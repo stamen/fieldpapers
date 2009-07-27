@@ -18,6 +18,7 @@
     
     $dbh->query('START TRANSACTION');
     $scan = add_scan($dbh, $user['id']);
+    flush_scans($dbh, 3600);
     $dbh->query('COMMIT');
 
     $post = s3_get_post_details($scan['id'], time() + 600);

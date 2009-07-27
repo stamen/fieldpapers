@@ -679,6 +679,64 @@
         return get_scan($dbh, $scan['id']);
     }
     
+    function delete_scan(&$dbh, $scan_id)
+    {
+        $q = sprintf('DELETE FROM scans
+                      WHERE id = %s',
+                     $dbh->quoteSmart($scan_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $q = sprintf('DELETE FROM steps
+                      WHERE scan_id = %s',
+                     $dbh->quoteSmart($scan_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        return true;
+    }
+    
+    function flush_scans(&$dbh, $age)
+    {
+        $due = time() + 5;
+        
+        while(time() < $due)
+        {
+            $q = sprintf('SELECT id
+                          FROM scans
+                          WHERE last_step = 0
+                            AND created < NOW() - INTERVAL %d SECOND
+                          LIMIT 1',
+                         $age);
+    
+            //error_log(preg_replace('/\s+/', ' ', $q));
+    
+            $res = $dbh->query($q);
+            
+            if(PEAR::isError($res)) 
+                die_with_code(500, "{$res->message}\n{$q}\n");
+    
+            $scan = $res->fetchRow(DB_FETCHMODE_ASSOC);
+            
+            if(empty($scan))
+                break;
+
+            delete_scan($dbh, $scan['id']);
+        }
+
+        return true;
+    }
+    
     function postpone_message(&$dbh, $message_id, $timeout)
     {
         $q = sprintf('UPDATE messages
