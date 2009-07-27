@@ -42,7 +42,7 @@
         if(php_sapi_name() == 'cli')
             return CLI_BASE_DIRECTORY;
         
-        return rtrim(dirname($_SERVER['SCRIPT_NAME']), DIRECTORY_SEPARATOR);
+        return rtrim(str_replace(' ', '%20', dirname($_SERVER['SCRIPT_NAME'])), DIRECTORY_SEPARATOR);
     }
     
     function get_base_href()
