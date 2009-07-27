@@ -24,7 +24,16 @@
     $sm->assign('prints', $prints);
     $sm->assign('scans', $scans);
     $sm->assign('language', $language);
-    
+
+    /* localized strings for the index page */
+    $sm->assign('nav_title', localize('Walking papers'));
+    $sm->assign('nav_home', localize('Home'));
+    $sm->assign('nav_prints', localize('Prints'));
+    $sm->assign('nav_scans', localize('Scans'));    
+    $sm->assign('nav_upload', localize('Upload'));    
+    $sm->assign('nav_zeitgeist', localize('Zeitgeist'));    
+    $sm->assign('nav_about', localize('About'));    
+
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("index.html.tpl");
 
