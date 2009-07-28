@@ -10,6 +10,8 @@
         Web und Druck Kartographie &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
         <br />
         German translation by Jonas Krückel
+        <br />
+        Dutch translation by Milo Vanderlinden
 
     {elseif $language == "nl"}
         WRITE ME
@@ -25,6 +27,8 @@
         Web and print cartography &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
         <br />
         German translation by Jonas Krückel
+        <br />
+        Dutch translation by Milo Vanderlinden
     {/if}
 </p>
 
