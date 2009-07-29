@@ -23,7 +23,12 @@
 
     function &get_db_connection()
     {
-        return DB::connect(DB_DSN);
+        $dbh =& DB::connect(DB_DSN);
+        
+        if(PEAR::isError($dbh)) 
+            die_with_code(500, "{$dbh->message}\n{$q}\n");
+
+        return $dbh;
     }
     
     function write_userdata($id, $language)
