@@ -5,8 +5,10 @@ all:
 	chmod a+rwX tmp
 	cd lib && make all
 	cd bin && make all
+	cd www && make all
 
 clean:
 	rm -rf templates/cache
 	rm -rf tmp
 	cd lib && make clean
+	cd bin && make clean
