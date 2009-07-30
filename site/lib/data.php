@@ -787,49 +787,62 @@
     }
     
    /**
-    * @param    $object_id      Name to assigne
+    * @param    $object_id      Name to assign
     * @param    $content_bytes  Content of file
     * @param    $mime_type      MIME/Type to assign
     * @return   mixed   URL of uploaded file on success, false or PEAR_Error on failure.
     */
     function post_file($object_id, $content_bytes, $mime_type)
     {
-        //return s3_post_file($object_id, $content_bytes, $mime_type);
-        
+        return USE_S3 ? post_file_s3($object_id, $content_bytes, $mime_type)
+                      : post_file_local($object_id, $content_bytes);
+    }
+    
+   /**
+    * @param    $object_id      Name to assign
+    * @param    $content_bytes  Content of file
+    * @return   mixed   URL of uploaded file on success, false or PEAR_Error on failure.
+    */
+    function post_file_local($object_id, $content_bytes)
+    {
         error_log("post_file: $object_id, ".strlen($content_bytes).", $mime_type");
         
         $filepath = realpath(dirname(__FILE__).'/../www/files');
         $pathbits = explode('/', $object_id);
         
-        while(count($pathbits))
+        while(count($pathbits) && is_dir($filepath) && is_writeable($filepath))
         {
             $filepath .= '/'.array_shift($pathbits);
 
             if(count($pathbits) >= 1)
             {
-                error_log("mkdir $filepath");
+                error_log("post_file_local: mkdir $filepath");
                 @mkdir($filepath);
                 @chmod($filepath, 0777);
             }
         }
         
-        error_log("fwrite $filepath");
-        
         if($fh = @fopen($filepath, 'w'))
         {
+            error_log("post_file_local: fwrite $filepath");
             fwrite($fh, $content_bytes);
             chmod($filepath, 0666);
             fclose($fh);
+            
+            // TODO: this needs to return a URL
+            return true;
         }
+        
+        return false;
     }
 
    /**
-    * @param    $object_id      Name to assigne
+    * @param    $object_id      Name to assign
     * @param    $content_bytes  Content of file
     * @param    $mime_type      MIME/Type to assign
     * @return   mixed   URL of uploaded file on success, false or PEAR_Error on failure.
     */
-    function s3_post_file($object_id, $content_bytes, $mime_type)
+    function post_file_s3($object_id, $content_bytes, $mime_type)
     {
         $bucket_id = S3_BUCKET_ID;
         
