@@ -1,5 +1,5 @@
-<h3>WRITE ME</h3>
-
+<h3>Scans</h3>
+ 
 <p>
-    WRITE ME
+    De verhouding tussen de statussen van de scans; succesvol verwerkt, mislukt of nog bezig.
 </p>
