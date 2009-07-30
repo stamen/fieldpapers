@@ -1,5 +1,6 @@
-<h3>WRITE ME</h3>
-
+<h3>Zoom niveau's</h3>
+ 
 <p>
-    WRITE ME
+    Het aantal afdrukken van de afgelopen maand gesorteerd op zoom niveau. Zoom niveau 0 is de hele wereld,
+    zoom niveau 14 wordt aangeraden als minimum door Walking Papers.
 </p>
