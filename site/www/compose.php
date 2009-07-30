@@ -127,7 +127,7 @@
 
         // post a preview
         $url = new Net_URL($print['preview_url']);
-        $res = s3_post_file(ltrim($url->path, '/'), $png, 'image/png');
+        $res = post_file(ltrim($url->path, '/'), $png, 'image/png');
         
         if(PEAR::isError($res))
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -203,7 +203,7 @@
         
         // post the PDF
         $url = new Net_URL($print['pdf_url']);
-        $res = s3_post_file(ltrim($url->path, '/'), $pdf_content, 'application/pdf');
+        $res = post_file(ltrim($url->path, '/'), $pdf_content, 'application/pdf');
         
         if(PEAR::isError($res))
             die_with_code(500, "{$res->message}\n{$q}\n");
