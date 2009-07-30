@@ -3,6 +3,6 @@
 </p>
 
 <p>
-    Je kunt ook meteen vanuit de browser aan de alg met de web-based OSM editor
+    Je kunt ook meteen vanuit de browser aan de slag met de web-based OSM editor
     <a href="http://wiki.openstreetmap.org/index.php/Potlatch">Potlatch</a>.
 </p>
