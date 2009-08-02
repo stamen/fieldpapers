@@ -6,7 +6,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{strip}
         {if $language == "de"}
-            WRITE ME
+            Scan hochgeladen
         {elseif $language == "nl"}
             WRITE ME
         {else}
@@ -29,7 +29,15 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    <h2>You’ve Uploaded A Scanned Map</h2>
+    <h2>
+		{if $language == "de"}
+			Du hast eine gescannte Karte hochgeladen
+		{elseif $language == "nl"}
+            WRITE ME
+        {else}
+			You’ve Uploaded A Scanned Map
+		{/if}	
+		</h2>
     
     <p>
         You’ve just uploaded a scanned map, and you’re about to add

@@ -6,7 +6,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>{strip}
         {if $language == "de"}
-            WRITE ME
+            Scan hochladen
         {elseif $language == "nl"}
             WRITE ME
         {else}

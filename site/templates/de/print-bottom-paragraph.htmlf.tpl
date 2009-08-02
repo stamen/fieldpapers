@@ -14,5 +14,5 @@
 </blockquote>
 
 <p>
-    Bitte habe ein paar Wochen für das Scannen und Drucken Geduld.
+    Bitte habe ein paar Wochen für das Scannen und Ausdrucken Geduld.
 </p>
