@@ -25,6 +25,6 @@
     (<a href="http://www.openstreetmap.org/user/forgot-password">Passwort vergessen?</a>)
 </p>
 <p>
-    This form will be replaced by an interactive editing window
-    with your scanned map in the background for a guide.
+    Dieses Eingabefeld wird anschließend durch ein interaktives Bearbeitungsfenster
+	mit deiner gescannten Karte als Hintergrund zur Orientierung ersetzt.
 </p>
