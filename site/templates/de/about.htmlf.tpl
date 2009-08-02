@@ -1,7 +1,7 @@
-﻿<h2>Über Walking Papers</h2>
+<h2>Über Walking Papers</h2>
 
 <p>
-    OpenStreetMap, the wiki-style map of the world that anyone can edit, is in need of a new way to add content. Walking Papers is a way to “round trip” map data through paper, to make it easier to perform the kinds of eyes-on-the-street edits that OSM needs now the most, as well as distributing the load by making it possible for legible, easy notes to be shared and turned into real geographical data. 
+    OpenStreetMap, die freie Wiki-Weltkarte, die von jedem bearbeitet werden kann, is in need of a new way to add content. Walking Papers is a way to “round trip” map data through paper, to make it easier to perform the kinds of eyes-on-the-street edits that OSM needs now the most, as well as distributing the load by making it possible for legible, easy notes to be shared and turned into real geographical data. 
 </p>
 <p>
     Walking Papers is a working service that implements this paper idea, based on <a href="http://mike.teczno.com/notes/walking-papers.html">
