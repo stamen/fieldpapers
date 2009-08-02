@@ -79,7 +79,7 @@
     <h2>{strip}
         <a name="make">
             {if $language == "de"}
-                Drucke
+                Einen Ausdruck erstellen
             {elseif $language == "nl"}
                 WRITE ME
             {else}
@@ -252,7 +252,7 @@
     <p>{strip}
         <a href="{$base_dir}/prints.php">
             {if $language == "de"}
-                Weitere Drucke...
+                Weitere Ausdrucke...
             {elseif $language == "nl"}
                 WRITE ME
             {else}

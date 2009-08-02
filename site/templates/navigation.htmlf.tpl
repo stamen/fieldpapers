@@ -5,7 +5,7 @@
 <p id="navigation">
     {if $language == "de"}
         <a href="{$base_dir}/">Home</a>
-        <a href="{$base_dir}/prints.php">Drucke</a>
+        <a href="{$base_dir}/prints.php">Ausdrucke</a>
         <a href="{$base_dir}/scans.php">Scans</a>
         <a href="{$base_dir}/upload.php">Hochladen</a>
         <a href="{$base_dir}/zeitgeist.php">Statistik</a>

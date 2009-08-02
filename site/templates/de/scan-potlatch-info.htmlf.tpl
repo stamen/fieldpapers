@@ -1,7 +1,7 @@
 <p>
     Zuerst musst du dich mit deinem OpenStreetMap Benutzerkonto einloggen, um zu editieren; logge dich unten ein oder 
     <a href="http://www.openstreetmap.org/user/new">erstelle ein neues Account</a>.
-    <strong><i>Walking Papers</i> wird dein Passwort nicht sehen bzw. speicheern</strong>,
+    <strong><i>Walking Papers</i> wird dein Passwort nicht sehen bzw. speichern</strong>,
     es wird direkt zu OpenStreetMap weitergeleitet.
 </p>
 <p>
