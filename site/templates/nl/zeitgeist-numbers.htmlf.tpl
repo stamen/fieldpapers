@@ -1,5 +1,5 @@
-<h3>WRITE ME</h3>
-
+<h3>Verhouding afdrukken/scans</h3>
+ 
 <p>
-    WRITE ME
+    het aantal afdrukken ten opzichte van het aantal scans van de afgelopen maand.
 </p>

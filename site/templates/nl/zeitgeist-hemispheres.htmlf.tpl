@@ -1,5 +1,6 @@
-<h3>WRITE ME</h3>
-
+<h3>Werelddelen</h3>
+ 
 <p>
-    WRITE ME
+    De verdeling van afdrukken per werelddeel van de laatste maand.
 </p>
+ 
