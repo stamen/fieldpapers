@@ -7,7 +7,7 @@
     Für diese bereits teilweise erfassten Orte brauchen man keine GPS-Tracks mehr,
     sondern Informationen, was auf und neben der Straße ist. Mit Walking
     Papers kann man ganz einfach Karten ausdrucken, Informationen auf diesen
-    eintragen und diese anschließend OpenStreetMap zur Verfügung stellen.
+    eintragen und sie anschließend OpenStreetMap zur Verfügung stellen.
 </p>
 
 <p>
