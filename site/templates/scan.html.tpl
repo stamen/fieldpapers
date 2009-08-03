@@ -162,17 +162,31 @@
                     {$step.number|step_description|escape}, giving up.
                 </p>
                 <p>
-                    You might try uploading your scan again, making sure that
-                    it’s at a reasonably high resolution (200+ dpi for a full
-                    sheet of paper is normal) and right-side up. A legible 
-                    <a href="http://en.wikipedia.org/wiki/QR_Code">QR code</a> is critical.
-                    If this doesn’t help,
-                    <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">let us know</a>.
+					{if $language == "de"}
+						Versuche deinen Scan nocheinmal hochzuladen, achte auf eine
+						angemessen hohe Auflösung (200+ dpi sind für ein ganzes Papier
+						normal) und auf die richtige Seite.
+					{elseif $language == "nl"}
+						WRITE ME
+					{else}
+						You might try uploading your scan again, making sure that
+						it’s at a reasonably high resolution (200+ dpi for a full
+						sheet of paper is normal) and right-side up. A legible 
+						<a href="http://en.wikipedia.org/wiki/QR_Code">QR code</a> is critical.
+						If this doesn’t help,
+						<a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">let us know</a>.
+					{/if}
                 </p>
                 
                 {if $step.number == $constants.STEP_FATAL_QRCODE_ERROR}
                     <p>
-                        Here’s the part of your scan where we tried to find a code:
+						{if $language == "de"}
+							write me
+						{elseif $language == "nl"}
+							WRITE ME
+						{else}
+							Here’s the part of your scan where we tried to find a code:
+						{/if}
                     </p>
                     <p>
                         <img width="65%" border="1" src="http://{$constants.S3_BUCKET_ID|escape}.s3.amazonaws.com/scans/{$scan.id|escape}/qrcode.jpg" />
@@ -181,7 +195,13 @@
                 
             {else}
                 <p>
-                    Processing your scanned image.
+					{if $language == "de"}
+						Das gescannte Bild wird vearbeitet.
+					{elseif $language == "nl"}
+						WRITE ME
+					{else}
+						Processing your scanned image.
+					{/if}
                 </p>
     
                 <ol class="steps">
@@ -196,13 +216,25 @@
     
                 {if $step.number >= 7}
                     <p>
-                        {$step.number|step_description|escape}, please stand by.
-                        We will try to process your scan again shortly.
+                        {if $language == "de"}
+							write me
+						{elseif $language == "nl"}
+							WRITE ME
+						{else}
+							{$step.number|step_description|escape}, please stand by.
+							We will try to process your scan again shortly.
+						{/if}
                     </p>
                     
                     {if $step.number == $constants.STEP_BAD_QRCODE}
                         <p>
-                            Here’s the part of your scan where we tried to find a code:
+                            {if $language == "de"}
+								write me
+							{elseif $language == "nl"}
+								WRITE ME
+							{else}
+								Here’s the part of your scan where we tried to find a code:
+							{/if}
                         </p>
                         <p>
                             <img width="65%" border="1" src="http://{$constants.S3_BUCKET_ID|escape}.s3.amazonaws.com/scans/{$scan.id|escape}/qrcode.jpg" />
@@ -211,10 +243,16 @@
                     
                 {else}
                     <p>
-                        This may take a little while, generally a few minutes.
-                        You don’t need to keep this browser window open—you can
-                        <a href="{$base_dir}/scan.php?id={$scan.id|escape}">bookmark this page</a>
-                        and come back later.
+						{if $language == "de"}
+							write me
+						{elseif $language == "nl"}
+							WRITE ME
+						{else}
+							This may take a little while, generally a few minutes.
+							You don’t need to keep this browser window open—you can
+							<a href="{$base_dir}/scan.php?id={$scan.id|escape}">bookmark this page</a>
+							and come back later.
+						{/if}
                     </p>
                 {/if}
             {/if}
