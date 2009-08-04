@@ -5,16 +5,19 @@
     require_once 'init.php';
     require_once 'data.php';
     
+    $dirname = $_POST['dirname'] ? $_POST['dirname'] : null;
     $expiration = $_POST['expiration'] ? $_POST['expiration'] : null;
     
     if(strtotime($expiration) < time())
         die_with_code(401, 'Sorry, expiration date has come and gone');
     
     $posted_signature = $_POST['signature'] ? $_POST['signature'] : null;
-    $expected_signature = sign_post_details($expiration, API_PASSWORD);
+    $expected_signature = sign_post_details($dirname, $expiration, API_PASSWORD);
     
     if($posted_signature != $expected_signature)
         die_with_code(401, 'Sorry, bad signature');
+    
+    
     
     header('Content-Type: text/plain');
     echo "Thanks, I have no idea what do with a file yet, but thanks.\n";

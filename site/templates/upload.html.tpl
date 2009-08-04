@@ -63,7 +63,8 @@
 
     {elseif $localpost}
         <form action="{$base_dir}/post-file.php" method="post" enctype="multipart/form-data">
-            <!--<input name="redirect" type="hidden" value="{$localpost.redirect|escape}" />-->
+            <input name="dirname" type="hidden" value="{$localpost.dirname|escape}" />
+            <input name="redirect" type="hidden" value="{$localpost.redirect|escape}" />
         
             <input name="expiration" type="hidden" value="{$localpost.expiration|escape}" />
             <input name="signature" type="hidden" value="{$localpost.signature|escape}" />

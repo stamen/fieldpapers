@@ -977,15 +977,18 @@
     */
     function local_get_post_details($scan_id, $expires, $format=null)
     {
+        $dirname = "scans/{$scan_id}";
+        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id).(is_null($format) ? '' : "&format={$format}");
+
         $expiration = date('r', $expires);
-        $signature = sign_post_details($expiration, API_PASSWORD);
+        $signature = sign_post_details($dirname, $expiration, API_PASSWORD);
         
-        return compact('expiration', 'signature');
+        return compact('dirname', 'expiration', 'signature', 'redirect');
     }
     
-    function sign_post_details($expiration, $api_password)
+    function sign_post_details($dirname, $expiration, $api_password)
     {
-        return md5(join(' ', array($expiration, $api_password)));
+        return md5(join(' ', array($dirname, $expiration, $api_password)));
     }
     
 ?>
