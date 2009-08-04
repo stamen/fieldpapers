@@ -7,7 +7,7 @@
     require_once 'Net/URL.php';
     
     $dirname = $_POST['dirname'] ? $_POST['dirname'] : null;
-    $redirect = $_POST['redirect'] ? $_POST['redirect'] : null;
+    $redirect = preg_match('#^http://#', $_POST['redirect']) ? $_POST['redirect'] : null;
     $expiration = $_POST['expiration'] ? $_POST['expiration'] : null;
     $file = is_array($_FILES['file']) ? $_FILES['file'] : null;
     
@@ -28,16 +28,15 @@
         $url = post_file_local($object_id, $content_bytes);
     }
 
-    $redirect = new Net_URL($redirect);
-    $redirect->addQueryString('url', $url);
-    $redirect = $redirect->getURL();
+    if($redirect)
+    {
+        $redirect = new Net_URL($redirect);
+        $redirect->addQueryString('url', $url);
+        $redirect = $redirect->getURL();
+    }
     
     header('Content-Type: text/plain');
-    echo "Thanks, I have no idea what do with a file yet, but thanks.\n";
-    echo "$url\n";
-    echo "$redirect\n";
-    print_r($_GET);
-    print_r($_POST);
-    print_r($_FILES);
+    header("Location: {$redirect}");
+    echo "Thanks, I think I handled your file, so thanks.\n";
 
 ?>
