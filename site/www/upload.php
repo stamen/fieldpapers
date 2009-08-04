@@ -25,8 +25,13 @@
         ? s3_get_post_details($scan['id'], time() + 600)
         : null;
 
+    $localpost = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
+        ? null
+        : local_get_post_details($scan['id'], time() + 600);
+
     $sm = get_smarty_instance();
     $sm->assign('s3post', $s3post);
+    $sm->assign('localpost', $localpost);
     $sm->assign('language', $language);
     
     header("Content-Type: text/html; charset=UTF-8");

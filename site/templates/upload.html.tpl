@@ -61,10 +61,13 @@
             <input class="mac-button" type="submit" value="{$label}" />
         </form>
 
-    {else}
+    {elseif $localpost}
         <form action="{$base_dir}/post-file.php" method="post" enctype="multipart/form-data">
-            <input name="redirect" type="hidden" value="{$s3post.redirect|escape}" />
+            <!--<input name="redirect" type="hidden" value="{$localpost.redirect|escape}" />-->
         
+            <input name="expiration" type="hidden" value="{$localpost.expiration|escape}" />
+            <input name="signature" type="hidden" value="{$localpost.signature|escape}" />
+            
             <input name="file" type="file" />
             <input class="mac-button" type="submit" value="{$label}" />
         </form>

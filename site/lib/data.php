@@ -967,5 +967,20 @@
                        S3_BUCKET_ID,
                        $object_id_scrubbed);
     }
+
+   /**
+    * @param    int     $expires    Expiration timestamp
+    * @param    string  $format     Response format for redirect URL
+    * @return   array   Associative array with:
+    *                   - "expiration": date when this post will expire
+    *                   - "signature": md5 summed, signed string
+    */
+    function local_get_post_details($scan_id, $expires, $format=null)
+    {
+        $expiration = date('r', $expires);
+        $signature = md5(join(' ', array($expiration, API_PASSWORD)));
+        
+        return compact('expiration', 'signature');
+    }
     
 ?>
