@@ -35,8 +35,10 @@
         $redirect = $redirect->getURL();
     }
     
+    if($redirect)
+        header("Location: {$redirect}");
+
     header('Content-Type: text/plain');
-    header("Location: {$redirect}");
     echo "Thanks, I think I handled your file, so thanks.\n";
 
 ?>

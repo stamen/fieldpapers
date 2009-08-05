@@ -103,76 +103,8 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         qrcode_image.save(qrcode_bytes, 'JPEG')
         qrcode_bytes = qrcode_bytes.getvalue()
         #s3.putBucketObject(bucket_id, qrcode_name, qrcode_bytes, 'image/jpeg', 'public-read')
-        
-        def motherfucker(scan_id, file_name, file_contents, password):
 
-            s, host, path, p, q, f = urlparse.urlparse(apibase)
-            
-            query = urllib.urlencode({'scan': scan_id, 'password': password})
-            
-            print query
-            
-            req = httplib.HTTPConnection(host, 80)
-            req.request('GET', path + '/append.php?' + query)
-            res = req.getresponse()
-            
-            print res.status
-            
-            html = xml.etree.ElementTree.parse(res)
-            
-            print html
-            
-            for form in html.findall('*/form'):
-                form_action, form_enctype = form.attrib['action'], form.attrib['enctype']
-                print form_action, form_enctype
-                
-                inputs = form.findall('.//input')
-                
-                file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
-                
-                fields = [(input.attrib['name'], input.attrib['value'])
-                          for input in inputs
-                          if input.attrib['type'] != 'file' and 'name' in input.attrib]
-                
-                files = [(input.attrib['name'], file_name, file_contents)
-                         for input in inputs
-                         if input.attrib['type'] == 'file']
-                
-                if len(files) == 1:
-                    print fields
-                    print files[0][:2]
-                    
-                    post_type, post_body = encodeMultipartFormdata(fields, files)
-                    
-                    s, host, path, p, query, f = urlparse.urlparse(urlparse.urljoin(apibase, form_action))
-                    
-                    print host, path, len(post_body), 'bytes'
-            
-                    req = httplib.HTTPConnection(host, 80)
-                    req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
-                    res = req.getresponse()
-                    
-                    print res.status
-                    print res.getheaders()
-                    print res.read()
-                    
-                    return
-                    
-                    
-                
-                print 'wtf?'
-            
-            
-
-
-
-
-            #def encodeMultipartFormdata(fields, files):
-            #    """ fields is a sequence of (name, value) elements for regular form fields.
-            #        files is a sequence of (name, filename, value) elements for data to be uploaded as files
-            #        Return (content_type, body) ready for httplib.HTTP instance
-
-        motherfucker(scan_id, qrcode_name, qrcode_bytes, password)
+        appendScanFile(scan_id, qrcode_name, qrcode_bytes, apibase, password)
     
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
@@ -252,6 +184,50 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         raise
 
     return 0
+
+def appendScanFile(scan_id, file_name, file_contents, apibase, password):
+    """ Upload a file via the API append.php form input provision thingie.
+    """
+
+    s, host, path, p, q, f = urlparse.urlparse(apibase)
+    
+    query = urllib.urlencode({'scan': scan_id, 'password': password})
+    
+    req = httplib.HTTPConnection(host, 80)
+    req.request('GET', path + '/append.php?' + query)
+    res = req.getresponse()
+    
+    html = xml.etree.ElementTree.parse(res)
+    
+    for form in html.findall('*/form'):
+        form_action, form_enctype = form.attrib['action'], form.attrib['enctype']
+        
+        inputs = form.findall('.//input')
+        
+        file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
+        
+        fields = [(input.attrib['name'], input.attrib['value'])
+                  for input in inputs
+                  if input.attrib['type'] != 'file' and 'name' in input.attrib]
+        
+        files = [(input.attrib['name'], file_name, file_contents)
+                 for input in inputs
+                 if input.attrib['type'] == 'file']
+        
+        if len(files) == 1:
+            post_type, post_body = encodeMultipartFormdata(fields, files)
+            
+            s, host, path, p, query, f = urlparse.urlparse(urlparse.urljoin(apibase, form_action))
+            
+            req = httplib.HTTPConnection(host, 80)
+            req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
+            res = req.getresponse()
+            
+            assert res.status == 200, 'POST of file to %s resulting in status %s instead of 200' % (host, res.status)
+
+            return True
+        
+    raise Exception('Did not find a form with a file input, why is that?')
 
 def encodeMultipartFormdata(fields, files):
     """ fields is a sequence of (name, value) elements for regular form fields.
