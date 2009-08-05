@@ -115,6 +115,7 @@
     
     function die_with_code($code, $message)
     {
+        error_log("die_with_code: $code, $message");
         header("HTTP/1.1 {$code}");
         die($message);
     }
