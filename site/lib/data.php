@@ -980,7 +980,7 @@
         $dirname = "scans/{$scan_id}";
         $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id).(is_null($format) ? '' : "&format={$format}");
 
-        $expiration = date('r', $expires);
+        $expiration = gmdate("D, d M Y H:i:s", $expires).' UTC';
         $signature = sign_post_details($dirname, $expiration, API_PASSWORD);
         
         return compact('dirname', 'expiration', 'signature', 'redirect');

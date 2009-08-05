@@ -11,24 +11,12 @@ import decode
 parser = optparse.OptionParser(usage="""poll.py [options]
 """)
 
-parser.add_option('-a', '--access', dest='access',
-                  help='AWS access key',
-                  action='store')
-
-parser.add_option('-s', '--secret', dest='secret',
-                  help='AWS secret key',
-                  action='store')
-
 parser.add_option('-p', '--password', dest='password',
                   help='Paperwalking queue password',
                   action='store')
 
 parser.add_option('-b', '--apibase', dest='apibase',
                   help='URL root of queue API',
-                  action='store')
-
-parser.add_option('-d', '--bucket', dest='bucket',
-                  help='S3 bucket name',
                   action='store')
 
 def getMarkers():
@@ -71,7 +59,7 @@ if __name__ == '__main__':
                 pass
             else:
                 print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                decode.main(url, getMarkers(), options.apibase, message_id, options.bucket, options.access, options.secret, options.password)
+                decode.main(url, getMarkers(), options.apibase, message_id, options.password)
 
         except KeyboardInterrupt:
             raise

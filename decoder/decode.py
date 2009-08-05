@@ -17,7 +17,6 @@ import PIL.Image
 import PIL.ImageFilter
 import matchup
 import ModestMaps
-import AWS
 
 class CodeReadException(Exception):
     pass
@@ -57,7 +56,7 @@ class Marker:
 
         self.anchor = Point(x, y)
 
-def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, password):
+def main(url, markers, apibase, message_id, password):
     """
     """
     url_pat = re.compile(r'^http://.+/scans/([^/]+)/(.*)$', re.I)
@@ -73,8 +72,6 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
     updateStepLocal = lambda step_number, timeout: updateStep(apibase, password, scan_id, step_number, message_id, timeout)
     
     try:
-        s3 = AWS.Storage.Service(aws_access, aws_secret)
-
         # sifting
         updateStepLocal(2, 60)
         
@@ -102,13 +99,10 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         qrcode_image = qrcode.copy()
         qrcode_image.save(qrcode_bytes, 'JPEG')
         qrcode_bytes = qrcode_bytes.getvalue()
-        #s3.putBucketObject(bucket_id, qrcode_name, qrcode_bytes, 'image/jpeg', 'public-read')
-
         appendScanFile(scan_id, qrcode_name, qrcode_bytes, apibase, password)
     
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
-        raise Exception('I quit')
         
         # tiling and uploading
         updateStepLocal(5, 180)
@@ -129,7 +123,7 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         preview_image.thumbnail((409, 280), PIL.Image.ANTIALIAS)
         preview_image.save(preview_bytes, 'JPEG')
         preview_bytes = preview_bytes.getvalue()
-        s3.putBucketObject(bucket_id, preview_name, preview_bytes, 'image/jpeg', 'public-read')
+        appendScanFile(scan_id, preview_name, preview_bytes, apibase, password)
         
         # make a largish image
         large_name = 'scans/%(scan_id)s/large.jpg' % locals()
@@ -138,7 +132,7 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         large_image.thumbnail((900, 900), PIL.Image.ANTIALIAS)
         large_image.save(large_bytes, 'JPEG')
         large_bytes = large_bytes.getvalue()
-        s3.putBucketObject(bucket_id, large_name, large_bytes, 'image/jpeg', 'public-read')
+        appendScanFile(scan_id, large_name, large_bytes, apibase, password)
         
         min_zoom, max_zoom = 20, 0
         
@@ -156,7 +150,7 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
                 tile_image.save(tile_bytes, 'JPEG')
                 tile_bytes = tile_bytes.getvalue()
 
-                s3.putBucketObject(bucket_id, tile_name, tile_bytes, 'image/jpeg', 'public-read')
+                appendScanFile(scan_id, tile_name, tile_bytes, apibase, password)
             
                 renders[str(coord)] = tile_image
                 
