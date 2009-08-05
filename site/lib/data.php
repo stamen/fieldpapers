@@ -438,7 +438,12 @@
         $rows = array();
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            if(empty($row['base_url']))
+                $row['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $row['id']);
+            
             $rows[] = $row;
+        }
         
         return $rows;
     }
@@ -468,7 +473,12 @@
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
 
-        return $res->fetchRow(DB_FETCHMODE_ASSOC);
+        $scan = $res->fetchRow(DB_FETCHMODE_ASSOC);
+
+        if(empty($scan['base_url']))
+            $scan['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $scan['id']);
+        
+        return $scan;
     }
     
     function get_user(&$dbh, $user_id)

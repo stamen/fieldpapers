@@ -37,7 +37,7 @@
     {if $scan && $scan.last_step == $constants.STEP_FINISHED}
         <span id="scan-info" style="display: none;">
             <span class="scan">{$scan.id|escape}</span>
-            <span class="tile">http://{$constants.S3_BUCKET_ID|escape}.s3.amazonaws.com/scans/{$scan.id|escape}/{literal}{z}/{x}/{y}{/literal}.jpg</span>
+            <span class="tile">{$scan.base_url}/{$scan.id|escape}/{literal}{z}/{x}/{y}{/literal}.jpg</span>
             <span class="minrow">{$scan.min_row|escape}</span>
             <span class="mincolumn">{$scan.min_column|escape}</span>
             <span class="minzoom">{$scan.min_zoom|escape}</span>
@@ -144,8 +144,8 @@
             {/if}
         
             <p>
-                <a href="http://{$constants.S3_BUCKET_ID|escape}.s3.amazonaws.com/scans/{$scan.id|escape}/large.jpg">
-                    <img border="1" src="http://{$constants.S3_BUCKET_ID|escape}.s3.amazonaws.com/scans/{$scan.id|escape}/preview.jpg" /></a>
+                <a href="{$scan.base_url}/large.jpg">
+                    <img border="1" src="{$scan.base_url}/preview.jpg" /></a>
             </p>
         
             <p>
@@ -220,9 +220,7 @@
                         <input name="maxrow" type="hidden" value="{$scan.max_row|escape}" />
                         <input name="maxcolumn" type="hidden" value="{$scan.max_column|escape}" />
                         <input name="maxzoom" type="hidden" value="{$scan.max_zoom|escape}" />
-
-                        <input name="bucket" type="hidden" value="{$constants.S3_BUCKET_ID|escape}" />
-                        <input name="scan" type="hidden" value="{$scan.id|escape}" />
+                        <input name="base_url" type="hidden" value="{$scan.base_url|escape}" />
                     </p>
                 </form>
             </div>
@@ -290,7 +288,7 @@
 						{/if}
                     </p>
                     <p>
-                        <img width="65%" border="1" src="http://{$constants.S3_BUCKET_ID|escape}.s3.amazonaws.com/scans/{$scan.id|escape}/qrcode.jpg" />
+                        <img width="65%" border="1" src="{$scan.base_url}/qrcode.jpg" />
                     </p>
                 {/if}
                 
@@ -361,7 +359,7 @@
 							{/if}
                         </p>
                         <p>
-                            <img width="65%" border="1" src="http://{$constants.S3_BUCKET_ID|escape}.s3.amazonaws.com/scans/{$scan.id|escape}/qrcode.jpg" />
+                            <img width="65%" border="1" src="{$scan.base_url}/qrcode.jpg" />
                         </p>
                     {/if}
                     
