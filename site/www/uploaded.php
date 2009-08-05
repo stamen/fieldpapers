@@ -4,6 +4,7 @@
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
+    require_once 'Net/URL.php';
     
     $url = $_GET['url'] ? $_GET['url'] : null;
     $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
@@ -51,6 +52,18 @@
             add_message($dbh, $url);
         
         $scan = get_scan($dbh, $scan['id']);
+        
+        error_log("uploaded.php: $url");
+        
+        $parsed_url = parse_url($url);
+        
+        error_log("uploaded.php: {$parsed_url['scheme']} {$parsed_url['host']} {$parsed_url['path']}, ".dirname($parsed_url['path']));
+        
+        $scan['base_url'] = "http://{$parsed_url['host']}".dirname($parsed_url['path']);
+        
+        error_log("uploaded.php: {$scan['base_url']}");
+        
+        set_scan($dbh, $scan);
         
         $dbh->query('COMMIT');
         

@@ -405,11 +405,15 @@
             ? 'p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,'
             : '';
         
+        $base_url = in_array('base_url', $column_names)
+            ? 's.base_url,'
+            : '';
+        
         $q = sprintf("SELECT {$woeid_column_names}
                              s.id, s.print_id, s.last_step,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
-                             s.description, s.is_private, s.will_edit,
+                             s.description, s.is_private, s.will_edit, {$base_url}
                              (p.north + p.south) / 2 AS print_latitude,
                              (p.east + p.west) / 2 AS print_longitude,
                              UNIX_TIMESTAMP(s.created) AS created,
@@ -441,15 +445,22 @@
     
     function get_scan(&$dbh, $scan_id)
     {
-        $q = sprintf('SELECT id, print_id, last_step,
+        // TODO: ditch dependency on table_columns()
+        $column_names = array_keys(table_columns($dbh, 'scans'));
+        
+        $base_url = in_array('base_url', $column_names)
+            ? 'base_url,'
+            : '';
+        
+        $q = sprintf("SELECT id, print_id, last_step,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
-                             description, is_private, will_edit,
+                             description, is_private, will_edit, {$base_url}
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              user_id
                       FROM scans
-                      WHERE id = %s',
+                      WHERE id = %s",
                      $dbh->quoteSmart($scan_id));
     
         $res = $dbh->query($q);
@@ -649,9 +660,11 @@
             return false;
 
         $update_clauses = array();
+        $column_names = array_keys(table_columns($dbh, 'scans'));
 
-        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit') as $field)
-            if(!is_null($scan[$field]))
+        // TODO: ditch dependency on table_columns()
+        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url') as $field)
+            if(in_array($field, $column_names) && !is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
 
@@ -661,10 +674,9 @@
         } else {
             $update_clauses = join(', ', $update_clauses);
             
-            $q = sprintf("UPDATE scans
-                          SET {$update_clauses}
-                          WHERE id = %s",
-                         $dbh->quoteSmart($scan['id']));
+            $q = "UPDATE scans
+                  SET {$update_clauses}
+                  WHERE id = ".$dbh->quoteSmart($scan['id']);
     
             error_log(preg_replace('/\s+/', ' ', $q));
     
