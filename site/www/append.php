@@ -28,7 +28,7 @@
         $scan = get_scan($dbh, $scan_id);
 
     $s3post = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
-        ? s3_get_post_details($scan['id'], time() + 600)
+        ? s3_get_post_details($scan['id'], time() + 600, $dirname)
         : null;
 
     $localpost = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)

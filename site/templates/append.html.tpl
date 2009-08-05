@@ -24,7 +24,7 @@
             <input name="AWSAccessKeyId" type="hidden" value="{$s3post.access|escape}" />
             <input name="acl" type="hidden" value="{$s3post.acl|escape}" />
             <input name="key" type="hidden" value="{$s3post.key|escape}" />
-            {* <input name="redirect" type="hidden" value="{$s3post.redirect|escape}" /> *}
+            <input name="redirect" type="hidden" value="{$s3post.redirect|escape}" />
         
             <input name="policy" type="hidden" value="{$s3post.policy|escape}" />
             <input name="signature" type="hidden" value="{$s3post.signature|escape}" />

@@ -207,7 +207,7 @@ def appendScanFile(scan_id, file_path, file_contents, apibase, password):
         files = [(input.attrib['name'], os.path.basename(file_path), file_contents)
                  for input in inputs
                  if input.attrib['type'] == 'file']
-        
+
         if len(files) == 1:
             post_type, post_body = encodeMultipartFormdata(fields, files)
             
@@ -217,7 +217,7 @@ def appendScanFile(scan_id, file_path, file_contents, apibase, password):
             req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
             res = req.getresponse()
             
-            assert res.status == 200, 'POST of file to %s resulting in status %s instead of 200' % (host, res.status)
+            assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
 
             return True
         
