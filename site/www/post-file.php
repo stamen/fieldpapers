@@ -12,7 +12,7 @@
     $file = is_array($_FILES['file']) ? $_FILES['file'] : null;
     
     if(strtotime($expiration) < time())
-        die_with_code(401, 'Sorry, expiration date has come and gone');
+        die_with_code(401, "Sorry, expiration date $expiration has come and gone - ".date('r', strtotime($expiration)));
     
     $posted_signature = $_POST['signature'] ? $_POST['signature'] : null;
     $expected_signature = sign_post_details($dirname, $expiration, API_PASSWORD);

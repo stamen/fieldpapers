@@ -9,6 +9,7 @@
         die_with_code(401, 'Sorry, bad password');
     
     $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
+    $dirname = $_GET['dirname'] ? $_GET['dirname'] : null;
     
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
@@ -32,7 +33,7 @@
 
     $localpost = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
         ? null
-        : local_get_post_details($scan['id'], time() + 600);
+        : local_get_post_details($scan['id'], time() + 600, $dirname);
 
     $sm = get_smarty_instance();
     $sm->assign('s3post', $s3post);

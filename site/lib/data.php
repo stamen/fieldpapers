@@ -905,7 +905,6 @@
     
    /**
     * @param    int     $expires    Expiration timestamp
-    * @param    string  $format     Response format for redirect URL
     * @return   array   Associative array with:
     *                   - "access": AWS access key
     *                   - "policy": base64-encoded policy
@@ -915,11 +914,11 @@
     *                   - "bucket": bucket ID
     *                   - "redirect": URL
     */
-    function s3_get_post_details($scan_id, $expires, $format=null)
+    function s3_get_post_details($scan_id, $expires)
     {
         $acl = 'public-read';
         $key = "scans/{$scan_id}/\${filename}";
-        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id).(is_null($format) ? '' : "&format={$format}");
+        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id);
         $access = AWS_ACCESS_KEY;
         $bucket = S3_BUCKET_ID;
         
@@ -970,15 +969,15 @@
 
    /**
     * @param    int     $expires    Expiration timestamp
-    * @param    string  $format     Response format for redirect URL
+    * @param    string  $dirname    Input with a directory name
     * @return   array   Associative array with:
     *                   - "expiration": date when this post will expire
     *                   - "signature": md5 summed, signed string
     */
-    function local_get_post_details($scan_id, $expires, $format=null)
+    function local_get_post_details($scan_id, $expires, $dirname)
     {
-        $dirname = "scans/{$scan_id}";
-        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id).(is_null($format) ? '' : "&format={$format}");
+        $dirname = rtrim("scans/{$scan_id}", '/').'/'.ltrim($dirname, '/');
+        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id);
 
         $expiration = gmdate("D, d M Y H:i:s", $expires).' UTC';
         $signature = sign_post_details($dirname, $expiration, API_PASSWORD);

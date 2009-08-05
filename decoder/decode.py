@@ -94,7 +94,7 @@ def main(url, markers, apibase, message_id, password):
         
         qrcode = extractCode(image, markers)
 
-        qrcode_name = 'scans/%(scan_id)s/qrcode.jpg' % locals()
+        qrcode_name = 'qrcode.jpg'
         qrcode_bytes = StringIO.StringIO()
         qrcode_image = qrcode.copy()
         qrcode_image.save(qrcode_bytes, 'JPEG')
@@ -117,7 +117,7 @@ def main(url, markers, apibase, message_id, password):
         renders = {}
         
         # make a smallish preview image
-        preview_name = 'scans/%(scan_id)s/preview.jpg' % locals()
+        preview_name = 'preview.jpg'
         preview_bytes = StringIO.StringIO()
         preview_image = image.copy()
         preview_image.thumbnail((409, 280), PIL.Image.ANTIALIAS)
@@ -126,7 +126,7 @@ def main(url, markers, apibase, message_id, password):
         appendScanFile(scan_id, preview_name, preview_bytes, apibase, password)
         
         # make a largish image
-        large_name = 'scans/%(scan_id)s/large.jpg' % locals()
+        large_name = 'large.jpg'
         large_bytes = StringIO.StringIO()
         large_image = image.copy()
         large_image.thumbnail((900, 900), PIL.Image.ANTIALIAS)
@@ -144,7 +144,7 @@ def main(url, markers, apibase, message_id, password):
             
             for (coord, tile_image) in zoom_renders:
                 x, y, z = coord.column, coord.row, coord.zoom
-                tile_name = 'scans/%(scan_id)s/%(z)d/%(x)d/%(y)d.jpg' % locals()
+                tile_name = '%(z)d/%(x)d/%(y)d.jpg' % locals()
                 
                 tile_bytes = StringIO.StringIO()
                 tile_image.save(tile_bytes, 'JPEG')
@@ -179,13 +179,13 @@ def main(url, markers, apibase, message_id, password):
 
     return 0
 
-def appendScanFile(scan_id, file_name, file_contents, apibase, password):
+def appendScanFile(scan_id, file_path, file_contents, apibase, password):
     """ Upload a file via the API append.php form input provision thingie.
     """
 
     s, host, path, p, q, f = urlparse.urlparse(apibase)
     
-    query = urllib.urlencode({'scan': scan_id, 'password': password})
+    query = urllib.urlencode({'scan': scan_id, 'password': password, 'dirname': os.path.dirname(file_path)})
     
     req = httplib.HTTPConnection(host, 80)
     req.request('GET', path + '/append.php?' + query)
@@ -204,7 +204,7 @@ def appendScanFile(scan_id, file_name, file_contents, apibase, password):
                   for input in inputs
                   if input.attrib['type'] != 'file' and 'name' in input.attrib]
         
-        files = [(input.attrib['name'], file_name, file_contents)
+        files = [(input.attrib['name'], os.path.basename(file_path), file_contents)
                  for input in inputs
                  if input.attrib['type'] == 'file']
         
