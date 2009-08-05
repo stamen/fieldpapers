@@ -3,6 +3,7 @@ import sys
 import re
 import math
 import time
+import array
 import urllib
 import os.path
 import httplib
@@ -10,6 +11,7 @@ import urlparse
 import tempfile
 import commands
 import StringIO
+import mimetypes
 import xml.etree.ElementTree
 import PIL.Image
 import PIL.ImageFilter
@@ -58,10 +60,10 @@ class Marker:
 def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, password):
     """
     """
-    url_pat = re.compile(r'^http://([^\.]+).s3.amazonaws.com/scans/([^/]+)/(.*)$', re.I)
+    url_pat = re.compile(r'^http://.+/scans/([^/]+)/(.*)$', re.I)
     
     if url_pat.match(url):
-        scan_id = url_pat.sub(r'\2', url)
+        scan_id = url_pat.sub(r'\1', url)
 
     else:
         print >> sys.stderr, url, "doesn't match expected form"
@@ -100,10 +102,81 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         qrcode_image = qrcode.copy()
         qrcode_image.save(qrcode_bytes, 'JPEG')
         qrcode_bytes = qrcode_bytes.getvalue()
-        s3.putBucketObject(bucket_id, qrcode_name, qrcode_bytes, 'image/jpeg', 'public-read')
+        #s3.putBucketObject(bucket_id, qrcode_name, qrcode_bytes, 'image/jpeg', 'public-read')
+        
+        def motherfucker(scan_id, file_name, file_contents, password):
+
+            s, host, path, p, q, f = urlparse.urlparse(apibase)
+            
+            query = urllib.urlencode({'scan': scan_id, 'password': password})
+            
+            print query
+            
+            req = httplib.HTTPConnection(host, 80)
+            req.request('GET', path + '/append.php?' + query)
+            res = req.getresponse()
+            
+            print res.status
+            
+            html = xml.etree.ElementTree.parse(res)
+            
+            print html
+            
+            for form in html.findall('*/form'):
+                form_action, form_enctype = form.attrib['action'], form.attrib['enctype']
+                print form_action, form_enctype
+                
+                inputs = form.findall('.//input')
+                
+                file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
+                
+                fields = [(input.attrib['name'], input.attrib['value'])
+                          for input in inputs
+                          if input.attrib['type'] != 'file' and 'name' in input.attrib]
+                
+                files = [(input.attrib['name'], file_name, file_contents)
+                         for input in inputs
+                         if input.attrib['type'] == 'file']
+                
+                if len(files) == 1:
+                    print fields
+                    print files[0][:2]
+                    
+                    post_type, post_body = encodeMultipartFormdata(fields, files)
+                    
+                    s, host, path, p, query, f = urlparse.urlparse(urlparse.urljoin(apibase, form_action))
+                    
+                    print host, path, len(post_body), 'bytes'
+            
+                    req = httplib.HTTPConnection(host, 80)
+                    req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
+                    res = req.getresponse()
+                    
+                    print res.status
+                    print res.getheaders()
+                    print res.read()
+                    
+                    return
+                    
+                    
+                
+                print 'wtf?'
+            
+            
+
+
+
+
+            #def encodeMultipartFormdata(fields, files):
+            #    """ fields is a sequence of (name, value) elements for regular form fields.
+            #        files is a sequence of (name, filename, value) elements for data to be uploaded as files
+            #        Return (content_type, body) ready for httplib.HTTP instance
+
+        motherfucker(scan_id, qrcode_name, qrcode_bytes, password)
     
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
+        raise Exception('I quit')
         
         # tiling and uploading
         updateStepLocal(5, 180)
@@ -179,6 +252,36 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         raise
 
     return 0
+
+def encodeMultipartFormdata(fields, files):
+    """ fields is a sequence of (name, value) elements for regular form fields.
+        files is a sequence of (name, filename, value) elements for data to be uploaded as files
+        Return (content_type, body) ready for httplib.HTTP instance
+        
+        Adapted from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/146306
+    """
+    BOUNDARY = '----------multipart-boundary-multipart-boundary-multipart-boundary$'
+    CRLF = '\r\n'
+
+    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+    bytes = array.array('c')
+
+    for (key, value) in fields:
+        bytes.fromstring('--' + BOUNDARY + CRLF)
+        bytes.fromstring('Content-Disposition: form-data; name="%s"' % key + CRLF)
+        bytes.fromstring(CRLF)
+        bytes.fromstring(value + CRLF)
+
+    for (key, filename, value) in files:
+        bytes.fromstring('--' + BOUNDARY + CRLF)
+        bytes.fromstring('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename) + CRLF)
+        bytes.fromstring('Content-Type: %s' % (mimetypes.guess_type(filename)[0] or 'application/octet-stream') + CRLF)
+        bytes.fromstring(CRLF)
+        bytes.fromstring(value + CRLF)
+
+    bytes.fromstring('--' + BOUNDARY + '--' + CRLF)
+
+    return content_type, bytes.tostring()
 
 def updateStep(apibase, password, scan_id, step_number, message_id, timeout):
     """
@@ -323,7 +426,7 @@ def siftImage(url):
     
     print >> sys.stderr, 'sift...', pgm_size,
     
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.realpath(__file__)).replace(' ', '\ ')
     status, output = commands.getstatusoutput("%(basedir)s/bin/sift --peak-thresh=8 -o '%(sift_filename)s' '%(pgm_filename)s'" % locals())
     data = open(sift_filename, 'r')
     
