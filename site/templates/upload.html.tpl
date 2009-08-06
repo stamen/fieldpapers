@@ -33,6 +33,7 @@
         
         <input name="file" type="file">
         <input class="mac-button" type="submit" value="Send">
+		
     </form>
     
     {include file="footer.htmlf.tpl"}

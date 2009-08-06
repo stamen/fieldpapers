@@ -87,7 +87,13 @@
                         {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
                 {/if}
                 <br/>
-                Uploaded {$scan.age|nice_relativetime|escape}.
+				{if $language == "de"}
+					Hochgeladen {$scan.age|nice_relativetime|escape}.
+				{elseif $language == "nl"}
+					WRITE ME
+				{else}
+					Uploaded {$scan.age|nice_relativetime|escape}.
+				{/if}
             </p>
             
             {if !$print.place_woeid}
@@ -165,7 +171,10 @@
 					{if $language == "de"}
 						Versuche deinen Scan nocheinmal hochzuladen, achte auf eine
 						angemessen hohe Auflösung (200+ dpi sind für ein ganzes Papier
-						normal) und auf die richtige Seite.
+						normal) und auf die richtige Seite. Ein leserlicher
+						<a href="http://de.wikipedia.org/wiki/QR_Code">QR code</a> ist wichtig.
+						Falls das nicht hilft, kannst du uns 
+						<a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">kontaktieren</a>.
 					{elseif $language == "nl"}
 						WRITE ME
 					{else}
@@ -181,7 +190,7 @@
                 {if $step.number == $constants.STEP_FATAL_QRCODE_ERROR}
                     <p>
 						{if $language == "de"}
-							write me
+							Dies ist der Teil deines Scans, in dem wir versuchten einen Code zu finden:
 						{elseif $language == "nl"}
 							WRITE ME
 						{else}
@@ -217,7 +226,8 @@
                 {if $step.number >= 7}
                     <p>
                         {if $language == "de"}
-							write me
+							{$step.number|step_description|escape}, bitte warten.
+							Wir versuchen deinen Scan bald zu verarbeiten.
 						{elseif $language == "nl"}
 							WRITE ME
 						{else}
@@ -229,7 +239,7 @@
                     {if $step.number == $constants.STEP_BAD_QRCODE}
                         <p>
                             {if $language == "de"}
-								write me
+								Dies ist der Teil deines Scans, in dem wir versuchten einen Code zu finden:
 							{elseif $language == "nl"}
 								WRITE ME
 							{else}
@@ -244,7 +254,10 @@
                 {else}
                     <p>
 						{if $language == "de"}
-							write me
+							Dies kann einige Minuten dauern.
+							Du musst das Browserfenster nicht geöffnet halten.
+							Setze ein Lesezeichen für diese <a href="{$base_dir}/scan.php?id={$scan.id|escape}">Seite</a>
+							und schaue später nocheinmal vorbei.
 						{elseif $language == "nl"}
 							WRITE ME
 						{else}
