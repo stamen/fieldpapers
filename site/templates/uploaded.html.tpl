@@ -41,7 +41,8 @@
     
     <p>
 		{if $language == "de"}
-            write me
+            Du hast eine gescannte Karte hochgeladen, bitte füge ein paar 
+			Informationen hinzu bevor du fortfährst.
         {elseif $language == "nl"}
             WRITE ME
         {else}
@@ -54,7 +55,7 @@
         {*
         <p>
             {if $language == "de"}
-				write me
+				privat?
 			{elseif $language == "nl"}
 				WRITE ME
 			{else}
@@ -67,20 +68,38 @@
         <p>
             <label>
                 {if $language == "de"}
-					write me
+					Planst du dies selbst zu bearbeiten?
 				{elseif $language == "nl"}
 					WRITE ME
 				{else}
 					Do you plan to edit this yourself?
 				{/if}
                 <select name="will_edit">
-                    <option label="Yes" value="yes" {if $scan.will_edit == 'yes'}selected="selected"{/if}>Yes</option>
-                    <option label="No" value="no"  {if $scan.will_edit == 'no'}selected="selected"{/if}>No</option>
+                    <option label="Yes" value="yes" {if $scan.will_edit == 'yes'}selected="selected"{/if}>
+						{if $language == "de"}
+							Ja
+						{elseif $language == "nl"}
+							WRITE ME
+						{else}
+							Yes
+						{/if}	
+					</option>
+                    <option label="No" value="no"  {if $scan.will_edit == 'no'}selected="selected"{/if}>
+						{if $language == "de"}
+							Nein
+						{elseif $language == "nl"}
+							WRITE ME
+						{else}
+							No
+						{/if}
+					</option>
                 </select>
             </label>
             <br />
 				{if $language == "de"}
-					write me
+					Du musst die Bearbeitung für OpenStreetmap nicht selbst durchführen.
+					Mit "Nein" zeigst du anderen Beteiligten, dass sie bei der Bearbeitung
+					des Scans mithelfen können.
 				{elseif $language == "nl"}
 					WRITE ME
 				{else}
@@ -90,9 +109,9 @@
         </p>
     
         <p>
-            <label for="descripion">
+            <label for="description">
 				{if $language == "de"}
-					write me
+					Beschreibe deine Ergänzungen.
 				{elseif $language == "nl"}
 					WRITE ME
 				{else}
@@ -101,7 +120,8 @@
 				</label>
             <br />
 				{if $language == "de"}
-					write me
+					Hast du Geschäfte hinzugefügt, Fußwege korrigiert, Ampeln markiert oder
+					Briefkästen eingetragen? Hier kannst du deine Änderungen beschreiben.
 				{elseif $language == "nl"}
 					WRITE ME
 				{else}
