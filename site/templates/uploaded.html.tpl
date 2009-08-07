@@ -40,36 +40,94 @@
 		</h2>
     
     <p>
-        You’ve just uploaded a scanned map, and you’re about to add
-        a few bits of information about before you proceed to trace it.
+		{if $language == "de"}
+            Du hast eine gescannte Karte hochgeladen, bitte füge ein paar 
+			Informationen hinzu bevor du fortfährst.
+        {elseif $language == "nl"}
+            WRITE ME
+        {else}
+			You’ve just uploaded a scanned map, and you’re about to add
+			a few bits of information about before you proceed to trace it.
+		{/if}
     </p>
     
     <form action="{$base_dir}/scan.php?id={$scan.id|escape}" method="post" enctype="multipart/form-data">
         {*
         <p>
-            private?
+            {if $language == "de"}
+				privat?
+			{elseif $language == "nl"}
+				WRITE ME
+			{else}
+				private?
+			{/if}
             <input type="checkbox" value="yes" name="is_private" {if $scan.is_private == 'yes'}checked="checked"{/if} />
         </p>
         *}
     
         <p>
             <label>
-                Do you plan to edit this yourself?
+                {if $language == "de"}
+					Planst du dies selbst zu bearbeiten?
+				{elseif $language == "nl"}
+					WRITE ME
+				{else}
+					Do you plan to edit this yourself?
+				{/if}
                 <select name="will_edit">
-                    <option label="Yes" value="yes" {if $scan.will_edit == 'yes'}selected="selected"{/if}>Yes</option>
-                    <option label="No" value="no"  {if $scan.will_edit == 'no'}selected="selected"{/if}>No</option>
+                    <option label="Yes" value="yes" {if $scan.will_edit == 'yes'}selected="selected"{/if}>
+						{if $language == "de"}
+							Ja
+						{elseif $language == "nl"}
+							WRITE ME
+						{else}
+							Yes
+						{/if}	
+					</option>
+                    <option label="No" value="no"  {if $scan.will_edit == 'no'}selected="selected"{/if}>
+						{if $language == "de"}
+							Nein
+						{elseif $language == "nl"}
+							WRITE ME
+						{else}
+							No
+						{/if}
+					</option>
                 </select>
             </label>
             <br />
-            You don’t have to do your own OpenStreetMap editing. Saying “no”
-            will let other visitors know about scans they can help with.
+				{if $language == "de"}
+					Du musst die Bearbeitung für OpenStreetmap nicht selbst durchführen.
+					Mit "Nein" zeigst du anderen Beteiligten, dass sie bei der Bearbeitung
+					des Scans mithelfen können.
+				{elseif $language == "nl"}
+					WRITE ME
+				{else}
+					You don’t have to do your own OpenStreetMap editing. Saying “no”
+					will let other visitors know about scans they can help with.
+				{/if}
         </p>
     
         <p>
-            <label for="descripion">Describe your additions.</label>
+            <label for="description">
+				{if $language == "de"}
+					Beschreibe deine Ergänzungen.
+				{elseif $language == "nl"}
+					WRITE ME
+				{else}
+					Describe your additions.
+				{/if}
+				</label>
             <br />
-            Did you add businesses, fix footpaths, mark traffic lights, outline parks,
-            place mailboxes? Write a few words about the changes to this area.
+				{if $language == "de"}
+					Hast du Geschäfte hinzugefügt, Fußwege korrigiert, Ampeln markiert oder
+					Briefkästen eingetragen? Hier kannst du deine Änderungen beschreiben.
+				{elseif $language == "nl"}
+					WRITE ME
+				{else}
+					Did you add businesses, fix footpaths, mark traffic lights, outline parks,
+					place mailboxes? Write a few words about the changes to this area.
+				{/if}
             <br />
             <textarea name="description" rows="10" cols="40">{$scan.description|escape}</textarea>
         </p>

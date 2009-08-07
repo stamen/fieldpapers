@@ -210,7 +210,14 @@
                 <option label="{$label}" value="landscape">{$label}</option>
             </select>
     
-            <input class="mac-button" type="submit" name="action" value="Make" />
+            <input class="mac-button" type="submit" name="action" value="Make" label="{$label}"/>
+			    {if $language == "de"}
+                    {assign var="label" value="Erstellen"}
+                {elseif $language == "nl"}
+                    {assign var="label" value="WRITE ME"}
+                {else}
+                    {assign var="label" value="Make"}
+                {/if}
         </p>
     </form>
 
