@@ -92,7 +92,15 @@
 
     <form onsubmit="return getPlaces(this.elements['q'].value, this.elements['appid'].value);">
         <input type="text" name="q" size="24" />
-        <input class="mac-button" type="submit" name="action" value="Find" />
+
+        {if $language == "de"}
+            {assign var="label" value="WRITE ME"}
+        {elseif $language == "nl"}
+            {assign var="label" value="WRITE ME"}
+        {else}
+            {assign var="label" value="Find"}
+        {/if}
+        <input class="mac-button" type="submit" name="action" value="{$label}" />
         <input type="hidden" name="appid" value="{$constants.GEOPLANET_APPID|escape}" />
         <span id="watch-cursor" style="visibility: hidden;"><img src="{$base_dir}/watch.gif" align="top" vspace="4" /></span>
     </form>
@@ -210,14 +218,14 @@
                 <option label="{$label}" value="landscape">{$label}</option>
             </select>
     
-            <input class="mac-button" type="submit" name="action" value="Make" label="{$label}"/>
-			    {if $language == "de"}
-                    {assign var="label" value="Erstellen"}
-                {elseif $language == "nl"}
-                    {assign var="label" value="WRITE ME"}
-                {else}
-                    {assign var="label" value="Make"}
-                {/if}
+            {if $language == "de"}
+                {assign var="label" value="Erstellen"}
+            {elseif $language == "nl"}
+                {assign var="label" value="WRITE ME"}
+            {else}
+                {assign var="label" value="Make"}
+            {/if}
+            <input class="mac-button" type="submit" name="action" value="{$label}" />
         </p>
     </form>
 
