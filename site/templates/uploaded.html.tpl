@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en">
+<html lang="{$language|default:"en"}">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{strip}
         {if $language == "de"}
             Scan hochgeladen
         {elseif $language == "nl"}
-            WRITE ME
+            Scan uploaden
         {else}
             Uploaded Scan
         {/if}
@@ -33,8 +33,8 @@
 		{if $language == "de"}
 			Du hast eine gescannte Karte hochgeladen
 		{elseif $language == "nl"}
-            WRITE ME
-        {else}
+            		Je hebt een gescande kaart geupload
+	        {else}
 			You’ve Uploaded A Scanned Map
 		{/if}	
 		</h2>
@@ -44,7 +44,7 @@
             Du hast eine gescannte Karte hochgeladen, bitte füge ein paar 
 			Informationen hinzu bevor du fortfährst.
         {elseif $language == "nl"}
-            WRITE ME
+            Je hebt een gescande kaart geupload, vul de volgende informatie in alvorens je begint met verwerken.
         {else}
 			You’ve just uploaded a scanned map, and you’re about to add
 			a few bits of information about before you proceed to trace it.
@@ -57,7 +57,7 @@
             {if $language == "de"}
 				privat?
 			{elseif $language == "nl"}
-				WRITE ME
+				privé?
 			{else}
 				private?
 			{/if}
@@ -70,7 +70,7 @@
                 {if $language == "de"}
 					Planst du dies selbst zu bearbeiten?
 				{elseif $language == "nl"}
-					WRITE ME
+					Wil je zelf de wijzigingen verwerken?
 				{else}
 					Do you plan to edit this yourself?
 				{/if}
@@ -78,7 +78,7 @@
                     {if $language == "de"}
                         {assign var="label" value="Ja"}
                     {elseif $language == "nl"}
-                        {assign var="label" value="WRITE ME"}
+                        {assign var="label" value="Ja"}
                     {else}
                         {assign var="label" value="Yes"}
                     {/if}	
@@ -86,7 +86,7 @@
                     {if $language == "de"}
                         {assign var="label" value="Nein"}
                     {elseif $language == "nl"}
-                        {assign var="label" value="WRITE ME"}
+                        {assign var="label" value="Nee"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}	
@@ -99,7 +99,8 @@
 					Mit "Nein" zeigst du anderen Beteiligten, dass sie bei der Bearbeitung
 					des Scans mithelfen können.
 				{elseif $language == "nl"}
-					WRITE ME
+					Je hoeft niet alleen de OpenStreetMap verwerking te doen. “Nee”
+					antwoorden geeft andere gebruikers de mogelijkheid te helpen.
 				{else}
 					You don’t have to do your own OpenStreetMap editing. Saying “no”
 					will let other visitors know about scans they can help with.
@@ -111,7 +112,7 @@
 				{if $language == "de"}
 					Beschreibe deine Ergänzungen.
 				{elseif $language == "nl"}
-					WRITE ME
+					Beschrijf jou toevoegingen.
 				{else}
 					Describe your additions.
 				{/if}
@@ -121,7 +122,8 @@
 					Hast du Geschäfte hinzugefügt, Fußwege korrigiert, Ampeln markiert oder
 					Briefkästen eingetragen? Hier kannst du deine Änderungen beschreiben.
 				{elseif $language == "nl"}
-					WRITE ME
+					Heb je bedrijven toegevoegd, voetpaden verbeterd, verkeerslichten aangeduid, parkgrenzen getekend
+					Of bijvoorbeeld brievenbussen in kaart gebracht? Beschrijf kort wat jij hebt veranderd.
 				{else}
 					Did you add businesses, fix footpaths, mark traffic lights, outline parks,
 					place mailboxes? Write a few words about the changes to this area.

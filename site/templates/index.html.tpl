@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en">
+<html lang="{$language|default:"en"}">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Walking Papers</title>
@@ -25,7 +25,7 @@
         {if $language == "de"}
             Zuletzt gescannt
         {elseif $language == "nl"}
-            WRITE ME
+            Recente scans
         {else}
             Recent Scans
         {/if}
@@ -69,7 +69,7 @@
             {if $language == "de"}
                 Weitere Scans...
             {elseif $language == "nl"}
-                WRITE ME
+                Meer scans...
             {else}
                 More recent scans...
             {/if}
@@ -81,7 +81,7 @@
             {if $language == "de"}
                 Einen Ausdruck erstellen
             {elseif $language == "nl"}
-                WRITE ME
+                Een afdruk maken
             {else}
                 Make A Print
             {/if}
@@ -96,7 +96,7 @@
         {if $language == "de"}
             {assign var="label" value="Suchen"}
         {elseif $language == "nl"}
-            {assign var="label" value="WRITE ME"}
+            {assign var="label" value="Zoek"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -126,7 +126,7 @@
             {if $language == "de"}
                 Ein Zoom-Level von <b>14 oder mehr</b> wird für das Erfassen von Details auf Straßenebene empfohlen.
             {elseif $language == "nl"}
-                WRITE ME
+                We raden aan een zoom niveau van <b>14 of hoger</b> te kiezen om optimaal gebruik te kunnen maken van de afdruk.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -202,7 +202,7 @@
             {if $language == "de"}
                 Ausrichtung:
             {elseif $language == "nl"}
-                WRITE ME
+                Papier oriëntatie:
             {else}
                 Orientation:
             {/if}
@@ -210,7 +210,7 @@
                 {if $language == "de"}
                     {assign var="label" value="Hochformat"}
                 {elseif $language == "nl"}
-                    {assign var="label" value="WRITE ME"}
+                    {assign var="label" value="Staand"}
                 {else}
                     {assign var="label" value="Portrait"}
                 {/if}
@@ -219,7 +219,7 @@
                 {if $language == "de"}
                     {assign var="label" value="Querformat"}
                 {elseif $language == "nl"}
-                    {assign var="label" value="WRITE ME"}
+                    {assign var="label" value="Liggend"}
                 {else}
                     {assign var="label" value="Landscape"}
                 {/if}
@@ -229,7 +229,7 @@
             {if $language == "de"}
                 {assign var="label" value="Erstellen"}
             {elseif $language == "nl"}
-                {assign var="label" value="WRITE ME"}
+                {assign var="label" value="Samenstellen"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -241,7 +241,7 @@
         {if $language == "de"}
             Zuletzt gedruckt
         {elseif $language == "nl"}
-            WRITE ME
+            Recente afdrukken
         {else}
             Recent Prints
         {/if}
@@ -277,7 +277,7 @@
             {if $language == "de"}
                 Weitere Ausdrucke...
             {elseif $language == "nl"}
-                WRITE ME
+                Meer recente afdrukken...
             {else}
                 More recent prints...
             {/if}
