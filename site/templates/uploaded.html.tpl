@@ -129,8 +129,15 @@
             <br />
             <textarea name="description" rows="10" cols="40">{$scan.description|escape}</textarea>
         </p>
-    
-        <input class="mac-button" type="submit" value="Save">
+		
+		{if $language == "de"}
+            {assign var="label" value="Speichern"}
+        {elseif $language == "nl"}
+            {assign var="label" value="WRITE ME"}
+        {else}
+            {assign var="label" value="Save"}
+        {/if}
+        <input class="mac-button" type="submit" value="{$label}">
     </form>
     
     {include file="footer.htmlf.tpl"}

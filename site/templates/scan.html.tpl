@@ -149,7 +149,14 @@
                     {include file="$language/scan-potlatch-info.htmlf.tpl"}
 
                     <p>
-                        <input class="mac-button" name="action" type="submit" value="Edit" />
+						{if $language == "de"}
+							{assign var="label" value="Bearbeiten"}
+						{elseif $language == "nl"}
+							{assign var="label" value="WRITE ME"}
+						{else}
+							{assign var="label" value="Edit"}
+						{/if}
+					    <input class="mac-button" name="action" type="submit" value="{$label}" />
                         <input name="minrow" type="hidden" value="{$scan.min_row|escape}" />
                         <input name="mincolumn" type="hidden" value="{$scan.min_column|escape}" />
                         <input name="minzoom" type="hidden" value="{$scan.min_zoom|escape}" />

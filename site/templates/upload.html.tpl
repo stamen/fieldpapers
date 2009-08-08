@@ -32,7 +32,15 @@
         <input name="signature" type="hidden" value="{$post.signature|escape}">
         
         <input name="file" type="file">
-        <input class="mac-button" type="submit" value="Send">
+		
+		{if $language == "de"}
+            {assign var="label" value="Hochladen"}
+        {elseif $language == "nl"}
+            {assign var="label" value="WRITE ME"}
+        {else}
+            {assign var="label" value="Send"}
+        {/if}
+        <input class="mac-button" type="submit" value="{$label}">
 		
     </form>
     
