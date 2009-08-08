@@ -75,24 +75,22 @@
 					Do you plan to edit this yourself?
 				{/if}
                 <select name="will_edit">
-                    <option label="Yes" value="yes" {if $scan.will_edit == 'yes'}selected="selected"{/if}>
-						{if $language == "de"}
-							Ja
-						{elseif $language == "nl"}
-							WRITE ME
-						{else}
-							Yes
-						{/if}	
-					</option>
-                    <option label="No" value="no"  {if $scan.will_edit == 'no'}selected="selected"{/if}>
-						{if $language == "de"}
-							Nein
-						{elseif $language == "nl"}
-							WRITE ME
-						{else}
-							No
-						{/if}
-					</option>
+                    {if $language == "de"}
+                        {assign var="label" value="Ja"}
+                    {elseif $language == "nl"}
+                        {assign var="label" value="WRITE ME"}
+                    {else}
+                        {assign var="label" value="Yes"}
+                    {/if}	
+                    <option label="{$label}" value="yes" {if $scan.will_edit == 'yes'}selected="selected"{/if}>{$label}</option>
+                    {if $language == "de"}
+                        {assign var="label" value="Nein"}
+                    {elseif $language == "nl"}
+                        {assign var="label" value="WRITE ME"}
+                    {else}
+                        {assign var="label" value="No"}
+                    {/if}	
+                    <option label="{$label}" value="no"  {if $scan.will_edit == 'no'}selected="selected"{/if}>{$label}</option>
                 </select>
             </label>
             <br />
