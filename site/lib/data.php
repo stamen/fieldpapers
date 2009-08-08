@@ -36,6 +36,12 @@
         return $signed_string;
     }
     
+   /**
+    * Return userdata (user ID, language) based on a signed string and an accept-language string.
+    * @param    string  $signed_string  JSON string, generally from a cookie, signed with an MD5 hash
+    * @param    string  $accept_language_header Content of the HTTP Accept-Language request header, e.g. "en-us,en;q=0.5"
+    * @return   string  Array with user ID and user language.
+    */
     function read_userdata($signed_string, $accept_language_header)
     {
         $default_language = get_preferred_language($accept_language_header);
@@ -63,7 +69,7 @@
         }
 
         //error_log("found no userdata in: {$signed_string}\n", 3, dirname(__FILE__).'/../tmp/log.txt');
-        return array(null, null);
+        return array(null, $default_language);
     }
     
    /**
