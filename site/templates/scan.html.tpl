@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en">
+<html lang="{$language|default:"en"}">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{strip}
         {if $language == "de"}
             Gescannte Karte #{$scan.id|escape}
         {elseif $language == "nl"}
-            WRITE ME
+            Gescande kaart #{$scan.id|escape}
         {else}
             Scanned Map #{$scan.id|escape}
         {/if}
@@ -55,7 +55,7 @@
                 {if $language == "de"}
                     Gescannte Karte
                 {elseif $language == "nl"}
-                    WRITE ME
+                    Gescande kaart
                 {else}
                     Scanned Map
                 {/if}
@@ -71,7 +71,7 @@
                 {if $language == "de"}
                     Umfasst diesen Bereich
                 {elseif $language == "nl"}
-                    WRITE ME
+                    Omvat het gebied rondom
                 {else}
                     Covers the area near
                 {/if}
@@ -90,7 +90,7 @@
 				{if $language == "de"}
 					Hochgeladen {$scan.age|nice_relativetime|escape}.
 				{elseif $language == "nl"}
-					WRITE ME
+					{$scan.age|nice_relativetime|escape} geupload.
 				{else}
 					Uploaded {$scan.age|nice_relativetime|escape}.
 				{/if}
@@ -122,8 +122,8 @@
                     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">neue Version der Karte des Gebietes vom Ausdruck #{$scan.print_id|escape} herunterladen</a>.
 
                 {elseif $language == "nl"}
-                    WRITE ME
-                    <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">LINK</a>
+                    Een
+                    <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">nieuwe kaart van dit gebied</a> downloaden.
 
                 {else}
                     Download a
@@ -135,7 +135,7 @@
                 {if $language == "de"}
                     Karte bearbeiten
                 {elseif $language == "nl"}
-                    WRITE ME
+                    Kaart bewerken
                 {else}
                     Edit The Map
                 {/if}
@@ -176,7 +176,11 @@
 						Falls das nicht hilft, kannst du uns 
 						<a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">kontaktieren</a>.
 					{elseif $language == "nl"}
-						WRITE ME
+						Probeer eventueel opnieuw de scan te uploaden, zorg er daarbij voor
+						dat de resolutie voldoende is (meer dan 200 dpi) en met de rechterzijde naar boven.
+						Hierbij is het belangrijk dat de <a href="http://en.wikipedia.org/wiki/QR_Code">QR Code</a>
+						goed leesbaar is. Wanneer dat niet helpt, 
+						<a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">laat het ons weten</a>.
 					{else}
 						You might try uploading your scan again, making sure that
 						it’s at a reasonably high resolution (200+ dpi for a full
@@ -192,7 +196,7 @@
 						{if $language == "de"}
 							Dies ist der Teil deines Scans, in dem wir versuchten einen Code zu finden:
 						{elseif $language == "nl"}
-							WRITE ME
+							Hier is een deel van de scan waarop ons systeem geprobeerd heeft de code te vinden:
 						{else}
 							Here’s the part of your scan where we tried to find a code:
 						{/if}
@@ -207,7 +211,7 @@
 					{if $language == "de"}
 						Das gescannte Bild wird vearbeitet.
 					{elseif $language == "nl"}
-						WRITE ME
+						De gescande afbeelding wordt verwerkt.
 					{else}
 						Processing your scanned image.
 					{/if}
@@ -229,7 +233,8 @@
 							{$step.number|step_description|escape}, bitte warten.
 							Wir versuchen deinen Scan bald zu verarbeiten.
 						{elseif $language == "nl"}
-							WRITE ME
+							{$step.number|step_description|escape}, een ogenblik geduld alstublieft.
+							We proberen de scan opnieuw te verwerken.
 						{else}
 							{$step.number|step_description|escape}, please stand by.
 							We will try to process your scan again shortly.
@@ -241,7 +246,7 @@
                             {if $language == "de"}
 								Dies ist der Teil deines Scans, in dem wir versuchten einen Code zu finden:
 							{elseif $language == "nl"}
-								WRITE ME
+								Hier is het deel van de scan waarop ons systeem geprobeerd heeft de code te vinden:
 							{else}
 								Here’s the part of your scan where we tried to find a code:
 							{/if}
@@ -259,7 +264,10 @@
 							Setze ein Lesezeichen für diese <a href="{$base_dir}/scan.php?id={$scan.id|escape}">Seite</a>
 							und schaue später nocheinmal vorbei.
 						{elseif $language == "nl"}
-							WRITE ME
+							Het kan even duren, meestal een paar minuten.
+							Het is niet nodig deze pagina open te houden, je kunt ook een 
+							<a href="{$base_dir}/scan.php?id={$scan.id|escape}">bookmark</a> van deze pagina
+							maken en later terugkomen.
 						{else}
 							This may take a little while, generally a few minutes.
 							You don’t need to keep this browser window open—you can

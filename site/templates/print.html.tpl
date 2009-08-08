@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en">
+<html lang="{$language|default:"en"}">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{strip}
         {if $language == "de"}
             Drucken #{$print.id|escape}
         {elseif $language == "nl"}
-            WRITE ME
+            #{$print.id|escape} afdrukken
         {else}
             Print #{$print.id|escape}
         {/if}
@@ -33,7 +33,7 @@
         {if $language == "de"}
             Karte drucken
         {elseif $language == "nl"}
-            WRITE ME
+            Kaart afdrukken
         {else}
             Print Map
         {/if}
@@ -53,7 +53,7 @@
                 {if $language == "de"}
                     Ist diese Karte falsch oder veraltet?
                 {elseif $language == "nl"}
-                    WRITE ME
+                    Is deze kaart onjuist of verouderd?
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
