@@ -57,7 +57,15 @@
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
-                <input class="mac-button" type="submit" name="action" value="Redo" />
+				
+				{if $language == "de"}
+					{assign var="label" value="Aktualisieren"}
+				{elseif $language == "nl"}
+					{assign var="label" value="WRITE ME"}
+				{else}
+					{assign var="label" value="Redo"}
+				{/if}
+                <input class="mac-button" type="submit" name="action" value="{$label}" />
             </p>
         </form>
     {/if}

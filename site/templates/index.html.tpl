@@ -94,7 +94,7 @@
         <input type="text" name="q" size="24" />
 
         {if $language == "de"}
-            {assign var="label" value="WRITE ME"}
+            {assign var="label" value="Suchen"}
         {elseif $language == "nl"}
             {assign var="label" value="WRITE ME"}
         {else}
@@ -156,7 +156,15 @@
                 map.setExtent([sw, ne]);
 
             } else {
-                alert("Sorry, I couldn't find a place by that name.");
+                alert(
+					{if $language == "de"}
+						"Sorry, es konnte kein Ort mit diesem Namen gefunden werden."
+					{elseif $language == "nl"}
+						WRITE ME
+					{else}
+						"Sorry, I couldn't find a place by that name."
+					{/if}	
+					);
             }
         }
         
