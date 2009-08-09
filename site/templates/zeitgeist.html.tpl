@@ -22,9 +22,9 @@
     
     <h2>{strip}
         {if $language == "de"}
-            Statistieken
+            Statistik
         {elseif $language == "nl"}
-            WRITE ME
+            Statistieken
         {else}
             Zeitgeist
         {/if}
