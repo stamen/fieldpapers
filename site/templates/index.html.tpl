@@ -48,10 +48,10 @@
     
                     <script type="text/javascript" language="javascript1.2" defer="defer">
                     // <![CDATA[
-                    
-                        var onPlaces_{$rscan.id|escape} = new Function('res', "appendPlacename(res, document.getElementById('scan-{$rscan.id|escape}'))");
-                        getPlacename({$rscan.print_latitude|escape}, {$rscan.print_longitude|escape}, '{$constants.FLICKR_KEY|escape}', 'onPlaces_{$rscan.id|escape}');
-                
+                        {if $rscan.print_latitude && $rscan.print_longitude}
+                            var onPlaces_{$rscan.id|escape} = new Function('res', "appendPlacename(res, document.getElementById('scan-{$rscan.id|escape}'))");
+                            getPlacename({$rscan.print_latitude|escape}, {$rscan.print_longitude|escape}, '{$constants.FLICKR_KEY|escape}', 'onPlaces_{$rscan.id|escape}');
+                        {/if}
                     // ]]>
                     </script>
                 {/if}
@@ -261,10 +261,10 @@
                         <b id="print-{$rprint.id|escape}">{$rprint.age|nice_relativetime|escape}</b></a>
                     <script type="text/javascript" language="javascript1.2" defer="defer">
                     // <![CDATA[
-                    
-                        var onPlaces_{$rprint.id|escape} = new Function('res', "appendPlacename(res, document.getElementById('print-{$rprint.id|escape}'))");
-                        getPlacename({$rprint.latitude|escape}, {$rprint.longitude|escape}, '{$constants.FLICKR_KEY|escape}', 'onPlaces_{$rprint.id|escape}');
-                
+                        {if $rprint.latitude && $rprint.longitude}
+                            var onPlaces_{$rprint.id|escape} = new Function('res', "appendPlacename(res, document.getElementById('print-{$rprint.id|escape}'))");
+                            getPlacename({$rprint.latitude|escape}, {$rprint.longitude|escape}, '{$constants.FLICKR_KEY|escape}', 'onPlaces_{$rprint.id|escape}');
+                        {/if}
                     // ]]>
                     </script>
                 {/if}
