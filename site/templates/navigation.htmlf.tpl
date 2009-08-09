@@ -12,11 +12,11 @@
         <a href="{$base_dir}/about.php">Über</a>
 
     {elseif $language == "nl"}
-        <a href="{$base_dir}/">Home</a>
+        <a href="{$base_dir}/">Index</a>
         <a href="{$base_dir}/prints.php">Afdrukken</a>
         <a href="{$base_dir}/scans.php">Scans</a>
         <a href="{$base_dir}/upload.php">Upload</a>
-        <a href="{$base_dir}/zeitgeist.php">Zeitgeist</a>
+        <a href="{$base_dir}/zeitgeist.php">Statistiek</a>
         <a href="{$base_dir}/about.php">Over</a>
 
     {else}
