@@ -156,15 +156,15 @@
                 map.setExtent([sw, ne]);
 
             } else {
-                alert(
-					{if $language == "de"}
-						"Sorry, es konnte kein Ort mit diesem Namen gefunden werden."
-					{elseif $language == "nl"}
-						WRITE ME
-					{else}
-						"Sorry, I couldn't find a place by that name."
-					{/if}	
-					);
+                {/literal}
+                {if $language == "de"}
+                    alert("Sorry, es konnte kein Ort mit diesem Namen gefunden werden.");
+                {elseif $language == "nl"}
+                    alert('WRITE ME');
+                {else}
+                    alert("Sorry, I couldn't find a place by that name.");
+                {/if}	
+                {literal}
             }
         }
         
