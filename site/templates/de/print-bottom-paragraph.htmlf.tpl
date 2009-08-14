@@ -1,9 +1,8 @@
 <p>
-    Falls du keinen Drucker hast, sende uns einen  Brief
-    <b><a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">self-addressed, stamped envelope</a>
-    with the print ID, “{$print.id}”,</b> and we’ll mail you a printed copy of this map. If you don’t have a scanner,
-    mail us your printed map and an <b>e-mail address</b> and we’ll scan it for
-    you.
+    Falls du keinen Drucker hast, sende uns einen
+    <b><a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">frankierten Brief mit einem adressierten Rückumschlag</a>
+    mit der Ausdruck ID, “{$print.id}”,</b> und wir erstellen dir einen Ausdruck dieser Karte. Falls du keinen Scanner hast, sende uns die ausgedruckte und beschriftete Karte und eine <b>E-Mail-Adresse</b> und wir scannen die Karte für dich ein. 
+    Im Moment ist nur eine Adresse in den USA verfügbar, jedoch wird es auch bald einen Druck- und Scan-Service in Deutschland geben.
 </p>
 
 <blockquote>
