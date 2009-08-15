@@ -7,7 +7,7 @@ body
     color: black;
 }
 
-h1, h2, h3, p, form, ol, blockquote
+h1, h2, h3, p, form, ol, ul, blockquote
 {
     margin: 1em auto;
     width: 408px;
@@ -44,7 +44,7 @@ h3
     font-size: 1.6em;
 }
 
-p, ol, blockquote
+p, ol, ul, blockquote
 {
     font-size: 1.5em;
 }
@@ -83,7 +83,8 @@ form.language
 }
 
     form.language button,
-    form.language button.selected
+    form.language button.selected,
+    form.language a
     {
         font-family: Helvetica, Arial, sans-serif;
         font-size: 1em;
