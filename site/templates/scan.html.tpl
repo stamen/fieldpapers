@@ -6,7 +6,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{strip}
         {if $language == "de"}
-            Gescannte Karte #{$scan.id|escape}
+            Eingescannte Karte #{$scan.id|escape}
         {elseif $language == "nl"}
             Gescande kaart #{$scan.id|escape}
         {else}
@@ -53,7 +53,7 @@
         {if $scan.last_step == $constants.STEP_FINISHED}
             <h2>{strip}
                 {if $language == "de"}
-                    Gescannte Karte
+                    Eingescannte Karte
                 {elseif $language == "nl"}
                     Gescande kaart
                 {else}
