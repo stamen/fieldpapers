@@ -6,7 +6,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{strip}
         {if $language == "de"}
-            Drucken #{$print.id|escape}
+            #{$print.id|escape} ausdrucken
         {elseif $language == "nl"}
             #{$print.id|escape} afdrukken
         {else}

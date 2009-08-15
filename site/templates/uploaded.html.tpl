@@ -31,7 +31,7 @@
     
     <h2>
 		{if $language == "de"}
-			Du hast eine gescannte Karte hochgeladen
+			Du hast eine eingescannte Karte hochgeladen
 		{elseif $language == "nl"}
             		Je hebt een gescande kaart geupload
 	        {else}
@@ -41,7 +41,7 @@
     
     <p>
 		{if $language == "de"}
-            Du hast eine gescannte Karte hochgeladen, bitte füge ein paar 
+            Du hast eine eingescannte Karte hochgeladen, bitte füge ein paar 
 			Informationen hinzu bevor du fortfährst.
         {elseif $language == "nl"}
             Je hebt een gescande kaart geupload, vul de volgende informatie in alvorens je begint met verwerken.

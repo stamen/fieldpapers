@@ -26,5 +26,5 @@
 </p>
 <p>
     Dieses Eingabefeld wird anschließend durch ein interaktives Bearbeitungsfenster
-	mit deiner gescannten Karte als Hintergrund zur Orientierung ersetzt.
+	mit deiner eingescannten Karte als Hintergrund zur Orientierung ersetzt.
 </p>

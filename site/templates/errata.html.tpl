@@ -6,7 +6,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{strip}
         {if $language == "de"}
-            WRITE ME
+            Fehlerverzeichnis
         {elseif $language == "nl"}
             Foutenlijst
         {else}
@@ -20,18 +20,41 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    <h2>Errata</h2>
+    <h2>
+	    {if $language == "de"}
+            Fehlerverzeichnis
+        {elseif $language == "nl"}
+            Foutenlijst
+        {else}
+            Errata
+        {/if}
+	</h2>
     
     <p>
-        I have been informed that “Errata” does not mean what I thought it meant:
-        <i><a href="http://dictionary.reference.com/search?q=errata">Errata</a> -
-        a list of errors and their corrections inserted, usually on a separate
-        page or slip of paper, in a book or other publication.</i>
+		{if $language == "de"}
+            
+        {elseif $language == "nl"}
+            I have been informed that “Errata” does not mean what I thought it meant:
+			<i><a href="http://dictionary.reference.com/search?q=errata">Errata</a> -
+			a list of errors and their corrections inserted, usually on a separate
+			page or slip of paper, in a book or other publication.</i>
+        {else}
+			I have been informed that “Errata” does not mean what I thought it meant:
+			<i><a href="http://dictionary.reference.com/search?q=errata">Errata</a> -
+			a list of errors and their corrections inserted, usually on a separate
+			page or slip of paper, in a book or other publication.</i>
     </p>
    
     <p>
-        I thought it was more like a list of random, “erratic” stuff that didn’t fit anyplace
-        else. So, this page has <a href="{$base_dir}/zeitgeist.php">moved to “zeitgeist”</a>.
+        {if $language == "de"}
+            Diese Seite wurde zu <a href="{$base_dir}/zeitgeist.php">Statistik</a> verschoben.
+        {elseif $language == "nl"}
+            I thought it was more like a list of random, “erratic” stuff that didn’t fit anyplace else.
+			So, this page has <a href="{$base_dir}/zeitgeist.php">moved to “zeitgeist”</a>.
+        {else}
+			I thought it was more like a list of random, “erratic” stuff that didn’t fit anyplace else.
+			So, this page has <a href="{$base_dir}/zeitgeist.php">moved to “zeitgeist”</a>.
+		{/if}
     </p>
     
     {include file="footer.htmlf.tpl"}

@@ -7,7 +7,7 @@
         Kartendaten <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
             <a href="http://openstreetmap.org">OpenStreetMap</a>
         <br />
-        Web und Druck Kartographie &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
+        Web- und Druck-Kartographie &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
         <br />
         German translation by Jonas Krückel
         <br />
