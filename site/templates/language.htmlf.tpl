@@ -9,7 +9,8 @@
         {if $language == "de"}
             (<a href="{$base_dir}/language.php"><abbr title="Lokalisierung">l10n</abbr></a>)
         {elseif $language == "nl"}
-            (<a href="{$base_dir}/language.php"><abbr title="WRITE ME">WRITE ME</abbr></a>)
+            {* nl: WRITE ME *}
+            (<a href="{$base_dir}/language.php"><abbr title="Localization">l10n</abbr></a>)
         {else}
             (<a href="{$base_dir}/language.php"><abbr title="Localization">l10n</abbr></a>)
         {/if}

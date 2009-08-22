@@ -160,7 +160,8 @@
                 {if $language == "de"}
                     alert("Sorry, es konnte kein Ort mit diesem Namen gefunden werden.");
                 {elseif $language == "nl"}
-                    alert('WRITE ME');
+                    {* nl: WRITE ME *}
+                    alert("Sorry, I couldn't find a place by that name.");
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
                 {/if}	

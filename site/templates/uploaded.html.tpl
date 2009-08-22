@@ -135,7 +135,8 @@
 		{if $language == "de"}
             {assign var="label" value="Speichern"}
         {elseif $language == "nl"}
-            {assign var="label" value="WRITE ME"}
+            {* nl: WRITE ME *}
+            {assign var="label" value="Save"}
         {else}
             {assign var="label" value="Save"}
         {/if}
