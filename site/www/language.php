@@ -12,7 +12,11 @@
     die();
     */
     
+    $dbh =& get_db_connection();
+    
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+
+    $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
 
     if($_POST['language'])
     {
@@ -29,8 +33,8 @@
         header("Location: {$location}");
     }
     
-    if($user_id)
-        setcookie('visitor', write_userdata($user_id, $language), time() + 86400 * 31);
+    if($user['id'])
+        setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
 
     $sm = get_smarty_instance();
     $sm->assign('language', $language);
