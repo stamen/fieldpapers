@@ -152,7 +152,8 @@
 						{if $language == "de"}
 							{assign var="label" value="Bearbeiten"}
 						{elseif $language == "nl"}
-							{assign var="label" value="WRITE ME"}
+						    {* nl: WRITE ME *}
+							{assign var="label" value="Edit"}
 						{else}
 							{assign var="label" value="Edit"}
 						{/if}
