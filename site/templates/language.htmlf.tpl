@@ -7,7 +7,7 @@
         <button type="submit" class="{if $language == "nl"}selected{/if}" name="language" value="nl">Nederlands</button>
         
         {if $language == "de"}
-            (<a href="{$base_dir}/language.php"><abbr title="WRITE ME">l10n</abbr></a>)
+            (<a href="{$base_dir}/language.php"><abbr title="Lokalisierung">l10n</abbr></a>)
         {elseif $language == "nl"}
             (<a href="{$base_dir}/language.php"><abbr title="WRITE ME">WRITE ME</abbr></a>)
         {else}
