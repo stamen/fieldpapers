@@ -9,6 +9,9 @@
             #{$print.id|escape} ausdrucken
         {elseif $language == "nl"}
             #{$print.id|escape} afdrukken
+        {elseif $language == "es"}
+           Imprimir #{$print.id|escape} 
+            
         {else}
             Print #{$print.id|escape}
         {/if}
@@ -34,6 +37,8 @@
             Karte drucken
         {elseif $language == "nl"}
             Kaart afdrukken
+        {elseif $language == "es"}
+            Imprimir mapa
         {else}
             Print Map
         {/if}
@@ -54,6 +59,8 @@
                     Ist diese Karte falsch oder veraltet?
                 {elseif $language == "nl"}
                     Is deze kaart onjuist of verouderd?
+                {elseif $language == "nl"}
+                  ¿Es este mapa erróneo o desfasado?
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
@@ -63,6 +70,8 @@
 				{elseif $language == "nl"}
 				    {* nl: WRITE ME *}
 					{assign var="label" value="Redo"}
+			{elseif $language == "es"}
+  					{assign var="label" value="Repetir"}
 				{else}
 					{assign var="label" value="Redo"}
 				{/if}

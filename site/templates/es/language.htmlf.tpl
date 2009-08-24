@@ -1,27 +1,32 @@
-<h2>Localization</h2>
+<h2>Traducción</h2>
 
 <p>
-    Help us make Walking Papers available in a variety of languages. The <a href="http://github.com/migurski/paperwalking">project source code is hosted at Github</a>, corrections and complete translations can be performed by <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">forking the project code</a> and sending a pull request.
+    Ayudanos a que Walking Papers esté disponible en varios idiomas. El <a href="http://github.com/migurski/paperwalking">código del proyecto está disponible en Github</a>, correcciones y traducciones completas pueden hacerse <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">forkeando el proyecto</a> y haciendo una pull request.
 </p>
 
 <p>
-    We currently have translations in these languages:
+   Actualmente disponemos de traducciones a los siguientes idiomas:
 </p>
 
 <ul>
     <li>
-        <strong>English</strong>
+        <strong>Inglés</strong>
         <br/>
-        Original by <a href="http://github.com/migurski">Michal Migurski</a>
+        Original de <a href="http://github.com/migurski">Michal Migurski</a>
     </li>
     <li>
-        <strong>German</strong>
+        <strong>Alemán</strong>
         <br/>
-        Translation by <a href="http://github.com/John07">Jonas Krückel</a>
+        Traducción de <a href="http://github.com/John07">Jonas Krückel</a>
     </li>
     <li>
-        <strong>Dutch</strong>
+        <strong>Holandés</strong>
         <br/>
-        Translation by <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
+        Traducción de  <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
+    </li>
+    <li>
+        <strong>Español</strong>
+        <br/>
+        Traducción de <a href="http://github.com/mort">Manuel González Noriega</a>
     </li>
 </ul>

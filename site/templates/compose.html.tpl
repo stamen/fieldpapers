@@ -10,7 +10,7 @@
         {elseif $language == "nl"}
             Samenstellen
         {else}
-            Compose
+            Componer
         {/if}
     {/strip} (Walking Papers)</title>
 </head>

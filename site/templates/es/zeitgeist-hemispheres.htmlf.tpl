@@ -1,5 +1,5 @@
-<h3>Hemispheres</h3>
+<h3>Hemisferios</h3>
 
 <p>
-    Number of prints by hemisphere in the past month.
+    Número de impresiones por hemisferio durante el mes pasado.
 </p>

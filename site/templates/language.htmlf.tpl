@@ -11,6 +11,8 @@
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
             (<a href="{$base_dir}/language.php"><abbr title="Localization">l10n</abbr></a>)
+        {elseif $language == "es"}
+            (<a href="{$base_dir}/language.php"><abbr title="Localización">l10n</abbr></a>)    
         {else}
             (<a href="{$base_dir}/language.php"><abbr title="Localization">l10n</abbr></a>)
         {/if}

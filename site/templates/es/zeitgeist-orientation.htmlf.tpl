@@ -1,6 +1,7 @@
-<h3>Orientation</h3>
+<h3>Orientación</h3>
 
 <p>
-    Share of prints by orientation in the past month.
-    Landscape orientation was first introduced on June 20.
+    Porcentaje de impresiones por orientación durante el mes pasado.
+    La orientación apaisada está disponible desde el 20 de junio.
+    
 </p>
