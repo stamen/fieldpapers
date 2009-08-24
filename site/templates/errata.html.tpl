@@ -9,6 +9,8 @@
             Fehlerverzeichnis
         {elseif $language == "nl"}
             Foutenlijst
+        {elseif $language == "es"}
+           Fe de erratas    
         {else}
             Errata
         {/if}
@@ -25,6 +27,8 @@
             Fehlerverzeichnis
         {elseif $language == "nl"}
             Foutenlijst
+        {elseif $language == "es"}
+          Fe de erratas        
         {else}
             Errata
         {/if}
@@ -48,6 +52,8 @@
     <p>
         {if $language == "de"}
             Diese Seite wurde zu <a href="{$base_dir}/zeitgeist.php">Statistik</a> verschoben.
+            {if $language == "es"}
+                 Esta página se ha movido a <a href="{$base_dir}/zeitgeist.php">Estadísticas</a>.      
         {elseif $language == "nl"}
             I thought it was more like a list of random, “erratic” stuff that didn’t fit anyplace else.
 			So, this page has <a href="{$base_dir}/zeitgeist.php">moved to “zeitgeist”</a>.

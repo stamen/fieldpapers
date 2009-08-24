@@ -1,12 +1,12 @@
 <p>
-    You’ll need to log in with your OpenStreetMap account
-    to do any editing; do that below or
-    <a href="http://www.openstreetmap.org/user/new">create a new account</a>.
-    <strong><i>Walking Papers</i> will not see or keep your password</strong>,
-    it is passed directly to OpenStreetMap.
+    Necesitas entrar con tu cuenta de OpenStreetMap para hacer modificaciones; hazlo aquí debajo o
+    
+    <a href="http://www.openstreetmap.org/user/new">crea una nueva cuenta</a>.
+    <strong><i>Walking Papers</i> no tendrá acceso o guardará tu contraseña</strong>,
+    ésta es pasada directamente a OpenStreetMap.
 </p>
 <p>
-    <label for="username">Email Address or Username</label>
+    <label for="username">Email o nombre de usuario</label>
     <br />
     <input id="username-textfield" name="username" type="text" size="30" />
 </p>
@@ -19,13 +19,14 @@
 // {/literal}]]>
 </script>
 <p>
-    <label for="password">Password</label>
+    <label for="password">Contraseña</label>
     <br />
     <input name="password" type="password" size="30" />
     <br />
-    (<a href="http://www.openstreetmap.org/user/forgot-password">Lost your password?</a>)
+    (<a href="http://www.openstreetmap.org/user/forgot-password">¿Has perdido tu contraseña?</a>)
 </p>
+
+
 <p>
-    This form will be replaced by an interactive editing window
-    with your scanned map in the background for a guide.
+  Este formulario se reemplazará por una ventana de edición interactiva con tu mapa escaneado como fondo para servir de guía.
 </p>

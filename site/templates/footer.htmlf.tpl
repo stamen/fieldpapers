@@ -40,6 +40,9 @@
         German translation by Jonas Krückel
         <br />
         Dutch translation by Milo van der Linden
+        <br />
+        Spanish translation by Manuel González Noriega
+        
     {/if}
 </p>
 

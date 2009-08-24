@@ -1,10 +1,9 @@
-<h2>You’re Uploading A Scanned Map</h2>
+<h2>Estás subiendo un mapa escaneado</h2>
 
 <p>
-    You’re here because you have a paper version of a
-    <a href="{$base_dir}/prints.php">printed map</a> and you’d like to
-    send a scanned version to trace into OpenStreetMap.
-    Your scan should be a reasonably-high resolution
-    (200+ <a href="http://en.wikipedia.org/wiki/Dots_per_inch">dpi</a>)
-    image file, such as a JPEG. A PDF file will not work.
+    Estás aquí porque tienes una versión en papel de un 
+    <a href="{$base_dir}/prints.php">mapa impreso</a> y quieres enviar una versión escaneada para ser
+    traceada en OpenStreetMap
+    El scan debe ser una imagen, por ejemplo un JPG, a una resolución razonable
+    (200 o más <a href="http://es.wikipedia.org/wiki/Puntos_por_pulgadah">ppp</a>). Un archivo PDF no sirve.
 </p>

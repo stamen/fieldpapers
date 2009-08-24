@@ -1,10 +1,10 @@
 <p>
-    If you don’t have a printer, send us a
-    <b><a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">self-addressed, stamped envelope</a>
-    with the print ID, “{$print.id}”,</b> and we’ll mail you a printed copy of this map. If you don’t have a scanner,
-    mail us your printed map and an <b>e-mail address</b> and we’ll scan it for
-    you.
+    Si no tienes impresora, mándanos un 
+    <b><a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">sobre con sellos para la devolución y tu dirección</a>
+    con el ID de impresión, “{$print.id}”,</b> y te mandaremos por correo una copia impresa de este mapa. Si no tienes escáner,
+    mándanos por correo tu <b>direccíón de email</b> y lo escanearemos por ti.
 </p>
+
 
 <blockquote>
     Walking Papers<br />
@@ -14,6 +14,6 @@
 </blockquote>
 
 <p>
-    Please allow a few weeks for scanning and printing.
+    Déjanos unas semanas para escanear e imprimir.
 </p>
 

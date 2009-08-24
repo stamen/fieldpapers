@@ -1,9 +1,17 @@
 <p>
-    Why do scans fail? Based on the errors we’ve seen, scans seem to fail for one of three reasons:
+    ¿Por qué fallan los scans? Basándonos en los errores que hemos visto, los scans parecen fallar por alguna de estas tres razones:
 </p>
 
 <ol>
-    <li>Many users have been uploading the same print PDF’s downloaded from this site. Scans need to be bitmap images, ideally JPEG’s.</li>
-    <li>Some users have submitted scans that are at a low resolution, or low-quality photographs instead of scans. Check the print pages for an address where you can mail us paper to have scanned!</li>
-    <li>Some scans have come out of printers with failing ink cartridges, which makes important details such as the QR code in the lower-right corner illegible.</li>
+    <li>
+      Muchos usuarios han estado subiendo al sitio los mismos PDFs para impresión que se han bajado del sitio. Los scans deben ser bitmaps, a ser posible JPGs.
+    </li>
+    <li>
+      Algunos usuarios han enviado scans que están a baja resolución, o fotografías de baja calidad en vez de scans. Mira en las páginas de impresión una dirección a la que puedes enviarnos los mapas en papel para que nosotros los escaneemos. 
+    </li>
+    <li>
+      Algunos scans se han imprimido en impresoras con cartuchos de tinta que están fallando, lo que hace que detalles importantes, como el QR code en la esquina inferior derecha, resulten ilegibles.
+    </li>
+    
 </ol>
+

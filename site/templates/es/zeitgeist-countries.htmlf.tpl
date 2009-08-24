@@ -1,5 +1,5 @@
-<h3>Countries</h3>
+<h3>Países</h3>
 
 <p>
-    Share of prints for top ten countries from the past month.
+    Porcentaje de impresiones para los diez primeros países durante el mes pasado.
 </p>

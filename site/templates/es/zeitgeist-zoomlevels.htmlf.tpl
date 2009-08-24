@@ -1,6 +1,5 @@
-<h3>Zoom Levels</h3>
+<h3>Niveles de zoom</h3>
 
 <p>
-    Number of prints from the past month at each zoom level. Zoom level 0 is the whole world,
-    while zoom level 14 is recommended as a minimum for street-level mapping.
+    Número de impresiones durante el mes pasado para cada nivel de zoom. El nivel de zoom 0 abarca todo el mundo, mientras que el nivel 14 es el mínimo recomendado para mapeado a nivel de calle.
 </p>
