@@ -9,6 +9,8 @@
             Zusammenstellen
         {elseif $language == "nl"}
             Samenstellen
+		{elseif $language == "es"}
+			Componer
         {else}
             Compose
         {/if}

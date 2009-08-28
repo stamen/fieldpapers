@@ -26,6 +26,8 @@
             Zuletzt gescannt
         {elseif $language == "nl"}
             Recente scans
+        {elseif $language == "es"}
+			Últimos scans
         {else}
             Recent Scans
         {/if}
@@ -70,6 +72,8 @@
                 Weitere Scans...
             {elseif $language == "nl"}
                 Meer scans...
+            {elseif $language == "es"}
+				Más scans... 
             {else}
                 More recent scans...
             {/if}
@@ -82,6 +86,8 @@
                 Einen Ausdruck erstellen
             {elseif $language == "nl"}
                 Een afdruk maken
+            {elseif $language == "es"}
+                Crear impresión   
             {else}
                 Make A Print
             {/if}
@@ -97,6 +103,8 @@
             {assign var="label" value="Suchen"}
         {elseif $language == "nl"}
             {assign var="label" value="Zoek"}
+        {elseif $language == "es"}
+            {assign var="label" value="Buscar"}        
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -127,6 +135,8 @@
                 Ein Zoom-Level von <b>14 oder mehr</b> wird für das Erfassen von Details auf Straßenebene empfohlen.
             {elseif $language == "nl"}
                 We raden aan een zoom niveau van <b>14 of hoger</b> te kiezen om optimaal gebruik te kunnen maken van de afdruk.
+            {elseif $language == "es"}
+                Recomendamos un nivel de zoom de <b>14 o más</b> para mapear a nivel de calle.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -159,6 +169,8 @@
                 {/literal}
                 {if $language == "de"}
                     alert("Sorry, es konnte kein Ort mit diesem Namen gefunden werden.");
+				{elseif $language == "es"}
+					alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
                 {elseif $language == "nl"}
                     {* nl: WRITE ME *}
                     alert("Sorry, I couldn't find a place by that name.");
@@ -204,6 +216,8 @@
                 Ausrichtung:
             {elseif $language == "nl"}
                 Papier oriëntatie:
+          {elseif $language == "es"}
+              Orientación del papel:
             {else}
                 Orientation:
             {/if}
@@ -212,6 +226,8 @@
                     {assign var="label" value="Hochformat"}
                 {elseif $language == "nl"}
                     {assign var="label" value="Staand"}
+                {elseif $language == "es"}
+                    {assign var="label" value="Retrato"}    
                 {else}
                     {assign var="label" value="Portrait"}
                 {/if}
@@ -221,6 +237,8 @@
                     {assign var="label" value="Querformat"}
                 {elseif $language == "nl"}
                     {assign var="label" value="Liggend"}
+                {elseif $language == "es"}
+                    {assign var="label" value="Paisaje"}
                 {else}
                     {assign var="label" value="Landscape"}
                 {/if}
@@ -231,6 +249,8 @@
                 {assign var="label" value="Erstellen"}
             {elseif $language == "nl"}
                 {assign var="label" value="Samenstellen"}
+            {elseif $language == "es"}
+                {assign var="label" value="Crear"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -243,6 +263,8 @@
             Zuletzt gedruckt
         {elseif $language == "nl"}
             Recente afdrukken
+        {elseif $language == "es"}
+            Últimas impresiones
         {else}
             Recent Prints
         {/if}
@@ -279,6 +301,8 @@
                 Weitere Ausdrucke...
             {elseif $language == "nl"}
                 Meer recente afdrukken...
+			{elseif $language == "es"}
+				Más impresiones...
             {else}
                 More recent prints...
             {/if}
