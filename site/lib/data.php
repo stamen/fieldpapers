@@ -329,6 +329,8 @@
             $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $row['id'], $row['id']);
             $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
 
+            $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
+
             $rows[] = $row;
         }
         
@@ -365,6 +367,8 @@
         
         $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $print_id, $print_id);
         $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $print_id);
+        
+        $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
         
         return $row;
     }

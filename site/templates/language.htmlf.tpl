@@ -5,6 +5,7 @@
         <button type="submit" class="{if $language == "en"}selected{/if}" name="language" value="en">English</button>
         <button type="submit" class="{if $language == "de"}selected{/if}" name="language" value="de">Deutsch</button>
         <button type="submit" class="{if $language == "nl"}selected{/if}" name="language" value="nl">Nederlands</button>
+        <button type="submit" class="{if $language == "es"}selected{/if}" name="language" value="es">Español</button>
         
         {if $language == "de"}
             (<a href="{$base_dir}/language.php"><abbr title="Lokalisierung">l10n</abbr></a>)
