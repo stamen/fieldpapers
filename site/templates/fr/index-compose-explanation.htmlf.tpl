@@ -11,5 +11,5 @@
 </p>
 
 <p>
-    <strong>Pour commencer</strong>, rechercher une ville que vous connaissez, et déplacez et zoomez sur la carte vers un emplacement précis.
+    <strong>Pour commencer</strong>, recherchez une ville que vous connaissez, déplacez et zoomez sur la carte vers un emplacement précis.
 </p>
