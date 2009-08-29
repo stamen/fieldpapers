@@ -11,6 +11,8 @@
             Samenstellen
 		{elseif $language == "es"}
 			Componer
+        {elseif $language == "fr"}
+            Composer
         {else}
             Compose
         {/if}
