@@ -37,7 +37,7 @@
 		
 		{if $language == "de"}
             {assign var="label" value="Hochladen"}
-		{if $language == "fr"}
+		{elseif $language == "fr"}
             {assign var="label" value="Envoyer"}
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
