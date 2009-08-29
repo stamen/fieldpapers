@@ -10,8 +10,10 @@
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
             Localization
-		{elseif $language == "es"}
-            Localización    
+        {elseif $language == "es"}
+            Localización
+        {elseif $language == "fr"}
+            Traduction
         {else}
             Localization
         {/if}

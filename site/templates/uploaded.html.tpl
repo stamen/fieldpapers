@@ -9,6 +9,8 @@
             Scan hochgeladen
         {elseif $language == "nl"}
             Scan uploaden
+        {elseif $language == "fr"}
+            Scan envoyé
         {else}
             Uploaded Scan
         {/if}
@@ -34,6 +36,8 @@
 			Du hast eine eingescannte Karte hochgeladen
 		{elseif $language == "nl"}
             		Je hebt een gescande kaart geupload
+		{elseif $language == "fr"}
+            Vous avez envoyé une carte scannée.
 	        {else}
 			You’ve Uploaded A Scanned Map
 		{/if}	
@@ -45,6 +49,9 @@
 			Informationen hinzu bevor du fortfährst.
         {elseif $language == "nl"}
             Je hebt een gescande kaart geupload, vul de volgende informatie in alvorens je begint met verwerken.
+        {elseif $language == "fr"}
+            Vous venez juste d'envoyer une carte scannée, et vous êtes sur le point de renseigner quelques informations
+            avant de commencer à la tracer.
         {else}
 			You’ve just uploaded a scanned map, and you’re about to add
 			a few bits of information about before you proceed to trace it.
@@ -58,6 +65,8 @@
 				privat?
 			{elseif $language == "nl"}
 				privé?
+			{elseif $language == "fr"}
+				privé ?
 			{else}
 				private?
 			{/if}
@@ -71,6 +80,8 @@
 					Planst du dies selbst zu bearbeiten?
 				{elseif $language == "nl"}
 					Wil je zelf de wijzigingen verwerken?
+				{elseif $language == "fr"}
+					Avez-vous l'intention de la modifier vous-même ?
 				{else}
 					Do you plan to edit this yourself?
 				{/if}
@@ -79,6 +90,8 @@
                         {assign var="label" value="Ja"}
                     {elseif $language == "nl"}
                         {assign var="label" value="Ja"}
+                    {elseif $language == "fr"}
+                        {assign var="label" value="Oui"}
                     {else}
                         {assign var="label" value="Yes"}
                     {/if}	
@@ -87,6 +100,8 @@
                         {assign var="label" value="Nein"}
                     {elseif $language == "nl"}
                         {assign var="label" value="Nee"}
+                    {elseif $language == "fr"}
+                        {assign var="label" value="Non"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}	
@@ -101,6 +116,9 @@
 				{elseif $language == "nl"}
 					Je hoeft niet alleen de OpenStreetMap verwerking te doen. “Nee”
 					antwoorden geeft andere gebruikers de mogelijkheid te helpen.
+				{elseif $language == "fr"}
+                    Vous n'avez pas à faire vos propres modifications dans OpenStreetMap. Choisir “Non”
+                    indiquera aux visiteurs quels scans ils pourront utiliser pour aider.
 				{else}
 					You don’t have to do your own OpenStreetMap editing. Saying “no”
 					will let other visitors know about scans they can help with.
@@ -113,6 +131,8 @@
 					Beschreibe deine Ergänzungen.
 				{elseif $language == "nl"}
 					Beschrijf jou toevoegingen.
+				{elseif $language == "fr"}
+					Décriver vos ajouts.
 				{else}
 					Describe your additions.
 				{/if}
@@ -124,6 +144,10 @@
 				{elseif $language == "nl"}
 					Heb je bedrijven toegevoegd, voetpaden verbeterd, verkeerslichten aangeduid, parkgrenzen getekend
 					Of bijvoorbeeld brievenbussen in kaart gebracht? Beschrijf kort wat jij hebt veranderd.
+				{elseif $language == "fr"}
+                    Avez-vous ajouté des sociétés, fixé des chemins piétons, ajouté des feux de signalisation, 
+                    détouré des parcs, placé des boites à lettres ? Décrivez en quelques mots les changements que vous avez
+                    faits sur cette zone.
 				{else}
 					Did you add businesses, fix footpaths, mark traffic lights, outline parks,
 					place mailboxes? Write a few words about the changes to this area.
@@ -134,6 +158,8 @@
 		
 		{if $language == "de"}
             {assign var="label" value="Speichern"}
+		{if $language == "fr"}
+            {assign var="label" value="Enregistrer"}
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
             {assign var="label" value="Save"}
