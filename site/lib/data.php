@@ -106,6 +106,10 @@
             // nl or nl-be
             if(preg_match('/^nl\b/', $language))
                 return 'nl';
+
+            // es...
+            if(preg_match('/^es\b/', $language))
+                return 'es';
         }
         
         // english is the default
