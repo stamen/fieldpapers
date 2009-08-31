@@ -182,7 +182,7 @@
 				{elseif $language == "es"}
 					alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
 				{elseif $language == "fr"}
-					alert("Désolé, aucun endroit de ce nom n'a été trouvé.'");
+					alert("Désolé, aucun endroit de ce nom n'a été trouvé.");
                 {elseif $language == "nl"}
                     {* nl: WRITE ME *}
                     alert("Sorry, I couldn't find a place by that name.");
@@ -326,7 +326,7 @@
 			{elseif $language == "es"}
 				Más impresiones...
 			{elseif $language == "fr"}
-				Plus d'impression récentes...
+				Plus d'impressions récentes...
             {else}
                 More recent prints...
             {/if}
