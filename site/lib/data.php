@@ -79,6 +79,8 @@
     {
         // break up string into pieces (languages and q factors)
         preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept_language_header, $lang_parse);
+
+        $languages = array();
         
         if(count($lang_parse[1]))
         {
