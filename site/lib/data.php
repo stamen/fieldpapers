@@ -110,6 +110,10 @@
             // es...
             if(preg_match('/^es\b/', $language))
                 return 'es';
+
+            // fr or fr-
+            if(preg_match('/^fr\b/', $language))
+                return 'fr';
         }
         
         // english is the default
