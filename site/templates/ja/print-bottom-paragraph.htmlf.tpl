@@ -1,9 +1,7 @@
 <p>
-    If you don’t have a printer, send us a
-    <b><a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">self-addressed, stamped envelope</a>
-    with the print ID, “{$print.id}”,</b> and we’ll mail you a printed copy of this map. If you don’t have a scanner,
-    mail us your printed map and an <b>e-mail address</b> and we’ll scan it for
-    you.
+もし、プリンターを持っていない場合は、
+ <b><a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">返信用封筒</a>を印刷ID“{$print.id}”,</b>とともに送ってください。
+私たちは、この地図の印刷したのをあなたに返信します。もし、スキャナーを持っていないときは、私たちに印刷した地図と、<b>電子メールアドレス</b>を郵送してください。あなたに代わって、スキャナーしてメールします。
 </p>
 
 <blockquote>
@@ -14,6 +12,6 @@
 </blockquote>
 
 <p>
-    Please allow a few weeks for scanning and printing.
+   ボランティアですから、数週間、スキャンや印刷にかかると思ってください。
 </p>
 
