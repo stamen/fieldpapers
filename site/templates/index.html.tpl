@@ -28,6 +28,8 @@
             Recente scans
         {elseif $language == "es"}
 			      Últimos scans
+        {elseif $language == "fr"}
+			    Scans récents
         {else}
             Recent Scans
         {/if}
@@ -74,6 +76,8 @@
                 Meer scans...
             {elseif $language == "es"}
 				      Más scans... 
+            {elseif $language == "fr"}
+				    Plus de scans... 
             {else}
                 More recent scans...
             {/if}
@@ -88,6 +92,8 @@
                 Een afdruk maken
             {elseif $language == "es"}
                 Crear impresión   
+            {elseif $language == "fr"}
+                Créer une impression
             {else}
                 Make A Print
             {/if}
@@ -105,6 +111,8 @@
             {assign var="label" value="Zoek"}
         {elseif $language == "es"}
             {assign var="label" value="Buscar"}        
+        {elseif $language == "fr"}
+            {assign var="label" value="Chercher"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -137,6 +145,8 @@
                 We raden aan een zoom niveau van <b>14 of hoger</b> te kiezen om optimaal gebruik te kunnen maken van de afdruk.
             {elseif $language == "es"}
                 Recomendamos un nivel de zoom de <b>14 o más</b> para mapear a nivel de calle.
+            {elseif $language == "fr"}
+                Un niveau de zoom <b>de 14 ou plus</b> est recommandé pour la cartographie au niveau du quartier.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -169,8 +179,10 @@
                 {/literal}
                 {if $language == "de"}
                     alert("Sorry, es konnte kein Ort mit diesem Namen gefunden werden.");
-                {elseif $language == "es"}
-                  alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
+				        {elseif $language == "es"}
+					      alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
+				        {elseif $language == "fr"}
+					      alert("Désolé, aucun endroit de ce nom n'a été trouvé.'");
                 {elseif $language == "nl"}
                     {* nl: WRITE ME *}
                     alert("Sorry, I couldn't find a place by that name.");
@@ -218,6 +230,8 @@
                 Papier oriëntatie:
           {elseif $language == "es"}
               Orientación del papel:
+          {elseif $language == "fr"}
+              Orientation du papier :
             {else}
                 Orientation:
             {/if}
@@ -228,6 +242,8 @@
                     {assign var="label" value="Staand"}
                 {elseif $language == "es"}
                     {assign var="label" value="Retrato"}    
+                {elseif $language == "fr"}
+                    {assign var="label" value="Portrait"}    
                 {else}
                     {assign var="label" value="Portrait"}
                 {/if}
@@ -239,6 +255,8 @@
                     {assign var="label" value="Liggend"}
                 {elseif $language == "es"}
                     {assign var="label" value="Paisaje"}
+                {elseif $language == "fr"}
+                    {assign var="label" value="Paysage"}
                 {else}
                     {assign var="label" value="Landscape"}
                 {/if}
@@ -251,6 +269,8 @@
                 {assign var="label" value="Samenstellen"}
             {elseif $language == "es"}
                 {assign var="label" value="Crear"}
+            {elseif $language == "fr"}
+                {assign var="label" value="Créer"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -265,6 +285,8 @@
             Recente afdrukken
         {elseif $language == "es"}
             Últimas impresiones
+        {elseif $language == "fr"}
+            Impressions récentes
         {else}
             Recent Prints
         {/if}
@@ -301,8 +323,10 @@
                 Weitere Ausdrucke...
             {elseif $language == "nl"}
                 Meer recente afdrukken...
-            {elseif $language == "es"}
-              Más impresiones...
+			        {elseif $language == "es"}
+				      Más impresiones...
+			        {elseif $language == "fr"}
+				    Plus d'impression récentes...
             {else}
                 More recent prints...
             {/if}

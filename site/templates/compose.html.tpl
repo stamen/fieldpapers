@@ -10,7 +10,9 @@
         {elseif $language == "nl"}
             Samenstellen
 		    {elseif $language == "es"}
-			      Componer
+			  Componer
+        {elseif $language == "fr"}
+            Composer
         {else}
             Componer
         {/if}

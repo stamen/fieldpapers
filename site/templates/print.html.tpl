@@ -10,7 +10,9 @@
         {elseif $language == "nl"}
             #{$print.id|escape} afdrukken
         {elseif $language == "es"}
-			      Imprimir #{$print.id|escape} 
+			  Imprimir #{$print.id|escape} 
+        {elseif $language == "fr"}
+            Impression #{$print.id|escape} 
         {else}
             Print #{$print.id|escape}
         {/if}
@@ -38,6 +40,8 @@
             Kaart afdrukken
         {elseif $language == "es"}
             Imprimir mapa
+        {elseif $language == "fr"}
+            Imprimer la carte
         {else}
             Print Map
         {/if}
@@ -58,13 +62,10 @@
                     Ist diese Karte falsch oder veraltet?
                 {elseif $language == "nl"}
                     Is deze kaart onjuist of verouderd?
-<<<<<<< HEAD:site/templates/print.html.tpl
-                {elseif $language == "nl"}
-                  ¿Es este mapa erróneo o desfasado?
-=======
                 {elseif $language == "es"}
-					¿Es este mapa erróneo o desfasado?
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/print.html.tpl
+					      ¿Es este mapa erróneo o desfasado?
+                {elseif $language == "fr"}
+                La carte est-elle mauvaise, ou obsolète ?
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
@@ -74,12 +75,10 @@
 				{elseif $language == "nl"}
 				    {* nl: WRITE ME *}
 					{assign var="label" value="Redo"}
-<<<<<<< HEAD:site/templates/print.html.tpl
-			{elseif $language == "es"}
-=======
 				{elseif $language == "es"}
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/print.html.tpl
   					{assign var="label" value="Repetir"}
+				{if $language == "fr"}
+					{assign var="label" value="Recommencer"}
 				{else}
 					{assign var="label" value="Redo"}
 				{/if}

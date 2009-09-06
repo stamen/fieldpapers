@@ -11,6 +11,8 @@
             Recente scans
         {elseif $language == "es"}
             Últimos scans    
+        {elseif $language == "fr"}
+            Scans récents
         {else}
             Recent Scans
         {/if}
@@ -29,6 +31,8 @@
             Recente scans
       {elseif $language == "es"}
           Últimos scans
+        {elseif $language == "fr"}
+            Scans récents
         {else}
             Recent Scans
         {/if}

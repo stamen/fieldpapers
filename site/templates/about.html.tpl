@@ -10,7 +10,9 @@
         {elseif $language == "nl"}
             Over
         {elseif $language == "es"}
-			      Acerca de    
+            Acerca de    
+        {elseif $language == "fr"}
+            À propos
         {else}
             About
         {/if}

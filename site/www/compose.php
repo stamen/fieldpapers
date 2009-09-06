@@ -86,14 +86,15 @@
         return array(null, null, null, null, null, null);
     }
     
-    function compose_map_image($north, $south, $east, $west, $zoom, $width, $height)
+    function compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height)
     {
         $hostports = explode(',', WSCOMPOSE_HOSTPORTS);
         shuffle($hostports);
         
         foreach($hostports as $hostport)
         {
-            $req = new HTTP_Request("http://{$hostport}/?provider=CLOUDMADE_FINELINE");
+            $req = new HTTP_Request("http://{$hostport}/");
+            $req->addQueryString('provider', $provider);
             $req->addQueryString('latitude', ($north + $south) / 2);
             $req->addQueryString('longitude', ($east + $west) / 2);
             $req->addQueryString('zoom', $zoom);
@@ -121,7 +122,7 @@
             ? array(360, 480 - 24)
             : array(480, 360 - 24);
         
-        $png = compose_map_image($print['north'], $print['south'], $print['east'], $print['west'], $print['zoom'], $width, $height);
+        $png = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $print['zoom'], $width, $height);
 
         // post a preview
         $url = new Net_URL($print['preview_url']);
@@ -140,7 +141,7 @@
             $height *= 2;
         }
 
-        $png = compose_map_image($print['north'], $print['south'], $print['east'], $print['west'], $zoom, $width, $height);
+        $png = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $zoom, $width, $height);
 
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
     

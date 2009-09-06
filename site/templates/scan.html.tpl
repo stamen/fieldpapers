@@ -9,9 +9,10 @@
             Eingescannte Karte #{$scan.id|escape}
         {elseif $language == "nl"}
             Gescande kaart #{$scan.id|escape}
-        {elseif $language == "nl"}
+        {elseif $language == "es"}
           Mapa escaneado #{$scan.id|escape}
-            
+        {elseif $language == "fr"}
+            Carte scannée #{$scan.id|escape}
         {else}
             Scanned Map #{$scan.id|escape}
         {/if}
@@ -59,9 +60,10 @@
                     Eingescannte Karte
                 {elseif $language == "nl"}
                     Gescande kaart
-                {elseif $language == "es"}
+               {elseif $language == "es"}
                     Mapa escaneado
-                    
+                {elseif $language == "fr"}
+                    Carte scannée
                 {else}
                     Scanned Map
                 {/if}
@@ -80,6 +82,8 @@
                     Omvat het gebied rondom
                 {elseif $language == "es"}
                   Cubre el área próxima
+                {elseif $language == "fr"}
+                    Couvre la zone près de
                 {else}
                     Covers the area near
                 {/if}
@@ -101,6 +105,8 @@
 					{$scan.age|nice_relativetime|escape} geupload.
 				{elseif $language == "es"}
 					Subido {$scan.age|nice_relativetime|escape}.		
+				{elseif $language == "fr"}
+					Envoyé le {$scan.age|nice_relativetime|escape}.
 				{else}
 					Uploaded {$scan.age|nice_relativetime|escape}.
 				{/if}
@@ -134,6 +140,8 @@
                 {elseif $language == "nl"}
                     Een
                     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">nieuwe kaart van dit gebied</a> downloaden.
+                {elseif $language == "fr"}
+                    Télécharger <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">une carte récente de cette zone à partir de l'impression</a>.
 
               {elseif $language == "es"}
                   Descarga un
@@ -153,7 +161,8 @@
                     Kaart bewerken
                 {elseif $language == "es"}
                   Editar mapa
-                
+                {elseif $language == "fr"}
+                    Modifier la carte
                 {else}
                     Edit The Map
                 {/if}
@@ -175,7 +184,8 @@
 						{elseif $language == "es"}
 						    {* nl: WRITE ME *}
 							{assign var="label" value="Editar"}
-						
+						{elseif $language == "fr"}
+							{assign var="label" value="Modifier"}
 						{else}
 							{assign var="label" value="Edit"}
 						{/if}
@@ -211,9 +221,14 @@
 						Hierbij is het belangrijk dat de <a href="http://en.wikipedia.org/wiki/QR_Code">QR Code</a>
 						goed leesbaar is. Wanneer dat niet helpt, 
 						<a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">laat het ons weten</a>.
-				{elseif $language == "es"}
-				  Puedes intentar subir tu scan de nuevo, asegurándote de que está a una resolución razonablemente algta (más de 200 ppp para una hoja entera de papel es lo normal) y con el lado derecho hacia arriba. Es imprescindible que el <a href="http://en.wikipedia.org/wiki/QR_Code">QR Code</a> sea legible. Si con todo esto no funciona, <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">haznoslo saber</a>.
+  				{elseif $language == "es"}
+  				  Puedes intentar subir tu scan de nuevo, asegurándote de que está a una resolución razonablemente algta (más de 200 ppp para una hoja entera de papel es lo normal) y con el lado derecho hacia arriba. Es imprescindible que el <a href="http://en.wikipedia.org/wiki/QR_Code">QR Code</a> sea legible. Si con todo esto no funciona, <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">haznoslo saber</a>.
 										
+					{elseif $language == "fr"}
+                        Vous devriez essayer d'envoyer à nouveau votre scan, en vous assurant qu'il est à une résolution assez grande 
+                        (plus de 200 dpi pour une feuille entière) et le côté droit vers le haut. 
+                        Un <a href="http://en.wikipedia.org/wiki/QR_Code">QR code</a> bien lisible est nécessaire.
+                        Si ça ne fonctionne toujours pas, <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">prévenez-nous</a>.
 					{else}
 						You might try uploading your scan again, making sure that
 						it’s at a reasonably high resolution (200+ dpi for a full
@@ -232,6 +247,8 @@
 							Hier is een deel van de scan waarop ons systeem geprobeerd heeft de code te vinden:
 						{elseif $language == "es"}
   						Esta es la parte de tu scan en la que hemos tratado de encontrar un código:
+						{elseif $language == "fr"}
+							Voici la partie de votre scan où nous avons tenté de trouver un code :
 						{else}
 							Here’s the part of your scan where we tried to find a code:
 						{/if}
@@ -249,6 +266,8 @@
 						De gescande afbeelding wordt verwerkt.
 					{elseif $language == "es"}
 					Procesando tu imagen escaneada.
+					{elseif $language == "fr"}
+        Traitement de votre image scannée.
 					{else}
 						Processing your scanned image.
 					{/if}
@@ -275,7 +294,9 @@
 						{elseif $language == "es"}
 							{$step.number|step_description|escape}, por favor, aguarda.
 							Intentaremos procesar tu scan en breve.
-  						
+						{elseif $language == "fr"}
+							{$step.number|step_description|escape}, merci de patienter.
+							Nous allons essayer de traiter votre scan à nouveau dans peu de temps.
 						{else}
 							{$step.number|step_description|escape}, please stand by.
 							We will try to process your scan again shortly.
@@ -290,6 +311,8 @@
 								Hier is het deel van de scan waarop ons systeem geprobeerd heeft de code te vinden:
 							{elseif $language == "es"}
   						  Esta es la parte de tu scan en la que hemos tratado de encontrar un código:
+							{elseif $language == "fr"}
+								Voici la partie de votre scan où nous avons tenté de trouver un code :
 							{else}
 								Here’s the part of your scan where we tried to find a code:
 							{/if}
@@ -315,6 +338,11 @@
 						Esto puede llevar un rato, generalmente unos pocos minutos.
 						No hace falta que mantengas abierta esta ventana del navegador, puedes 
 						<a href="{$base_dir}/scan.php?id={$scan.id|escape}">añadir esta página a tus favoritos</a> para volver más tarde.
+						{elseif $language == "fr"}
+              Ça peut prendre un peu de temps, en général quelques minutes.
+              Vous n'êtes pas obligé de laisser la fenêtre de votre navigateur ouverte.
+              Vous pouvez ajouter <a href="{$base_dir}/scan.php?id={$scan.id|escape}">cette page</a>
+              à vos favoris, et revenir plus tard.
 						{else}
 							This may take a little while, generally a few minutes.
 							You don’t need to keep this browser window open—you can

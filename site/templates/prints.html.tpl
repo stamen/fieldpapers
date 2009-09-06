@@ -11,6 +11,8 @@
             Recente afdrukken
         {elseif $language == "es"}
           Últimas impresiones
+        {elseif $language == "fr"}
+          Impressions récentes
         {else}
             Recent Prints
         {/if}
@@ -28,7 +30,9 @@
         {elseif $language == "nl"}
             Recente afdrukken
         {elseif $language == "es"}
-          Últimas impresiones      
+          Últimas impresiones     
+        {elseif $language == "fr"}
+          Impressions récentes
         {else}
             Recent Prints
         {/if}
