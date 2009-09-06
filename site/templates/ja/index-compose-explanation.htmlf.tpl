@@ -1,15 +1,13 @@
 <p>
-    <a href="http://openstreetmap.org">OpenStreetMap</a> is a wiki-style map
-    of the world that anyone can edit. In some places, participants are
-    creating the first freely-available maps by GPS survey. In other places,
-    such as the United States, basic roads exist, but lack local detail:
-    locations of traffic signals, ATMs, cafés, schools, parks, and shops.
-    What such partially-mapped places need is not more GPS traces, but
-    additional knowledge about what exists on and around the street. Walking
-    Papers is made to help you easily create printed maps, mark them with
-    things you know, and then share that knowledge with OpenStreetMap.
+    <a href="http://openstreetmap.org">オープンストリートマップ(OpenStreetMap)</a>は、
+    wikiスタイルの世界地図で誰でも編集できます。ある場所では、参加者はそこで最初の
+自由に利用できる地図をGPS測量によって作成しています。他の場所では、たとえばアメリカのように
+基本的な道路情報はあるけれども、ローカルの詳細情報がない場合もあります。
+たとえば、信号機の場所や、ATM、カフェ、学校、公園、商店などです。
+このような部分的に記録された場所は、GPSトレースはもはや必要ありません。しかし、通りに面してあるいは、その近所に何があるのか、といった追加的情報は必要です。
+ウォーキングペーパーは、あなたが印刷された地図を容易に作成して、地図上に知っている情報を書き加えるのが簡単にできるように考案されました。そして、それをOpenStreetMapによって知識を共有できるようにしてくれます。
 </p>
 
 <p>
-    <strong>To get started</strong>, search for a town or city you know, then pan and zoom the map to an exact location.
+    <strong>まず最初に</strong>あなたが詳しい街や都市を検索し、ズームを調整して、記入したいエリアになるようにすることから始めましょう。
 </p>
