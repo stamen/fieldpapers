@@ -72,14 +72,8 @@
                 Weitere Scans...
             {elseif $language == "nl"}
                 Meer scans...
-<<<<<<< HEAD:site/templates/index.html.tpl
-            {elseif $language == "nl"}
-              Más scans...
-                
-=======
             {elseif $language == "es"}
-				Más scans... 
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/index.html.tpl
+				      Más scans... 
             {else}
                 More recent scans...
             {/if}
@@ -93,12 +87,7 @@
             {elseif $language == "nl"}
                 Een afdruk maken
             {elseif $language == "es"}
-<<<<<<< HEAD:site/templates/index.html.tpl
-                Crear impresión
-                
-=======
                 Crear impresión   
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/index.html.tpl
             {else}
                 Make A Print
             {/if}
@@ -180,15 +169,8 @@
                 {/literal}
                 {if $language == "de"}
                     alert("Sorry, es konnte kein Ort mit diesem Namen gefunden werden.");
-<<<<<<< HEAD:site/templates/index.html.tpl
-                
-              {elseif $language == "es"}
-                  {* nl: WRITE ME *}
+                {elseif $language == "es"}
                   alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
-=======
-				{elseif $language == "es"}
-					alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/index.html.tpl
                 {elseif $language == "nl"}
                     {* nl: WRITE ME *}
                     alert("Sorry, I couldn't find a place by that name.");
@@ -257,10 +239,6 @@
                     {assign var="label" value="Liggend"}
                 {elseif $language == "es"}
                     {assign var="label" value="Paisaje"}
-<<<<<<< HEAD:site/templates/index.html.tpl
-                
-=======
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/index.html.tpl
                 {else}
                     {assign var="label" value="Landscape"}
                 {/if}
@@ -287,10 +265,6 @@
             Recente afdrukken
         {elseif $language == "es"}
             Últimas impresiones
-<<<<<<< HEAD:site/templates/index.html.tpl
-        
-=======
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/index.html.tpl
         {else}
             Recent Prints
         {/if}
@@ -327,13 +301,8 @@
                 Weitere Ausdrucke...
             {elseif $language == "nl"}
                 Meer recente afdrukken...
-<<<<<<< HEAD:site/templates/index.html.tpl
-          {elseif $language == "es"}
+            {elseif $language == "es"}
               Más impresiones...
-=======
-			{elseif $language == "es"}
-				Más impresiones...
->>>>>>> 0900520de5203dfd6f206a51cc92a672676430c8:site/templates/index.html.tpl
             {else}
                 More recent prints...
             {/if}

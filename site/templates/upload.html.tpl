@@ -9,6 +9,8 @@
             Scan hochladen
         {elseif $language == "nl"}
             Scan uploaden
+        {elseif $language == "es"}
+            Subir scan
         {else}
             Upload Scan
         {/if}
@@ -38,6 +40,9 @@
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
             {assign var="label" value="Send"}
+      {elseif $language == "es"}
+          {* nl: WRITE ME *}
+          {assign var="label" value="Enviar"}      
         {else}
             {assign var="label" value="Send"}
         {/if}

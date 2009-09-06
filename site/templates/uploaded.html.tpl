@@ -9,6 +9,9 @@
             Scan hochgeladen
         {elseif $language == "nl"}
             Scan uploaden
+        {elseif $language == "es"}
+            Scan subido
+        
         {else}
             Uploaded Scan
         {/if}
@@ -33,8 +36,10 @@
 		{if $language == "de"}
 			Du hast eine eingescannte Karte hochgeladen
 		{elseif $language == "nl"}
-            		Je hebt een gescande kaart geupload
-	        {else}
+      Je hebt een gescande kaart geupload
+    {elseif $language == "es"}
+      Has subido un mapa escaneado
+	  {else}
 			You’ve Uploaded A Scanned Map
 		{/if}	
 		</h2>
@@ -43,8 +48,10 @@
 		{if $language == "de"}
             Du hast eine eingescannte Karte hochgeladen, bitte füge ein paar 
 			Informationen hinzu bevor du fortfährst.
-        {elseif $language == "nl"}
-            Je hebt een gescande kaart geupload, vul de volgende informatie in alvorens je begint met verwerken.
+    {elseif $language == "nl"}
+        Je hebt een gescande kaart geupload, vul de volgende informatie in alvorens je begint met verwerken.
+    {elseif $language == "es"}
+        Has subido un mapa escaneado y ahora vas a dar un poco de información adicional antes de proceder a tracearlo.
         {else}
 			You’ve just uploaded a scanned map, and you’re about to add
 			a few bits of information about before you proceed to trace it.
@@ -58,6 +65,9 @@
 				privat?
 			{elseif $language == "nl"}
 				privé?
+			{elseif $language == "es"}
+			¿privado?
+  			
 			{else}
 				private?
 			{/if}
@@ -71,6 +81,8 @@
 					Planst du dies selbst zu bearbeiten?
 				{elseif $language == "nl"}
 					Wil je zelf de wijzigingen verwerken?
+			{else}
+				¿Vas a editar esto tú mismo?
 				{else}
 					Do you plan to edit this yourself?
 				{/if}
