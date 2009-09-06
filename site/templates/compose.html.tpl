@@ -13,6 +13,8 @@
 			Componer
         {elseif $language == "fr"}
             Composer
+	{elseif $language == "ja"}
+	    作成
         {else}
             Compose
         {/if}

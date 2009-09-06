@@ -12,7 +12,10 @@
         German translation by Jonas Krückel
         <br />
         Dutch translation by Milo van der Linden
-
+	<br />
+	French translation by Jonathan Fretin
+	<br />
+	Japanese translation by Hiroshi Miura
     {elseif $language == "nl"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -26,6 +29,8 @@
         Duitse vertaling door Jonas Krückel
         <br />
         Nederlandse vertaling door Milo van der Linden
+	<br />
+	Japonese vertaling door Hiroshi Miura
     {elseif $language == "fr"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -43,6 +48,27 @@
         Traduction espagnole par Manuel González Noriega
         <br />
         Traduction française par Jonathan Fretin
+	<br />
+	Traduction Japonese par Hiroshi Miura
+    {elseif $language == "ja"}
+        ウオーキングペーパー(Walking Papers) &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
+        <br />
+        連絡先 <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
+        <br />
+        地図データ <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
+            <a href="http://openstreetmap.org">OpenStreetMap</a>
+        <br />
+        Webおよび印刷地図イメージ &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
+        <br />
+        ドイツ語訳Jonas Krückel
+        <br />
+        オランダ語訳Milo van der Linden
+        <br />
+        スペイン語訳Manuel González Noriega
+        <br />
+        フランス語訳Jonathan Fretin
+	<br />
+	日本語訳　三浦広志
     {else}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -60,6 +86,8 @@
         Spanish translation by Manuel González Noriega
         <br />
         French translation by Jonathan Fretin
+	<br />
+	Japanese translation by Hiroshi Miur
     {/if}
 </p>
 

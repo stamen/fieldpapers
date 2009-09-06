@@ -11,6 +11,8 @@
             Scan uploaden
         {elseif $language == "fr"}
             Scan envoyé
+        {elseif $language == "ja"}
+	    アップロードした取込データ
         {else}
             Uploaded Scan
         {/if}
@@ -38,6 +40,8 @@
             		Je hebt een gescande kaart geupload
 		{elseif $language == "fr"}
             Vous avez envoyé une carte scannée.
+        	{elseif $language == "ja"}
+            	    	スキャンしたアップロードしました
 	        {else}
 			You’ve Uploaded A Scanned Map
 		{/if}	
@@ -52,6 +56,8 @@
         {elseif $language == "fr"}
             Vous venez juste d'envoyer une carte scannée, et vous êtes sur le point de renseigner quelques informations
             avant de commencer à la tracer.
+        {elseif $language == "ja"}
+	    スキャナーした地図をアップロードしました。そして、トレースを行う前に若干の情報を追加する段階になりました。
         {else}
 			You’ve just uploaded a scanned map, and you’re about to add
 			a few bits of information about before you proceed to trace it.
@@ -67,6 +73,8 @@
 				privé?
 			{elseif $language == "fr"}
 				privé ?
+                        {elseif $language == "ja"}
+				プライベート?
 			{else}
 				private?
 			{/if}
@@ -82,6 +90,8 @@
 					Wil je zelf de wijzigingen verwerken?
 				{elseif $language == "fr"}
 					Avez-vous l'intention de la modifier vous-même ?
+                                {elseif $language == "ja"}
+					この地図をご自身で編集する予定ですか？
 				{else}
 					Do you plan to edit this yourself?
 				{/if}
@@ -119,6 +129,8 @@
 				{elseif $language == "fr"}
                     Vous n'avez pas à faire vos propres modifications dans OpenStreetMap. Choisir “Non”
                     indiquera aux visiteurs quels scans ils pourront utiliser pour aider.
+                                {elseif $language == "ja"}
+					ご自身で、OpenStreetMapの編集を行う必要はありません。ここで"no"と答えれば、他の訪問者がこのスキャン結果について知ることができ、助けることができます。
 				{else}
 					You don’t have to do your own OpenStreetMap editing. Saying “no”
 					will let other visitors know about scans they can help with.
@@ -133,6 +145,8 @@
 					Beschrijf jou toevoegingen.
 				{elseif $language == "fr"}
 					Décriver vos ajouts.
+				{elseif $language == "ja"}
+				あなたの追加した情報を説明してください
 				{else}
 					Describe your additions.
 				{/if}
@@ -148,6 +162,8 @@
                     Avez-vous ajouté des sociétés, fixé des chemins piétons, ajouté des feux de signalisation, 
                     détouré des parcs, placé des boites à lettres ? Décrivez en quelques mots les changements que vous avez
                     faits sur cette zone.
+                                {elseif $language == "ja"}
+					商店、歩道の修正、信号機の追加、公園の輪郭、郵便ポストを追加したでしょうか？このエリアでの追加について、このようなコメントをいれてください。
 				{else}
 					Did you add businesses, fix footpaths, mark traffic lights, outline parks,
 					place mailboxes? Write a few words about the changes to this area.
@@ -162,6 +178,8 @@
             {assign var="label" value="Enregistrer"}
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
+            {assign var="label" value="Save"}
+        {elseif $language == "ja"}
             {assign var="label" value="Save"}
         {else}
             {assign var="label" value="Save"}
