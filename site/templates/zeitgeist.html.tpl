@@ -9,6 +9,8 @@
             Statistik
         {elseif $language == "nl"}
             Statistieken
+        {elseif $language == "es"}
+            Estadísticas    
         {elseif $language == "fr"}
             Statistiques
         {else}
@@ -27,6 +29,8 @@
             Statistik
         {elseif $language == "nl"}
             Statistieken
+        {elseif $language == "es"}
+            Estadísticas    
         {elseif $language == "fr"}
             Statistiques
         {else}

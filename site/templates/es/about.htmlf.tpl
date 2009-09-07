@@ -23,7 +23,7 @@
   Hay una tercera forma de edición de mapas que funciona mejor con papel, y esa es la anotación de las caracterísitcas locales, a pie de calle, que resultarían invisibles en vistas aéreas, incomprensibles en la ausencia de datos básicos de carreteras, e imposible de recoger sin una visita al sitio: farolas, tiendas de bicibletas, baños, cajeros automáticos, escaleras, cafeterías, pubs, direcciones, y otros fragmentos de contexto geográfico que convierten a OpenStreetMap en una opción tan fuerte frente a los grandes servicios comerciales en la escala humana. 
 </p>
 
-<h3>Arreglando el número 3</h3>
+<h3>Arreglando la tercera forma</h3>
 
 
 

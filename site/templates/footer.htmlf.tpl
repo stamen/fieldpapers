@@ -37,11 +37,13 @@
       <br />
       Cartografía web e impresa &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
      <br />
-      German translation by Jonas Krückel
+      Traducción al alemán por Jonas Krückel
       <br />
-      Dutch translation by Milo van der Linden
+      Traducción al holandés por Milo van der Linden
       <br />
-      Spanish translation by Manuel González Noriega  
+     Traducción al español por Manuel González Noriega  
+      <br />
+      Traduction al francés por Jonathan Fretin
 
     {elseif $language == "fr"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>

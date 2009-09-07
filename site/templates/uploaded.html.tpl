@@ -88,7 +88,7 @@
 					Planst du dies selbst zu bearbeiten?
 				{elseif $language == "nl"}
 					Wil je zelf de wijzigingen verwerken?
-			{else}
+          {elseif $language == "es"}
 				¿Vas a editar esto tú mismo?
 				{elseif $language == "fr"}
 					Avez-vous l'intention de la modifier vous-même ?
@@ -112,7 +112,7 @@
                         {assign var="label" value="Nein"}
                     {elseif $language == "nl"}
                         {assign var="label" value="Nee"}
-                  {elseif $language == "fr"}
+                  {elseif $language == "es"}
                       {assign var="label" value="No"}
                     {elseif $language == "fr"}
                         {assign var="label" value="Non"}

@@ -10,7 +10,7 @@
         {elseif $language == "nl"}
             #{$print.id|escape} afdrukken
         {elseif $language == "es"}
-			  Imprimir #{$print.id|escape} 
+			    Imprimir #{$print.id|escape} 
         {elseif $language == "fr"}
             Impression #{$print.id|escape} 
         {else}
@@ -58,18 +58,18 @@
                 <input name="west" type="hidden" value="{$print.west|escape}" />
                 <input name="zoom" type="hidden" value="{$print.zoom|escape}" />
         
-                {if $language == "de"}
-                    Ist diese Karte falsch oder veraltet?
-                {elseif $language == "nl"}
-                    Is deze kaart onjuist of verouderd?
-                {elseif $language == "es"}
-					      ¿Es este mapa erróneo o desfasado?
-                {elseif $language == "fr"}
-                La carte est-elle mauvaise, ou obsolète ?
-                {else}
-                    Is this map wrong, or out of date?
-                {/if}
-				
+          {if $language == "de"}
+              Ist diese Karte falsch oder veraltet?
+          {elseif $language == "nl"}
+              Is deze kaart onjuist of verouderd?
+          {elseif $language == "es"}
+		      ¿Es este mapa erróneo o desfasado?
+          {elseif $language == "fr"}
+          La carte est-elle mauvaise, ou obsolète ?
+          {else}
+              Is this map wrong, or out of date?
+          {/if}
+	
 				{if $language == "de"}
 					{assign var="label" value="Aktualisieren"}
 				{elseif $language == "nl"}
