@@ -1,6 +1,5 @@
-<h3>Zoom Levels</h3>
+<h3>ズームレベル</h3>
 
 <p>
-    Number of prints from the past month at each zoom level. Zoom level 0 is the whole world,
-    while zoom level 14 is recommended as a minimum for street-level mapping.
+    過去一ヶ月の、各ズームレベルにおける印刷された数です。ズーム０は世界全体で、ズーム１４が最小の道路マッピングに推奨されます。
 </p>

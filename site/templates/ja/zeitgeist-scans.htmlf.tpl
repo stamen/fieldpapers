@@ -1,5 +1,5 @@
-<h3>Scans</h3>
+<h3>スキャナーされたイメージ</h3>
 
 <p>
-    Number of scans from the past month that have finished successfully, failed for some reason, or are still in progress.
+    過去一ヶ月にスキャナーされた投稿されたイメージ数の、成功したもの、あるいは何らかの理由で失敗したもの、処理中のものの数です。
 </p>

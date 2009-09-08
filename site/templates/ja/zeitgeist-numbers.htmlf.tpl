@@ -1,5 +1,4 @@
-<h3>Numbers</h3>
+<h3>数</h3>
 
 <p>
-    Number of prints vs. number of scans for the past month.
-</p>
+    過去一ヶ月の印刷の数および、スキャナーされた数</p>
