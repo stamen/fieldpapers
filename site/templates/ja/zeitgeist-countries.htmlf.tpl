@@ -1,5 +1,5 @@
-<h3>Countries</h3>
+<h3>国</h3>
 
 <p>
-    Share of prints for top ten countries from the past month.
+    過去一ヶ月でのトップ１０国の割合
 </p>

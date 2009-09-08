@@ -1,12 +1,12 @@
 <p>
-    You’ll need to log in with your OpenStreetMap account
-    to do any editing; do that below or
-    <a href="http://www.openstreetmap.org/user/new">create a new account</a>.
-    <strong><i>Walking Papers</i> will not see or keep your password</strong>,
-    it is passed directly to OpenStreetMap.
-</p>
+
+編集を行うためには、 オープンストリートマップのアカウントをとってログインする必要があります。   
+以下に進んでログインするか、
+    <a href="http://www.openstreetmap.org/user/new">新規アカウントを作成してください</a>.
+    <strong><i>ウォーキングペーパー（Walking Papers）</i>には、パスワードが表示されたり、保存されることはありません</strong>ので、
+直接OpenStreetMapに渡すことができます。</p>
 <p>
-    <label for="username">Email Address or Username</label>
+    <label for="username">電子メールアドレスまたはユーザ名</label>
     <br />
     <input id="username-textfield" name="username" type="text" size="30" />
 </p>
@@ -19,13 +19,12 @@
 // {/literal}]]>
 </script>
 <p>
-    <label for="password">Password</label>
+    <label for="password">パスワード</label>
     <br />
     <input name="password" type="password" size="30" />
     <br />
-    (<a href="http://www.openstreetmap.org/user/forgot-password">Lost your password?</a>)
+    (<a href="http://www.openstreetmap.org/user/forgot-password">パスワードを忘れましたか？</a>)
 </p>
 <p>
-    This form will be replaced by an interactive editing window
-    with your scanned map in the background for a guide.
+    このフォームは、あなたのスキャンした地図をガイドとして、背景に表示される編集画面に変わります。
 </p>
