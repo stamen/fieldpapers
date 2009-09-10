@@ -83,9 +83,9 @@
 					{assign var="label" value="Redo"}
 				{elseif $language == "es"}
   					{assign var="label" value="Repetir"}
-				{if $language == "fr"}
+				{elseif $language == "fr"}
 					{assign var="label" value="Recommencer"}
-				{if $language == "ja"}
+				{elseif $language == "ja"}
 					{assign var="label" value="再実行"}
 				{else}
 					{assign var="label" value="Redo"}
