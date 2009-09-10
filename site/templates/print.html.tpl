@@ -86,7 +86,7 @@
 				{if $language == "fr"}
 					{assign var="label" value="Recommencer"}
 				{if $language == "ja"}
-					{assign var="label" value="Redo"}
+					{assign var="label" value="再実行"}
 				{else}
 					{assign var="label" value="Redo"}
 				{/if}

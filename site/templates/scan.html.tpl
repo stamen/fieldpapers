@@ -180,7 +180,7 @@
 						{if $language == "fr"}
 							{assign var="label" value="Modifier"}
                                                 {if $language == "ja"}
-                                                        {assign var="label" value="Edit"}
+                                                        {assign var="label" value="編集"}
 						{else}
 							{assign var="label" value="Edit"}
 						{/if}

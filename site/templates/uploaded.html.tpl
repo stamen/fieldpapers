@@ -102,6 +102,8 @@
                         {assign var="label" value="Ja"}
                     {elseif $language == "fr"}
                         {assign var="label" value="Oui"}
+		    {elseif $language == "ja"}
+			{assign var="label" value="はい"}
                     {else}
                         {assign var="label" value="Yes"}
                     {/if}	
@@ -112,6 +114,8 @@
                         {assign var="label" value="Nee"}
                     {elseif $language == "fr"}
                         {assign var="label" value="Non"}
+		    {elseif $language == "ja"}
+			{assign var="label" value="いいえ"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}	
@@ -180,7 +184,7 @@
             {* nl: WRITE ME *}
             {assign var="label" value="Save"}
         {elseif $language == "ja"}
-            {assign var="label" value="Save"}
+            {assign var="label" value="保存"}
         {else}
             {assign var="label" value="Save"}
         {/if}

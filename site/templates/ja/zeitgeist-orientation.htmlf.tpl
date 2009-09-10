@@ -1,6 +1,5 @@
-<h3>Orientation</h3>
+<h3>向き</h3>
 
 <p>
-    Share of prints by orientation in the past month.
-    Landscape orientation was first introduced on June 20.
+印刷時の向きについて、過去１ヶ月における割合です。横向きは、７月２０日に提供開始されはじめました。
 </p>

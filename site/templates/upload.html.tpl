@@ -45,7 +45,7 @@
             {* nl: WRITE ME *}
             {assign var="label" value="Send"}
 	{else if $language == "ja"}
-            {assign var="label" value="Send"}
+            {assign var="label" value="送信"}
         {else}
             {assign var="label" value="Send"}
         {/if}
