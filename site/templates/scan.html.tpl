@@ -194,7 +194,7 @@
 							{assign var="label" value="Editar"}
 						{elseif $language == "fr"}
 							{assign var="label" value="Modifier"}
-                                                {if $language == "ja"}
+                                                {elseif $language == "ja"}
                                                         {assign var="label" value="編集"}
 						{else}
 							{assign var="label" value="Edit"}
