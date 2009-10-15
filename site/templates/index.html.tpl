@@ -27,7 +27,7 @@
         {elseif $language == "nl"}
             Recente scans
         {elseif $language == "es"}
-			Últimos scans
+			      Últimos scans
         {elseif $language == "fr"}
 			Scans récents
 	{elseif $language == "ja"}
@@ -77,7 +77,7 @@
             {elseif $language == "nl"}
                 Meer scans...
             {elseif $language == "es"}
-				Más scans... 
+				      Más scans... 
             {elseif $language == "fr"}
 				Plus de scans... 
 	    {elseif $language == "ja"}

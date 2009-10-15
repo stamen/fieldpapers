@@ -31,6 +31,25 @@
         Nederlandse vertaling door Milo van der Linden
 	<br />
 	Japonese vertaling door Hiroshi Miura
+    
+  {elseif $language == "es"}
+      Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
+      <br />
+      Contacto <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
+      <br />
+      Datos geográficos <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
+          <a href="http://openstreetmap.org">OpenStreetMap</a>
+      <br />
+      Cartografía web e impresa &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
+     <br />
+      Traducción al alemán por Jonas Krückel
+      <br />
+      Traducción al holandés por Milo van der Linden
+      <br />
+     Traducción al español por Manuel González Noriega  
+      <br />
+      Traduction al francés por Jonathan Fretin
+
     {elseif $language == "fr"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />

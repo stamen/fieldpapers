@@ -10,7 +10,7 @@
         {elseif $language == "nl"}
             #{$print.id|escape} afdrukken
         {elseif $language == "es"}
-			Imprimir #{$print.id|escape} 
+			    Imprimir #{$print.id|escape} 
         {elseif $language == "fr"}
             Impression #{$print.id|escape} 
         {elseif $language == "ja"}
