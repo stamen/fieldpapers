@@ -13,6 +13,8 @@
 			Imprimir #{$print.id|escape} 
         {elseif $language == "fr"}
             Impression #{$print.id|escape} 
+        {elseif $language == "ja"}
+	    印刷 #{$print.id|escape}
         {else}
             Print #{$print.id|escape}
         {/if}
@@ -42,6 +44,8 @@
             Imprimir mapa
         {elseif $language == "fr"}
             Imprimer la carte
+        {elseif $language == "ja"}
+	    地図印刷
         {else}
             Print Map
         {/if}
@@ -66,6 +70,8 @@
 					¿Es este mapa erróneo o desfasado?
                 {elseif $language == "fr"}
                     La carte est-elle mauvaise, ou obsolète ?
+                {elseif $language == "ja"}
+		    この地図が間違っているか、古いですか？
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
@@ -79,6 +85,8 @@
   					{assign var="label" value="Repetir"}
 				{elseif $language == "fr"}
 					{assign var="label" value="Recommencer"}
+				{elseif $language == "ja"}
+					{assign var="label" value="再実行"}
 				{else}
 					{assign var="label" value="Redo"}
 				{/if}

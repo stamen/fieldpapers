@@ -11,6 +11,8 @@
             Scan uploaden
         {elseif $language == "fr"}
             Envoyer un scan
+        {elseif $language == "ja"}
+            スキャナーデータのアップロード
         {else}
             Upload Scan
         {/if}
@@ -42,6 +44,8 @@
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
             {assign var="label" value="Send"}
+	{else if $language == "ja"}
+            {assign var="label" value="送信"}
         {else}
             {assign var="label" value="Send"}
         {/if}

@@ -11,6 +11,8 @@
             Gescande kaart #{$scan.id|escape}
         {elseif $language == "fr"}
             Carte scannée #{$scan.id|escape}
+        {elseif $language == "ja"}
+	    取り込んだ地図#{$scan.id|escape}
         {else}
             Scanned Map #{$scan.id|escape}
         {/if}
@@ -60,6 +62,8 @@
                     Gescande kaart
                 {elseif $language == "fr"}
                     Carte scannée
+		{elseif $language == "ja"}
+		    取り込んだ地図
                 {else}
                     Scanned Map
                 {/if}
@@ -78,6 +82,8 @@
                     Omvat het gebied rondom
                 {elseif $language == "fr"}
                     Couvre la zone près de
+		{elseif $language == "ja"}
+		    近所をカバー
                 {else}
                     Covers the area near
                 {/if}
@@ -99,6 +105,8 @@
 					{$scan.age|nice_relativetime|escape} geupload.
 				{elseif $language == "fr"}
 					Envoyé le {$scan.age|nice_relativetime|escape}.
+                                {elseif $language == "ja"}
+                                        アップロード {$scan.age|nice_relativetime|escape}
 				{else}
 					Uploaded {$scan.age|nice_relativetime|escape}.
 				{/if}
@@ -134,7 +142,8 @@
                     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">nieuwe kaart van dit gebied</a> downloaden.
                 {elseif $language == "fr"}
                     Télécharger <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">une carte récente de cette zone à partir de l'impression</a>.
-
+		{elseif $language == "ja"}
+		     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">印刷された地図 #{$scan.print_id|escape} からこのエリアの最新地図</a>をダウンロードする
                 {else}
                     Download a
                     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">fresh map of this area from print #{$scan.print_id|escape}</a>.
@@ -148,6 +157,8 @@
                     Kaart bewerken
                 {elseif $language == "fr"}
                     Modifier la carte
+                {elseif $language == "ja"}
+		    The Mapの編集
                 {else}
                     Edit The Map
                 {/if}
@@ -168,6 +179,8 @@
 							{assign var="label" value="Edit"}
 						{elseif $language == "fr"}
 							{assign var="label" value="Modifier"}
+                                                {if $language == "ja"}
+                                                        {assign var="label" value="編集"}
 						{else}
 							{assign var="label" value="Edit"}
 						{/if}
@@ -208,6 +221,13 @@
                         (plus de 200 dpi pour une feuille entière) et le côté droit vers le haut. 
                         Un <a href="http://en.wikipedia.org/wiki/QR_Code">QR code</a> bien lisible est nécessaire.
                         Si ça ne fonctionne toujours pas, <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">prévenez-nous</a>.
+                                        {elseif $language == "ja"}
+                                                あなたは、スキャナーしなおしてアップロードしようとすると思います。
+                                                それが十分に高解像度であるか(すべてのシートに対して200DPI以上ですか）
+                                                また、右が上になっているか、意識してください。最も重要な点は、
+                                                <a href="http://en.wikipedia.org/wiki/QR_Code">QR code</a>が読めることです。
+                                                もし、このアドバイスを守ってもうまくいかない場合は、
+                                                <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">私たちにお知らせください</a>.
 					{else}
 						You might try uploading your scan again, making sure that
 						it’s at a reasonably high resolution (200+ dpi for a full
