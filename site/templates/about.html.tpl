@@ -9,6 +9,12 @@
             Über
         {elseif $language == "nl"}
             Over
+        {elseif $language == "es"}
+            Acerca de    
+        {elseif $language == "fr"}
+            À propos
+	{elseif $language == "ja"}
+	    情報
         {else}
             About
         {/if}

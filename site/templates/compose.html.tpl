@@ -9,8 +9,14 @@
             Zusammenstellen
         {elseif $language == "nl"}
             Samenstellen
+		    {elseif $language == "es"}
+			  Componer
+        {elseif $language == "fr"}
+            Composer
+	{elseif $language == "ja"}
+	    作成
         {else}
-            Compose
+            Componer
         {/if}
     {/strip} (Walking Papers)</title>
 </head>

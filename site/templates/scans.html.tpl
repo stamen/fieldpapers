@@ -9,6 +9,12 @@
             Zuletzt gescannt
         {elseif $language == "nl"}
             Recente scans
+        {elseif $language == "es"}
+            Últimos scans    
+        {elseif $language == "fr"}
+            Scans récents
+        {elseif $language == "ja"}
+	    最近の取込データ
         {else}
             Recent Scans
         {/if}
@@ -25,6 +31,12 @@
             Zuletzt gescannt
         {elseif $language == "nl"}
             Recente scans
+      {elseif $language == "es"}
+          Últimos scans
+        {elseif $language == "fr"}
+            Scans récents
+        {elseif $language == "ja"}
+            最近の取込データ
         {else}
             Recent Scans
         {/if}

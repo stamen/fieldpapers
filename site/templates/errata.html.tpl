@@ -9,6 +9,12 @@
             Fehlerverzeichnis
         {elseif $language == "nl"}
             Foutenlijst
+        {elseif $language == "es"}
+           Fe de erratas    
+        {elseif $language == "fr"}
+            Erreurs
+	{elseif $language == "ja"}
+	    訂正
         {else}
             Errata
         {/if}
@@ -25,6 +31,10 @@
             Fehlerverzeichnis
         {elseif $language == "nl"}
             Foutenlijst
+        {elseif $language == "es"}
+          Fe de erratas
+        {elseif $language == "fr"}
+          Erreurs
         {else}
             Errata
         {/if}
@@ -38,6 +48,8 @@
 			<i><a href="http://dictionary.reference.com/search?q=errata">Errata</a> -
 			a list of errors and their corrections inserted, usually on a separate
 			page or slip of paper, in a book or other publication.</i>
+	{elseif $language = "ja"}
+	   "訂正"ページを提供しているけれども、間違いとその訂正が一覧になっている本などによく入っている、いわゆる正誤表とはちがいます。 
         {else}
 			I have been informed that “Errata” does not mean what I thought it meant:
 			<i><a href="http://dictionary.reference.com/search?q=errata">Errata</a> -
@@ -48,9 +60,14 @@
     <p>
         {if $language == "de"}
             Diese Seite wurde zu <a href="{$base_dir}/zeitgeist.php">Statistik</a> verschoben.
+        {if $language == "es"}
+             
+            Esta página se ha trasladado a <a href="{$base_dir}/zeitgeist.php">Estadísticas</a>.      
         {elseif $language == "nl"}
             I thought it was more like a list of random, “erratic” stuff that didn’t fit anyplace else.
 			So, this page has <a href="{$base_dir}/zeitgeist.php">moved to “zeitgeist”</a>.
+	{elseif $language == "ja"}
+	このページは、<a href="{$base_dir}/zeitgeist.php">moved to “zeitgeist”</a>に移動しました。
         {else}
 			I thought it was more like a list of random, “erratic” stuff that didn’t fit anyplace else.
 			So, this page has <a href="{$base_dir}/zeitgeist.php">moved to “zeitgeist”</a>.

@@ -19,6 +19,30 @@
         <a href="{$base_dir}/zeitgeist.php">Statistiek</a>
         <a href="{$base_dir}/about.php">Over</a>
 
+
+  {elseif $language == "es"}
+      <a href="{$base_dir}/">Portada</a>
+      <a href="{$base_dir}/prints.php">Impresiones</a>
+      <a href="{$base_dir}/scans.php">Scans</a>
+      <a href="{$base_dir}/upload.php">Subir</a>
+      <a href="{$base_dir}/zeitgeist.php">Estadísticas</a>
+      <a href="{$base_dir}/about.php">Acerca de</a>
+
+  {elseif $language == "fr"}
+      <a href="{$base_dir}/">Accueil</a>
+      <a href="{$base_dir}/prints.php">Impressions</a>
+      <a href="{$base_dir}/scans.php">Scans</a>
+      <a href="{$base_dir}/upload.php">Envoyer</a>
+      <a href="{$base_dir}/zeitgeist.php">Stats</a>
+      <a href="{$base_dir}/about.php">À propos</a>
+
+  {elseif $language == "ja"}
+      <a href="{$base_dir}/">ホーム</a>
+      <a href="{$base_dir}/prints.php">プリント</a>
+      <a href="{$base_dir}/scans.php">取込データ</a>
+      <a href="{$base_dir}/upload.php">アップロード</a>
+      <a href="{$base_dir}/zeitgeist.php">統計</a>
+      <a href="{$base_dir}/about.php">サイトについて</a>
     {else}
         <a href="{$base_dir}/">Home</a>
         <a href="{$base_dir}/prints.php">Prints</a>

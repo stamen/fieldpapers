@@ -9,6 +9,12 @@
             Zuletzt gedruckt
         {elseif $language == "nl"}
             Recente afdrukken
+        {elseif $language == "es"}
+          Últimas impresiones
+        {elseif $language == "fr"}
+          Impressions récentes
+        {elseif $language == "ja"}
+	  最近の印刷
         {else}
             Recent Prints
         {/if}
@@ -25,6 +31,12 @@
             Zuletzt gedruckt
         {elseif $language == "nl"}
             Recente afdrukken
+        {elseif $language == "es"}
+          Últimas impresiones     
+        {elseif $language == "fr"}
+          Impressions récentes
+        {elseif $language == "ja"}
+	  最近の印刷
         {else}
             Recent Prints
         {/if}

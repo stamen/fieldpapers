@@ -9,6 +9,12 @@
             Statistik
         {elseif $language == "nl"}
             Statistieken
+        {elseif $language == "es"}
+            Estadísticas    
+        {elseif $language == "fr"}
+            Statistiques
+        {elseif $language == "ja"}
+	   統計
         {else}
             Zeitgeist
         {/if}
@@ -25,6 +31,12 @@
             Statistik
         {elseif $language == "nl"}
             Statistieken
+        {elseif $language == "es"}
+            Estadísticas    
+        {elseif $language == "fr"}
+            Statistiques
+        {elseif $language == "ja"}
+           統計
         {else}
             Zeitgeist
         {/if}

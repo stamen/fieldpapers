@@ -36,7 +36,7 @@ Auch in Deutschland sind mittlerweile große Teile des Straßennetzes bereits er
 
 <h3>Kontext</h3>
 <p>
-    Das Projekt ist hauptsächlich von <a href="http://aaronland.info/">Aaron Cope von Flickr</a>inspiriert und von <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom at Really Interesting Group</a>, deren <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> und <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> all diesen post-digitalen, mittelalterlichen Technologien helfen sinnvoll zu sein.
+    Das Projekt ist hauptsächlich von <a href="http://aaronland.info/">Aaron Cope von Flickr</a> inspiriert und von <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom at Really Interesting Group</a>, deren <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> und <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> all diesen post-digitalen, mittelalterlichen Technologien helfen sinnvoll zu sein.
 </p>
 <p>
     <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
