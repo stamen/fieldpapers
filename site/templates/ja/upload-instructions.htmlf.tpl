@@ -1,10 +1,11 @@
-<h2>You’re Uploading A Scanned Map</h2>
-
+<h2>スキャンした地図をアップロードしています</h2>
+ 
 <p>
-    You’re here because you have a paper version of a
-    <a href="{$base_dir}/prints.php">printed map</a> and you’d like to
-    send a scanned version to trace into OpenStreetMap.
-    Your scan should be a reasonably-high resolution
-    (200+ <a href="http://en.wikipedia.org/wiki/Dots_per_inch">dpi</a>)
-    image file, such as a JPEG. A PDF file will not work.
+あなたが、このシステムから紙に<a href="{$base_dir}/prints.php">
+印刷した
+地図</a>をもっていて、
+スキャナーしたファイルをOpenStreetMapに取り込ませたい、ということでこのページにいるはずです。
+　スキャナーしたJPEG画像ファイルは、その後の作業で判別可能な解像度であるべき
+(200 <a href="http://en.wikipedia.org/wiki/Dots_per_inch">dpi</a>以上)です。
+PDFファイルには対応していません。
 </p>
