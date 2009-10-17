@@ -13,6 +13,8 @@
           Últimas impresiones
         {elseif $language == "fr"}
           Impressions récentes
+        {elseif $language == "ja"}
+	  最近の印刷
         {else}
             Recent Prints
         {/if}
@@ -33,6 +35,8 @@
           Últimas impresiones     
         {elseif $language == "fr"}
           Impressions récentes
+        {elseif $language == "ja"}
+	  最近の印刷
         {else}
             Recent Prints
         {/if}
