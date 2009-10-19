@@ -200,7 +200,7 @@
 		
 		{if $language == "de"}
             {assign var="label" value="Speichern"}
-		{if $language == "fr"}
+		{elseif $language == "fr"}
             {assign var="label" value="Enregistrer"}
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
