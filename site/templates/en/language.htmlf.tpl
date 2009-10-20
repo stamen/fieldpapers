@@ -24,4 +24,9 @@
         <br/>
         Translation by <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
     </li>
+    <li>
+        <strong>Italian</strong>
+        <br/>
+        Translation by <a href="http://github.com/ecarnevale">Emanuel Carnevale</a>
+    </li>
 </ul>
