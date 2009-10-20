@@ -1,12 +1,12 @@
 <p>
-    You’ll need to log in with your OpenStreetMap account
-    to do any editing; do that below or
-    <a href="http://www.openstreetmap.org/user/new">create a new account</a>.
-    <strong><i>Walking Papers</i> will not see or keep your password</strong>,
-    it is passed directly to OpenStreetMap.
+    Per poter fare qualsiasi modifica devi fare il login con il tuo
+		account di OpenStreetMap; puoi farlo qui sotto oppure puoi  
+    <a href="http://www.openstreetmap.org/user/new">crea un nuovo account</a>.
+    <strong><i>Walking Papers</i> non conserverà né sara a conoscenza della tua password</strong>,
+    viene passata direttamante a OpenStreetMap.
 </p>
 <p>
-    <label for="username">Email Address or Username</label>
+    <label for="username">Indirizzo email o Nome utente</label>
     <br />
     <input id="username-textfield" name="username" type="text" size="30" />
 </p>
@@ -26,6 +26,6 @@
     (<a href="http://www.openstreetmap.org/user/forgot-password">Lost your password?</a>)
 </p>
 <p>
-    This form will be replaced by an interactive editing window
-    with your scanned map in the background for a guide.
+		Questa form verrà sostituita da una finestra di editing interattiva
+		con la tua mappa scannerizzata messa come sfondo per esserti di guida.
 </p>

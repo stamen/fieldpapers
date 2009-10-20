@@ -2,5 +2,5 @@
 
 <p>
     Percentuale di stampe divise per orientamento nell'ultimo mese.
-		L'orientamento orizzontale e' stato introdotto per la prima volta il 20 Giugno.
+		L'orientamento orizzontale é stato introdotto per la prima volta il 20 Giugno.
 </p>

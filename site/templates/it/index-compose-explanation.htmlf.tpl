@@ -11,5 +11,5 @@
 </p>
 
 <p>
-    <strong>Per iniziare</strong>, cerca per una citta' o un paese che conosci, e poi fai zoom e sposta la cartina in una localita' esatta.
+    <strong>Per iniziare</strong>, cerca per una città o un paese che conosci, e poi fai zoom e sposta la cartina in una località esatta.
 </p>
