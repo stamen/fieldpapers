@@ -1,5 +1,4 @@
 <p>
-    Why are there so many prints? It’s easy to create a print and less-easy to make a scan. We’re in the early days of this site,
-    and I imagine that it may take some time for the initial excitement of printing out paper maps to translate into submitted,
-    annotated scanned images. Bring it on!
+		Perche' ci sono cosi' tante stampe? E' facile creare una stampa e meno facile effettuare una scansione. Questo sito e' nella sua prima infanzia,
+		e mi immagino che ci voglia un po' di tempo perche' l'eccitazione iniziale di stampare mappe cartacee si trasformi in immagini scannerizzate ed inviate. Mandatecele!
 </p>

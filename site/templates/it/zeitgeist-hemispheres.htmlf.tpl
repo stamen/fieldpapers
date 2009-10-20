@@ -1,5 +1,5 @@
-<h3>Hemispheres</h3>
+<h3>Emisferi</h3>
 
 <p>
-    Number of prints by hemisphere in the past month.
+    Numero di stampe per emisfero nell'ultimo mese.
 </p>

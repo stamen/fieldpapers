@@ -1,6 +1,6 @@
-<h3>Orientation</h3>
+<h3>Orientamento</h3>
 
 <p>
-    Share of prints by orientation in the past month.
-    Landscape orientation was first introduced on June 20.
+    Percentuale di stampe divise per orientamento nell'ultimo mese.
+		L'orientamento orizzontale e' stato introdotto per la prima volta il 20 Giugno.
 </p>
