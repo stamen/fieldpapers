@@ -1,13 +1,15 @@
 <p>
-    <a href="http://openstreetmap.org">OpenStreetMap</a> is a wiki-style map
-    of the world that anyone can edit. In some places, participants are
-    creating the first freely-available maps by GPS survey. In other places,
-    such as the United States, basic roads exist, but lack local detail:
-    locations of traffic signals, ATMs, cafés, schools, parks, and shops.
-    What such partially-mapped places need is not more GPS traces, but
-    additional knowledge about what exists on and around the street. Walking
-    Papers is made to help you easily create printed maps, mark them with
-    things you know, and then share that knowledge with OpenStreetMap.
+    <a href="http://openstreetmap.org">OpenStreetMap</a> é una mappa
+		del mondo in stile wiki che tutti possono modificare. In alcuni luoghi
+		i partecipanti stanno creando le prime mappe liberamente disponibili realizzate
+		con un'esplorazione via GPS. In altri posti, come ad esempio gli Stati Uniti,
+		le strade principali esistono, ma mancano dei dettagli locali: la posizione 
+		dei segnali stradali, dei bancomat, dei bar, delle scuole, dei parchi ed dei 
+		negozi. Quello di cui questi posti parzialmente mappati hanno bisogno, non sono 
+		ulteriori tracce GPS, ma ingormazioni aggiuntive su cosa esiste sulle strade ed
+		intorno ad esse. Walking Papers é stato realizzato per aiutarti a creare in modo
+		semplice delle mappe cartacee, segnarle con le cose che conosci e poi condividere
+		questa conoscenza con OpenStreetMap.
 </p>
 
 <p>
