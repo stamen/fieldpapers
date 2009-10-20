@@ -1,10 +1,9 @@
 <p>
-    Print maps, draw on them, scan them back in and help OpenStreetMap
-    improve its coverage of local points of interests and street detail.
-    <i>Walking Papers</i> is a product of <a href="http://stamen.com">Stamen Design's</a>
-    <a href="http://mike.teczno.com">Michal Migurski</a>.
+    Stampa le mappe, disegnaci sopra, scannerizzale di nuovo e aiuta OpenStreetMap
+		a migliorare la sua copertura di punti di interesse locale ed il dettaglio stradale.
+    <i>Walking Papers</i> e' un prodotto di <a href="http://mike.teczno.com">Michal Migurski</a> di <a href="http://stamen.com">Stamen Design</a>.
 </p>
 
 <p>
-    <a href="#make">See below to make your own printed map.</a>
+    <a href="#make">Guarda qui sotto per realizzare le tue mappe personali</a>
 </p>
