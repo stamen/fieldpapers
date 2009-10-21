@@ -13,8 +13,8 @@
            Fe de erratas    
         {elseif $language == "fr"}
             Erreurs
-	{elseif $language == "ja"}
-	    訂正
+      	{elseif $language == "ja"}
+      	    訂正
         {else}
             Errata
         {/if}

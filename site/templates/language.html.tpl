@@ -14,8 +14,10 @@
             Localización
         {elseif $language == "fr"}
             Traduction
-	{elseif $language == "ja"}
-	    地域化
+      	{elseif $language == "ja"}
+      	    地域化
+	      {elseif $language == "it"}
+          Localizzazione
         {else}
             Localization
         {/if}

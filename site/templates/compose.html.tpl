@@ -10,11 +10,13 @@
         {elseif $language == "nl"}
             Samenstellen
 		    {elseif $language == "es"}
-			  Componer
+    			  Componer
         {elseif $language == "fr"}
             Composer
-	{elseif $language == "ja"}
-	    作成
+	      {elseif $language == "ja"}
+      	    作成
+	      {elseif $language == "it"}
+      	    Compositore
         {else}
             Componer
         {/if}

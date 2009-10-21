@@ -29,9 +29,11 @@
         {elseif $language == "es"}
 			      Últimos scans
         {elseif $language == "fr"}
-			Scans récents
-	{elseif $language == "ja"}
-	    最近の取込データ
+      			Scans récents
+      	{elseif $language == "ja"}
+      	    最近の取込データ
+      	{elseif $language == "it"}
+      	    Scansioni recenti
         {else}
             Recent Scans
         {/if}
@@ -79,9 +81,11 @@
             {elseif $language == "es"}
 				      Más scans... 
             {elseif $language == "fr"}
-				Plus de scans... 
-	    {elseif $language == "ja"}
-		最近の取り込みの続き...
+				      Plus de scans... 
+      	    {elseif $language == "ja"}
+          		最近の取り込みの続き...
+        		{elseif $language == "it"}
+				      Altre scansioni recenti...
             {else}
                 More recent scans...
             {/if}
@@ -98,8 +102,10 @@
                 Crear impresión   
             {elseif $language == "fr"}
                 Créer une impression
-	    {elseif $language == "ja"}
-		印刷する
+      	    {elseif $language == "ja"}
+            		印刷する
+            {elseif $language == "it"}
+                Stampare
             {else}
                 Make A Print
             {/if}
@@ -119,8 +125,10 @@
             {assign var="label" value="Buscar"}        
         {elseif $language == "fr"}
             {assign var="label" value="Chercher"}
-	{elseif $language == "ja"}
-	    {assign var="label" value="検索"}
+        {elseif $language == "it"}
+            {assign var="label" value="Cerca"}
+        {elseif $language == "ja"}
+      	    {assign var="label" value="検索"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -155,8 +163,10 @@
                 Recomendamos un nivel de zoom de <b>14 o más</b> para mapear a nivel de calle.
             {elseif $language == "fr"}
                 Un niveau de zoom <b>de 14 ou plus</b> est recommandé pour la cartographie au niveau du quartier.
-	    {elseif $language == "ja"}
-		ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
+            {elseif $language == "it"}
+                Per una mappatura a livello stradale é raccomandato un livello di zoom <b>maggiore o uguale a 14</b>
+      	    {elseif $language == "ja"}
+            		ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -198,6 +208,8 @@
                     alert("Sorry, I couldn't find a place by that name.");
 		{elseif $language == "ja"}
 		    alert("申し訳ありません。その名前の場所は見つけられません。");
+		    {elseif $language == "it"}
+					alert("Ci dispiace non siamo riusciti a trovare un posto con quel nome.");
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
                 {/if}	
@@ -246,6 +258,8 @@
               Orientation du papier :
 	  {elseif $language == "ja"}
 	      向き:
+	      {elseif $language == "it"}
+            Orientamento del foglio:
             {else}
                 Orientation:
             {/if}
@@ -258,8 +272,10 @@
                     {assign var="label" value="Retrato"}    
                 {elseif $language == "fr"}
                     {assign var="label" value="Portrait"}    
-		{elseif $language == "ja"}
-		    {assign var="label" value="縦"}
+            		{elseif $language == "ja"}
+            		    {assign var="label" value="縦"}
+                {elseif $language == "it"}
+                    {assign var="label" value="Verticale"}    
                 {else}
                     {assign var="label" value="Portrait"}
                 {/if}
@@ -273,8 +289,10 @@
                     {assign var="label" value="Paisaje"}
                 {elseif $language == "fr"}
                     {assign var="label" value="Paysage"}
-		{elseif $language == "ja"}
-		    {assign var="label" value="横"}
+            		{elseif $language == "ja"}
+            		    {assign var="label" value="横"}
+                {elseif $language == "it"}
+                    {assign var="label" value="Orizzontale"}    
                 {else}
                     {assign var="label" value="Landscape"}
                 {/if}
@@ -289,8 +307,10 @@
                 {assign var="label" value="Crear"}
             {elseif $language == "fr"}
                 {assign var="label" value="Créer"}
-	    {elseif $language == "ja"}
-		{assign var="label" value="作成"}
+      	    {elseif $language == "ja"}
+            		{assign var="label" value="作成"}
+      	    {elseif $language == "it"}
+            		{assign var="label" value="Crea"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -307,8 +327,10 @@
             Últimas impresiones
         {elseif $language == "fr"}
             Impressions récentes
-	{elseif $language == "ja"}
-	    最近の印刷
+        {elseif $language == "ja"}
+      	    最近の印刷
+        {elseif $language == "it"}
+            Stampe recenti
         {else}
             Recent Prints
         {/if}
@@ -349,10 +371,12 @@
 				Más impresiones...
 			{elseif $language == "fr"}
 				Plus d'impressions récentes...
-		{elseif $language == "ja"}
-		   最近の印刷の続き...
-            {else}
-                More recent prints...
+  		{elseif $language == "ja"}
+  		   最近の印刷の続き...
+ 			{elseif $language == "it"}
+ 				Altre stampe recenti...
+      {else}
+        More recent prints...
             {/if}
         </a>
     {/strip}</p>

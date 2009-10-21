@@ -15,6 +15,8 @@
             Envoyer un scan
         {elseif $language == "ja"}
             スキャナーデータのアップロード
+        {elseif $language == "it"}
+            Invia una mappa scannerizzata
         {else}
             Upload Scan
         {/if}
@@ -49,7 +51,9 @@
 	{elseif $language == "ja"}
             {assign var="label" value="送信"}
       {elseif $language == "es"}
-          {assign var="label" value="Enviar"}      
+          {assign var="label" value="Enviar"}
+      {elseif $language == "it"}
+              {assign var="label" value="Invia"}
         {else}
             {assign var="label" value="Send"}
         {/if}
