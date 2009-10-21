@@ -43,7 +43,7 @@
       <a href="{$base_dir}/upload.php">アップロード</a>
       <a href="{$base_dir}/zeitgeist.php">統計</a>
       <a href="{$base_dir}/about.php">サイトについて</a>
-  {elseif $language == "fr"}
+  {elseif $language == "it"}
       <a href="{$base_dir}/">Home</a>
       <a href="{$base_dir}/prints.php">Stampe</a>
       <a href="{$base_dir}/scans.php">Scansioni</a>
