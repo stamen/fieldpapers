@@ -1,9 +1,9 @@
 <p>
     Per poter fare qualsiasi modifica devi fare il login con il tuo
 		account di OpenStreetMap; puoi farlo qui sotto oppure puoi  
-    <a href="http://www.openstreetmap.org/user/new">crea un nuovo account</a>.
-    <strong><i>Walking Papers</i> non conserverà né sara a conoscenza della tua password</strong>,
-    viene passata direttamante a OpenStreetMap.
+    <a href="http://www.openstreetmap.org/user/new">creare un nuovo account</a>.
+    <strong><i>Walking Papers</i> non conserverà né sarà mai a conoscenza della tua password</strong>,
+    essa viene passata direttamante a OpenStreetMap.
 </p>
 <p>
     <label for="username">Indirizzo email o Nome utente</label>
@@ -27,5 +27,5 @@
 </p>
 <p>
 		Questa form verrà sostituita da una finestra di editing interattiva
-		con la tua mappa scannerizzata messa come sfondo per esserti di guida.
+		dove la tua mappa scannerizzata sarà usata come sfondo per poterti essere da guida.
 </p>

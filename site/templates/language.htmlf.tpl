@@ -18,8 +18,10 @@
             (<a href="{$base_dir}/language.php"><abbr title="Localización">l10n</abbr></a>)
         {elseif $language == "fr"}
             (<a href="{$base_dir}/language.php"><abbr title="Traduction">l10n</abbr></a>)
-	{elseif $language == "ja"}
-	    (<a href="{$base_dir}/language.php"><abbr title="地域化">l10n</abbr></a>)
+      	{elseif $language == "ja"}
+      	    (<a href="{$base_dir}/language.php"><abbr title="地域化">l10n</abbr></a>)
+	      {elseif $language == "it"}
+            (<a href="{$base_dir}/language.php"><abbr title="Localizzazione">l10n</abbr></a>)  
         {else}
             (<a href="{$base_dir}/language.php"><abbr title="Localization">l10n</abbr></a>)
         {/if}

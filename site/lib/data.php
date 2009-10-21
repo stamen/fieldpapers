@@ -114,10 +114,16 @@
             // fr or fr-
             if(preg_match('/^fr\b/', $language))
                 return 'fr';
-	    // ja or ja-
-	    if(preg_match('/^ja\b/', $language))
-		return 'ja';
-        }
+                
+    	    // ja or ja-
+    	    if(preg_match('/^ja\b/', $language))
+    		return 'ja';
+            }
+            
+            // it or it-
+            if(preg_match('/^it\b/', $language))
+                return 'it';
+
         
         // english is the default
         return 'en';

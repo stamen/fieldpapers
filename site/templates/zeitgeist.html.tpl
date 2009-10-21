@@ -15,6 +15,8 @@
             Statistiques
         {elseif $language == "ja"}
 	   統計
+       {elseif $language == "it"}
+           Statistiche
         {else}
             Zeitgeist
         {/if}
@@ -37,6 +39,8 @@
             Statistiques
         {elseif $language == "ja"}
            統計
+       {elseif $language == "it"}
+           Statistiche
         {else}
             Zeitgeist
         {/if}
