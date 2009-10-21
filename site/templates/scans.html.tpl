@@ -14,7 +14,9 @@
         {elseif $language == "fr"}
             Scans récents
         {elseif $language == "ja"}
-	    最近の取込データ
+    	    最近の取込データ
+        {elseif $language == "it"}
+            Scansioni recenti
         {else}
             Recent Scans
         {/if}
@@ -37,6 +39,8 @@
             Scans récents
         {elseif $language == "ja"}
             最近の取込データ
+        {elseif $language == "it"}
+            Scansioni recenti
         {else}
             Recent Scans
         {/if}

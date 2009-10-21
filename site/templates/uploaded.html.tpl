@@ -14,7 +14,9 @@
         {elseif $language == "fr"}
             Scan envoyé
         {elseif $language == "ja"}
-	    アップロードした取込データ
+      	    アップロードした取込データ
+        {elseif $language == "it"}
+            Scansione inviata
         {else}
             Uploaded Scan
         {/if}
@@ -43,10 +45,12 @@
     {elseif $language == "es"}
       Has subido un mapa escaneado
 		{elseif $language == "fr"}
-            Vous avez envoyé une carte scannée.
-        	{elseif $language == "ja"}
-            	    	スキャンしたアップロードしました
-	        {else}
+      Vous avez envoyé une carte scannée.
+  	{elseif $language == "ja"}
+	    	スキャンしたアップロードしました
+		{elseif $language == "it"}
+      Hai spedito una mappa scannerizzata.
+    {else}
 			You’ve Uploaded A Scanned Map
 		{/if}	
 		</h2>
@@ -64,7 +68,9 @@
             avant de commencer à la tracer.
         {elseif $language == "ja"}
 	    スキャナーした地図をアップロードしました。そして、トレースを行う前に若干の情報を追加する段階になりました。
-        {else}
+      {elseif $language == "it"}
+          Hai appena spedito una mappa scannerizzata e stai per aggiungere un paio di informazioni prima di iniziare a tracciarla.
+      {else}
 			You’ve just uploaded a scanned map, and you’re about to add
 			a few bits of information about before you proceed to trace it.
 		{/if}
@@ -83,6 +89,8 @@
 				privé ?
                         {elseif $language == "ja"}
 				プライベート?
+  			{elseif $language == "it"}
+  				privato?
 			{else}
 				private?
 			{/if}
@@ -102,6 +110,8 @@
 					Avez-vous l'intention de la modifier vous-même ?
                                 {elseif $language == "ja"}
 					この地図をご自身で編集する予定ですか？
+        {elseif $language == "it"}
+          Hai intenzione di iniziarla a modificare tu?
 				{else}
 					Do you plan to edit this yourself?
 				{/if}
@@ -114,6 +124,8 @@
                       {assign var="label" value="Sí"}    
                     {elseif $language == "fr"}
                         {assign var="label" value="Oui"}
+                    {elseif $language == "it"}
+                        {assign var="label" value="Si"}
 		    {elseif $language == "ja"}
 			{assign var="label" value="はい"}
                     {else}
@@ -128,8 +140,10 @@
                       {assign var="label" value="No"}
                     {elseif $language == "fr"}
                         {assign var="label" value="Non"}
-		    {elseif $language == "ja"}
-			{assign var="label" value="いいえ"}
+            		    {elseif $language == "ja"}
+                			{assign var="label" value="いいえ"}
+              			{elseif $language == "it"}
+                      {assign var="label" value="No"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}	
@@ -153,6 +167,8 @@
                     indiquera aux visiteurs quels scans ils pourront utiliser pour aider.
                                 {elseif $language == "ja"}
 					ご自身で、OpenStreetMapの編集を行う必要はありません。ここで"no"と答えれば、他の訪問者がこのスキャン結果について知ることができ、助けることができます。
+    			{elseif $language == "it"}
+    				Non devi effettuare le modifiche OpenStreetMap. Rispondendo “no” renderai a conoscenza gli altri visitatori di scansioni che potrebbero beneficiare del loro aiuto.
 				{else}
 					You don’t have to do your own OpenStreetMap editing. Saying “no”
 					will let other visitors know about scans they can help with.
@@ -171,6 +187,8 @@
 				あなたの追加した情報を説明してください
   			{elseif $language == "es"}
 					Describe tus modificaciones.	
+  			{elseif $language == "it"}
+          Descrivi le tue modifiche.
 				{else}
 					Describe your additions.
 				{/if}
@@ -190,6 +208,8 @@
 					商店、歩道の修正、信号機の追加、公園の輪郭、郵便ポストを追加したでしょうか？このエリアでの追加について、このようなコメントをいれてください。
 				{elseif $language == "es"}
         ¿Has añadido negocios, corregido aceras, señalado semáforos, delineado parques, colocado buzones de correos? Describe en pocas palabras tus modificaciones a éste área.
+        {elseif $language == "it"}
+          Hai aggiunto negozi, marciapiedi, segnato semafori, delimitato parchi, posizionato buche delle lettere? Scrivi un paio di parole a proposito delle modifiche in quest'area.
 				{else}
 					Did you add businesses, fix footpaths, mark traffic lights, outline parks,
 					place mailboxes? Write a few words about the changes to this area.
@@ -209,6 +229,8 @@
             {assign var="label" value="保存"}
 	{elseif $language == "es"}
             {assign var="label" value="Guardar"}
+        {elseif $language == "it"}
+                  {assign var="label" value="Salva"}
         {else}
             {assign var="label" value="Save"}
         {/if}

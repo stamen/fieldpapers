@@ -13,8 +13,10 @@
             Acerca de    
         {elseif $language == "fr"}
             À propos
-	{elseif $language == "ja"}
-	    情報
+	      {elseif $language == "ja"}
+      	    情報
+        {elseif $language == "it"}
+            Di cosa si tratta  
         {else}
             About
         {/if}
