@@ -65,6 +65,8 @@
                 <input name="east" type="hidden" value="{$print.east|escape}" />
                 <input name="west" type="hidden" value="{$print.west|escape}" />
                 <input name="zoom" type="hidden" value="{$print.zoom|escape}" />
+                <input name="orientation" type="hidden" value="{$print.orientation|escape}" />
+                <input name="provider" type="hidden" value="{$print.provider|escape}" />
         
                 {if $language == "de"}
                     Ist diese Karte falsch oder veraltet?

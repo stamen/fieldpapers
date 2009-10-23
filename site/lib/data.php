@@ -312,21 +312,22 @@
         // TODO: ditch dependency on table_columns()
         $column_names = array_keys(table_columns($dbh, 'prints'));
         
-        $woeid_column_names = in_array('place_woeid', $column_names)
-            ? 'country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,'
+        $orientation_column_name = in_array('orientation', $column_names)
+            ? 'orientation,'
             : '';
         
-        $zoom_column_name = in_array('zoom', $column_names)
-            ? 'zoom,'
+        $provider_column_name = in_array('provider', $column_names)
+            ? 'provider,'
             : '';
         
-        $q = sprintf("SELECT {$woeid_column_names}
-                             {$zoom_column_name}
-                             id, north, south, east, west,
+        $q = sprintf("SELECT {$orientation_column_name}
+                             {$provider_column_name}
+                             id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
                              user_id
                       FROM prints
                       ORDER BY created DESC
@@ -345,7 +346,8 @@
             $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $row['id'], $row['id']);
             $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
 
-            $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
+            if(empty($row['provider']))
+                $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
 
             $rows[] = $row;
         }
@@ -362,7 +364,12 @@
             ? 'orientation,'
             : '';
         
+        $provider_column_name = in_array('provider', $column_names)
+            ? 'provider,'
+            : '';
+        
         $q = sprintf("SELECT {$orientation_column_name}
+                             {$provider_column_name}
                              id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
@@ -384,7 +391,8 @@
         $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $print_id, $print_id);
         $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $print_id);
         
-        $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
+        if(empty($row['provider']))
+            $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
         
         return $row;
     }
@@ -608,7 +616,7 @@
         $column_names = array_keys(table_columns($dbh, 'prints'));
 
         // TODO: ditch dependency on table_columns()
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'provider', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
             if(in_array($field, $column_names) && !is_null($print[$field]))
                 if($print[$field] != $old_print[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));

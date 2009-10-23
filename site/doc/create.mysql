@@ -45,6 +45,8 @@ ALTER TABLE prints ADD COLUMN place_woeid INT UNSIGNED AFTER place_name;
 
 ALTER TABLE prints ADD COLUMN orientation ENUM('portrait', 'landscape') DEFAULT 'portrait' AFTER zoom;
 
+ALTER TABLE prints ADD COLUMN provider VARCHAR(255) AFTER orientation;
+
 
 
 DROP TABLE IF EXISTS scans;
