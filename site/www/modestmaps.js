@@ -813,6 +813,42 @@ com.modestmaps.Map.prototype = {
         return this.coordinate.zoom;
     },
     
+    setProvider: function(newProvider)
+    {
+        for (var tileKey in this.requestedTiles) {
+            if (!wantedTiles[tileKey]) {
+                var tile = this.requestedTiles[tileKey];
+                this.cancelTileRequest(tile);
+                tile = null;
+            }
+        }
+
+        for(var i = 0; i < this.layers.length; i += 1) {
+            var layer = this.layers[i];
+
+            while(layer.firstChild) {
+                layer.removeChild(layer.firstChild);
+            }
+        }
+        
+        this.tiles = {};
+        this.requestedTiles = {};
+    
+        this.requestCount = 0;
+        this.maxSimultaneousRequests = 4;
+        this.requestQueue = [];
+        
+        this.tileCacheSize = 0;
+        
+        // empty cache ?
+        
+        // for later: check geometry and set a new center (not now)
+        
+        this.provider = newProvider;
+        
+        this.draw();
+    },
+    
     // rendering    
     
     draw: function(onlyThisLayer) {

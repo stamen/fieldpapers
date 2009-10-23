@@ -19,6 +19,7 @@
     $west = is_numeric($_POST['west']) ? floatval($_POST['west']) : null;
     $zoom = is_numeric($_POST['zoom']) ? intval($_POST['zoom']) : null;
     $orientation = $_POST['orientation'] ? $_POST['orientation'] : null;
+    $provider = $_POST['provider'] ? $_POST['provider'] : null;
     
     $dbh =& get_db_connection();
     
@@ -223,6 +224,7 @@
         $print['west'] = $west;
         $print['zoom'] = $zoom;
         $print['orientation'] = $orientation;
+        $print['provider'] = $provider;
         
         list($print['country_name'], $print['country_woeid'],
              $print['region_name'], $print['region_woeid'],

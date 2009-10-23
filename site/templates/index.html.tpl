@@ -176,7 +176,7 @@
     <script type="text/javascript" language="javascript1.2">
     // <![CDATA[
 
-        var map = makeMap('map', '{$constants.CLOUDMADE_KEY|escape}');
+        var map = makeMap('map', 'http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png');
         
         // {literal}
         
@@ -215,6 +215,15 @@
                 {/if}	
                 {literal}
             }
+        }
+        
+        function setProvider(providerURL)
+        {
+            var tileURL = function(coord) {
+                return providerURL.replace('{X}', coord.column).replace('{Y}', coord.row).replace('{Z}', coord.zoom);
+            }
+            
+            map.setProvider(new mm.MapProvider(tileURL));
         }
         
         function setOrientation(orientation)
@@ -315,6 +324,20 @@
                 {assign var="label" value="Make"}
             {/if}
             <input class="mac-button" type="submit" name="action" value="{$label}" />
+        </p>
+        
+        <p>
+            Provider:
+            <select name="provider" onchange="setProvider(this.value);">
+                {assign var="label" value="Cloudmade Fineline"}
+                <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png" selected="selected">{$label}</option>
+                
+                {assign var="label" value="Cloudmade Fresh"}
+                <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/997/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                
+                {assign var="label" value="OpenStreetMap"}
+                <option label="{$label}" value="http://tile.openstreetmap.org/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+            </select>
         </p>
     </form>
 

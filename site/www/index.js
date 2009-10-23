@@ -56,10 +56,10 @@ function onMapChanged(map)
     form.elements['zoom'].value = map.coordinate.zoom;
 }
 
-function makeMap(elementID, cloudmadeKey)
+function makeMap(elementID, providerURL)
 {
     var tileURL = function(coord) {
-        return 'http://tile.cloudmade.com/' + cloudmadeKey + '/997/256/' + coord.zoom + '/' + coord.column + '/' + coord.row + '.png';
+        return providerURL.replace('{X}', coord.column).replace('{Y}', coord.row).replace('{Z}', coord.zoom);
     }
     
     var map = new mm.Map(elementID, new mm.MapProvider(tileURL), new mm.Point(360, 456))
