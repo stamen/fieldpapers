@@ -264,7 +264,7 @@
           {elseif $language == "es"}
               Orientación del papel:
           {elseif $language == "fr"}
-              Orientation du papier :
+              Orientation du papier:
 	  {elseif $language == "ja"}
 	      向き:
 	      {elseif $language == "it"}
@@ -327,7 +327,21 @@
         </p>
         
         <p>
+            {if $language == "de"}
+                Kartenstil:
+            {elseif $language == "nl"}
+                Provider:
+          {elseif $language == "es"}
+              Provider:
+          {elseif $language == "fr"}
+              Provider:
+	  {elseif $language == "ja"}
+	      Provider:
+	      {elseif $language == "it"}
             Provider:
+            {else}
+                Provider:
+            {/if}
             <select name="provider" onchange="setProvider(this.value);">
                 {assign var="label" value="Cloudmade Fineline"}
                 <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png" selected="selected">{$label}</option>
