@@ -3,8 +3,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="{$language|default:"en"}">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>{strip}
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>{strip}
         {if $language == "de"}
             #{$print.id|escape} ausdrucken
         {elseif $language == "nl"}
@@ -83,23 +83,23 @@
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
-				
-				{if $language == "de"}
-					{assign var="label" value="Aktualisieren"}
-				{elseif $language == "nl"}
-				    {* nl: WRITE ME *}
-					{assign var="label" value="Redo"}
-				{elseif $language == "es"}
-  					{assign var="label" value="Repetir"}
-				{elseif $language == "fr"}
-					{assign var="label" value="Recommencer"}
-				{elseif $language == "ja"}
-					{assign var="label" value="再実行"}
-				{elseif $language == "it"}
-					{assign var="label" value="Rifai"}
-				{else}
-					{assign var="label" value="Redo"}
-				{/if}
+                
+                {if $language == "de"}
+                    {assign var="label" value="Aktualisieren"}
+                {elseif $language == "nl"}
+                    {* nl: WRITE ME *}
+                    {assign var="label" value="Redo"}
+                {elseif $language == "es"}
+                      {assign var="label" value="Repetir"}
+                {elseif $language == "fr"}
+                    {assign var="label" value="Recommencer"}
+                {elseif $language == "ja"}
+                    {assign var="label" value="再実行"}
+                {elseif $language == "it"}
+                    {assign var="label" value="Rifai"}
+                {else}
+                    {assign var="label" value="Redo"}
+                {/if}
                 <input class="mac-button" type="submit" name="action" value="{$label}" />
             </p>
         </form>
