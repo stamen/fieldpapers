@@ -27,9 +27,9 @@
         {elseif $language == "nl"}
             Recente scans
         {elseif $language == "es"}
-			      Últimos scans
+			Últimos scans
         {elseif $language == "fr"}
-      			Scans récents
+      		Scans récents
       	{elseif $language == "ja"}
       	    最近の取込データ
       	{elseif $language == "it"}
@@ -79,13 +79,13 @@
             {elseif $language == "nl"}
                 Meer scans...
             {elseif $language == "es"}
-				      Más scans... 
+				Más scans... 
             {elseif $language == "fr"}
-				      Plus de scans... 
+				Plus de scans... 
       	    {elseif $language == "ja"}
           		最近の取り込みの続き...
-        		{elseif $language == "it"}
-				      Altre scansioni recenti...
+        	{elseif $language == "it"}
+				Altre scansioni recenti...
             {else}
                 More recent scans...
             {/if}
@@ -103,7 +103,7 @@
             {elseif $language == "fr"}
                 Créer une impression
       	    {elseif $language == "ja"}
-            		印刷する
+            	印刷する
             {elseif $language == "it"}
                 Stampare
             {else}
@@ -166,7 +166,7 @@
             {elseif $language == "it"}
                 Per una mappatura a livello stradale é raccomandato un livello di zoom <b>maggiore o uguale a 14</b>
       	    {elseif $language == "ja"}
-            		ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
+            	ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -261,14 +261,14 @@
                 Ausrichtung:
             {elseif $language == "nl"}
                 Papier oriëntatie:
-          {elseif $language == "es"}
-              Orientación del papel:
-          {elseif $language == "fr"}
-              Orientation du papier:
-	  {elseif $language == "ja"}
-	      向き:
-	      {elseif $language == "it"}
-            Orientamento del foglio:
+			{elseif $language == "es"}
+				Orientación del papel:
+			{elseif $language == "fr"}
+				Orientation du papier:
+			{elseif $language == "ja"}
+				向き:
+			{elseif $language == "it"}
+				Orientamento del foglio:
             {else}
                 Orientation:
             {/if}
@@ -281,8 +281,8 @@
                     {assign var="label" value="Retrato"}    
                 {elseif $language == "fr"}
                     {assign var="label" value="Portrait"}    
-            		{elseif $language == "ja"}
-            		    {assign var="label" value="縦"}
+            	{elseif $language == "ja"}
+            		{assign var="label" value="縦"}
                 {elseif $language == "it"}
                     {assign var="label" value="Verticale"}    
                 {else}
@@ -298,8 +298,8 @@
                     {assign var="label" value="Paisaje"}
                 {elseif $language == "fr"}
                     {assign var="label" value="Paysage"}
-            		{elseif $language == "ja"}
-            		    {assign var="label" value="横"}
+            	{elseif $language == "ja"}
+            		{assign var="label" value="横"}
                 {elseif $language == "it"}
                     {assign var="label" value="Orizzontale"}    
                 {else}
@@ -317,9 +317,9 @@
             {elseif $language == "fr"}
                 {assign var="label" value="Créer"}
       	    {elseif $language == "ja"}
-            		{assign var="label" value="作成"}
+            	{assign var="label" value="作成"}
       	    {elseif $language == "it"}
-            		{assign var="label" value="Crea"}
+            	{assign var="label" value="Crea"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -331,14 +331,14 @@
                 Kartenstil:
             {elseif $language == "nl"}
                 Provider:
-          {elseif $language == "es"}
-              Provider:
-          {elseif $language == "fr"}
-              Provider:
-	  {elseif $language == "ja"}
-	      Provider:
-	      {elseif $language == "it"}
-            Provider:
+			{elseif $language == "es"}
+				Provider:
+			{elseif $language == "fr"}
+				Provider:
+			{elseif $language == "ja"}
+				Provider:
+			{elseif $language == "it"}
+				Provider:
             {else}
                 Provider:
             {/if}
@@ -408,12 +408,12 @@
 				Más impresiones...
 			{elseif $language == "fr"}
 				Plus d'impressions récentes...
-  		{elseif $language == "ja"}
-  		   最近の印刷の続き...
+			{elseif $language == "ja"}
+				最近の印刷の続き...
  			{elseif $language == "it"}
  				Altre stampe recenti...
-      {else}
-        More recent prints...
+			{else}
+				More recent prints...
             {/if}
         </a>
     {/strip}</p>
