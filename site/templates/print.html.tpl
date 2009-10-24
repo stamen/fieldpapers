@@ -10,18 +10,18 @@
         {elseif $language == "nl"}
             #{$print.id|escape} afdrukken
         {elseif $language == "es"}
-			    Imprimir #{$print.id|escape} 
+            Imprimir #{$print.id|escape} 
         {elseif $language == "fr"}
             Impression #{$print.id|escape} 
         {elseif $language == "ja"}
-    	    印刷 #{$print.id|escape}
+            印刷 #{$print.id|escape}
         {elseif $language == "it"}
             Stampa #{$print.id|escape} 
         {else}
             Print #{$print.id|escape}
         {/if}
     {/strip} (Walking Papers)</title>
-	<link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
@@ -47,7 +47,7 @@
         {elseif $language == "fr"}
             Imprimer la carte
         {elseif $language == "ja"}
-    	    地図印刷
+            地図印刷
         {elseif $language == "fr"}
             Stampa la mappa
         {else}
@@ -73,11 +73,11 @@
                 {elseif $language == "nl"}
                     Is deze kaart onjuist of verouderd?
                 {elseif $language == "es"}
-					¿Es este mapa erróneo o desfasado?
+                    ¿Es este mapa erróneo o desfasado?
                 {elseif $language == "fr"}
                     La carte est-elle mauvaise, ou obsolète ?
                 {elseif $language == "ja"}
-		    この地図が間違っているか、古いですか？
+                    この地図が間違っているか、古いですか？
                 {elseif $language == "it"}
                     Questa mappa é vecchia o sbagliata?
                 {else}
