@@ -3,10 +3,10 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="{$language|default:"en"}">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Walking Papers</title>
-	<link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
-	<link rel="stylesheet" href="{$base_dir}/index.css" type="text/css" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Walking Papers</title>
+    <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/index.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
     <script type="text/javascript" src="{$base_dir}/index.js"></script>
@@ -27,13 +27,13 @@
         {elseif $language == "nl"}
             Recente scans
         {elseif $language == "es"}
-			Últimos scans
+            Últimos scans
         {elseif $language == "fr"}
-      		Scans récents
-      	{elseif $language == "ja"}
-      	    最近の取込データ
-      	{elseif $language == "it"}
-      	    Scansioni recenti
+            Scans récents
+        {elseif $language == "ja"}
+            最近の取込データ
+        {elseif $language == "it"}
+            Scansioni recenti
         {else}
             Recent Scans
         {/if}
@@ -79,13 +79,13 @@
             {elseif $language == "nl"}
                 Meer scans...
             {elseif $language == "es"}
-				Más scans... 
+                Más scans... 
             {elseif $language == "fr"}
-				Plus de scans... 
-      	    {elseif $language == "ja"}
-          		最近の取り込みの続き...
-        	{elseif $language == "it"}
-				Altre scansioni recenti...
+                Plus de scans... 
+            {elseif $language == "ja"}
+                最近の取り込みの続き...
+            {elseif $language == "it"}
+                Altre scansioni recenti...
             {else}
                 More recent scans...
             {/if}
@@ -102,8 +102,8 @@
                 Crear impresión   
             {elseif $language == "fr"}
                 Créer une impression
-      	    {elseif $language == "ja"}
-            	印刷する
+            {elseif $language == "ja"}
+                印刷する
             {elseif $language == "it"}
                 Stampare
             {else}
@@ -128,7 +128,7 @@
         {elseif $language == "it"}
             {assign var="label" value="Cerca"}
         {elseif $language == "ja"}
-      	    {assign var="label" value="検索"}
+            {assign var="label" value="検索"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -165,8 +165,8 @@
                 Un niveau de zoom <b>de 14 ou plus</b> est recommandé pour la cartographie au niveau du quartier.
             {elseif $language == "it"}
                 Per una mappatura a livello stradale é raccomandato un livello di zoom <b>maggiore o uguale a 14</b>
-      	    {elseif $language == "ja"}
-            	ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
+            {elseif $language == "ja"}
+                ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -199,20 +199,20 @@
                 {/literal}
                 {if $language == "de"}
                     alert("Sorry, es konnte kein Ort mit diesem Namen gefunden werden.");
-				{elseif $language == "es"}
-					alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
-				{elseif $language == "fr"}
-					alert("Désolé, aucun endroit de ce nom n'a été trouvé.");
+                {elseif $language == "es"}
+                    alert("Lo sentimos, no hemos encontrado ningún lugar llamado así.");
+                {elseif $language == "fr"}
+                    alert("Désolé, aucun endroit de ce nom n'a été trouvé.");
                 {elseif $language == "nl"}
                     {* nl: WRITE ME *}
                     alert("Sorry, I couldn't find a place by that name.");
-		{elseif $language == "ja"}
-		    alert("申し訳ありません。その名前の場所は見つけられません。");
-		    {elseif $language == "it"}
-					alert("Ci dispiace non siamo riusciti a trovare un posto con quel nome.");
+                {elseif $language == "ja"}
+                    alert("申し訳ありません。その名前の場所は見つけられません。");
+                {elseif $language == "it"}
+                    alert("Ci dispiace non siamo riusciti a trovare un posto con quel nome.");
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
-                {/if}	
+                {/if}
                 {literal}
             }
         }
@@ -261,14 +261,14 @@
                 Ausrichtung:
             {elseif $language == "nl"}
                 Papier oriëntatie:
-			{elseif $language == "es"}
-				Orientación del papel:
-			{elseif $language == "fr"}
-				Orientation du papier:
-			{elseif $language == "ja"}
-				向き:
-			{elseif $language == "it"}
-				Orientamento del foglio:
+            {elseif $language == "es"}
+                Orientación del papel:
+            {elseif $language == "fr"}
+                Orientation du papier:
+            {elseif $language == "ja"}
+                向き:
+            {elseif $language == "it"}
+                Orientamento del foglio:
             {else}
                 Orientation:
             {/if}
@@ -281,8 +281,8 @@
                     {assign var="label" value="Retrato"}    
                 {elseif $language == "fr"}
                     {assign var="label" value="Portrait"}    
-            	{elseif $language == "ja"}
-            		{assign var="label" value="縦"}
+                {elseif $language == "ja"}
+                    {assign var="label" value="縦"}
                 {elseif $language == "it"}
                     {assign var="label" value="Verticale"}    
                 {else}
@@ -298,8 +298,8 @@
                     {assign var="label" value="Paisaje"}
                 {elseif $language == "fr"}
                     {assign var="label" value="Paysage"}
-            	{elseif $language == "ja"}
-            		{assign var="label" value="横"}
+                {elseif $language == "ja"}
+                    {assign var="label" value="横"}
                 {elseif $language == "it"}
                     {assign var="label" value="Orizzontale"}    
                 {else}
@@ -316,10 +316,10 @@
                 {assign var="label" value="Crear"}
             {elseif $language == "fr"}
                 {assign var="label" value="Créer"}
-      	    {elseif $language == "ja"}
-            	{assign var="label" value="作成"}
-      	    {elseif $language == "it"}
-            	{assign var="label" value="Crea"}
+            {elseif $language == "ja"}
+                {assign var="label" value="作成"}
+            {elseif $language == "it"}
+                {assign var="label" value="Crea"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -331,14 +331,14 @@
                 Kartenstil:
             {elseif $language == "nl"}
                 Provider:
-			{elseif $language == "es"}
-				Provider:
-			{elseif $language == "fr"}
-				Provider:
-			{elseif $language == "ja"}
-				Provider:
-			{elseif $language == "it"}
-				Provider:
+            {elseif $language == "es"}
+                Provider:
+            {elseif $language == "fr"}
+                Provider:
+            {elseif $language == "ja"}
+                Provider:
+            {elseif $language == "it"}
+                Provider:
             {else}
                 Provider:
             {/if}
@@ -365,7 +365,7 @@
         {elseif $language == "fr"}
             Impressions récentes
         {elseif $language == "ja"}
-      	    最近の印刷
+            最近の印刷
         {elseif $language == "it"}
             Stampe recenti
         {else}
@@ -404,16 +404,16 @@
                 Weitere Ausdrucke...
             {elseif $language == "nl"}
                 Meer recente afdrukken...
-			{elseif $language == "es"}
-				Más impresiones...
-			{elseif $language == "fr"}
-				Plus d'impressions récentes...
-			{elseif $language == "ja"}
-				最近の印刷の続き...
- 			{elseif $language == "it"}
- 				Altre stampe recenti...
-			{else}
-				More recent prints...
+            {elseif $language == "es"}
+                Más impresiones...
+            {elseif $language == "fr"}
+                Plus d'impressions récentes...
+            {elseif $language == "ja"}
+                最近の印刷の続き...
+            {elseif $language == "it"}
+                Altre stampe recenti...
+            {else}
+                More recent prints...
             {/if}
         </a>
     {/strip}</p>
