@@ -10,7 +10,7 @@
         {elseif $language == "nl"}
             Foutenlijst
         {elseif $language == "es"}
-           Fe de erratas    
+            Fe de erratas    
         {elseif $language == "fr"}
             Erreurs
         {elseif $language == "ja"}

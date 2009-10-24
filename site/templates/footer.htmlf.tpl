@@ -45,7 +45,7 @@
             <a href="http://openstreetmap.org">OpenStreetMap</a>
         <br />
         Cartografía web e impresa &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
-       <br />
+        <br />
         Traducción al alemán por Jonas Krückel
         <br />
         Traducción al holandés por Milo van der Linden

@@ -158,7 +158,6 @@
                 {elseif $language == "nl"}
                     Je hoeft niet alleen de OpenStreetMap verwerking te doen. “Nee”
                     antwoorden geeft andere gebruikers de mogelijkheid te helpen.
-                    
                 {elseif $language == "es"}
                     No tienes que hacer tus propias modificaciones a OpenStretMap. Decir "no" permitirá a otros visitantes saber con qué scans pueden colaborar.
                 {elseif $language == "fr"}
