@@ -3,8 +3,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="{$language|default:"en"}">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>{strip}
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>{strip}
         {if $language == "de"}
             Zuletzt gescannt
         {elseif $language == "nl"}
@@ -14,14 +14,14 @@
         {elseif $language == "fr"}
             Scans récents
         {elseif $language == "ja"}
-    	    最近の取込データ
+            最近の取込データ
         {elseif $language == "it"}
             Scansioni recenti
         {else}
             Recent Scans
         {/if}
     {/strip} (Walking Papers)</title>
-	<link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
 <body>
@@ -33,7 +33,7 @@
             Zuletzt gescannt
         {elseif $language == "nl"}
             Recente scans
-      {elseif $language == "es"}
+        {elseif $language == "es"}
           Últimos scans
         {elseif $language == "fr"}
             Scans récents
