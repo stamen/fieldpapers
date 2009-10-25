@@ -357,6 +357,7 @@
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
         {
+            // TODO: ditch special-case for provider
             if(empty($row['provider']))
                 $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
 
@@ -404,6 +405,7 @@
 
         $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
         
+        // TODO: ditch special-case for provider
         if(empty($row['provider']))
             $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
         
@@ -453,6 +455,7 @@
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
         {
+            // TODO: ditch special-case for base_url
             if(empty($row['base_url']))
                 $row['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $row['id']);
             
@@ -489,6 +492,7 @@
 
         $scan = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
+        // TODO: ditch special-case for base_url
         if(empty($scan['base_url']))
             $scan['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $scan['id']);
         
@@ -650,9 +654,10 @@
         $column_names = array_keys(table_columns($dbh, 'prints'));
 
         // TODO: ditch dependency on table_columns()
+        // TODO: ditch special-case for provider
         foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'provider', 'pdf_url', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
             if(in_array($field, $column_names) && !is_null($print[$field]))
-                if($print[$field] != $old_print[$field])
+                if($print[$field] != $old_print[$field] || in_array($field, array('provider')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));
 
         if(empty($update_clauses)) {
@@ -687,9 +692,10 @@
         $column_names = array_keys(table_columns($dbh, 'scans'));
 
         // TODO: ditch dependency on table_columns()
+        // TODO: ditch special-case for base_url
         foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url') as $field)
             if(in_array($field, $column_names) && !is_null($scan[$field]))
-                if($scan[$field] != $old_scan[$field])
+                if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
 
         if(empty($update_clauses)) {
