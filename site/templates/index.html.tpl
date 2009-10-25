@@ -351,6 +351,9 @@
                 
                 {assign var="label" value="OpenStreetMap"}
                 <option label="{$label}" value="http://tile.openstreetmap.org/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                
+                {assign var="label" value="No Name"}
+                <option label="{$label}" value="http://a.tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/3/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
             </select>
         </p>
     </form>
