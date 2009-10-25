@@ -21,10 +21,12 @@
     flush_scans($dbh, 3600);
     $dbh->query('COMMIT');
 
-    $post = s3_get_post_details($scan['id'], time() + 600);
+    $s3post = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
+        ? s3_get_post_details($scan['id'], time() + 600)
+        : null;
 
     $sm = get_smarty_instance();
-    $sm->assign('post', $post);
+    $sm->assign('s3post', $s3post);
     $sm->assign('language', $language);
     
     header("Content-Type: text/html; charset=UTF-8");

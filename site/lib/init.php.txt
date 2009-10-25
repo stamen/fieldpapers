@@ -20,9 +20,9 @@
     define('FLICKR_KEY', '*** http://www.flickr.com/services/api/keys/ ***');
 
     // Amazon S3
-    define('USE_S3', 1);
+    // leave one or more of these constants empty to use local uploads
     define('AWS_ACCESS_KEY', '*** http://aws.amazon.com/ ***');
-    define('AWS_SECRET_KEY', '****');
-    define('S3_BUCKET_ID',   '****');
+    define('AWS_SECRET_KEY', '');
+    define('S3_BUCKET_ID',   '');
 
 ?>

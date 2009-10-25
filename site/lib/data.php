@@ -787,8 +787,9 @@
     */
     function post_file($object_id, $content_bytes, $mime_type)
     {
-        return USE_S3 ? post_file_s3($object_id, $content_bytes, $mime_type)
-                      : post_file_local($object_id, $content_bytes);
+        return (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
+            ? post_file_s3($object_id, $content_bytes, $mime_type)
+            : post_file_local($object_id, $content_bytes);
     }
     
    /**

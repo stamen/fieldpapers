@@ -30,36 +30,45 @@
     
     {include file="$language/upload-instructions.htmlf.tpl"}
     
-    <form action="http://{$post.bucket|escape}.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
-        <input name="AWSAccessKeyId" type="hidden" value="{$post.access|escape}" />
-        <input name="acl" type="hidden" value="{$post.acl|escape}" />
-        <input name="key" type="hidden" value="{$post.key|escape}" />
-        <input name="redirect" type="hidden" value="{$post.redirect|escape}" />
-    
-        <input name="policy" type="hidden" value="{$post.policy|escape}" />
-        <input name="signature" type="hidden" value="{$post.signature|escape}" />
+    {if $language == "de"}
+        {assign var="label" value="Hochladen"}
+    {elseif $language == "fr"}
+        {assign var="label" value="Envoyer"}
+    {elseif $language == "nl"}
+        {* nl: WRITE ME *}
+        {assign var="label" value="Send"}
+    {elseif $language == "ja"}
+        {assign var="label" value="送信"}
+    {elseif $language == "es"}
+        {assign var="label" value="Enviar"}
+    {elseif $language == "it"}
+        {assign var="label" value="Invia"}
+    {else}
+        {assign var="label" value="Send"}
+    {/if}
+
+    {if $s3post}
+        <form action="http://{$s3post.bucket|escape}.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
+            <input name="AWSAccessKeyId" type="hidden" value="{$s3post.access|escape}" />
+            <input name="acl" type="hidden" value="{$s3post.acl|escape}" />
+            <input name="key" type="hidden" value="{$s3post.key|escape}" />
+            <input name="redirect" type="hidden" value="{$s3post.redirect|escape}" />
         
-        <input name="file" type="file" />
-		
-		{if $language == "de"}
-            {assign var="label" value="Hochladen"}
-		{elseif $language == "fr"}
-            {assign var="label" value="Envoyer"}
-        {elseif $language == "nl"}
-            {* nl: WRITE ME *}
-            {assign var="label" value="Send"}
-	{elseif $language == "ja"}
-            {assign var="label" value="送信"}
-      {elseif $language == "es"}
-          {assign var="label" value="Enviar"}
-      {elseif $language == "it"}
-              {assign var="label" value="Invia"}
-        {else}
-            {assign var="label" value="Send"}
-        {/if}
-        <input class="mac-button" type="submit" value="{$label}" />
-		
-    </form>
+            <input name="policy" type="hidden" value="{$s3post.policy|escape}" />
+            <input name="signature" type="hidden" value="{$s3post.signature|escape}" />
+            
+            <input name="file" type="file" />
+            <input class="mac-button" type="submit" value="{$label}" />
+        </form>
+
+    {else}
+        <form action="{$base_dir}/post-file.php" method="post" enctype="multipart/form-data">
+            <input name="redirect" type="hidden" value="{$s3post.redirect|escape}" />
+        
+            <input name="file" type="file" />
+            <input class="mac-button" type="submit" value="{$label}" />
+        </form>
+    {/if}
     
     {include file="footer.htmlf.tpl"}
     
