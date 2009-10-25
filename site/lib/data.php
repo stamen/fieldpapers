@@ -329,15 +329,20 @@
             ? 'provider,'
             : '';
         
+        $url_column_names = (in_array('pdf_url', $column_names) && in_array('preview_url', $column_names))
+            ? 'pdf_url, preview_url,'
+            : '';
+        
         $q = sprintf("SELECT {$orientation_column_name}
                              {$provider_column_name}
+                             {$url_column_names}
                              id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id, pdf_url, preview_url
+                             user_id
                       FROM prints
                       ORDER BY created DESC
                       LIMIT %d",
@@ -374,15 +379,20 @@
             ? 'provider,'
             : '';
         
+        $url_column_names = (in_array('pdf_url', $column_names) && in_array('preview_url', $column_names))
+            ? 'pdf_url, preview_url,'
+            : '';
+        
         $q = sprintf("SELECT {$orientation_column_name}
                              {$provider_column_name}
+                             {$url_column_names}
                              id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id, pdf_url, preview_url
+                             user_id
                       FROM prints
                       WHERE id = %s",
                      $dbh->quoteSmart($print_id));
