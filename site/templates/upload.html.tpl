@@ -31,15 +31,15 @@
     {include file="$language/upload-instructions.htmlf.tpl"}
     
     <form action="http://{$post.bucket|escape}.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
-        <input name="AWSAccessKeyId" type="hidden" value="{$post.access|escape}">
-        <input name="acl" type="hidden" value="{$post.acl|escape}">
-        <input name="key" type="hidden" value="{$post.key|escape}">
-        <input name="redirect" type="hidden" value="{$post.redirect|escape}">
+        <input name="AWSAccessKeyId" type="hidden" value="{$post.access|escape}" />
+        <input name="acl" type="hidden" value="{$post.acl|escape}" />
+        <input name="key" type="hidden" value="{$post.key|escape}" />
+        <input name="redirect" type="hidden" value="{$post.redirect|escape}" />
     
-        <input name="policy" type="hidden" value="{$post.policy|escape}">
-        <input name="signature" type="hidden" value="{$post.signature|escape}">
+        <input name="policy" type="hidden" value="{$post.policy|escape}" />
+        <input name="signature" type="hidden" value="{$post.signature|escape}" />
         
-        <input name="file" type="file">
+        <input name="file" type="file" />
 		
 		{if $language == "de"}
             {assign var="label" value="Hochladen"}
@@ -57,7 +57,7 @@
         {else}
             {assign var="label" value="Send"}
         {/if}
-        <input class="mac-button" type="submit" value="{$label}">
+        <input class="mac-button" type="submit" value="{$label}" />
 		
     </form>
     
