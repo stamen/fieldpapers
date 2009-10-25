@@ -3,20 +3,20 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="{$language|default:"en"}">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>{strip}
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>{strip}
         {if $language == "de"}
             Zusammenstellen
         {elseif $language == "nl"}
             Samenstellen
-		    {elseif $language == "es"}
-    			  Componer
+        {elseif $language == "es"}
+            Componer
         {elseif $language == "fr"}
             Composer
-	      {elseif $language == "ja"}
-      	    作成
-	      {elseif $language == "it"}
-      	    Compositore
+        {elseif $language == "ja"}
+            作成
+        {elseif $language == "it"}
+            Compositore
         {else}
             Componer
         {/if}

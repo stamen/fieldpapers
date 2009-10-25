@@ -3,25 +3,25 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="{$language|default:"en"}">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>{strip}
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>{strip}
         {if $language == "de"}
             #{$print.id|escape} ausdrucken
         {elseif $language == "nl"}
             #{$print.id|escape} afdrukken
         {elseif $language == "es"}
-			    Imprimir #{$print.id|escape} 
+            Imprimir #{$print.id|escape} 
         {elseif $language == "fr"}
             Impression #{$print.id|escape} 
         {elseif $language == "ja"}
-    	    印刷 #{$print.id|escape}
+            印刷 #{$print.id|escape}
         {elseif $language == "it"}
             Stampa #{$print.id|escape} 
         {else}
             Print #{$print.id|escape}
         {/if}
     {/strip} (Walking Papers)</title>
-	<link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
@@ -47,7 +47,7 @@
         {elseif $language == "fr"}
             Imprimer la carte
         {elseif $language == "ja"}
-    	    地図印刷
+            地図印刷
         {elseif $language == "fr"}
             Stampa la mappa
         {else}
@@ -73,33 +73,33 @@
                 {elseif $language == "nl"}
                     Is deze kaart onjuist of verouderd?
                 {elseif $language == "es"}
-					¿Es este mapa erróneo o desfasado?
+                    ¿Es este mapa erróneo o desfasado?
                 {elseif $language == "fr"}
                     La carte est-elle mauvaise, ou obsolète ?
                 {elseif $language == "ja"}
-		    この地図が間違っているか、古いですか？
+                    この地図が間違っているか、古いですか？
                 {elseif $language == "it"}
                     Questa mappa é vecchia o sbagliata?
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
-				
-				{if $language == "de"}
-					{assign var="label" value="Aktualisieren"}
-				{elseif $language == "nl"}
-				    {* nl: WRITE ME *}
-					{assign var="label" value="Redo"}
-				{elseif $language == "es"}
-  					{assign var="label" value="Repetir"}
-				{elseif $language == "fr"}
-					{assign var="label" value="Recommencer"}
-				{elseif $language == "ja"}
-					{assign var="label" value="再実行"}
-				{elseif $language == "it"}
-					{assign var="label" value="Rifai"}
-				{else}
-					{assign var="label" value="Redo"}
-				{/if}
+                
+                {if $language == "de"}
+                    {assign var="label" value="Aktualisieren"}
+                {elseif $language == "nl"}
+                    {* nl: WRITE ME *}
+                    {assign var="label" value="Redo"}
+                {elseif $language == "es"}
+                      {assign var="label" value="Repetir"}
+                {elseif $language == "fr"}
+                    {assign var="label" value="Recommencer"}
+                {elseif $language == "ja"}
+                    {assign var="label" value="再実行"}
+                {elseif $language == "it"}
+                    {assign var="label" value="Rifai"}
+                {else}
+                    {assign var="label" value="Redo"}
+                {/if}
                 <input class="mac-button" type="submit" name="action" value="{$label}" />
             </p>
         </form>

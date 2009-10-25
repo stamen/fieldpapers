@@ -40,25 +40,25 @@
         <input name="signature" type="hidden" value="{$post.signature|escape}">
         
         <input name="file" type="file">
-		
-		{if $language == "de"}
+        
+        {if $language == "de"}
             {assign var="label" value="Hochladen"}
-		{elseif $language == "fr"}
+        {elseif $language == "fr"}
             {assign var="label" value="Envoyer"}
         {elseif $language == "nl"}
             {* nl: WRITE ME *}
             {assign var="label" value="Send"}
-	{elseif $language == "ja"}
+        {elseif $language == "ja"}
             {assign var="label" value="送信"}
-      {elseif $language == "es"}
-          {assign var="label" value="Enviar"}
-      {elseif $language == "it"}
-              {assign var="label" value="Invia"}
+        {elseif $language == "es"}
+            {assign var="label" value="Enviar"}
+        {elseif $language == "it"}
+            {assign var="label" value="Invia"}
         {else}
             {assign var="label" value="Send"}
         {/if}
         <input class="mac-button" type="submit" value="{$label}">
-		
+        
     </form>
     
     {include file="footer.htmlf.tpl"}

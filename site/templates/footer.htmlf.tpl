@@ -12,10 +12,14 @@
         German translation by Jonas Krückel
         <br />
         Dutch translation by Milo van der Linden
-      	<br />
-      	French translation by Jonathan Fretin
-      	<br />
-      	Japanese translation by Hiroshi Miura
+        <br />
+        French translation by Jonathan Fretin
+        <br />
+        Japanese translation by Hiroshi Miura
+        <br />
+        Italian translation by Emanuel Carnevale
+        <br />
+        Spanish translation by Manuel González Noriega
     {elseif $language == "nl"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -29,8 +33,8 @@
         Duitse vertaling door Jonas Krückel
         <br />
         Nederlandse vertaling door Milo van der Linden
-  	<br />
-  	Japonese vertaling door Hiroshi Miura
+        <br />
+        Japonese vertaling door Hiroshi Miura
   
     {elseif $language == "es"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -41,12 +45,12 @@
             <a href="http://openstreetmap.org">OpenStreetMap</a>
         <br />
         Cartografía web e impresa &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
-       <br />
+        <br />
         Traducción al alemán por Jonas Krückel
         <br />
         Traducción al holandés por Milo van der Linden
         <br />
-       Traducción al español por Manuel González Noriega  
+        Traducción al español por Manuel González Noriega  
         <br />
         Traduction al francés por Jonathan Fretin
 
@@ -67,8 +71,8 @@
         Traduction espagnole par Manuel González Noriega
         <br />
         Traduction française par Jonathan Fretin
-      	<br />
-	      Traduction Japonese par Hiroshi Miura
+        <br />
+        Traduction Japonese par Hiroshi Miura
     {elseif $language == "it"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -86,10 +90,10 @@
         Traduzione spagnola di Manuel González Noriega
         <br />
         Traduzione francese di Jonathan Fretin
-      	<br />
-	      Traduzione giapponese di Hiroshi Miura
-	      <br />
-	      Traduzione italiana di Emanuel Carnevale
+        <br />
+        Traduzione giapponese di Hiroshi Miura
+        <br />
+        Traduzione italiana di Emanuel Carnevale
     {elseif $language == "ja"}
         ウオーキングペーパー(Walking Papers) &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -109,8 +113,8 @@
         フランス語訳Jonathan Fretin
         <br />
         イタリア語訳Emanuel Carnevale
-	<br />
-	日本語訳　三浦広志
+        <br />
+        日本語訳　三浦広志
     {else}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -129,8 +133,8 @@
         <br />
         French translation by Jonathan Fretin
         <br />
-      	Japanese translation by Hiroshi Miura
-      	<br />
+        Japanese translation by Hiroshi Miura
+        <br />
         Italian translation by Emanuel Carnevale
     {/if}
 </p>
