@@ -47,6 +47,9 @@ ALTER TABLE prints ADD COLUMN orientation ENUM('portrait', 'landscape') DEFAULT 
 
 ALTER TABLE prints ADD COLUMN provider VARCHAR(255) AFTER orientation;
 
+ALTER TABLE prints ADD COLUMN pdf_url VARCHAR(255) AFTER provider;
+ALTER TABLE prints ADD COLUMN preview_url VARCHAR(255) AFTER pdf_url;
+
 
 
 DROP TABLE IF EXISTS scans;

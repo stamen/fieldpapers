@@ -333,7 +333,7 @@
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id
+                             user_id, pdf_url, preview_url
                       FROM prints
                       ORDER BY created DESC
                       LIMIT %d",
@@ -348,9 +348,6 @@
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
         {
-            $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $row['id'], $row['id']);
-            $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
-
             if(empty($row['provider']))
                 $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
 
@@ -381,7 +378,7 @@
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id
+                             user_id, pdf_url, preview_url
                       FROM prints
                       WHERE id = %s",
                      $dbh->quoteSmart($print_id));
@@ -392,9 +389,6 @@
             die_with_code(500, "{$res->message}\n{$q}\n");
 
         $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
-        
-        $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $print_id, $print_id);
-        $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $print_id);
         
         if(empty($row['provider']))
             $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
@@ -621,7 +615,7 @@
         $column_names = array_keys(table_columns($dbh, 'prints'));
 
         // TODO: ditch dependency on table_columns()
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'provider', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'provider', 'pdf_url', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
             if(in_array($field, $column_names) && !is_null($print[$field]))
                 if($print[$field] != $old_print[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));
@@ -632,10 +626,9 @@
         } else {
             $update_clauses = join(', ', $update_clauses);
             
-            $q = sprintf("UPDATE prints
-                          SET {$update_clauses}
-                          WHERE id = %s",
-                         $dbh->quoteSmart($print['id']));
+            $q = "UPDATE prints
+                  SET {$update_clauses}
+                  WHERE id = ".$dbh->quoteSmart($print['id']);
     
             error_log(preg_replace('/\s+/', ' ', $q));
     
@@ -805,8 +798,6 @@
     */
     function post_file_local($object_id, $content_bytes)
     {
-        error_log("post_file: $object_id, ".strlen($content_bytes).", $mime_type");
-        
         $filepath = realpath(dirname(__FILE__).'/../www/files');
         $pathbits = explode('/', $object_id);
         
@@ -816,21 +807,20 @@
 
             if(count($pathbits) >= 1)
             {
-                error_log("post_file_local: mkdir $filepath");
                 @mkdir($filepath);
                 @chmod($filepath, 0777);
             }
         }
         
+        $url = 'http://'.get_domain_name().get_base_dir().'/files/'.$object_id;
+        
         if($fh = @fopen($filepath, 'w'))
         {
-            error_log("post_file_local: fwrite $filepath");
             fwrite($fh, $content_bytes);
             chmod($filepath, 0666);
             fclose($fh);
             
-            // TODO: this needs to return a URL
-            return true;
+            return $url;
         }
         
         return false;
