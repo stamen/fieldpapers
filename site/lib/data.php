@@ -978,9 +978,14 @@
     function local_get_post_details($scan_id, $expires, $format=null)
     {
         $expiration = date('r', $expires);
-        $signature = md5(join(' ', array($expiration, API_PASSWORD)));
+        $signature = sign_post_details($expiration, API_PASSWORD);
         
         return compact('expiration', 'signature');
+    }
+    
+    function sign_post_details($expiration, $api_password)
+    {
+        return md5(join(' ', array($expiration, $api_password)));
     }
     
 ?>
