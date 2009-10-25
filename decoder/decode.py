@@ -194,7 +194,7 @@ def appendScanFile(scan_id, file_path, file_contents, apibase, password):
     html = xml.etree.ElementTree.parse(res)
     
     for form in html.findall('*/form'):
-        form_action, form_enctype = form.attrib['action'], form.attrib['enctype']
+        form_action = form.attrib['action']
         
         inputs = form.findall('.//input')
         
