@@ -1,7 +1,7 @@
-function makeProviderFunction(bucket_id, scan_id)
+function makeProviderFunction(base_url)
 {
     return function(coord) {
-        return 'http://' + bucket_id + '.s3.amazonaws.com/scans/' + scan_id + '/' + coord.zoom +'/'+ coord.column +'/'+ coord.row + '.jpg';
+        return base_url + '/' + coord.zoom +'/'+ coord.column +'/'+ coord.row + '.jpg';
     }
 }
 
@@ -50,18 +50,17 @@ function editInPotlatch(inputs)
     var maxcolumn = parseFloat(inputs['maxcolumn'].value);
     var minzoom = parseInt(inputs['minzoom'].value);
     var maxzoom = parseInt(inputs['maxzoom'].value);
-    var bucket = inputs['bucket'].value;
-    var scan = inputs['scan'].value;
+    var base_url = inputs['base_url'].value;
 
     var mm = com.modestmaps;
     var tl = (new mm.Coordinate(minrow, mincolumn, minzoom)).zoomTo(maxzoom).zoomBy(-1);
     var br = (new mm.Coordinate(maxrow, maxcolumn, maxzoom)).zoomBy(-1);
     var center = new mm.Coordinate((tl.row + br.row) / 2, (tl.column + br.column) / 2, tl.zoom)
 
-    var provider = new mm.MapProvider(makeProviderFunction(bucket, scan));
+    var provider = new mm.MapProvider(makeProviderFunction(base_url));
     var center = provider.coordinateLocation(center);
     
-    var custombg = 'http://'+bucket+'.s3.amazonaws.com/scans/'+scan+'/!/!/!.jpg';
+    var custombg = base_url+'/!/!/!.jpg';
     var token = inputs['username'].value + ':' + inputs['password'].value;
     
     if(inputs['username'].value)

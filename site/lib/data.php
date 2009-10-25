@@ -23,7 +23,12 @@
 
     function &get_db_connection()
     {
-        return DB::connect(DB_DSN);
+        $dbh =& DB::connect(DB_DSN);
+        
+        if(PEAR::isError($dbh)) 
+            die_with_code(500, "{$dbh->message}\n{$q}\n");
+
+        return $dbh;
     }
     
     function write_userdata($id, $language)
@@ -91,6 +96,10 @@
             
             // sort list based on value	
             arsort($languages, SORT_NUMERIC);
+
+        } else {
+            $languages = array();
+
         }
         
         foreach(array_keys($languages) as $language)
@@ -114,14 +123,14 @@
             // fr or fr-
             if(preg_match('/^fr\b/', $language))
                 return 'fr';
-
-	    // ja or ja-
-	    if(preg_match('/^ja\b/', $language))
-		return 'ja';
-
-	    // it or it-
-	    if(preg_match('/^it\b/', $language))
-		return 'it';
+            
+            // ja or ja-
+            if(preg_match('/^ja\b/', $language))
+            return 'ja';
+            
+            // it or it-
+            if(preg_match('/^it\b/', $language))
+            return 'it';
         }
         
         // english is the default
@@ -320,8 +329,13 @@
             ? 'provider,'
             : '';
         
+        $url_column_names = (in_array('pdf_url', $column_names) && in_array('preview_url', $column_names))
+            ? 'pdf_url, preview_url,'
+            : '';
+        
         $q = sprintf("SELECT {$orientation_column_name}
                              {$provider_column_name}
+                             {$url_column_names}
                              id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
@@ -343,9 +357,7 @@
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
         {
-            $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $row['id'], $row['id']);
-            $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
-
+            // TODO: ditch special-case for provider
             if(empty($row['provider']))
                 $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
 
@@ -368,8 +380,13 @@
             ? 'provider,'
             : '';
         
+        $url_column_names = (in_array('pdf_url', $column_names) && in_array('preview_url', $column_names))
+            ? 'pdf_url, preview_url,'
+            : '';
+        
         $q = sprintf("SELECT {$orientation_column_name}
                              {$provider_column_name}
+                             {$url_column_names}
                              id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
@@ -388,9 +405,7 @@
 
         $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
         
-        $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $print_id, $print_id);
-        $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $print_id);
-        
+        // TODO: ditch special-case for provider
         if(empty($row['provider']))
             $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
         
@@ -406,11 +421,15 @@
             ? 'p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,'
             : '';
         
+        $base_url = in_array('base_url', $column_names)
+            ? 's.base_url,'
+            : '';
+        
         $q = sprintf("SELECT {$woeid_column_names}
                              s.id, s.print_id, s.last_step,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
-                             s.description, s.is_private, s.will_edit,
+                             s.description, s.is_private, s.will_edit, {$base_url}
                              (p.north + p.south) / 2 AS print_latitude,
                              (p.east + p.west) / 2 AS print_longitude,
                              UNIX_TIMESTAMP(s.created) AS created,
@@ -435,22 +454,35 @@
         $rows = array();
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            // TODO: ditch special-case for base_url
+            if(empty($row['base_url']))
+                $row['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $row['id']);
+            
             $rows[] = $row;
+        }
         
         return $rows;
     }
     
     function get_scan(&$dbh, $scan_id)
     {
-        $q = sprintf('SELECT id, print_id, last_step,
+        // TODO: ditch dependency on table_columns()
+        $column_names = array_keys(table_columns($dbh, 'scans'));
+        
+        $base_url = in_array('base_url', $column_names)
+            ? 'base_url,'
+            : '';
+        
+        $q = sprintf("SELECT id, print_id, last_step,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
-                             description, is_private, will_edit,
+                             description, is_private, will_edit, {$base_url}
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              user_id
                       FROM scans
-                      WHERE id = %s',
+                      WHERE id = %s",
                      $dbh->quoteSmart($scan_id));
     
         $res = $dbh->query($q);
@@ -458,7 +490,13 @@
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
 
-        return $res->fetchRow(DB_FETCHMODE_ASSOC);
+        $scan = $res->fetchRow(DB_FETCHMODE_ASSOC);
+
+        // TODO: ditch special-case for base_url
+        if(empty($scan['base_url']))
+            $scan['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $scan['id']);
+        
+        return $scan;
     }
     
     function get_user(&$dbh, $user_id)
@@ -616,9 +654,10 @@
         $column_names = array_keys(table_columns($dbh, 'prints'));
 
         // TODO: ditch dependency on table_columns()
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'provider', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+        // TODO: ditch special-case for provider
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'provider', 'pdf_url', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
             if(in_array($field, $column_names) && !is_null($print[$field]))
-                if($print[$field] != $old_print[$field])
+                if($print[$field] != $old_print[$field] || in_array($field, array('provider')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));
 
         if(empty($update_clauses)) {
@@ -627,10 +666,9 @@
         } else {
             $update_clauses = join(', ', $update_clauses);
             
-            $q = sprintf("UPDATE prints
-                          SET {$update_clauses}
-                          WHERE id = %s",
-                         $dbh->quoteSmart($print['id']));
+            $q = "UPDATE prints
+                  SET {$update_clauses}
+                  WHERE id = ".$dbh->quoteSmart($print['id']);
     
             error_log(preg_replace('/\s+/', ' ', $q));
     
@@ -651,10 +689,13 @@
             return false;
 
         $update_clauses = array();
+        $column_names = array_keys(table_columns($dbh, 'scans'));
 
-        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit') as $field)
-            if(!is_null($scan[$field]))
-                if($scan[$field] != $old_scan[$field])
+        // TODO: ditch dependency on table_columns()
+        // TODO: ditch special-case for base_url
+        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url') as $field)
+            if(in_array($field, $column_names) && !is_null($scan[$field]))
+                if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
 
         if(empty($update_clauses)) {
@@ -663,10 +704,9 @@
         } else {
             $update_clauses = join(', ', $update_clauses);
             
-            $q = sprintf("UPDATE scans
-                          SET {$update_clauses}
-                          WHERE id = %s",
-                         $dbh->quoteSmart($scan['id']));
+            $q = "UPDATE scans
+                  SET {$update_clauses}
+                  WHERE id = ".$dbh->quoteSmart($scan['id']);
     
             error_log(preg_replace('/\s+/', ' ', $q));
     
@@ -677,6 +717,64 @@
         }
 
         return get_scan($dbh, $scan['id']);
+    }
+    
+    function delete_scan(&$dbh, $scan_id)
+    {
+        $q = sprintf('DELETE FROM scans
+                      WHERE id = %s',
+                     $dbh->quoteSmart($scan_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $q = sprintf('DELETE FROM steps
+                      WHERE scan_id = %s',
+                     $dbh->quoteSmart($scan_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        return true;
+    }
+    
+    function flush_scans(&$dbh, $age)
+    {
+        $due = time() + 5;
+        
+        while(time() < $due)
+        {
+            $q = sprintf('SELECT id
+                          FROM scans
+                          WHERE last_step = 0
+                            AND created < NOW() - INTERVAL %d SECOND
+                          LIMIT 1',
+                         $age);
+    
+            //error_log(preg_replace('/\s+/', ' ', $q));
+    
+            $res = $dbh->query($q);
+            
+            if(PEAR::isError($res)) 
+                die_with_code(500, "{$res->message}\n{$q}\n");
+    
+            $scan = $res->fetchRow(DB_FETCHMODE_ASSOC);
+            
+            if(empty($scan))
+                break;
+
+            delete_scan($dbh, $scan['id']);
+        }
+
+        return true;
     }
     
     function postpone_message(&$dbh, $message_id, $timeout)
@@ -722,14 +820,62 @@
 
         return false;
     }
-
+    
    /**
-    * @param    $object_id      Name to assigned
+    * @param    $object_id      Name to assign
     * @param    $content_bytes  Content of file
     * @param    $mime_type      MIME/Type to assign
     * @return   mixed   URL of uploaded file on success, false or PEAR_Error on failure.
     */
-    function s3_post_file($object_id, $content_bytes, $mime_type)
+    function post_file($object_id, $content_bytes, $mime_type)
+    {
+        return (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
+            ? post_file_s3($object_id, $content_bytes, $mime_type)
+            : post_file_local($object_id, $content_bytes);
+    }
+    
+   /**
+    * @param    $object_id      Name to assign
+    * @param    $content_bytes  Content of file
+    * @return   mixed   URL of uploaded file on success, false or PEAR_Error on failure.
+    */
+    function post_file_local($object_id, $content_bytes)
+    {
+        $filepath = realpath(dirname(__FILE__).'/../www/files');
+        $pathbits = explode('/', $object_id);
+        
+        while(count($pathbits) && is_dir($filepath) && is_writeable($filepath))
+        {
+            $filepath .= '/'.array_shift($pathbits);
+
+            if(count($pathbits) >= 1)
+            {
+                @mkdir($filepath);
+                @chmod($filepath, 0777);
+            }
+        }
+        
+        $url = 'http://'.get_domain_name().get_base_dir().'/files/'.$object_id;
+        
+        if($fh = @fopen($filepath, 'w'))
+        {
+            fwrite($fh, $content_bytes);
+            chmod($filepath, 0666);
+            fclose($fh);
+            
+            return $url;
+        }
+        
+        return false;
+    }
+
+   /**
+    * @param    $object_id      Name to assign
+    * @param    $content_bytes  Content of file
+    * @param    $mime_type      MIME/Type to assign
+    * @return   mixed   URL of uploaded file on success, false or PEAR_Error on failure.
+    */
+    function post_file_s3($object_id, $content_bytes, $mime_type)
     {
         $bucket_id = S3_BUCKET_ID;
         
@@ -801,7 +947,7 @@
     
    /**
     * @param    int     $expires    Expiration timestamp
-    * @param    string  $format     Response format for redirect URL
+    * @param    string  $dirname    Input with a directory name
     * @return   array   Associative array with:
     *                   - "access": AWS access key
     *                   - "policy": base64-encoded policy
@@ -811,11 +957,11 @@
     *                   - "bucket": bucket ID
     *                   - "redirect": URL
     */
-    function s3_get_post_details($scan_id, $expires, $format=null)
+    function s3_get_post_details($scan_id, $expires, $dirname)
     {
         $acl = 'public-read';
-        $key = "scans/{$scan_id}/\${filename}";
-        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id).(is_null($format) ? '' : "&format={$format}");
+        $key = rtrim("scans/{$scan_id}", '/').'/'.ltrim($dirname."/\${filename}", '/');
+        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id);
         $access = AWS_ACCESS_KEY;
         $bucket = S3_BUCKET_ID;
         
@@ -862,6 +1008,29 @@
         return sprintf('http://%s.s3.amazonaws.com/%s',
                        S3_BUCKET_ID,
                        $object_id_scrubbed);
+    }
+
+   /**
+    * @param    int     $expires    Expiration timestamp
+    * @param    string  $dirname    Input with a directory name
+    * @return   array   Associative array with:
+    *                   - "expiration": date when this post will expire
+    *                   - "signature": md5 summed, signed string
+    */
+    function local_get_post_details($scan_id, $expires, $dirname)
+    {
+        $dirname = rtrim("scans/{$scan_id}", '/').'/'.ltrim($dirname, '/');
+        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id);
+
+        $expiration = gmdate("D, d M Y H:i:s", $expires).' UTC';
+        $signature = sign_post_details($dirname, $expiration, API_PASSWORD);
+        
+        return compact('dirname', 'expiration', 'signature', 'redirect');
+    }
+    
+    function sign_post_details($dirname, $expiration, $api_password)
+    {
+        return md5(join(' ', array($dirname, $expiration, $api_password)));
     }
     
 ?>

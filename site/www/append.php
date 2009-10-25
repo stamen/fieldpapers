@@ -5,29 +5,35 @@
     require_once 'init.php';
     require_once 'data.php';
     
+    if($_GET['password'] != API_PASSWORD)
+        die_with_code(401, 'Sorry, bad password');
+    
+    $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
+    $dirname = $_GET['dirname'] ? $_GET['dirname'] : null;
+    
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
     /**** ... ****/
     
     $dbh =& get_db_connection();
     
+    /*
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
 
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
+        */
     
-    $dbh->query('START TRANSACTION');
-    $scan = add_scan($dbh, $user['id']);
-    flush_scans($dbh, 3600);
-    $dbh->query('COMMIT');
+    if($scan_id)
+        $scan = get_scan($dbh, $scan_id);
 
     $s3post = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
-        ? s3_get_post_details($scan['id'], time() + 600, '')
+        ? s3_get_post_details($scan['id'], time() + 600, $dirname)
         : null;
 
     $localpost = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
         ? null
-        : local_get_post_details($scan['id'], time() + 600, '');
+        : local_get_post_details($scan['id'], time() + 600, $dirname);
 
     $sm = get_smarty_instance();
     $sm->assign('s3post', $s3post);
@@ -35,6 +41,6 @@
     $sm->assign('language', $language);
     
     header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("upload.html.tpl");
+    print $sm->fetch("append.html.tpl");
 
 ?>

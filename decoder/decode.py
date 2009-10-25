@@ -3,6 +3,7 @@ import sys
 import re
 import math
 import time
+import array
 import urllib
 import os.path
 import httplib
@@ -10,12 +11,12 @@ import urlparse
 import tempfile
 import commands
 import StringIO
+import mimetypes
 import xml.etree.ElementTree
 import PIL.Image
 import PIL.ImageFilter
 import matchup
 import ModestMaps
-import AWS
 
 class CodeReadException(Exception):
     pass
@@ -55,13 +56,13 @@ class Marker:
 
         self.anchor = Point(x, y)
 
-def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, password):
+def main(url, markers, apibase, message_id, password):
     """
     """
-    url_pat = re.compile(r'^http://([^\.]+).s3.amazonaws.com/scans/([^/]+)/(.*)$', re.I)
+    url_pat = re.compile(r'^http://.+/scans/([^/]+)/(.*)$', re.I)
     
     if url_pat.match(url):
-        scan_id = url_pat.sub(r'\2', url)
+        scan_id = url_pat.sub(r'\1', url)
 
     else:
         print >> sys.stderr, url, "doesn't match expected form"
@@ -71,8 +72,6 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
     updateStepLocal = lambda step_number, timeout: updateStep(apibase, password, scan_id, step_number, message_id, timeout)
     
     try:
-        s3 = AWS.Storage.Service(aws_access, aws_secret)
-
         # sifting
         updateStepLocal(2, 60)
         
@@ -95,12 +94,12 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         
         qrcode = extractCode(image, markers)
 
-        qrcode_name = 'scans/%(scan_id)s/qrcode.jpg' % locals()
+        qrcode_name = 'qrcode.jpg'
         qrcode_bytes = StringIO.StringIO()
         qrcode_image = qrcode.copy()
         qrcode_image.save(qrcode_bytes, 'JPEG')
         qrcode_bytes = qrcode_bytes.getvalue()
-        s3.putBucketObject(bucket_id, qrcode_name, qrcode_bytes, 'image/jpeg', 'public-read')
+        appendScanFile(scan_id, qrcode_name, qrcode_bytes, apibase, password)
     
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
@@ -118,22 +117,22 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         renders = {}
         
         # make a smallish preview image
-        preview_name = 'scans/%(scan_id)s/preview.jpg' % locals()
+        preview_name = 'preview.jpg'
         preview_bytes = StringIO.StringIO()
         preview_image = image.copy()
         preview_image.thumbnail((409, 280), PIL.Image.ANTIALIAS)
         preview_image.save(preview_bytes, 'JPEG')
         preview_bytes = preview_bytes.getvalue()
-        s3.putBucketObject(bucket_id, preview_name, preview_bytes, 'image/jpeg', 'public-read')
+        appendScanFile(scan_id, preview_name, preview_bytes, apibase, password)
         
         # make a largish image
-        large_name = 'scans/%(scan_id)s/large.jpg' % locals()
+        large_name = 'large.jpg'
         large_bytes = StringIO.StringIO()
         large_image = image.copy()
         large_image.thumbnail((900, 900), PIL.Image.ANTIALIAS)
         large_image.save(large_bytes, 'JPEG')
         large_bytes = large_bytes.getvalue()
-        s3.putBucketObject(bucket_id, large_name, large_bytes, 'image/jpeg', 'public-read')
+        appendScanFile(scan_id, large_name, large_bytes, apibase, password)
         
         min_zoom, max_zoom = 20, 0
         
@@ -145,13 +144,13 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
             
             for (coord, tile_image) in zoom_renders:
                 x, y, z = coord.column, coord.row, coord.zoom
-                tile_name = 'scans/%(scan_id)s/%(z)d/%(x)d/%(y)d.jpg' % locals()
+                tile_name = '%(z)d/%(x)d/%(y)d.jpg' % locals()
                 
                 tile_bytes = StringIO.StringIO()
                 tile_image.save(tile_bytes, 'JPEG')
                 tile_bytes = tile_bytes.getvalue()
 
-                s3.putBucketObject(bucket_id, tile_name, tile_bytes, 'image/jpeg', 'public-read')
+                appendScanFile(scan_id, tile_name, tile_bytes, apibase, password)
             
                 renders[str(coord)] = tile_image
                 
@@ -179,6 +178,80 @@ def main(url, markers, apibase, message_id, bucket_id, aws_access, aws_secret, p
         raise
 
     return 0
+
+def appendScanFile(scan_id, file_path, file_contents, apibase, password):
+    """ Upload a file via the API append.php form input provision thingie.
+    """
+
+    s, host, path, p, q, f = urlparse.urlparse(apibase)
+    
+    query = urllib.urlencode({'scan': scan_id, 'password': password, 'dirname': os.path.dirname(file_path)})
+    
+    req = httplib.HTTPConnection(host, 80)
+    req.request('GET', path + '/append.php?' + query)
+    res = req.getresponse()
+    
+    html = xml.etree.ElementTree.parse(res)
+    
+    for form in html.findall('*/form'):
+        form_action = form.attrib['action']
+        
+        inputs = form.findall('.//input')
+        
+        file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
+        
+        fields = [(input.attrib['name'], input.attrib['value'])
+                  for input in inputs
+                  if input.attrib['type'] != 'file' and 'name' in input.attrib]
+        
+        files = [(input.attrib['name'], os.path.basename(file_path), file_contents)
+                 for input in inputs
+                 if input.attrib['type'] == 'file']
+
+        if len(files) == 1:
+            post_type, post_body = encodeMultipartFormdata(fields, files)
+            
+            s, host, path, p, query, f = urlparse.urlparse(urlparse.urljoin(apibase, form_action))
+            
+            req = httplib.HTTPConnection(host, 80)
+            req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
+            res = req.getresponse()
+            
+            assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
+
+            return True
+        
+    raise Exception('Did not find a form with a file input, why is that?')
+
+def encodeMultipartFormdata(fields, files):
+    """ fields is a sequence of (name, value) elements for regular form fields.
+        files is a sequence of (name, filename, value) elements for data to be uploaded as files
+        Return (content_type, body) ready for httplib.HTTP instance
+        
+        Adapted from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/146306
+    """
+    BOUNDARY = '----------multipart-boundary-multipart-boundary-multipart-boundary$'
+    CRLF = '\r\n'
+
+    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+    bytes = array.array('c')
+
+    for (key, value) in fields:
+        bytes.fromstring('--' + BOUNDARY + CRLF)
+        bytes.fromstring('Content-Disposition: form-data; name="%s"' % key + CRLF)
+        bytes.fromstring(CRLF)
+        bytes.fromstring(value + CRLF)
+
+    for (key, filename, value) in files:
+        bytes.fromstring('--' + BOUNDARY + CRLF)
+        bytes.fromstring('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename) + CRLF)
+        bytes.fromstring('Content-Type: %s' % (mimetypes.guess_type(filename)[0] or 'application/octet-stream') + CRLF)
+        bytes.fromstring(CRLF)
+        bytes.fromstring(value + CRLF)
+
+    bytes.fromstring('--' + BOUNDARY + '--' + CRLF)
+
+    return content_type, bytes.tostring()
 
 def updateStep(apibase, password, scan_id, step_number, message_id, timeout):
     """
@@ -323,7 +396,7 @@ def siftImage(url):
     
     print >> sys.stderr, 'sift...', pgm_size,
     
-    basedir = os.path.dirname(os.path.realpath(__file__))
+    basedir = os.path.dirname(os.path.realpath(__file__)).replace(' ', '\ ')
     status, output = commands.getstatusoutput("%(basedir)s/bin/sift --peak-thresh=8 -o '%(sift_filename)s' '%(pgm_filename)s'" % locals())
     data = open(sift_filename, 'r')
     

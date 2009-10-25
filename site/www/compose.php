@@ -126,11 +126,10 @@
         $png = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $print['zoom'], $width, $height);
 
         // post a preview
-        $url = new Net_URL($print['preview_url']);
-        $res = s3_post_file(ltrim($url->path, '/'), $png, 'image/png');
+        $print['preview_url'] = post_file("prints/{$print['id']}/preview.png", $png, 'image/png');
         
-        if(PEAR::isError($res))
-            die_with_code(500, "{$res->message}\n{$q}\n");
+        if(PEAR::isError($print['preview_url']))
+            die_with_code(500, "{$print['preview_url']->message}\n{$q}\n");
         
         $zoom = $print['zoom'];
         $max_zoom = min(18, $print['zoom'] + 2);
@@ -203,13 +202,15 @@
         
         // post the PDF
         $url = new Net_URL($print['pdf_url']);
-        $res = s3_post_file(ltrim($url->path, '/'), $pdf_content, 'application/pdf');
+        $print['pdf_url'] = post_file("prints/{$print['id']}/walking-paper-{$print['id']}.pdf", $pdf_content, 'application/pdf');
         
-        if(PEAR::isError($res))
-            die_with_code(500, "{$res->message}\n{$q}\n");
+        if(PEAR::isError($print['pdf_url']))
+            die_with_code(500, "{$print['pdf_url']->message}\n{$q}\n");
         
         unlink($map_filename);
         unlink($code_filename);
+        
+        return $print;
     }
     
     if($zoom && $north && $south && $east && $west)
@@ -231,10 +232,10 @@
              $print['place_name'], $print['place_woeid'])
          = latlon_placeinfo(($north + $south) / 2, ($west + $east) / 2, $zoom - 1);
 
-        $print = set_print($dbh, $print);
-        
-        compose_map($print);
+        $print = compose_map($print);
 
+        set_print($dbh, $print);
+        
         $dbh->query('COMMIT');
         
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);

@@ -47,6 +47,9 @@ ALTER TABLE prints ADD COLUMN orientation ENUM('portrait', 'landscape') DEFAULT 
 
 ALTER TABLE prints ADD COLUMN provider VARCHAR(255) AFTER orientation;
 
+ALTER TABLE prints ADD COLUMN pdf_url VARCHAR(255) AFTER provider;
+ALTER TABLE prints ADD COLUMN preview_url VARCHAR(255) AFTER pdf_url;
+
 
 
 DROP TABLE IF EXISTS scans;
@@ -78,6 +81,8 @@ CREATE TABLE scans (
     INDEX step (last_step)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
+
+ALTER TABLE scans ADD COLUMN base_url VARCHAR(255) AFTER will_edit;
 
 
 
