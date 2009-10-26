@@ -363,6 +363,14 @@
             if(empty($row['provider']))
                 $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
 
+            // TODO: ditch special-case for pdf_url
+            if(empty($row['pdf_url']) && S3_BUCKET_ID)
+                $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $row['id'], $row['id']);
+
+            // TODO: ditch special-case for preview_url
+            if(empty($row['preview_url']) && S3_BUCKET_ID)
+                $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
+
             $rows[] = $row;
         }
         
@@ -410,6 +418,14 @@
         // TODO: ditch special-case for provider
         if(empty($row['provider']))
             $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
+
+        // TODO: ditch special-case for pdf_url
+        if(empty($row['pdf_url']) && S3_BUCKET_ID)
+            $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $row['id'], $row['id']);
+
+        // TODO: ditch special-case for preview_url
+        if(empty($row['preview_url']) && S3_BUCKET_ID)
+            $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
         
         return $row;
     }
