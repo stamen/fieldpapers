@@ -355,6 +355,9 @@
                 {assign var="label" value="OpenStreetMap: Osmarender"}
                 <option label="{$label}" value="http://tah.openstreetmap.org/Tiles/tile/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                 
+                {assign var="label" value="OpenStreetMap: CycleMap"}
+                <option label="{$label}" value="http://andy.sandbox.cloudmade.com/tiles/cycle/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                
                 {assign var="label" value="Cloudmade: Fresh"}
                 <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/997/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
             </select>
