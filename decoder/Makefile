@@ -2,7 +2,7 @@ all: ModestMaps ws-decode bin
 	#
 
 ModestMaps:
-	svn co http://modestmaps.mapstraction.com/svn/trunk/py/ModestMaps
+	svn co http://modestmaps.googlecode.com/svn/trunk/py/ModestMaps
 
 ws-decode:
 	curl -O http://aaronland.info/java/ws-decode/ws-decode-0.1.tar.gz
