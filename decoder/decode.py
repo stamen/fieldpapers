@@ -495,14 +495,10 @@ def extractCode(image, markers):
 def readCode(image):
     """
     """
-    codebytes = StringIO.StringIO()
-    image.save(codebytes, 'PNG')
-    codebytes.seek(0)
-    
     decode = 'java', '-classpath', ':'.join(glob.glob('lib/*.jar')), 'qrdecode'
     decode = subprocess.Popen(decode, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     
-    decode.stdin.write(codebytes.read())
+    image.save(decode.stdin, 'PNG')
     decode.stdin.close()
     decode.wait()
     
