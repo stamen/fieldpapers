@@ -15,10 +15,8 @@ public class qrdecode
         File tmpfile = File.createTempFile("qrcode", ".bin");
         FileOutputStream fw = new FileOutputStream(tmpfile);
         
-        while (System.in.available() > 0)
+        for (int b = System.in.read(); b != -1; b = System.in.read())
         {
-            byte[] b = new byte[System.in.available()];
-            System.in.read(b, 0, System.in.available());
             fw.write(b);
         }
         
