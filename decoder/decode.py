@@ -3,6 +3,7 @@ import sys
 import re
 import math
 import time
+import glob
 import array
 import urllib
 import os.path
@@ -12,6 +13,7 @@ import tempfile
 import commands
 import StringIO
 import mimetypes
+import subprocess
 import xml.etree.ElementTree
 import PIL.Image
 import PIL.ImageFilter
@@ -497,14 +499,17 @@ def readCode(image):
     image.save(codebytes, 'PNG')
     codebytes.seek(0)
     
-    req = httplib.HTTPConnection('127.0.0.1', 9955)
-    req.request('POST', '/decode', codebytes.read(), {'Content-Type': 'image/png'})
-    res = req.getresponse()
+    decode = 'java', '-classpath', ':'.join(glob.glob('lib/*.jar')), 'qrdecode'
+    decode = subprocess.Popen(decode, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     
-    decoded = res.read()
+    decode.stdin.write(codebytes.read())
+    decode.stdin.close()
+    decode.wait()
+    
+    decoded = decode.stdout.read().strip()
     print decoded
     
-    if res.status == 200 and decoded.startswith('http://'):
+    if decoded.startswith('http://'):
     
         html = xml.etree.ElementTree.parse(urllib.urlopen(decoded))
         
