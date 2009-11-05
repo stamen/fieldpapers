@@ -69,7 +69,6 @@ function makeMap(elementID, providerURL)
     map.addCallback('extentset', function(m, a) { return onMapChanged(m); });
     map.addCallback('panned',    function(m, a) { return onMapChanged(m); });
 
-    map.setCenterZoom(new mm.Location(37.660, -122.168), 9);
     map.draw();
     
     return map;
