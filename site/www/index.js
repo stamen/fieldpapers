@@ -39,10 +39,11 @@ function formatDegree(value, axis)
 function onMapChanged(map)
 {
     var center = map.getCenter();
-    var info = document.getElementById('info');
+    var permalink = document.getElementById('permalink');
     var warn = document.getElementById('zoom-warning');
 
-    info.innerHTML = formatDegree(center.lat, 'lat') + ', ' + formatDegree(center.lon, 'lon') + ' at zoom level ' + map.coordinate.zoom + '.';
+    permalink.href = '?lat='+escape(center.lat.toFixed(6))+'&lon='+escape(center.lon.toFixed(6))+'&zoom='+escape(map.getZoom().toString())+'#make';
+    permalink.innerHTML = formatDegree(center.lat, 'lat') + ', ' + formatDegree(center.lon, 'lon') + ' at zoom level ' + map.coordinate.zoom + '.';
     warn.style.display = (map.getZoom() < 14) ? 'block' : 'none';
     
     var northwest = map.pointLocation(new mm.Point(0, 0));

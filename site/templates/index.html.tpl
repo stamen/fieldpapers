@@ -138,7 +138,7 @@
     </form>
 
     <p>
-        <span id="info"></span>
+        <a href="#" id="permalink"></a>
     </p>
 
     <div class="sheet">
@@ -225,6 +225,7 @@
             }
             
             map.setProvider(new mm.MapProvider(tileURL));
+            onMapChanged(map);
         }
         
         function setOrientation(orientation)
