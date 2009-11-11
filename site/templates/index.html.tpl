@@ -12,7 +12,6 @@
     <script type="text/javascript" src="{$base_dir}/index.js"></script>
 </head>
 <body>
-    <!-- testing -->
 
     {include file="navigation.htmlf.tpl"}
     
