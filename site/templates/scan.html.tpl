@@ -44,6 +44,7 @@
             <span class="maxrow">{$scan.max_row|escape}</span>
             <span class="maxcolumn">{$scan.max_column|escape}</span>
             <span class="maxzoom">{$scan.max_zoom|escape}</span>
+            {if $scan.description}<span class="description">{$scan.description|escape}</span>{/if}
         </span>
     
         <span id="print-info" style="display: none;">

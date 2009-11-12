@@ -138,7 +138,7 @@
     </form>
 
     <p>
-        <span id="info"></span>
+        <a href="#" id="permalink"></a>
     </p>
 
     <div class="sheet">
@@ -176,7 +176,8 @@
     <script type="text/javascript" language="javascript1.2">
     // <![CDATA[
 
-        var map = makeMap('map', 'http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png');
+        var map = makeMap('map', '{$provider|escape:"javascript"}');
+        map.setCenterZoom(new mm.Location({$latitude}, {$longitude}), {$zoom});
         
         // {literal}
         
@@ -224,6 +225,7 @@
             }
             
             map.setProvider(new mm.MapProvider(tileURL));
+            onMapChanged(map);
         }
         
         function setOrientation(orientation)
@@ -326,39 +328,47 @@
             <input class="mac-button" type="submit" name="action" value="{$label}" />
         </p>
         
-        <p>
-            {if $language == "de"}
-                Kartenstil:
-            {elseif $language == "nl"}
-                Provider:
-            {elseif $language == "es"}
-                Provider:
-            {elseif $language == "fr"}
-                Provider:
-            {elseif $language == "ja"}
-                Provider:
-            {elseif $language == "it"}
-                Provider:
-            {else}
-                Provider:
-            {/if}
-            <select name="provider" onchange="setProvider(this.value);">
-                {assign var="label" value="Cloudmade: Fineline"}
-                <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png" selected="selected">{$label}</option>
-                
-                {assign var="label" value="OpenStreetMap"}
-                <option label="{$label}" value="http://tile.openstreetmap.org/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                
-                {assign var="label" value="Cloudmade: No Name"}
-                <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/3/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                
-                {assign var="label" value="OpenStreetMap: Osmarender"}
-                <option label="{$label}" value="http://tah.openstreetmap.org/Tiles/tile/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                
-                {assign var="label" value="Cloudmade: Fresh"}
-                <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/997/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-            </select>
-        </p>
+        {if $request.get.provider}
+            <input type="hidden" name="provider" value="{$provider|escape}" />
+
+        {else}
+            <p>
+                {if $language == "de"}
+                    Kartenstil:
+                {elseif $language == "nl"}
+                    Provider:
+                {elseif $language == "es"}
+                    Provider:
+                {elseif $language == "fr"}
+                    Provider:
+                {elseif $language == "ja"}
+                    Provider:
+                {elseif $language == "it"}
+                    Provider:
+                {else}
+                    Provider:
+                {/if}
+                <select name="provider" onchange="setProvider(this.value);">
+                    {assign var="label" value="OpenStreetMap"}
+                    <option label="{$label}" value="http://tile.openstreetmap.org/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="OpenStreetMap: CycleMap"}
+                    <option label="{$label}" value="http://andy.sandbox.cloudmade.com/tiles/cycle/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="OpenStreetMap: Osmarender"}
+                    <option label="{$label}" value="http://tah.openstreetmap.org/Tiles/tile/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="Cloudmade: Fineline"}
+                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png" selected="selected">{$label}</option>
+                    
+                    {assign var="label" value="Cloudmade: Fresh"}
+                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/997/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="Cloudmade: No Name"}
+                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/3/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                </select>
+            </p>
+        {/if}
     </form>
 
     <h2>{strip}

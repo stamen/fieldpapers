@@ -6,6 +6,10 @@
     require_once 'data.php';
     
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $provider = is_null($_GET['provider']) ? 'http://tile.cloudmade.com/'.CLOUDMADE_KEY.'/2/256/{Z}/{X}/{Y}.png' : $_GET['provider'];
+    $latitude = is_numeric($_GET['lat']) ? floatval($_GET['lat']) : 37.660;
+    $longitude = is_numeric($_GET['lon']) ? floatval($_GET['lon']) : -122.168;
+    $zoom = is_numeric($_GET['zoom']) ? intval($_GET['zoom']) : 9;
 
     /**** ... ****/
     
@@ -24,6 +28,11 @@
     $sm->assign('prints', $prints);
     $sm->assign('scans', $scans);
     $sm->assign('language', $language);
+
+    $sm->assign('provider', $provider);
+    $sm->assign('latitude', $latitude);
+    $sm->assign('longitude', $longitude);
+    $sm->assign('zoom', $zoom);
 
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("index.html.tpl");
