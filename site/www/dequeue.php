@@ -1,4 +1,9 @@
 <?php
+   /**
+    * POST endpoint for pulling messages from the queue.
+    *
+    * Gets new messages, existing messages, accepts visibility timeout, and deletes messages.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');

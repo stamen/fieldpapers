@@ -1,4 +1,9 @@
 <?php
+   /**
+    * File upload form, for sites configured to use local file storage instead of S3.
+    *
+    * POST vars include expiration time and signature for pre-signed posts.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');

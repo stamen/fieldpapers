@@ -1,4 +1,10 @@
 <?php
+   /**
+    * Language setting view and change endpoint.
+    *
+    * Accepts POST var with replacement language setting that modifies a cookie
+    * and redirects the visitor, or simply displays the current lanaguage settings.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');

@@ -1,4 +1,9 @@
 <?php
+   /**
+    * Home page with information and print form.
+    *
+    * GET vars for prepositioning map form include bounding box and tile provider.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');

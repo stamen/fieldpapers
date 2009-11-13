@@ -1,4 +1,9 @@
 <?php
+   /**
+    * POST endpoint for attaching new files to a scan, e.g. tiles.
+    *
+    * Requires global site API password and a scan ID, shows an HTML upload form.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
