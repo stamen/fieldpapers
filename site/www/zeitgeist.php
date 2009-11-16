@@ -1,4 +1,8 @@
 <?php
+   /**
+    * Statistics display page, with information about a variety
+    * of usage numbers for this installation of Walking Papers.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');

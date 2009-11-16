@@ -1,4 +1,11 @@
 <?php
+   /**
+    * Upload form for new scans.
+    *
+    * Each time this page is accessed a new scan is created and some old unfulfilled ones are culled.
+    *
+    * Requires global site API password, shows an HTML upload form.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');

@@ -1,4 +1,10 @@
 <?php
+   /**
+    * Scan step modification page, so that polling decoders can notify the user how
+    * the scan is progressing. Some steps are simple progress, others are error markers.
+    *
+    * Requires global site API password and a scan ID, modifies the steps table.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
