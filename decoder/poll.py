@@ -1,5 +1,6 @@
 import sys
 import time
+import math
 import urllib
 import httplib
 import os.path
@@ -69,8 +70,9 @@ if __name__ == '__main__':
 
             poll_failures += 1
             
-            if poll_failures > 5:
+            if poll_failures > 10:
                 print >> sys.stderr, 'No, seriously.'
                 raise
 
-        time.sleep(5)
+        # exponential back off
+        time.sleep(math.pow(2, poll_failures))
