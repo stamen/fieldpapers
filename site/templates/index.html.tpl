@@ -434,6 +434,13 @@
         </a>
     {/strip}</p>
     
+    <p>
+        <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr"><img src="{$base_dir}/kibera-scans.jpg" border="1" /></a>
+        <br/>
+        <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a>
+        by <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie on Flickr</a>
+    </p>
+    
     {include file="footer.htmlf.tpl"}
     
 </body>
