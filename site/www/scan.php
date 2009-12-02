@@ -1,4 +1,7 @@
 <?php
+   /**
+    * Display page for a single scan with a given ID.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
