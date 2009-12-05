@@ -9,6 +9,9 @@
     require_once 'HTTP/Request.php';
     require_once 'Net/URL.php';
     
+    if(!function_exists('imagecreatefromstring'))
+        die_with_code(500, "Missing function imagecreatefromstring from PHP image processing and GD library");
+    
     define('STEP_UPLOADING', 0);
     define('STEP_QUEUED', 1);
     define('STEP_SIFTING', 2);

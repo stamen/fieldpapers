@@ -1,4 +1,8 @@
 <?php
+   /**
+    * Post-upload page, with an interstitial information-gathering
+    * form after a scan image has been successfully uploaded.
+    */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');

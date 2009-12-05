@@ -181,6 +181,37 @@ def main(url, markers, apibase, message_id, password):
 
     return 0
 
+def test(url, markers):
+    """ A simpler, dumbed-down version of main() meant for testing.
+    """
+    image, features, scale = siftImage(url)
+    
+    for (name, marker) in markers.items():
+        print >> sys.stderr, name, '...',
+        marker.locateInFeatures(features)
+
+        x, y = int(marker.anchor.x / scale), int(marker.anchor.y / scale)
+        print >> sys.stderr, '->', (x, y)
+
+        marker.anchor = Point(x, y)
+
+    handle, qrcode_filename = tempfile.mkstemp(dir='/tmp', prefix='qrcode-', suffix='.jpg')
+    print >> sys.stderr, 'QR code in', qrcode_filename
+    os.close(handle)
+    
+    qrcode = extractCode(image, markers)
+    qrcode.save(qrcode_filename, 'JPEG')
+
+    print_id, north, west, south, east = readCode(qrcode)
+    print 'code contents:', 'Print', print_id, (north, west, south, east)
+    
+    gym = ModestMaps.OpenStreetMap.Provider()
+    
+    topleft = gym.locationCoordinate(ModestMaps.Geo.Location(north, west))
+    bottomright = gym.locationCoordinate(ModestMaps.Geo.Location(south, east))
+    
+    print 'coordinates:', topleft, bottomright
+
 def appendScanFile(scan_id, file_path, file_contents, apibase, password):
     """ Upload a file via the API append.php form input provision thingie.
     """
@@ -486,11 +517,13 @@ def extractCode(image, markers):
     qrcode = PIL.Image.new('RGB', justcode.size, (0xCC, 0xCC, 0xCC))
     qrcode.paste(justcode, (0, 0), justcode)
     
-    # raise contrast
-    lut = [0x00] * 112 + [0xFF] * 144 # [0x00] * 112 + range(0x00, 0xFF, 8) + [0xFF] * 112
-    qrcode = qrcode.convert('L').filter(PIL.ImageFilter.BLUR).point(lut)
-    
     return qrcode
+    
+    ## raise contrast
+    #lut = [0x00] * 112 + [0xFF] * 144 # [0x00] * 112 + range(0x00, 0xFF, 8) + [0xFF] * 112
+    #qrcode = qrcode.convert('L').filter(PIL.ImageFilter.BLUR).point(lut)
+    #
+    #return qrcode
 
 def readCode(image):
     """
@@ -540,4 +573,4 @@ if __name__ == '__main__':
         basepath = os.path.dirname(os.path.realpath(__file__)) + '/corners/' + basename
         markers[basename] = Marker(basepath)
     
-    sys.exit(main(url, markers))
+    sys.exit(test(url, markers))
