@@ -342,7 +342,7 @@
                 {elseif $language == "fr"}
                     Provider:
                 {elseif $language == "ja"}
-                    Provider:
+                    地図供給者:
                 {elseif $language == "it"}
                     Provider:
                 {else}
