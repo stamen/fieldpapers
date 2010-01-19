@@ -352,16 +352,19 @@
                     {assign var="label" value="Haiti (OpenStreetMap)"}
                     <option label="{$label}" selected="selected" value="http://live.openstreetmap.nl/haiti/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
+                    {assign var="label" value="Haiti (Current Satellite Mosaic)"}
+                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/haiti-current/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
                     {assign var="label" value="Haiti (Jan. 16 GeoEye Satellite)"}
                     <option label="{$label}" value="http://maps.nypl.org/tilecache/1/geoeye_100116/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
-                    {assign var="label" value="Haiti (Jan. 14 Ikonos Satellite)"}
+                    {assign var="label" value="Haiti (Jan. 14-15 IKONOS Satellite)"}
                     <option label="{$label}" value="http://maps.nypl.org/tilecache/1/ikonos_100114/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
                     {assign var="label" value="Haiti (Jan. 13 GeoEye Satellite)"}
                     <option label="{$label}" value="http://maps.nypl.org/tilecache/1/geoeye/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
-                    {assign var="label" value="Haiti (D.G. Crisis Satellite)"}
+                    {assign var="label" value="Haiti (Digital Globe Crisis Satellite)"}
                     <option label="{$label}" value="http://maps.nypl.org/tilecache/1/dg_crisis/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
                     {assign var="label" value="OpenStreetMap"}
