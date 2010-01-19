@@ -349,6 +349,21 @@
                     Provider:
                 {/if}
                 <select name="provider" onchange="setProvider(this.value);">
+                    {assign var="label" value="Haiti (OpenStreetMap)"}
+                    <option label="{$label}" selected="selected" value="http://live.openstreetmap.nl/haiti/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="Haiti (Jan. 16 GeoEye Satellite)"}
+                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/geoeye_100116/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="Haiti (Jan. 14 Ikonos Satellite)"}
+                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/ikonos_100114/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="Haiti (Jan. 13 GeoEye Satellite)"}
+                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/geoeye/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
+                    {assign var="label" value="Haiti (D.G. Crisis Satellite)"}
+                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/dg_crisis/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    
                     {assign var="label" value="OpenStreetMap"}
                     <option label="{$label}" value="http://tile.openstreetmap.org/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
@@ -359,7 +374,7 @@
                     <option label="{$label}" value="http://tah.openstreetmap.org/Tiles/tile/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
                     {assign var="label" value="Cloudmade: Fineline"}
-                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png" selected="selected">{$label}</option>
+                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
                     {assign var="label" value="Cloudmade: Fresh"}
                     <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/997/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
