@@ -15,6 +15,15 @@
 
     {include file="navigation.htmlf.tpl"}
     
+    <p style="background-color: red; color: white;">
+        <b>January 18, 2010</b>
+        <br/>
+        Thanks to OpenStreetMap, GeoEye, IKONOS, Digital Globe, NYPL, and other
+        crisis mapping volunteers, we have imagery specific to Haiti for use with
+        Walking Papers. <a href="#make" style="color: white;">Make a print below</a>
+        and choose from several Haiti satellite and road map providers.
+    </p>
+    
     {include file="$language/index-top-paragraph.htmlf.tpl"}
     
     <p>
