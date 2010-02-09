@@ -11,7 +11,7 @@
     require_once 'data.php';
     
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    $provider = is_null($_GET['provider']) ? 'http://live.openstreetmap.nl/haiti/{Z}/{X}/{Y}.png' : $_GET['provider'];
+    $provider = is_null($_GET['provider']) ? 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png' : $_GET['provider'];
     $latitude = is_numeric($_GET['lat']) ? floatval($_GET['lat']) : 18.5477;
     $longitude = is_numeric($_GET['lon']) ? floatval($_GET['lon']) : -72.3376;
     $zoom = is_numeric($_GET['zoom']) ? intval($_GET['zoom']) : 14;
