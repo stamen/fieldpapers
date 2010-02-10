@@ -386,6 +386,12 @@
                     <option label="{$label}" value="http://maps.nypl.org/tilecache/1/dg_crisis/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                 </select>
             </p>
+            <p>
+                Grid:
+                <input type="radio" name="grid" value="" checked="checked" /> None
+                <input type="radio" name="grid" value="utm" /> UTM
+                <input type="radio" name="grid" value="mgrs" /> MGRS
+            </p>
         {/if}
     </form>
 

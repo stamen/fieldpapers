@@ -28,6 +28,13 @@
     $orientation = $_POST['orientation'] ? $_POST['orientation'] : null;
     $provider = $_POST['provider'] ? $_POST['provider'] : null;
     
+    switch(strtolower($_POST['grid']))
+    {
+        case 'utm':
+        case 'mgrs':
+            $provider .= sprintf(",http://osm.stamen.com/gridtile/tilecache.cgi/1.0/%s/{Z}/{X}/{Y}.png", strtolower($_POST['grid']));
+    }
+    
     $dbh =& get_db_connection();
     
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
