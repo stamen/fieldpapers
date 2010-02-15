@@ -390,7 +390,7 @@
                 Grid:
                 <input type="radio" name="grid" value="" checked="checked" /> None
                 <input type="radio" name="grid" value="utm" /> UTM
-                <input type="radio" name="grid" value="mgrs" /> MGRS
+                <input type="radio" name="grid" value="mgrs" /> MGRS/USNG
             </p>
         {/if}
     </form>
