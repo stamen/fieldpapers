@@ -38,6 +38,8 @@
     $sm->assign('latitude', $latitude);
     $sm->assign('longitude', $longitude);
     $sm->assign('zoom', $zoom);
+    
+    $sm->assign('paper_sizes', array('Letter', 'A4', 'A3'));
 
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("index.html.tpl");
