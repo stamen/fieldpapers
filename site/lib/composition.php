@@ -85,7 +85,7 @@
             $req->addQueryString('width', round($width));
             $req->addQueryString('height', round($height));
             
-            echo $req->getURL()."\n";
+            error_log($req->getURL());
             
             $res = $req->sendRequest();
             
@@ -105,27 +105,75 @@
    /**
     * Pixel dimensions of preview map, sized for placement on print web page.
     */
-    function get_preview_map_size($orientation)
+    function get_preview_map_size($paper)
     {
-        switch($orientation)
+        switch($paper)
         {
             case 'portrait-letter':
                 return array(360, 480 - 24);
 
             case 'portrait-a4':
-                return array(360, 529.664 - 24);
+                return array(360, 504.897);
+
+            case 'portrait-a3':
+                return array(360, 506.200);
 
             case 'landscape-letter':
                 return array(480, 360 - 24);
 
             case 'landscape-a4':
-                return array(480, 326.244 - 24);
+                return array(480, 303.800);
+
+            case 'landscape-a3':
+                return array(480, 314.932);
+        }
+    }
+    
+   /**
+    * 
+    */
+    function get_page_orientation($paper)
+    {
+        switch($paper)
+        {
+            case 'portrait-letter':
+            case 'portrait-a3':
+            case 'portrait-a4':
+                return 'P';
+
+            case 'landscape-letter':
+            case 'landscape-a3':
+            case 'landscape-a4':
+                return 'L';
+        }
+    }
+    
+   /**
+    * 
+    */
+    function get_page_size($paper)
+    {
+        switch($paper)
+        {
+            case 'portrait-letter':
+            case 'landscape-letter':
+                return 'letter';
+
+            case 'portrait-a3':
+            case 'landscape-a3':
+                return 'a3';
+
+            case 'portrait-a4':
+            case 'landscape-a4':
+                return 'a4';
         }
     }
     
     function compose_map($print)
     {
-        list($width, $height) = get_preview_map_size($print['orientation']);
+        list($width, $height) = get_preview_map_size($print['paper']);
+        
+        printf("preview size %d x %d = %.3f aspect\n", $width, $height, $width/$height);
         
         $png = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $print['zoom'], $width, $height);
 
@@ -136,7 +184,8 @@
             die_with_code(500, "{$print['preview_url']->message}\n{$q}\n");
         
         $zoom = $print['zoom'];
-        $max_zoom = min(18, $print['zoom'] + 2);
+        $factors = array('letter' => 2, 'a4' => 2, 'a3' => 3);
+        $max_zoom = min(18, $print['zoom'] + $factors[ get_page_size($print['paper']) ]);
         
         while($zoom < $max_zoom)
         {
@@ -149,7 +198,7 @@
 
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
     
-        $pdf = new FPDF($print['orientation'] == 'portrait' ? 'P' : 'L', 'pt', 'letter');
+        $pdf = new FPDF(get_page_orientation($print['paper']), 'pt', get_page_size($print['paper']));
         $pdf->addPage();
         
         $icon_filename = realpath(dirname(__FILE__).'/../lib/print/icon.png');
@@ -162,12 +211,9 @@
         $map_filename = tempnam(TMP_DIR, 'composed-map-');
         imagejpeg($map_img, $map_filename, 75);
         
-        if($print['orientation'] == 'portrait') {
-            $pdf->image($map_filename, 36, 72, 540, 684, 'jpg');
+        printf("print size %d x %d = %.3f aspect\n", $pdf->w - 72, $pdf->h - 108, ($pdf->w - 72) / ($pdf->h - 108));
         
-        } else {
-            $pdf->image($map_filename, 36, 72, 720, 504, 'jpg');
-        }
+        $pdf->image($map_filename, 36, 72, $pdf->w - 72, $pdf->h - 108, 'jpg');
         
         $pdf->setFont('Helvetica', 'B', 24);
         $pdf->text(62.61, 68.49, 'Walking Papers');
