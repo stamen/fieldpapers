@@ -85,8 +85,6 @@
             $req->addQueryString('width', round($width));
             $req->addQueryString('height', round($height));
             
-            error_log($req->getURL());
-            
             $res = $req->sendRequest();
             
             if(PEAR::isError($res))
@@ -216,8 +214,6 @@
         $map_img = imagecreatefromstring($png);
         $map_filename = tempnam(TMP_DIR, 'composed-map-');
         imagejpeg($map_img, $map_filename, 75);
-        
-        printf("print size %d x %d = %.3f aspect\n", $pdf->w - 72, $pdf->h - 108, ($pdf->w - 72) / ($pdf->h - 108));
         
         $pdf->image($map_filename, 36, 72, $pdf->w - 72, $pdf->h - 108, 'jpg');
         
