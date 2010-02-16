@@ -469,6 +469,19 @@ def linearSolution(r1, s1, t1, r2, s2, t2, r3, s3, t3):
     
     return a, b, c
 
+def guessPaper(aspect):
+    """
+    """
+    aspects = {('letter', 'portrait'):   7.5 / 9.5,
+               ('letter', 'landscape'): 10.0 / 7.0,
+               ('a4', 'portait'):       7.267717 / 10.192913,
+               ('a4', 'landscape'):    10.692913 /  6.767717,
+               ('a3', 'portrait'):     10.692913 / 15.035433,
+               ('a3', 'landscape'):    15.535433 / 10.192913}
+
+    distances = sorted( [(abs(aspect - a), paper) for (paper, a) in aspects.items()] )
+    return distances[0][1]
+
 def extractCode(image, markers):
     """
     """
@@ -478,12 +491,15 @@ def extractCode(image, markers):
     distance_across = math.hypot(markers['Hand'].anchor.x - markers['Header'].anchor.x, markers['Hand'].anchor.y - markers['Header'].anchor.y)
     distance_down = math.hypot(markers['CCBYSA'].anchor.x - markers['Header'].anchor.x, markers['CCBYSA'].anchor.y - markers['Header'].anchor.y)
     aspect = distance_across / distance_down
-    orientation = aspect > 1 and 'landscape' or 'portrait'
+    paper_size, orientation = guessPaper(aspect)
     
-    print >> sys.stderr, 'aspect', aspect, 'orientation', orientation
+    print >> sys.stderr, 'aspect:', aspect, 'paper:', paper_size, orientation
     
-    right = orientation == 'portrait' and 540 or 720
-    bottom = orientation == 'portrait' and 720 or 540
+    right, bottom = {'letter': (540, 720), 'a4': (523.3, 769.9), 'a3': (769.9, 1118.6)}.get(paper_size)
+    
+    if orientation == 'landscape':
+        # flip them around
+        right, bottom = bottom, right
     
     ax, bx, cx = linearSolution(0,      0, markers['Header'].anchor.x,
                                 right,  0, markers['Hand'].anchor.x,
