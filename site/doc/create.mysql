@@ -24,6 +24,24 @@ CREATE TABLE prints (
     east        DOUBLE,
     west        DOUBLE,
     
+    zoom        INT UNSIGNED AFTER,
+    
+    # paper_size
+    orientation ENUM('portrait', 'landscape') DEFAULT 'portrait',
+    provider    VARCHAR(255),
+    
+    pdf_url     VARCHAR(255),
+    preview_url VARCHAR(255),
+    
+    country_name    VARCHAR(64),
+    country_woeid   INT UNSIGNED,
+    
+    region_name     VARCHAR(64),
+    region_woeid    INT UNSIGNED,
+    
+    place_name      VARCHAR(128),
+    place_woeid     INT UNSIGNED
+    
     user_id     VARCHAR(8) NOT NULL,
     created     TIMESTAMP NOT NULL,
     
@@ -32,23 +50,7 @@ CREATE TABLE prints (
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
-ALTER TABLE prints ADD COLUMN zoom INT UNSIGNED AFTER west;
-
-ALTER TABLE prints ADD COLUMN country_name VARCHAR(64) AFTER zoom;
-ALTER TABLE prints ADD COLUMN country_woeid INT UNSIGNED AFTER country_name;
-
-ALTER TABLE prints ADD COLUMN region_name VARCHAR(64) AFTER country_woeid;
-ALTER TABLE prints ADD COLUMN region_woeid INT UNSIGNED AFTER region_name;
-
-ALTER TABLE prints ADD COLUMN place_name VARCHAR(128) AFTER region_woeid;
-ALTER TABLE prints ADD COLUMN place_woeid INT UNSIGNED AFTER place_name;
-
-ALTER TABLE prints ADD COLUMN orientation ENUM('portrait', 'landscape') DEFAULT 'portrait' AFTER zoom;
-
-ALTER TABLE prints ADD COLUMN provider VARCHAR(255) AFTER orientation;
-
-ALTER TABLE prints ADD COLUMN pdf_url VARCHAR(255) AFTER provider;
-ALTER TABLE prints ADD COLUMN preview_url VARCHAR(255) AFTER pdf_url;
+ALTER TABLE prints ADD COLUMN paper_size  ENUM('letter', 'a4', 'a3') DEFAULT 'letter' AFTER zoom;
 
 
 
