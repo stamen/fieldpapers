@@ -228,17 +228,36 @@
             onMapChanged(map);
         }
         
-        function setOrientation(orientation)
+        function setPapersize(paper)
         {
             var sheet = map.parent.parentNode;
-        
-            if(orientation == 'landscape') {
-                sheet.className = sheet.className + ' landscape';
-                map.dimensions = new mm.Point(480, 336);
             
-            } else {
-                sheet.className = sheet.className.replace(/landscape/, '');
-                map.dimensions = new mm.Point(360, 456);
+            // ditch existing paper details
+            sheet.className = sheet.className.replace(/\b(portrait|landscape|letter|a4|a3)\b/g, ' ');
+        
+            if(paper == 'portrait-letter') {
+                sheet.className = sheet.className + ' portrait letter';
+                map.dimensions = new mm.Point(360, 480 - 24);
+            
+            } else if(paper == 'portrait-a4') {
+                sheet.className = sheet.className + ' portrait a4';
+                map.dimensions = new mm.Point(360, 504.897);
+            
+            } else if(paper == 'portrait-a3') {
+                sheet.className = sheet.className + ' portrait a3';
+                map.dimensions = new mm.Point(360, 506.200);
+            
+            } else if(paper == 'landscape-letter') {
+                sheet.className = sheet.className + ' landscape letter';
+                map.dimensions = new mm.Point(480, 360 - 24);
+            
+            } else if(paper == 'landscape-a4') {
+                sheet.className = sheet.className + ' landscape a4';
+                map.dimensions = new mm.Point(480, 303.800);
+            
+            } else if(paper == 'landscape-a3') {
+                sheet.className = sheet.className + ' landscape a3';
+                map.dimensions = new mm.Point(480, 314.932);
             }
 
             map.parent.style.width = parseInt(map.dimensions.x) + 'px';
@@ -275,7 +294,7 @@
                 Orientation:
             {/if}
             
-            <select name="orientation" onchange="setOrientation(this.value);">
+            <select name="paper" onchange="setPapersize(this.value);">
                 {foreach from=$paper_sizes item="size"}
                     {if $language == "de"}
                         {assign var="label" value="Hochformat ($size)"}

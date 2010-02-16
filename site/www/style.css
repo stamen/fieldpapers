@@ -150,8 +150,6 @@ form.language
     position: relative;
     background: white;
     border: 1px solid black;
-    width: 360px;
-    height: 456px;
     padding: 24px;
 }
 
@@ -186,17 +184,35 @@ form.language
     top: -1px;
 }
 
+    .sheet
+    {
+        width: 360px;
+        height: 456px;
+    }
+
+    .sheet.a4 { height: 505px; }
+    .sheet.a3 { height: 506px; }
+    
+    .sheet.a4 .dummy-qrcode { top: 481px; }
+    .sheet.a3 .dummy-qrcode { top: 482px; }
+
     .sheet.landscape
     {
         width: 480px;
         height: 336px;
     }
     
+    .sheet.landscape.a4 { height: 304px; }
+    .sheet.landscape.a3 { height: 315px; }
+    
     .sheet.landscape .dummy-qrcode
     {
         top: 312px;
         left: 456px;
     }
+    
+    .sheet.landscape.a4 .dummy-qrcode { top: 280px; }
+    .sheet.landscape.a3 .dummy-qrcode { top: 291px; }
     
     .sheet.landscape .dog-ear
     {

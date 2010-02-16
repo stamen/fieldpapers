@@ -26,7 +26,7 @@
     $east = is_numeric($_POST['east']) ? floatval($_POST['east']) : null;
     $west = is_numeric($_POST['west']) ? floatval($_POST['west']) : null;
     $zoom = is_numeric($_POST['zoom']) ? intval($_POST['zoom']) : null;
-    $orientation = $_POST['orientation'] ? $_POST['orientation'] : null;
+    $paper = $_POST['paper'] ? $_POST['paper'] : null;
     $provider = $_POST['provider'] ? $_POST['provider'] : null;
     
     switch(strtolower($_POST['grid']))
@@ -54,7 +54,7 @@
         $print['east'] = $east;
         $print['west'] = $west;
         $print['zoom'] = $zoom;
-        $print['orientation'] = $orientation;
+        $print['paper'] = $paper;
         $print['provider'] = $provider;
         
         list($print['country_name'], $print['country_woeid'],

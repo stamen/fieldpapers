@@ -171,9 +171,15 @@
     
     function compose_map($print)
     {
-        list($width, $height) = get_preview_map_size($print['paper']);
+        if(preg_match('/^(portrait|landscape)-(letter|a4|a3)$/', $print['paper'], $parts)) {
+            $print['orientation'] = $parts[1];
+            $print['paper_size'] = $parts[2];
+            
+        } else {
+            die_with_code(500, "Give us a meaningful paper, not \"{$print['paper']}\"\n");
+        }
         
-        printf("preview size %d x %d = %.3f aspect\n", $width, $height, $width/$height);
+        list($width, $height) = get_preview_map_size($print['paper']);
         
         $png = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $print['zoom'], $width, $height);
 
