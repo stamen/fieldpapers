@@ -74,5 +74,8 @@ if __name__ == '__main__':
                 print >> sys.stderr, 'No, seriously.'
                 raise
 
+        if args[0] == 'once':
+            break
+
         # exponential back off
         time.sleep(math.pow(2, poll_failures))
