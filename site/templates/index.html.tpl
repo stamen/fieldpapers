@@ -444,7 +444,7 @@
                     <a href="{$base_dir}/print.php?id={$rprint.id|escape}">
                         <b id="print-{$rprint.id|escape}">{$rprint.age|nice_relativetime|escape}</b>
                         <br />
-                        {$rprint.place_name|escape}</a>
+                        {$rprint.place_name|escape} ({$rprint.paper_size|ucwords|escape})</a>
 
                 {else}
                     <a href="{$base_dir}/print.php?id={$rprint.id|escape}">
