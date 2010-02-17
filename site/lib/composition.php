@@ -70,7 +70,7 @@
         return array(null, null, null, null, null, null);
     }
     
-    function compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height)
+    function compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height, $format='png')
     {
         $hostports = explode(',', WSCOMPOSE_HOSTPORTS);
         shuffle($hostports);
@@ -84,6 +84,7 @@
             $req->addQueryString('zoom', $zoom);
             $req->addQueryString('width', round($width));
             $req->addQueryString('height', round($height));
+            $req->addQueryString('output', $format);
             
             $res = $req->sendRequest();
             
@@ -92,7 +93,7 @@
     
             if($req->getResponseCode() == 200)
             {
-                // return some raw PNG data
+                // return some raw PNG or JPEG data
                 return $req->getResponseBody();
             }
         }
@@ -198,7 +199,7 @@
             $height *= 2;
         }
 
-        $png = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $zoom, $width, $height);
+        $jpg = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $zoom, $width, $height, 'jpeg');
 
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
     
@@ -211,9 +212,13 @@
         $hand_filename = realpath(dirname(__FILE__).'/../lib/print/Hand.png');
         $pdf->image($hand_filename, $pdf->w - 96, 30, 66, 48);
         
-        $map_img = imagecreatefromstring($png);
         $map_filename = tempnam(TMP_DIR, 'composed-map-');
-        imagejpeg($map_img, $map_filename, 75);
+        
+        if($fh = @fopen($map_filename, 'w'))
+        {
+            @fwrite($fh, $jpg);
+            @fclose($fh);
+        }
         
         $pdf->image($map_filename, 36, 72, $pdf->w - 72, $pdf->h - 108, 'jpg');
         
