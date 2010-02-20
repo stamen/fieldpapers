@@ -74,7 +74,7 @@ if __name__ == '__main__':
                 print >> sys.stderr, 'No, seriously.'
                 raise
 
-        if args[0] == 'once':
+        if len(args) and args[0] == 'once':
             break
 
         # exponential back off
