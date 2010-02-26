@@ -13,9 +13,15 @@
     top: 415px;
     padding: 9px;
 }
+    
+.sheet.a4 #zoom-warning { top: 464px; }
+.sheet.a3 #zoom-warning { top: 465px; }
 
 .sheet.landscape #zoom-warning
 {
     width: 430px;
     top: 319px;
 }
+    
+.sheet.landscape.a4 #zoom-warning { top: 287px; }
+.sheet.landscape.a3 #zoom-warning { top: 298px; }

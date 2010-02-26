@@ -65,6 +65,7 @@
                 <input name="east" type="hidden" value="{$print.east|escape}" />
                 <input name="west" type="hidden" value="{$print.west|escape}" />
                 <input name="zoom" type="hidden" value="{$print.zoom|escape}" />
+                <input name="paper_size" type="hidden" value="{$print.paper_size|escape}" />
                 <input name="orientation" type="hidden" value="{$print.orientation|escape}" />
                 <input name="provider" type="hidden" value="{$print.provider|escape}" />
         
@@ -105,7 +106,7 @@
         </form>
     {/if}
     
-    <div class="sheet {$print.orientation|escape}">
+    <div class="sheet {$print.paper_size|escape} {$print.orientation|escape}">
         <img src="{$print.preview_url|escape}"/>
         <div class="dummy-qrcode"><img src="http://chart.apis.google.com/chart?chs=44x44&amp;cht=qr&amp;chld=L%7C0&amp;chl=example" alt="" border="0" /></div>
         <div class="dog-ear"> </div>

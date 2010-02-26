@@ -228,17 +228,36 @@
             onMapChanged(map);
         }
         
-        function setOrientation(orientation)
+        function setPapersize(paper)
         {
             var sheet = map.parent.parentNode;
-        
-            if(orientation == 'landscape') {
-                sheet.className = sheet.className + ' landscape';
-                map.dimensions = new mm.Point(480, 336);
             
-            } else {
-                sheet.className = sheet.className.replace(/landscape/, '');
-                map.dimensions = new mm.Point(360, 456);
+            // ditch existing paper details
+            sheet.className = sheet.className.replace(/\b(portrait|landscape|letter|a4|a3)\b/g, ' ');
+        
+            if(paper == 'portrait-letter') {
+                sheet.className = sheet.className + ' portrait letter';
+                map.dimensions = new mm.Point(360, 480 - 24);
+            
+            } else if(paper == 'portrait-a4') {
+                sheet.className = sheet.className + ' portrait a4';
+                map.dimensions = new mm.Point(360, 504.897);
+            
+            } else if(paper == 'portrait-a3') {
+                sheet.className = sheet.className + ' portrait a3';
+                map.dimensions = new mm.Point(360, 506.200);
+            
+            } else if(paper == 'landscape-letter') {
+                sheet.className = sheet.className + ' landscape letter';
+                map.dimensions = new mm.Point(480, 360 - 24);
+            
+            } else if(paper == 'landscape-a4') {
+                sheet.className = sheet.className + ' landscape a4';
+                map.dimensions = new mm.Point(480, 303.800);
+            
+            } else if(paper == 'landscape-a3') {
+                sheet.className = sheet.className + ' landscape a3';
+                map.dimensions = new mm.Point(480, 314.932);
             }
 
             map.parent.style.width = parseInt(map.dimensions.x) + 'px';
@@ -274,40 +293,45 @@
             {else}
                 Orientation:
             {/if}
-            <select name="orientation" onchange="setOrientation(this.value);">
-                {if $language == "de"}
-                    {assign var="label" value="Hochformat"}
-                {elseif $language == "nl"}
-                    {assign var="label" value="Staand"}
-                {elseif $language == "es"}
-                    {assign var="label" value="Retrato"}    
-                {elseif $language == "fr"}
-                    {assign var="label" value="Portrait"}    
-                {elseif $language == "ja"}
-                    {assign var="label" value="縦"}
-                {elseif $language == "it"}
-                    {assign var="label" value="Verticale"}    
-                {else}
-                    {assign var="label" value="Portrait"}
-                {/if}
-                <option label="{$label}" value="portrait" selected="selected">{$label}</option>
-
-                {if $language == "de"}
-                    {assign var="label" value="Querformat"}
-                {elseif $language == "nl"}
-                    {assign var="label" value="Liggend"}
-                {elseif $language == "es"}
-                    {assign var="label" value="Paisaje"}
-                {elseif $language == "fr"}
-                    {assign var="label" value="Paysage"}
-                {elseif $language == "ja"}
-                    {assign var="label" value="横"}
-                {elseif $language == "it"}
-                    {assign var="label" value="Orizzontale"}    
-                {else}
-                    {assign var="label" value="Landscape"}
-                {/if}
-                <option label="{$label}" value="landscape">{$label}</option>
+            
+            <select name="paper" onchange="setPapersize(this.value);">
+                {foreach from=$paper_sizes item="size"}
+                    {if $language == "de"}
+                        {assign var="label" value="Hochformat ($size)"}
+                    {elseif $language == "nl"}
+                        {assign var="label" value="Staand ($size)"}
+                    {elseif $language == "es"}
+                        {assign var="label" value="Retrato ($size)"}
+                    {elseif $language == "fr"}
+                        {assign var="label" value="Portrait ($size)"}
+                    {elseif $language == "ja"}
+                        {assign var="label" value="縦 ($size)"}
+                    {elseif $language == "it"}
+                        {assign var="label" value="Verticale ($size)"}
+                    {else}
+                        {assign var="label" value="Portrait ($size)"}
+                    {/if}
+                    <option label="{$label}" value="portrait-{$size|lower}">{$label}</option>
+                {/foreach}
+    
+                {foreach from=$paper_sizes item="size"}
+                    {if $language == "de"}
+                        {assign var="label" value="Querformat ($size)"}
+                    {elseif $language == "nl"}
+                        {assign var="label" value="Liggend ($size)"}
+                    {elseif $language == "es"}
+                        {assign var="label" value="Paisaje ($size)"}
+                    {elseif $language == "fr"}
+                        {assign var="label" value="Paysage ($size)"}
+                    {elseif $language == "ja"}
+                        {assign var="label" value="横 ($size)"}
+                    {elseif $language == "it"}
+                        {assign var="label" value="Orizzontale ($size)"}
+                    {else}
+                        {assign var="label" value="Landscape ($size)"}
+                    {/if}
+                    <option label="{$label}" value="landscape-{$size|lower}">{$label}</option>
+                {/foreach}
             </select>
     
             {if $language == "de"}
@@ -420,7 +444,7 @@
                     <a href="{$base_dir}/print.php?id={$rprint.id|escape}">
                         <b id="print-{$rprint.id|escape}">{$rprint.age|nice_relativetime|escape}</b>
                         <br />
-                        {$rprint.place_name|escape}</a>
+                        {$rprint.place_name|escape} ({$rprint.paper_size|ucwords|escape})</a>
 
                 {else}
                     <a href="{$base_dir}/print.php?id={$rprint.id|escape}">

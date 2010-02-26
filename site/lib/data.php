@@ -326,6 +326,10 @@
         // TODO: ditch dependency on table_columns()
         $column_names = array_keys(table_columns($dbh, 'prints'));
         
+        $papersize_column_name = in_array('paper_size', $column_names)
+            ? 'paper_size,'
+            : '';
+        
         $orientation_column_name = in_array('orientation', $column_names)
             ? 'orientation,'
             : '';
@@ -338,7 +342,8 @@
             ? 'pdf_url, preview_url,'
             : '';
         
-        $q = sprintf("SELECT {$orientation_column_name}
+        $q = sprintf("SELECT {$papersize_column_name}
+                             {$orientation_column_name}
                              {$provider_column_name}
                              {$url_column_names}
                              id, north, south, east, west, zoom,
@@ -385,6 +390,10 @@
         // TODO: ditch dependency on table_columns()
         $column_names = array_keys(table_columns($dbh, 'prints'));
         
+        $papersize_column_name = in_array('paper_size', $column_names)
+            ? 'paper_size,'
+            : '';
+        
         $orientation_column_name = in_array('orientation', $column_names)
             ? 'orientation,'
             : '';
@@ -397,7 +406,8 @@
             ? 'pdf_url, preview_url,'
             : '';
         
-        $q = sprintf("SELECT {$orientation_column_name}
+        $q = sprintf("SELECT {$papersize_column_name}
+                             {$orientation_column_name}
                              {$provider_column_name}
                              {$url_column_names}
                              id, north, south, east, west, zoom,
@@ -676,7 +686,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for provider
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'orientation', 'provider', 'pdf_url', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'provider', 'pdf_url', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
             if(in_array($field, $column_names) && !is_null($print[$field]))
                 if($print[$field] != $old_print[$field] || in_array($field, array('provider')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));
