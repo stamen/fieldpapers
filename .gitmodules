@@ -1,0 +1,3 @@
+[submodule "decoder/ModestMaps"]
+	path = decoder/ModestMaps
+	url = http://github.com/migurski/modestmaps-py.git
