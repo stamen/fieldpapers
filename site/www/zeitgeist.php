@@ -166,9 +166,12 @@
         $total_scans += $row['scans'];
     }
     
-    $scan_states['finished'] = round(100 * $scan_states['finished'] / $total_scans);
-    $scan_states['progress'] = round(100 * $scan_states['progress'] / $total_scans);
-    $scan_states['failed'] = round(100 * $scan_states['failed'] / $total_scans);
+    if($total_scans)
+    {
+        $scan_states['finished'] = round(100 * $scan_states['finished'] / $total_scans);
+        $scan_states['progress'] = round(100 * $scan_states['progress'] / $total_scans);
+        $scan_states['failed'] = round(100 * $scan_states['failed'] / $total_scans);
+    }
     
 
 
