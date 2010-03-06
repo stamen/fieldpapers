@@ -24,7 +24,7 @@ CREATE TABLE prints (
     east        DOUBLE,
     west        DOUBLE,
     
-    zoom        INT UNSIGNED AFTER,
+    zoom        INT UNSIGNED,
     
     # paper_size
     orientation ENUM('portrait', 'landscape') DEFAULT 'portrait',
@@ -40,7 +40,7 @@ CREATE TABLE prints (
     region_woeid    INT UNSIGNED,
     
     place_name      VARCHAR(128),
-    place_woeid     INT UNSIGNED
+    place_woeid     INT UNSIGNED,
     
     user_id     VARCHAR(8) NOT NULL,
     created     TIMESTAMP NOT NULL,
