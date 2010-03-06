@@ -72,6 +72,30 @@
     
     function compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height, $format='png')
     {
+        if(!WSCOMPOSE_HOSTPORTS)
+        {
+            require_once 'ModestMaps/ModestMaps.php';
+            
+            $provider = new MMaps_Templated_Spherical_Mercator_Provider($provider);
+            $center = new MMaps_Location(($north + $south) / 2, ($east + $west) / 2);
+            $dimensions = new MMaps_Point($width, $height);
+
+            $map = MMaps_mapByCenterZoom($provider, $center, $zoom, $dimensions);
+            $img = $map->draw();
+            $fn = tempnam('/tmp', 'composed-map-');
+            
+            if($format == 'jpeg') {
+                imagejpeg($img, $fn);
+            
+            } elseif($format == 'png') {
+                imagepng($img, $fn);
+            }
+            
+            $data = file_get_contents($fn);
+            unlink($fn);
+            return $data;
+        }
+        
         $hostports = explode(',', WSCOMPOSE_HOSTPORTS);
         shuffle($hostports);
         
