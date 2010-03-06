@@ -18,6 +18,8 @@ import xml.etree.ElementTree
 import PIL.Image
 import PIL.ImageFilter
 import matchup
+
+sys.path.append('ModestMaps')
 import ModestMaps
 
 class CodeReadException(Exception):
