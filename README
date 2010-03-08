@@ -2,6 +2,8 @@ Paperwalking is the codebase behind http://walking-papers.org.
 
 There are two main components here.
 
+See INSTALL for a guide to installing Paperwalking.
+
 1. Site
 
 The user-facing website is written in PHP and MySQL, and has been developed
@@ -14,7 +16,7 @@ The ugly math bits are done in an offline process that consumes a queue
 of freshly-scanned images from the main site, runs them through the
 image-recognition algorithm, and posts back georectified image tiles
 for editing. You can run a bunch of these in parallel to make jobs go
-faster, and they should be percetly fine on small EC2 instances or
+faster, and they should be perfectly fine on small EC2 instances or
 a box plugged into plain old residential DSL.
 
 It's worth mentioning that the image recognition part of the work relies

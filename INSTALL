@@ -1,0 +1,125 @@
+Installing Paperwalking on Ubuntu 9
+-----------------------------------
+
+Hardware
+--------
+
+I've tested this guide on two platforms: Amazon's EC2 cloud-based computing
+service, and the SheevaPlug, a miniaturized ARM-based plug computing platform.
+SheevaPlug comes with Ubuntu 9.04, while EC2 can run Ubuntu 9.10 machine images.
+Machine images from Alestic.com seem to work well, and the guide below was
+produced using ami-19a34270 (alestic/ubuntu-9.10-karmic-base-20090623).
+
+When setting up an EC2 instance, make sure it's in a security group that can
+accept both SSH and HTTP connections!
+
+Start by logging into the server via SSH, as the root user.
+
+Software
+--------
+
+There are a few packages that you will need to install: some base material,
+packaged for use by the offline image decoder, and packages to help run the
+public-facing website. During the last step below, you'll be asked to create
+a root MySQL password a few times, it's fine to leave this blank.
+
+% apt-get update
+% apt-get install curl vim screen tcsh sudo build-essential git-core
+% apt-get intsall python-imaging python-numpy openjdk-6-jre-headless
+% apt-get install libapache2-mod-php5 php5-gd php5-mysql mysql-server-5.1 php-pear
+
+Paperwalking uses server packages from PHP's PEAR collection. The can be
+installed via the pear utility. Some of the packages below will throw warnings
+about deprecation, don't worry about those.
+
+% pear install Crypt_HMAC HTTP_Request DB
+% pear install Crypt_HMAC2 MDB2 MDB2#mysql
+
+Apache's default configuration will need to be edited slightly. Edit the line
+with "DocumentRoot" to say: DocumentRoot /var/www/paperwalking/site/www, then
+restart Apache.
+
+% pico /etc/apache2/sites-enabled/000-default
+% apache2ctl restart
+
+Try http://example.host in a browser.
+
+Now, to install Paperwalking itself.
+
+% cd /var/www
+% git clone http://github.com/migurski/paperwalking.git paperwalking
+% cd paperwalking
+% git submodule init && git submodule update
+
+% mysql -u root
+	> create database paperwalking character set='utf8';
+	> grant select, insert, update, delete, lock tables on paperwalking.* to paperwalking@localhost identified by 'w4lks';
+	> flush privileges;
+	> quit;
+
+% mysql -u root paperwalking < site/doc/create.mysql
+% cd site && make
+
+The main site configuration information is kept in lib/init.php. Paperwalking
+comes with a blank that you have to copy and edit with your favorite text editor.
+
+% cp lib/init.php.txt lib/init.php
+% pico lib/init.php
+
+Change these two lines (choose your own password):
+1.	define('DB_DSN', 'mysql://paperwalking:w4lks@localhost/paperwalking');
+2.	define('API_PASSWORD', 'swordfish');
+
+Now try http://example.host in a browser to see it work. Make a new print, it
+might take a little while (we'll get back to this later). Print it, scan it, or
+just convert it to a JPEG, and post the image back to your instance of Paperwalking.
+Note that it's just sitting there, "queued for processing". Keep this browser
+window open, because we need to build SIFT.
+
+% cd ../decoder
+% make
+
+Some stuff will scroll by, you may see compiler warnings, ignore these unless
+actual errors show up. Run the decoder once with the password chosen above.
+
+% python poll.py -p swordfish -b http://localhost once
+
+Watch the scan page in your browser update as it progresses through the image.
+
+If it works, then re-run poll.py without the "once" argument at the end.
+
+We don't have a proper daemon wrapper for this yet, so I've just been running it
+in screen as a cheap way to get a long-running process going. It sounds ghetto,
+but I've had processes like this one stay up for months at a time this way.
+
+Use of screen to maintain long-running shell sessions is described here:
+	http://www.rackaid.com/resources/linux-screen-tutorial-and-how-to/
+
+Now for a few optional niceties.
+
+First, we can speed up the creation of print maps by using Modest Maps ws-compose.
+
+% cd ~
+% git clone http://github.com/migurski/modestmaps-py.git modestmaps
+
+And in a screen as above:
+
+% cd modestmaps
+% python ws-compose.py
+
+Back in the site configuration, configure ws-compose.
+
+% pico /var/www/paperwalking/site/lib/init.php 
+	define('WSCOMPOSE_HOSTPORTS', '127.0.0.1:9999');
+
+Finally we can get applications IDs for three external information services,
+for specific improvements to the site.
+
+GeoPlanet is used in conjunction with the "Find" button on the map composition page:
+http://developer.yahoo.com/geo/geoplanet/
+
+Flickr does our reverse-geocoding, so that maps of arbitrary places can be given names:
+http://www.flickr.com/services/api/keys/
+
+Cloudmade provides a few extra map styles:
+http://developers.cloudmade.com/
