@@ -4,3 +4,6 @@
 [submodule "site/lib/ModestMaps"]
 	path = site/lib/ModestMaps
 	url = http://github.com/migurski/modestmaps-php.git
+[submodule "decoder/vlfeat"]
+	path = decoder/vlfeat
+	url = http://github.com/migurski/vlfeat.git
