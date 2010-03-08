@@ -121,12 +121,11 @@
     
         var onPlaces = new Function('res', "appendPlacename(res, document.getElementById('print-location'))");
         var flickrKey = '{$constants.FLICKR_KEY|escape}';
-        var cloudmadeKey = '{$constants.CLOUDMADE_KEY|escape}';
         var lat = {$print.latitude|escape};
         var lon = {$print.longitude|escape};
         
         {if !$print.place_woeid}getPlacename(lat, lon, flickrKey, 'onPlaces');{/if}
-        makeStaticMap('mini-map', lat, lon, cloudmadeKey);
+        makeStaticMap('mini-map', lat, lon);
 
     // ]]>
     </script>

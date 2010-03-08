@@ -24,13 +24,13 @@ function getPlacename(lat, lon, flickrKey, callback)
     document.body.appendChild(script);
 }
 
-function makeStaticMap(elementID, lat, lon, cloudmadeKey)
+function makeStaticMap(elementID, lat, lon)
 {
     // "import" the namespace
     var mm = com.modestmaps;
     
     var tileURL = function(coord) {
-        return 'http://tile.cloudmade.com/' + cloudmadeKey + '/997/256/' + coord.zoom + '/' + coord.column + '/' + coord.row + '.png';
+        return 'http://tile.openstreetmap.org/' + coord.zoom + '/' + coord.column + '/' + coord.row + '.png';
     }
     
     var map = new com.modestmaps.Map(elementID, new mm.MapProvider(tileURL), new mm.Point(408, 252))
