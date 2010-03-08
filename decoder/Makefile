@@ -33,4 +33,4 @@ vlfeat/bin/$(ARCH)/sift:
 
 clean:
 	rm -rf bin
-	cd vlfeat && make clean
+	rm -rf vlfeat/bin/$(ARCH)
