@@ -1,8 +1,22 @@
 Paperwalking is the codebase behind http://walking-papers.org.
-
-There are two main components here.
+Copyright (C) 2009-2010, Michal Migurski <mike@stamen.com>
 
 See INSTALL for a guide to installing Paperwalking.
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+There are two main components here.
 
 1. Site
 
@@ -20,6 +34,5 @@ faster, and they should be perfectly fine on small EC2 instances or
 a box plugged into plain old residential DSL.
 
 It's worth mentioning that the image recognition part of the work relies
-on a NON-FREE, PATENTED ALGORITHM called SIFT:
-
+on a patented algorithm called SIFT:
     http://en.wikipedia.org/wiki/Scale-invariant_feature_transform
