@@ -39,7 +39,8 @@
     header(sprintf('X-Print-Region: %s (woeid %d)', $print['region_name'], $print['region_woeid']));
     header(sprintf('X-Print-Place: %s (woeid %d)', $print['place_name'], $print['place_woeid']));
     
-    $type = get_preferred_type($_SERVER['HTTP_ACCEPT']);
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = get_preferred_type($type);
     
     if($type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
