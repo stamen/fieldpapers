@@ -79,6 +79,41 @@
         //error_log("found no userdata in: {$signed_string}\n", 3, dirname(__FILE__).'/../tmp/log.txt');
         return array(null, $default_language);
     }
+
+    function get_preferred_type($accept_type_header)
+    {
+        // break up string into pieces (types and q factors)
+        preg_match_all('#([\*a-z]+/([\*a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);
+
+        $types = array();
+        
+        if(count($type_parse[1]))
+        {
+            // create a list like "text/html" => 0.8
+            $types = array_combine($type_parse[1], $type_parse[4]);
+            
+            // set default to 1 for any without q factor
+            foreach($types as $l => $val)
+                $types[$l] = ($val === '') ? 1 : $val;
+            
+            // sort list based on value	
+            arsort($types, SORT_NUMERIC);
+
+        } else {
+            $types = array();
+
+        }
+        
+        foreach(array_keys($types) as $type)
+        {
+            // XML generally?
+            if(preg_match('#^(text|application)/xml$#', $type))
+                return 'application/xml';
+        }
+        
+        // HTML is the default
+        return 'text/html';
+    }
     
    /**
     * Adapted from http://www.thefutureoftheweb.com/blog/use-accept-language-header
