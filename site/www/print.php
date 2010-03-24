@@ -27,7 +27,31 @@
     $sm->assign('print', $print);
     $sm->assign('language', $language);
     
-    header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("print.html.tpl");
+    header(sprintf('X-Print-ID: %s', $print['id']));
+    header(sprintf('X-Print-User-ID: %s', $print['user_id']));
+    header(sprintf('X-Print-Paper: %s %s', $print['paper_size'], $print['orientation']));
+    header(sprintf('X-Print-Provider: %s', $print['provider']));
+    header(sprintf('X-Print-PDF-URL: %s', $print['pdf_url']));
+    header(sprintf('X-Print-Preview-URL: %s', $print['preview_url']));
+    header(sprintf('X-Print-Bounds: %.6f %.6f %.6f %.6f', $print['south'], $print['west'], $print['north'], $print['east']));
+    header(sprintf('X-Print-Center: %.6f %.6f %d', $print['latitude'], $print['longitude'], $print['zoom']));
+    header(sprintf('X-Print-Country: %s (woeid %d)', $print['country_name'], $print['country_woeid']));
+    header(sprintf('X-Print-Region: %s (woeid %d)', $print['region_name'], $print['region_woeid']));
+    header(sprintf('X-Print-Place: %s (woeid %d)', $print['place_name'], $print['place_woeid']));
+    
+    $type = get_preferred_type($_SERVER['HTTP_ACCEPT']);
+    
+    if($type == 'text/html') {
+        header("Content-Type: text/html; charset=UTF-8");
+        print $sm->fetch("print.html.tpl");
+    
+    } elseif($type == 'application/xml') { 
+        header("Content-Type: application/xml; charset=UTF-8");
+        print $sm->fetch("print.xml.tpl");
+    
+    } else {
+        header('HTTP/1.1 400');
+        die("Unknown type: {$_SERVER['HTTP_ACCEPT']}\n");
+    }
 
 ?>
