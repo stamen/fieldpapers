@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<print id="{$print.id|escape}" user="{$print.user_id|escape}">
+<print id="{$print.id|escape}" user="{$print.user_id|escape}" href="http://{$domain}{$base_dir}{$base_href}?id={$print.id|escape:"url"}">
     <paper size="{$print.paper_size|escape}" orientation="{$print.orientation|escape}" />
     <provider>{$print.provider|escape}"</provider>
     <preview href="{$print.preview_url|escape}" />

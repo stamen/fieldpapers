@@ -48,6 +48,7 @@
     
     } elseif($type == 'application/xml') { 
         header("Content-Type: application/xml; charset=UTF-8");
+        print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
         print $sm->fetch("print.xml.tpl");
     
     } else {

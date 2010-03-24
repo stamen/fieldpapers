@@ -4,4 +4,5 @@
     <will-edit>{$scan.will_edit|escape}</will-edit>
     <minimum-coord row="{$scan.min_row|escape}" column="{$scan.min_column|escape}" zoom="{$scan.min_zoom|escape}" />
     <maximum-coord row="{$scan.max_row|escape}" column="{$scan.max_column|escape}" zoom="{$scan.max_zoom|escape}" />
+    {include file="print.xml.tpl"}
 </scan>
