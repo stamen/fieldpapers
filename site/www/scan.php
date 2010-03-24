@@ -59,7 +59,42 @@
     $sm->assign('print', $print);
     $sm->assign('language', $language);
     
-    header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("scan.html.tpl");
+    header(sprintf('X-Scan-ID: %s', $scan['id']));
+    header(sprintf('X-Scan-User-ID: %s', $scan['user_id']));
+    header(sprintf('X-Scan-Last-Step: %s', $scan['last_step']));
+    header(sprintf('X-Scan-Is-Private: %s', $scan['is_private']));
+    header(sprintf('X-Scan-Will-Edit: %s', $scan['will_edit']));
+    header(sprintf('X-Scan-Minimum-Coord: %.3f %.3f %d', $scan['min_row'], $scan['min_column'], $scan['min_zoom']));
+    header(sprintf('X-Scan-Maximum-Coord: %.3f %.3f %d', $scan['max_row'], $scan['max_column'], $scan['max_zoom']));
+    header(sprintf('X-Scan-Base-URL: %s', $scan['base_url']));
+
+    header(sprintf('X-Print-ID: %s', $print['id']));
+    header(sprintf('X-Print-User-ID: %s', $print['user_id']));
+    header(sprintf('X-Print-Paper: %s %s', $print['paper_size'], $print['orientation']));
+    header(sprintf('X-Print-Provider: %s', $print['provider']));
+    header(sprintf('X-Print-PDF-URL: %s', $print['pdf_url']));
+    header(sprintf('X-Print-Preview-URL: %s', $print['preview_url']));
+    header(sprintf('X-Print-Bounds: %.6f %.6f %.6f %.6f', $print['south'], $print['west'], $print['north'], $print['east']));
+    header(sprintf('X-Print-Center: %.6f %.6f %d', $print['latitude'], $print['longitude'], $print['zoom']));
+    header(sprintf('X-Print-Country: %s (woeid %d)', $print['country_name'], $print['country_woeid']));
+    header(sprintf('X-Print-Region: %s (woeid %d)', $print['region_name'], $print['region_woeid']));
+    header(sprintf('X-Print-Place: %s (woeid %d)', $print['place_name'], $print['place_woeid']));
+    
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = get_preferred_type($type);
+    
+    if($type == 'text/html') {
+        header("Content-Type: text/html; charset=UTF-8");
+        print $sm->fetch("scan.html.tpl");
+    
+    } elseif($type == 'application/xml') { 
+        header("Content-Type: application/xml; charset=UTF-8");
+        print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
+        print $sm->fetch("scan.xml.tpl");
+    
+    } else {
+        header('HTTP/1.1 400');
+        die("Unknown type: {$_SERVER['HTTP_ACCEPT']}\n");
+    }
 
 ?>
