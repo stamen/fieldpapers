@@ -27,18 +27,8 @@
     $sm->assign('print', $print);
     $sm->assign('language', $language);
     
-    header(sprintf('X-Print-ID: %s', $print['id']));
-    header(sprintf('X-Print-User-ID: %s', $print['user_id']));
-    header(sprintf('X-Print-Paper: %s %s', $print['paper_size'], $print['orientation']));
-    header(sprintf('X-Print-Provider: %s', $print['provider']));
-    header(sprintf('X-Print-PDF-URL: %s', $print['pdf_url']));
-    header(sprintf('X-Print-Preview-URL: %s', $print['preview_url']));
-    header(sprintf('X-Print-Bounds: %.6f %.6f %.6f %.6f', $print['south'], $print['west'], $print['north'], $print['east']));
-    header(sprintf('X-Print-Center: %.6f %.6f %d', $print['latitude'], $print['longitude'], $print['zoom']));
-    header(sprintf('X-Print-Country: %s (woeid %d)', $print['country_name'], $print['country_woeid']));
-    header(sprintf('X-Print-Region: %s (woeid %d)', $print['region_name'], $print['region_woeid']));
-    header(sprintf('X-Print-Place: %s (woeid %d)', $print['place_name'], $print['place_woeid']));
-    
+    print_headers($print);
+
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
     
