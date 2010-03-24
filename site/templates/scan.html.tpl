@@ -23,7 +23,7 @@
     {/strip} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <link rel="stylesheet" href="{$base_dir}/scan.css" type="text/css" />
-    <link rel="data" type="application/xml" href="http://{$domain}{$base_dir}{$base_href}?id={$scan.id|escape:"url"}&amp;type=xml" />
+    <link rel="data" type="application/xml" href="{$base_dir}{$base_href}?id={$scan.id|escape:"url"}&amp;type=xml" />
     {if $scan && $scan.last_step != 6 && $scan.last_step != $constants.STEP_FATAL_ERROR && $scan.last_step != $constants.STEP_FATAL_QRCODE_ERROR}
         <meta http-equiv="refresh" content="5" />
     {else}
