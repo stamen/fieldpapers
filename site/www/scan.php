@@ -62,7 +62,7 @@
     scan_headers($scan);
     print_headers($print);
     
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = $_GET['type'] ? $_GET['type'] : 'html'; //$_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
     
     if($type == 'text/html') {
@@ -76,7 +76,7 @@
     
     } else {
         header('HTTP/1.1 400');
-        die("Unknown type: {$_SERVER['HTTP_ACCEPT']}\n");
+        die("Unknown type.\n");
     }
 
 ?>

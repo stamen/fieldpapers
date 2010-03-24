@@ -22,7 +22,7 @@
         {/if}
     {/strip} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
-    <link rel="data" type="application/xml" href="http://{$domain}{$base_dir}{$base_href}?id={$print.id|escape:"url"}&amp;type=application%2Fxml" />
+    <link rel="data" type="application/xml" href="http://{$domain}{$base_dir}{$base_href}?id={$print.id|escape:"url"}&amp;type=xml" />
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>

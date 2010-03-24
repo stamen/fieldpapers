@@ -80,8 +80,20 @@
         return array(null, $default_language);
     }
 
+   /**
+    * Get a useful type back from an Accept header.
+    *
+    * If the single argument is one of "html" or "xml", just return
+    * what's appropriate without pretending it's a full header.
+    */
     function get_preferred_type($accept_type_header)
     {
+        if($accept_type_header == 'xml')
+            return 'application/xml';
+        
+        if($accept_type_header == 'html')
+            return 'text/html';
+        
         // break up string into pieces (types and q factors)
         preg_match_all('#([\*a-z]+/([\*a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);
 
