@@ -1,5 +1,5 @@
-<h3>Countries</h3>
+<h3>Ülkeler</h3>
 
 <p>
-    Share of prints for top ten countries from the past month.
+	Son aydır öne giden on ülkelerin baskı porsiyonları.
 </p>

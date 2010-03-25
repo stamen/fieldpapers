@@ -1,12 +1,11 @@
 <p>
-    You’ll need to log in with your OpenStreetMap account
-    to do any editing; do that below or
-    <a href="http://www.openstreetmap.org/user/new">create a new account</a>.
-    <strong><i>Walking Papers</i> will not see or keep your password</strong>,
-    it is passed directly to OpenStreetMap.
+	OSM Haritasına değişmek için aşağıda hezabına girmen lazım veya
+    <a href="http://www.openstreetmap.org/user/new">yeni hesabı oluşturabilirsin</a>.
+    <strong><i>Walking Papers</i>, senin şifreni ne görecek ne kaydedecektir.</strong>
+    OpenStreetMap'a direkt veriliyor.
 </p>
 <p>
-    <label for="username">Email Address or Username</label>
+    <label for="username">Kullanıcı Adı veya Email Adres</label>
     <br />
     <input id="username-textfield" name="username" type="text" size="30" />
 </p>
@@ -19,11 +18,11 @@
 // {/literal}]]>
 </script>
 <p>
-    <label for="password">Password</label>
+    <label for="password">Şifre</label>
     <br />
     <input name="password" type="password" size="30" />
     <br />
-    (<a href="http://www.openstreetmap.org/user/forgot-password">Lost your password?</a>)
+    (<a href="http://www.openstreetmap.org/user/forgot-password">Şifreni kaybettin mi?</a>)
 </p>
 <p>
     This form will be replaced by an interactive editing window
