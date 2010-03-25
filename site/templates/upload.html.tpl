@@ -17,6 +17,8 @@
             スキャナーデータのアップロード
         {elseif $language == "it"}
             Invia una mappa scannerizzata
+        {elseif $language == "tr"}
+			Taramayı yükle
         {else}
             Upload Scan
         {/if}
@@ -43,6 +45,8 @@
         {assign var="label" value="Enviar"}
     {elseif $language == "it"}
         {assign var="label" value="Invia"}
+    {elseif $language == "tr"}
+        {assign var="label" value="Gönder"}
     {else}
         {assign var="label" value="Send"}
     {/if}

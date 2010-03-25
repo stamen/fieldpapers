@@ -17,6 +17,8 @@
             統計
         {elseif $language == "it"}
             Statistiche
+        {elseif $language == "tr"}
+            İstatistikler
         {else}
             Zeitgeist
         {/if}
@@ -41,6 +43,8 @@
             統計
         {elseif $language == "it"}
             Statistiche
+        {elseif $language == "tr"}
+            İstatistikler
         {else}
             Zeitgeist
         {/if}
