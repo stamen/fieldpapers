@@ -34,6 +34,8 @@
             最近の取込データ
         {elseif $language == "it"}
             Scansioni recenti
+        {elseif $language == "tr"}
+            Son taramalar
         {else}
             Recent Scans
         {/if}
@@ -86,6 +88,8 @@
                 最近の取り込みの続き...
             {elseif $language == "it"}
                 Altre scansioni recenti...
+            {elseif $language == "tr"}
+                Daha taramalar...
             {else}
                 More recent scans...
             {/if}
@@ -106,6 +110,8 @@
                 印刷する
             {elseif $language == "it"}
                 Stampare
+            {elseif $language == "tr"}
+                Baskı Yap
             {else}
                 Make A Print
             {/if}
@@ -129,6 +135,8 @@
             {assign var="label" value="Cerca"}
         {elseif $language == "ja"}
             {assign var="label" value="検索"}
+        {elseif $language == "tr"}
+            {assign var="label" value="Ara"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -167,6 +175,8 @@
                 Per una mappatura a livello stradale é raccomandato un livello di zoom <b>maggiore o uguale a 14</b>
             {elseif $language == "ja"}
                 ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
+            {elseif $language == "tr"}
+				Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -211,6 +221,8 @@
                     alert("申し訳ありません。その名前の場所は見つけられません。");
                 {elseif $language == "it"}
                     alert("Ci dispiace non siamo riusciti a trovare un posto con quel nome.");
+                {elseif $language == "tr"}
+                    alert("Üzgünüz. O adlı yeri bulunamadı.");
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
                 {/if}
@@ -290,6 +302,8 @@
                 向き:
             {elseif $language == "it"}
                 Orientamento del foglio:
+            {elseif $language == "tr"}
+                Yönelim:
             {else}
                 Orientation:
             {/if}
@@ -308,6 +322,8 @@
                         {assign var="label" value="縦 ($size)"}
                     {elseif $language == "it"}
                         {assign var="label" value="Verticale ($size)"}
+                    {elseif $language == "tr"}
+                        {assign var="label" value="Dikey ($size)"}
                     {else}
                         {assign var="label" value="Portrait ($size)"}
                     {/if}
@@ -327,6 +343,8 @@
                         {assign var="label" value="横 ($size)"}
                     {elseif $language == "it"}
                         {assign var="label" value="Orizzontale ($size)"}
+                    {elseif $language == "tr"}
+                        {assign var="label" value="Yatay ($size)"}
                     {else}
                         {assign var="label" value="Landscape ($size)"}
                     {/if}
@@ -346,6 +364,8 @@
                 {assign var="label" value="作成"}
             {elseif $language == "it"}
                 {assign var="label" value="Crea"}
+            {elseif $language == "tr"}
+                {assign var="label" value="Üret"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -369,6 +389,8 @@
                     Provider:
                 {elseif $language == "it"}
                     Provider:
+                {elseif $language == "tr"}
+                    Kaynak:
                 {else}
                     Provider:
                 {/if}
@@ -432,6 +454,8 @@
             最近の印刷
         {elseif $language == "it"}
             Stampe recenti
+        {elseif $language == "tr"}
+            Son Baskılar
         {else}
             Recent Prints
         {/if}
@@ -476,6 +500,8 @@
                 最近の印刷の続き...
             {elseif $language == "it"}
                 Altre stampe recenti...
+            {elseif $language == "tr"}
+                Daha baskılar...
             {else}
                 More recent prints...
             {/if}

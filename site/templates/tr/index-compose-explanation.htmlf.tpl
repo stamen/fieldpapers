@@ -1,5 +1,7 @@
 <p>
-    <a href="http://openstreetmap.org">OpenStreetMap</a> is a wiki-style map
+    <a href="http://openstreetmap.org">OpenStreetMap</a> herkesin değiştirebilen wiki-tarzı dünya haritasıdır. Bazı yerlerde katılımcılar
+	
+	is a wiki-style map
     of the world that anyone can edit. In some places, participants are
     creating the first freely-available maps by GPS survey. In other places,
     such as the United States, basic roads exist, but lack local detail:

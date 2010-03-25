@@ -1,47 +1,52 @@
-<h2>Localization</h2>
+<h2>Yerelleştirme</h2>
 
 <p>
     Help us make Walking Papers available in a variety of languages. The <a href="http://github.com/migurski/paperwalking">project source code is hosted at Github</a>, corrections and complete translations can be performed by <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">forking the project code</a> and sending a pull request.
 </p>
 
 <p>
-    We currently have translations in these languages:
+	Şu anda bu dillerde çevirimiz var.
 </p>
 
 <ul>
     <li>
-        <strong>English</strong>
+        <strong>İngilizce</strong>
         <br/>
-        Original by <a href="http://github.com/migurski">Michal Migurski</a>
+        <a href="http://github.com/migurski">Michal Migurski</a> tarafından orijinal.
     </li>
     <li>
-        <strong>German</strong>
+        <strong>Almanca</strong>
         <br/>
-        Translation by <a href="http://github.com/John07">Jonas Krückel</a>
+        <a href="http://github.com/John07">Jonas Krückel</a> tarafından çeviri.
     </li>
     <li>
-        <strong>Dutch</strong>
+        <strong>Felemenkçe</strong>
         <br/>
-        Translation by <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
+        <a href="http://github.com/milovanderlinden">Milo van der Linden</a> tarafından çeviri.
     </li>
     <li>
-        <strong>French</strong>
+        <strong>Fransızca</strong>
         <br/>
-        Translation by <a href="http://github.com/jfretin">Jonathan Fretin</a>
+        <a href="http://github.com/jfretin">Jonathan Fretin</a> tarafından çeviri.
     </li>
     <li>
-        <strong>Spanish</strong>
+        <strong>İspanyolca</strong>
         <br/>
-        Translation by <a href="http://github.com/mort">Manuel González Noriega</a>
+        <a href="http://github.com/mort">Manuel González Noriega</a> tarafından çeviri.
     </li>
     <li>
-			<strong>Japanese (日本語)</strong>
-			<br/>
-			Translation by <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
+		<strong>Japonca (日本語)</strong>
+		<br/>
+		<a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a> tarafından çeviri.
     </li>
     <li>
-        <strong>Italian</strong>
+        <strong>İtalyanca</strong>
         <br/>
-        Translation by <a href="http://github.com/ecarnevale">Emanuel Carnevale</a>
+        <a href="http://github.com/ecarnevale">Emanuel Carnevale</a> tarafından çeviri.
+    </li>
+    <li>
+        <strong>Türkçe</strong>
+        <br/>
+        <a href="http://github.com/alerque">Caleb Maclennan</a> tarafından çeviri.
     </li>
 </ul>

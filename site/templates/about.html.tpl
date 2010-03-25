@@ -17,6 +17,8 @@
             情報
         {elseif $language == "it"}
             Di cosa si tratta  
+        {elseif $language == "tr"}
+            Hakkında
         {else}
             About
         {/if}
