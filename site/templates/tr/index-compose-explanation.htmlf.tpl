@@ -1,17 +1,16 @@
 <p>
-    <a href="http://openstreetmap.org">OpenStreetMap</a> herkesin değiştirebilen wiki-tarzı dünya haritasıdır. Bazı yerlerde katılımcılar
-	
-	is a wiki-style map
-    of the world that anyone can edit. In some places, participants are
-    creating the first freely-available maps by GPS survey. In other places,
-    such as the United States, basic roads exist, but lack local detail:
-    locations of traffic signals, ATMs, cafés, schools, parks, and shops.
-    What such partially-mapped places need is not more GPS traces, but
-    additional knowledge about what exists on and around the street. Walking
-    Papers is made to help you easily create printed maps, mark them with
-    things you know, and then share that knowledge with OpenStreetMap.
+    <a href="http://openstreetmap.org">OpenStreetMap</a> herkesin
+    değiştirebilen wiki-tarzı dünya haritasıdır. Bazı yerlerde
+    katılımcılar, GPS keşifiyle aracılığıyla özgürce mevcut olan ilk
+    haritayı üretiyorlar. Başka yerlerde temel sokalar var, örneği Birleşik
+    Devletlerinde, fakat trafik lambalar, ATM'lar, cafeler, okullar, parklar,
+    dükkânlar gibi yersel detaylar eksik. Bu kısmen haritalanmış yerlerin
+    ihtiyacı GPS izlerine değil fakat sokakların çevresindeki şeylerin
+    bilgisi. Walking Papers'ın amacı, sizin baskı haritalarını yapıp onların
+    üzerinde bildiğiniz detaylarını çizmenizi ve bu bilgi OpenStreetMap'la
+    paylaşmanızı kolaylaştırmaktır.
 </p>
 
 <p>
-    <strong>To get started</strong>, search for a town or city you know, then pan and zoom the map to an exact location.
+    <strong>Başlamak içın </strong>, bildiğiniz şehir veya köy için arayın, sonra tam yere kadar haritayı kaydırıp zum yapın.
 </p>
