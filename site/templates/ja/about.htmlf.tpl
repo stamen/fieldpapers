@@ -1,37 +1,40 @@
 <h2>ウオーキングペーパーについて</h2>
 
 <p>
-    ウィキ(Wiki)スタイルの世界地図で、誰でも編集可能なOpenStreetMap(オープンストリートマップ；OSM）には、新しいコンテンツの作成方法が必要でした。ウオーキングペーパー（ Walking Papers）は、紙を通して地図データを"round trip"する方法です。それは、ストリートで見たことを編集することを簡単にします。これは、みんなにもっと使ってもらえるように負荷を分散するのと同じくらい、OSMが現在もっとも必要としている、ノートを共有し、それを実際の地理データへと変換するのを簡単にするということなのです。
+ウィキ(Wiki)スタイルの世界地図で、誰でも編集可能なOpenStreetMap(オープンストリートマップ；OSM）には、新しいコンテンツの作成方法が必要でした。ウオーキングペーパー（ Walking Papers）は、紙を通して地図データを"round trip"する方法です。それは、ストリートで見たことを編集することを簡単にします。これは、みんなにもっと使ってもらえるように負荷を分散するのと同じくらい、OSMが現在もっとも必要としている、ノートを共有し、それを実際の地理データへと変換するのを簡単にするということなのです。
 </p>
 <p>
     ウオーキングペーパー（Walking Papers）は、この（思いつきの）ペーパーアイディアを実装し、２月から始めた実際に稼働するサービスで<a href="http://mike.teczno.com/notes/walking-papers.html">
-   初期の技術的実装 実験 </a> です。    
+初期の技術的実装 実験</a> です。    
 </p>
 
 <h3>３種のマッピング</h3>
 
 <p>
-    USの
-A rough road network of the United States has been basically complete in OSM for some time now, since the bulk import of the US Census TIGER/Line data set. This means that U.S. mapping parties can be slightly counterproductive: the party format was designed for places where raw GPS traces are needed most of all, and participants frequently create fresh data for a given location for the very first time. You show up, are given a handheld GPS device, quickly schooled in its use, and sent out on foot or bicycle or car to collect traces of nearby roads and pathways. 
+アメリカのCensus TIGER/線データセットのまとまった取り込みのため、現状OSMでは、アメリカの粗い道路網のデータは基本的には完了している状態です。このことは、アメリカのマッピングパーティでは、若干非生産的になり得ることを意味しています。パーティの進め方は、そのエリアの多くの地点で生GPSデータが必要な場所での活動に向いているように作られています。参加者は、目標地点の最初の新鮮なデータをたくさん作れるようになっています。集合して、ハンディGPSレシーバを与えられ、使い方を素早く教えてもらい、徒歩や自転車や、自動車で、近所の道路や歩道のトレースを集めて、送信するわけです。
 </p>
 <p>
-    Because we taxpayers have funded the creation of free, public data for every road in the U.S., raw roads generally already exist in the database. TIGER data can be inaccurate, but with the gracious licensing of Yahoo aerial tile imagery, it’s possible to correct misplaced roads without actually leaving your desk - simply use OSM’s built-in editor to move streets around until they match those seen on the underlying satellite imagery. This kind of gardening or tending activity can be great fun in an <a href="http://en.wikipedia.org/wiki/Obsessive%E2%80%93compulsive_disorder">OCD</a> sort of way, and we’ve personally killed many hours moving nodes here and there to improve the accuracy of street grids. 
+アメリカでは納税者が、すべての道路の無料の公共データを作成することの負担をしていることから、生の道路情報は、一般的にすでにデータベースに存在している状態です。TIGERデータは、不正確かもしれないのですが、親切にもYahoo 衛星写真画像をライセンスされていることで、間違った情報を実際に机から離れて調査しなくても修正できるのです。単純に、OSMの組み込みエディタをつかって、衛星写真にあうように、道路データを移動させればよいわけです。この種のガーデニングあるいは子守のような活動は、なかなかの楽しみになりえます。
+ <a href="http://en.wikipedia.org/wiki/Obsessive%E2%80%93compulsive_disorder">OCD</a>のような考え方で、
+私たちは、
+格子状の通りの正確さを高めるために
+個人的に多くの時間を使ってノードをここそこに動かしたりして多くの時間を使っているのです。
 </p>
 <p>
-    There’s a third form of map editing that is best addressed by paper, and that is the annotation of local, eye-level features that would be invisible on an aerial image, meaningless in the absence of base road data, and impossible to collect without a site visit: street lights, bike shops, restrooms, cash machines, stairs, cafes, pubs, addresses, and other bits of geographic context that make OpenStreetMap such a strong contender with the larger, commercial services at a human scale. 
+３つめの地図編集の形は、紙による取り扱いです。衛星写真ではわからないようなローカルの、目視による地物のコメントをつけていくことで行います。もちろん、基礎となる道路データ無しでは意味がありませんし、その場に訪問しなければできないことです。たとえば、通りの明かりや、バイク店や、公衆トイレや、ATM/CDや、階段やカフェや、居酒屋やバーや、住所といったものを含めて、あらゆる地理情報コンテンツを取り込みます。これらは、HumanのスケールでOpenStreetMapを大手の商用地図サービスの強力な競争相手にすることができます。
 </p>
 
 <h3>Fixing #3</h3>
 
 <p>
-    Currently, there aren’t any methods in place specifically designed to address this third kind of casual local mapping. 
+現在、この３つめのカジュアルローカルマッピングのために特別に考えられた方法はありません。
 </p>
 <p>
-    Walking Papers is a website and a service designed to close this final loop by providing OpenStreetMap print maps that can be marked up with a pen, scanned back into the computer, and traced using OSM’s regular web-based editor, Potlatch. It’s designed for the casual mapper who doesn’t want to fill their pockets with gadgets to record what’s around them, the social mapper who might be out and about taking notes and comparing them with friends, and the opportunistic mapper who might make notes during a commute or a walk if they had a notebook-sized slip of paper to write on. Finally, it’s designed for the luddite mapper who would like to help the OpenStreetMap project but needs help from a distributed community to convert their handwritten annotations into OpenStreetMap’s tagged data and local conventions. 
+ウォーキングペーパーは、
+ペンで記録でき、スキャナーでコンピュータに取り込み、OSMの通常のWebベースの編集ツールでトレースできるようにするOSM印刷地図を提供することで、この流れをサポートするよう設計されたWebサイトとサービスです。GPSや機材をポケットに入れて持ち歩きたくはない普段のマッパーや、ノートをとって友人と比較して楽しむような社会交流マッパーや、通勤したり散歩しているときにメモ帳を持っていたら書き付けるような日和見マッパーを、支援できるようにデザインされています。最後に、OpenStreetMapプロジェクトを助けたいが、グローバルの地理的に分散したコミュニティによる手書きメモをOSMの地域のルールに基づくタグ付けに助けが必要な技術嫌いのマッパーのためでもあるのです。
 </p>
 <p>
-    We’re trying to bridge some of these uses with web service opportunism and old-fashioned undigital fulfillment. Each scanned map is reverse-geocoded using Flickr’s 
-    <a href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon API feature</a>, which coughs up a meaningful local name for a given geographical area so you can look at a collection of everyone’s scans and perhaps recognize a place you know and might help trace. Each print and scan action is also backed by a (possibly optimistic) promise to snail-mail printed maps to users, and to accept snail-mailed annotated maps in return. If you want to play neogeography pen-pal or simply don’t have a scanner at your disposal, Walking Papers can help. 
+私たちは、日和見的な懐古的なデジタルではない満足感とWebサービスでのやり方を結びつけようとしています。スキャナーされた各地図は、Flickrの<a href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon API 機能</a>をつかって逆ジオコードされます。この機能は、与えられた地理的な領域にたいして、意味あるローカル名をはき出します。そのため、全員のスキャン結果のコレクションをみて、知っている場所かを判別できて、トレースをとる手助けをすることができます。おのおの印刷とスキャンは、もちろん（できる範囲ですが）、郵送で地図を送付し、書き込んだ地図を郵送で受け取ることもできます。もし、新しい地理的文通を楽しみたいとか、単にスキャナーを持っていないとかでも、ウォーキングペーパーは助けになります。
 </p>
 
 <h3>Context</h3>
