@@ -183,6 +183,10 @@
             // it or it-
             if(preg_match('/^it\b/', $language))
             return 'it';
+
+            // tr or tr-
+            if(preg_match('/^tr\b/', $language))
+            return 'tr';
         }
         
         // english is the default
