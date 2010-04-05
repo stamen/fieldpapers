@@ -12,5 +12,5 @@
 </p>
 
 <p>
-    <strong>Başlamak içın </strong>, bildiğiniz şehir veya köy için arayın, sonra tam yere kadar haritayı kaydırıp zum yapın.
+    <strong>Başlamak için</strong>, bildiğiniz şehir veya köy için arayın, sonra tam yere kadar haritayı kaydırıp zum yapın.
 </p>

@@ -57,7 +57,7 @@
 		<a href="{$base_dir}/prints.php">Baskılar</a>
 		<a href="{$base_dir}/scans.php">Taramalar</a>
 		<a href="{$base_dir}/upload.php">Yükle</a>
-		<a href="{$base_dir}/zeitgeist.php">İstatistikler</a>
+		<a href="{$base_dir}/zeitgeist.php">İstatistik</a>
 		<a href="{$base_dir}/about.php">Hakkında</a>
 
     {else}

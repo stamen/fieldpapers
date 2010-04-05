@@ -20,7 +20,7 @@
     There’s a third form of map editing that is best addressed by paper, and that is the annotation of local, eye-level features that would be invisible on an aerial image, meaningless in the absence of base road data, and impossible to collect without a site visit: street lights, bike shops, restrooms, cash machines, stairs, cafes, pubs, addresses, and other bits of geographic context that make OpenStreetMap such a strong contender with the larger, commercial services at a human scale. 
 </p>
 
-<h3>#3'u Düzenleme</h3>
+<h3>3'üncü Düzenleme</h3>
 
 <p>
     Currently, there aren’t any methods in place specifically designed to address this third kind of casual local mapping. 
