@@ -6,5 +6,5 @@
 </p>
 
 <p>
-    <a href="#make">Aşağda kendini baskı haritasını oluşturabilirsin.</a>
+    <a href="#make">Aşağda kendine bir baskı haritasını oluşturabilirsin.</a>
 </p>

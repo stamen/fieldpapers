@@ -35,7 +35,7 @@
         {elseif $language == "it"}
             Scansioni recenti
         {elseif $language == "tr"}
-            Son taramalar
+            Son Taramalar
         {else}
             Recent Scans
         {/if}
@@ -433,8 +433,13 @@
                 </select>
             </p>
             <p>
-                Grid:
-                <input type="radio" name="grid" value="" checked="checked" /> None
+                {if $language == "tr"}
+                    Şebeke:
+					<input type="radio" name="grid" value="" checked="checked" /> Hiç biri
+                {else}
+                    Grid:
+					<input type="radio" name="grid" value="" checked="checked" /> None
+                {/if}
                 <input type="radio" name="grid" value="utm" /> UTM
                 <input type="radio" name="grid" value="mgrs" /> MGRS/USNG
             </p>
