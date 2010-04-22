@@ -1,9 +1,9 @@
 <p>
-    Why do scans fail? Based on the errors we’ve seen, scans seem to fail for one of three reasons:
+    なぜスキャンが失敗するのでしょうか？いままで見られたエラーを元にすると、次の３つの理由が問題となっているようです。
 </p>
 
 <ol>
-    <li>Many users have been uploading the same print PDF’s downloaded from this site. Scans need to be bitmap images, ideally JPEG’s.</li>
-    <li>Some users have submitted scans that are at a low resolution, or low-quality photographs instead of scans. Check the print pages for an address where you can mail us paper to have scanned!</li>
-    <li>Some scans have come out of printers with failing ink cartridges, which makes important details such as the QR code in the lower-right corner illegible.</li>
+    <li>多くのユーザが、ダウンロードと同じPDFをアップロードしてしまっています。スキャン結果はビットマップイメージ、とくにJPEG形式が推奨されます。</li>
+    <li>一部のユーザは、解像度の低いものや、スキャナーの代わりに写真をとってアップロードしています。印刷ページの、スキャンすべき用紙を郵送できる住所をチェックしてください。</li>
+    <li>一部のユーザは、インクカートリッジが詰まっているなどしたプリンターで印刷してしまって、右下にあるQRコードの重要な情報が欠落させてしまっているようです。</li>
 </ol>
