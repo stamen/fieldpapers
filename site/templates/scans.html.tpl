@@ -17,6 +17,8 @@
             最近の取込データ
         {elseif $language == "it"}
             Scansioni recenti
+        {elseif $language == "tr"}
+            Son Taramalar
         {else}
             Recent Scans
         {/if}
@@ -41,6 +43,8 @@
             最近の取込データ
         {elseif $language == "it"}
             Scansioni recenti
+        {elseif $language == "tr"}
+            Son Taramalar
         {else}
             Recent Scans
         {/if}

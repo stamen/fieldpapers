@@ -35,13 +35,18 @@
         Translation by <a href="http://github.com/mort">Manuel González Noriega</a>
     </li>
     <li>
-			<strong>Japanese (日本語)</strong>
-			<br/>
-			Translation by <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
+		<strong>Japanese (日本語)</strong>
+		<br/>
+		Translation by <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
     </li>
     <li>
         <strong>Italian</strong>
         <br/>
         Translation by <a href="http://github.com/ecarnevale">Emanuel Carnevale</a>
+    </li>
+    <li>
+        <strong>Turkish</strong>
+        <br/>
+        Translation by <a href="http://github.com/alerque">Caleb Maclennan</a> with help from the <a href="http://lists.openstreetmap.org/listinfo/talk-tr">talk-tr group</a>.
     </li>
 </ul>

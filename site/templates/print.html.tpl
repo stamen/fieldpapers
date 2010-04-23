@@ -17,6 +17,8 @@
             印刷 #{$print.id|escape}
         {elseif $language == "it"}
             Stampa #{$print.id|escape} 
+        {elseif $language == "tr"}
+            #{$print.id|escape} baskıyı yazdır
         {else}
             Print #{$print.id|escape}
         {/if}
@@ -51,6 +53,8 @@
             地図印刷
         {elseif $language == "fr"}
             Stampa la mappa
+        {elseif $language == "tr"}
+            Haritayı yazdır
         {else}
             Print Map
         {/if}
@@ -82,6 +86,8 @@
                     この地図が間違っているか、古いですか？
                 {elseif $language == "it"}
                     Questa mappa é vecchia o sbagliata?
+                {elseif $language == "tr"}
+                    Bu hariyta yanlış veya geçerliğini yitirmiş mi?
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
@@ -99,6 +105,8 @@
                     {assign var="label" value="再実行"}
                 {elseif $language == "it"}
                     {assign var="label" value="Rifai"}
+                {elseif $language == "tr"}
+                    {assign var="label" value="Yenile"}
                 {else}
                     {assign var="label" value="Redo"}
                 {/if}

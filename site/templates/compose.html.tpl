@@ -17,6 +17,8 @@
             作成
         {elseif $language == "it"}
             Compositore
+        {elseif $language == "tr"}
+            Oluşturucu
         {else}
             Componer
         {/if}

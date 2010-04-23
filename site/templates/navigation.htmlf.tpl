@@ -20,36 +20,45 @@
         <a href="{$base_dir}/about.php">Over</a>
 
 
-  {elseif $language == "es"}
-      <a href="{$base_dir}/">Portada</a>
-      <a href="{$base_dir}/prints.php">Impresiones</a>
-      <a href="{$base_dir}/scans.php">Scans</a>
-      <a href="{$base_dir}/upload.php">Subir</a>
-      <a href="{$base_dir}/zeitgeist.php">Estadísticas</a>
-      <a href="{$base_dir}/about.php">Acerca de</a>
+	{elseif $language == "es"}
+		<a href="{$base_dir}/">Portada</a>
+		<a href="{$base_dir}/prints.php">Impresiones</a>
+		<a href="{$base_dir}/scans.php">Scans</a>
+		<a href="{$base_dir}/upload.php">Subir</a>
+		<a href="{$base_dir}/zeitgeist.php">Estadísticas</a>
+		<a href="{$base_dir}/about.php">Acerca de</a>
 
-  {elseif $language == "fr"}
-      <a href="{$base_dir}/">Accueil</a>
-      <a href="{$base_dir}/prints.php">Impressions</a>
-      <a href="{$base_dir}/scans.php">Scans</a>
-      <a href="{$base_dir}/upload.php">Envoyer</a>
-      <a href="{$base_dir}/zeitgeist.php">Stats</a>
-      <a href="{$base_dir}/about.php">À propos</a>
+	{elseif $language == "fr"}
+		<a href="{$base_dir}/">Accueil</a>
+		<a href="{$base_dir}/prints.php">Impressions</a>
+		<a href="{$base_dir}/scans.php">Scans</a>
+		<a href="{$base_dir}/upload.php">Envoyer</a>
+		<a href="{$base_dir}/zeitgeist.php">Stats</a>
+		<a href="{$base_dir}/about.php">À propos</a>
 
-  {elseif $language == "ja"}
-      <a href="{$base_dir}/">ホーム</a>
-      <a href="{$base_dir}/prints.php">プリント</a>
-      <a href="{$base_dir}/scans.php">取込データ</a>
-      <a href="{$base_dir}/upload.php">アップロード</a>
-      <a href="{$base_dir}/zeitgeist.php">統計</a>
-      <a href="{$base_dir}/about.php">サイトについて</a>
-  {elseif $language == "it"}
-      <a href="{$base_dir}/">Home</a>
-      <a href="{$base_dir}/prints.php">Stampe</a>
-      <a href="{$base_dir}/scans.php">Scansioni</a>
-      <a href="{$base_dir}/upload.php">Invio</a>
-      <a href="{$base_dir}/zeitgeist.php">Statistiche</a>
-      <a href="{$base_dir}/about.php">Di cosa si tratta</a>
+	{elseif $language == "ja"}
+		<a href="{$base_dir}/">ホーム</a>
+		<a href="{$base_dir}/prints.php">プリント</a>
+		<a href="{$base_dir}/scans.php">取込データ</a>
+		<a href="{$base_dir}/upload.php">アップロード</a>
+		<a href="{$base_dir}/zeitgeist.php">統計</a>
+		<a href="{$base_dir}/about.php">サイトについて</a>
+
+	{elseif $language == "it"}
+		<a href="{$base_dir}/">Home</a>
+		<a href="{$base_dir}/prints.php">Stampe</a>
+		<a href="{$base_dir}/scans.php">Scansioni</a>
+		<a href="{$base_dir}/upload.php">Invio</a>
+		<a href="{$base_dir}/zeitgeist.php">Statistiche</a>
+		<a href="{$base_dir}/about.php">Di cosa si tratta</a>
+
+	{elseif $language == "tr"}
+		<a href="{$base_dir}/">Ana Sayfa</a>
+		<a href="{$base_dir}/prints.php">Baskılar</a>
+		<a href="{$base_dir}/scans.php">Taramalar</a>
+		<a href="{$base_dir}/upload.php">Yükle</a>
+		<a href="{$base_dir}/zeitgeist.php">İstatistik</a>
+		<a href="{$base_dir}/about.php">Hakkında</a>
 
     {else}
         <a href="{$base_dir}/">Home</a>

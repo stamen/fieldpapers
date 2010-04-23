@@ -18,6 +18,8 @@
             地域化
         {elseif $language == "it"}
             Localizzazione
+        {elseif $language == "tr"}
+            Yerelleştirme
         {else}
             Localization
         {/if}

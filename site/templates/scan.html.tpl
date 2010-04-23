@@ -17,6 +17,8 @@
             取り込んだ地図#{$scan.id|escape}
         {elseif $language == "it"}
             Mappa scansionata #{$scan.id|escape}
+        {elseif $language == "tr"}
+            #{$scan.id|escape} Taramış Harita
         {else}
             Scanned Map #{$scan.id|escape}
         {/if}
@@ -74,6 +76,8 @@
                     取り込んだ地図
                 {elseif $language == "it"}
                     Mappa scannerizzata
+                {elseif $language == "tr"}
+                    Taramış Harita
                 {else}
                     Scanned Map
                 {/if}
@@ -98,6 +102,8 @@
                     近所をカバー
                 {elseif $language == "it"}
                     Copre l'area vicino a
+                {elseif $language == "tr"}
+                    Kapsanmış yeri:
                 {else}
                     Covers the area near
                 {/if}
@@ -126,7 +132,7 @@
                 {elseif $language == "it"}
                     Inviato {$scan.age|nice_relativetime|escape}.
                 {else}
-                    Uploaded {$scan.age|nice_relativetime|escape}.
+                    Yüklenmiş {$scan.age|nice_relativetime|escape}.
                 {/if}
             </p>
             
@@ -166,9 +172,10 @@
                     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">mapa actualizado de este área a partir de la impresión #{$scan.print_id|escape}</a>.
                 {elseif $language == "it"}
                     Scarica <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">una mappa recente di quest'area partendo dalla stampa #{$scan.print_id|escape}</a>.
+                {elseif $language == "tr"}
+                    <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">#{$scan.print_id|escape} baskıdan bu yerin güncel harıtasını</a> indirin.
                 {else}
-                    Download a
-                    <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">fresh map of this area from print #{$scan.print_id|escape}</a>.
+                    Download a <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">fresh map of this area from print #{$scan.print_id|escape}</a>.
                 {/if}
             </p>
     
@@ -185,6 +192,8 @@
                     The Mapの編集
                 {elseif $language == "it"}
                     Modifica la mappa
+                {elseif $language == "tr"}
+                    Haritayı Değiştir
                 {else}
                     Edit The Map
                 {/if}
@@ -211,6 +220,8 @@
                             {assign var="label" value="編集"}
                         {elseif $language == "it"}
                             {assign var="label" value="Modifica"}
+                        {elseif $language == "tr"}
+                            {assign var="label" value="Değiştir"}
                         {else}
                             {assign var="label" value="Edit"}
                         {/if}
