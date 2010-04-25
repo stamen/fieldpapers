@@ -520,9 +520,11 @@
         <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr"><img src="{$base_dir}/kibera-scans.jpg" border="1" /></a>
         <br/>
         {if $language == "tr"}
-			<a href="http://www.flickr.com/photos/junipermarie/">Flickr'da ricajimarie</a> tarafından <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Kibera'da Walking Papers</a>
+            <a href="http://www.flickr.com/photos/junipermarie/">Flickr'da ricajimarie</a> tarafından <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Kibera'da Walking Papers</a>
+        {if $language == "de"}
+            <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> von <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie bei Flickr</a>
         {else}
-			<a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> by <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie on Flickr</a>
+            <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> by <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie on Flickr</a>
         {/if}
     </p>
     
