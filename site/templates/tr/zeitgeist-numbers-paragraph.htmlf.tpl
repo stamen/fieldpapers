@@ -1,5 +1,5 @@
 <p>
-    Why are there so many prints? It’s easy to create a print and less-easy to make a scan. We’re in the early days of this site,
-    and I imagine that it may take some time for the initial excitement of printing out paper maps to translate into submitted,
-    annotated scanned images. Bring it on!
+	Neden o kadar baskılar var? Tarama yapmtak baskı yapmak daha kolaydır. Bu sitenin ilk günlerindeyiz,
+	ve kağıt haritaları basmasının ilk keyfinin, teslim edilen notlu taramış resimlere çevirilmesinin
+	biraz zaman alacağını sanıyoruz. Elinden geleni arkana koyma!
 </p>
