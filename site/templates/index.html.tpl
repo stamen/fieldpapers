@@ -111,7 +111,7 @@
             {elseif $language == "it"}
                 Stampare
             {elseif $language == "tr"}
-                Baskı Yap
+                Baskı Oluştur
             {else}
                 Make A Print
             {/if}
