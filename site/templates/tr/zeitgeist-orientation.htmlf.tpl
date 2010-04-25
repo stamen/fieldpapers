@@ -1,6 +1,6 @@
-<h3>Orientation</h3>
+<h3>Yönelim</h3>
 
 <p>
-    Share of prints by orientation in the past month.
-    Landscape orientation was first introduced on June 20.
+	Yönelime göre son ayın baskı sayısı.
+	Yatay yönelimin ilk tanıtımı 20 Haziran 2009 idi.
 </p>

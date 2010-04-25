@@ -1,9 +1,9 @@
 <p>
-    Why do scans fail? Based on the errors we’ve seen, scans seem to fail for one of three reasons:
+	Taramalar neden başarsız olur? Gördüğüz hatalara göre taramaların başarsız olmasının üç nedeni var:
 </p>
 
 <ol>
-    <li>Many users have been uploading the same print PDF’s downloaded from this site. Scans need to be bitmap images, ideally JPEG’s.</li>
-    <li>Some users have submitted scans that are at a low resolution, or low-quality photographs instead of scans. Check the print pages for an address where you can mail us paper to have scanned!</li>
-    <li>Some scans have come out of printers with failing ink cartridges, which makes important details such as the QR code in the lower-right corner illegible.</li>
+    <li>Bir çok kullanıcı bu siteden indirdiği ayndı baskı PDF'ları yüklenmekteydi. Taramaların bitmap resim biçiminin olması gerek, en iyisi de JPEG'lerinin olması</li>
+    <li>Bazı kullanıcı düşük çözünürlük taramaları veya tarama yerinde düşük kalete fotografları teslim etmişti. Baskı harıta kağıtlarınızın taranması için gönderebileceği adres için baskı sayfalarına bakın!</li>
+    <li>Bazı taramalar yanılan mürekkep kartüslarlı yazıcılardan çıktığı için sağ-alt köşesindeki QR kodu gibi önemli ayrıntılar okunaksız olur.</li>
 </ol>
