@@ -113,7 +113,7 @@
     // ]]>
     </script>
 
-    {include file="$language/print-bottom-paragraph.htmlf.tpl"}
+    {include file="$language/print-mail-info.htmlf.tpl"}
 
     {include file="footer.htmlf.tpl"}
     
