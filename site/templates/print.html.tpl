@@ -56,7 +56,7 @@
         {/if}
     {/strip}</h2>
     
-    {include file="$language/print-top-paragraph.htmlf.tpl"}
+    {include file="$language/print-info.htmlf.tpl"}
 
     {if $print.zoom}
         <form action="{$base_dir}/compose.php" method="post" name="bounds">
