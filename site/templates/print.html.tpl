@@ -40,27 +40,7 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    <h2>{strip}
-        {if $language == "de"}
-            Karte drucken
-        {elseif $language == "nl"}
-            Kaart afdrukken
-        {elseif $language == "es"}
-            Imprimir mapa
-        {elseif $language == "fr"}
-            Imprimer la carte
-        {elseif $language == "ja"}
-            地図印刷
-        {elseif $language == "fr"}
-            Stampa la mappa
-        {elseif $language == "tr"}
-            Haritayı yazdır
-        {else}
-            Print Map
-        {/if}
-    {/strip}</h2>
-    
-    {include file="$language/print-top-paragraph.htmlf.tpl"}
+    {include file="$language/print-info.htmlf.tpl"}
 
     {if $print.zoom}
         <form action="{$base_dir}/compose.php" method="post" name="bounds">
@@ -139,7 +119,7 @@
     // ]]>
     </script>
 
-    {include file="$language/print-bottom-paragraph.htmlf.tpl"}
+    {include file="$language/print-mail-info.htmlf.tpl"}
 
     {include file="footer.htmlf.tpl"}
     
