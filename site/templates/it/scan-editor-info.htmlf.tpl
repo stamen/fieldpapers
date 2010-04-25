@@ -1,3 +1,5 @@
+<h2>Modifica la mappa</h2>
+    
 <p>
     Ci sono due modi per editare OpenStreetMap utilizzando questa 
 		mappa come guida. Se preferisci usare l'editor

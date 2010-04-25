@@ -1,3 +1,5 @@
+<h2>Editar mapa</h2>
+    
 <p>
     Hay dos formas de editar OpenStreetMap con este mapa escaneado como guía. Si prefieres usar el editor avanzado de OSM
     <a href="http://josm.openstreetmap.de">JOSM</a>, prueba el

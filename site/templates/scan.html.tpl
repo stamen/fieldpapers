@@ -172,24 +172,6 @@
                 {/if}
             </p>
     
-            <h2>{strip}
-                {if $language == "de"}
-                    Karte bearbeiten
-                {elseif $language == "nl"}
-                    Kaart bewerken
-                {elseif $language == "es"}
-                  Editar mapa
-                {elseif $language == "fr"}
-                    Modifier la carte
-                {elseif $language == "ja"}
-                    The Mapの編集
-                {elseif $language == "it"}
-                    Modifica la mappa
-                {else}
-                    Edit The Map
-                {/if}
-            {/strip}</h2>
-    
             {include file="$language/scan-editor-info.htmlf.tpl"}
             
             <div id="editor">
