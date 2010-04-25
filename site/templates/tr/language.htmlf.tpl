@@ -47,6 +47,6 @@
     <li>
         <strong>Türkçe</strong>
         <br/>
-        <a href="http://lists.openstreetmap.org/listinfo/talk-tr">Talk-tr grubu</a>'nun desteğiyle <a href="http://github.com/alerque">Caleb Maclennan</a> tarafından çeviri.
+        <a href="http://github.com/alerque">Caleb Maclennan</a> tarafından çeviri.
     </li>
 </ul>
