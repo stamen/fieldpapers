@@ -1,3 +1,5 @@
+<h2>Karte bearbeiten</h2>
+    
 <p>
     Es gibt 2 Möglichkeiten, um basierend auf der eingescannten Karte OpenStreetMap zu bearbeiten.
     Wenn du den fortgeschrittenen OSM-Editor

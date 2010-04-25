@@ -1,5 +1,7 @@
+<h2>Print Map</h2>
+
 <p>
-  この周囲の地図を印刷
+    Print map of the area surrounding
     {if $print.place_woeid}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
@@ -11,18 +13,20 @@
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
     {/if}
     <br />
-    {$print.age|nice_relativetime|escape}を作成。
+    Created {$print.age|nice_relativetime|escape}.
     <span class="date-created" style="display: none;">{$print.created|escape}</span>
 </p>
 
 <p>
     <a href="{$print.pdf_url|escape}">
         <img src="{$base_dir}/tiny-doc.png" border="0" align="bottom"/>
-        印刷用の地図をPDFフォーマットでダウンロード</a>
+        Download map PDF for print</a>
 </p>
 
 <p>
-    <a href="{$print.pdf_url|escape}">地図のダウンロードから、</a>この領域の道路だけのマッピングを始める地図が入手できます。商用の情報や、公園、学校、ビル、遊歩道、郵便ポスト、キャッシュディスペンサー、あるいはほかのランドマークなどの詳細を追加することができます。
-作業がおわったら、あなたの手書きでの変更や備考を直接OpenStreetMapに入れるために、
-  メモを入れた地図を  <a href="{$base_dir}/upload.php">スキャンし投稿します</a>
+    <a href="{$print.pdf_url|escape}">Download a map</a> to get started mapping this area
+    from street level. Add details like businesses, parks, schools, buildings, paths,
+    post boxes, cash machines and other useful landmarks. When you’re finished,
+    <a href="{$base_dir}/upload.php">post a scan</a> of your annotated map
+    to trace your handwritten changes and notes directly into OpenStreetMap.
 </p>
