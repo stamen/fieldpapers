@@ -1,3 +1,5 @@
+<h2>地図印刷</h2>
+
 <p>
   この周囲の地図を印刷
     {if $print.place_woeid}

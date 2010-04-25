@@ -1,3 +1,5 @@
+<h2>Print Map</h2>
+
 <p>
     Print map of the area surrounding
     {if $print.place_woeid}

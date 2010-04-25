@@ -1,3 +1,5 @@
+<h2>Karte drucken</h2>
+
 <p>
     Karte von dem diesem Bereich drucken
     {if $print.place_woeid}

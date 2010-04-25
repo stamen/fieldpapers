@@ -1,3 +1,5 @@
+<h2>Imprimir mapa</h2>
+
 <p>
     Imprimir mapa del área circundante
     {if $print.place_woeid}

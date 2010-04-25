@@ -38,24 +38,6 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    <h2>{strip}
-        {if $language == "de"}
-            Karte drucken
-        {elseif $language == "nl"}
-            Kaart afdrukken
-        {elseif $language == "es"}
-            Imprimir mapa
-        {elseif $language == "fr"}
-            Imprimer la carte
-        {elseif $language == "ja"}
-            地図印刷
-        {elseif $language == "fr"}
-            Stampa la mappa
-        {else}
-            Print Map
-        {/if}
-    {/strip}</h2>
-    
     {include file="$language/print-info.htmlf.tpl"}
 
     {if $print.zoom}

@@ -1,3 +1,5 @@
+<h2>Kaart afdrukken</h2>
+
 <p>
     Afdruk samenstellen voor het gebied rond coördinaten: 
     {if $print.place_woeid}

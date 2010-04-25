@@ -1,3 +1,5 @@
+<h2>Stampa la mappa</h2>
+
 <p>
     Stampa una mappa dell'area intorno a
     {if $print.place_woeid}
