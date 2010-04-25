@@ -435,10 +435,13 @@
             <p>
                 {if $language == "tr"}
                     Şebeke:
-					<input type="radio" name="grid" value="" checked="checked" /> Hiç biri
+                    <input type="radio" name="grid" value="" checked="checked" /> Hiç biri
+                {if $language == "de"}
+                    Gitternetz:
+                    <input type="radio" name="grid" value="" checked="checked" /> ohne
                 {else}
                     Grid:
-					<input type="radio" name="grid" value="" checked="checked" /> None
+                    <input type="radio" name="grid" value="" checked="checked" /> None
                 {/if}
                 <input type="radio" name="grid" value="utm" /> UTM
                 <input type="radio" name="grid" value="mgrs" /> MGRS/USNG
