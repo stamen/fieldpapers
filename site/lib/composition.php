@@ -256,18 +256,20 @@
         $pdf->image($ccbysa_filename, 30, $pdf->h - 60, 67, 30);
 
         $pdf->setFont('Helvetica', '', 9);
-        $pdf->text($pdf->w - 358, 57.74, 'Help improve OpenStreetMap by drawing on this map, then visit');
-        $pdf->text($pdf->w - 358, 68.74, $print_url);
+        $pdf->text($pdf->w - 342, 57.74, 'Help improve OpenStreetMap by drawing on this map, then visit');
+        $pdf->text($pdf->w - 342, 68.74, $print_url);
         $pdf->text(99, $pdf->h - 47.5, sprintf('Map data ©2009-%s CC-BY-SA', date('Y')));
         $pdf->text(99, $pdf->h - 36.5, 'OpenStreetMap.org contributors');
 
-        $size = 64;
+        $size = 96;
         $pad = 8;
         
         $pdf->setFillColor(0xFF);
         $pdf->rect($pdf->w - 36 - $size - $pad, $pdf->h - 36 - $size - $pad, $size + $pad * 2, $size + $pad * 2, 'F');
 
-        $req = new HTTP_Request('http://chart.apis.google.com/chart?chs=264x264&cht=qr&chld=Q|0');
+        $print_url .= sprintf('#n=%.6f,w=%.6f,s=%.6f,e=%.6f', $print['north'], $print['west'], $print['south'], $print['east']);
+
+        $req = new HTTP_Request('http://chart.apis.google.com/chart?chs=248x248&cht=qr&chld=Q|0');
         $req->addQueryString('chl', $print_url);
         $res = $req->sendRequest();
         

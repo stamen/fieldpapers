@@ -513,23 +513,23 @@ def extractCode(image, markers):
     
     # candidate location of the QR code on the printed image:
     # top-left, top-right, bottom-left corner of QR code.
-    xys = [(right - 63, bottom - 63), (right, bottom - 63), (right - 63, bottom)]
+    xys = [(right - 96, bottom - 96), (right, bottom - 96), (right - 96, bottom)]
 
     corners = [Point(ax * x + bx * y + cx, ay * x + by * y + cy)
                for (x, y) in xys]
 
     # projection from extracted QR code image space to source image space
     
-    ax, bx, cx = linearSolution(50,  50, corners[0].x,
-                                450, 50, corners[1].x,
-                                50, 450, corners[2].x)
+    ax, bx, cx = linearSolution(25,  25, corners[0].x,
+                                575, 25, corners[1].x,
+                                25, 575, corners[2].x)
     
-    ay, by, cy = linearSolution(50,  50, corners[0].y,
-                                450, 50, corners[1].y,
-                                50, 450, corners[2].y)
+    ay, by, cy = linearSolution(25,  25, corners[0].y,
+                                575, 25, corners[1].y,
+                                25, 575, corners[2].y)
 
     # extract the code part
-    justcode = image.convert('RGBA').transform((500, 500), PIL.Image.AFFINE, (ax, bx, cx, ay, by, cy), PIL.Image.BICUBIC)
+    justcode = image.convert('RGBA').transform((600, 600), PIL.Image.AFFINE, (ax, bx, cx, ay, by, cy), PIL.Image.BICUBIC)
     
     # paste it to an output image
     qrcode = PIL.Image.new('RGB', justcode.size, (0xCC, 0xCC, 0xCC))
