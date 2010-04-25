@@ -6,5 +6,5 @@
 </p>
 
 <p>
-    <a href="#make">Eine eigene Karte drucken.</a>
+    <a href="#make">Eine eigene Karte drucken</a>
 </p>
