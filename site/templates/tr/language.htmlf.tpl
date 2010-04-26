@@ -5,7 +5,7 @@
 </p>
 
 <p>
-	Şu anda bu dillerde çevirimiz var.
+	Şu anda bu dillerde çevirimiz var:
 </p>
 
 <ul>

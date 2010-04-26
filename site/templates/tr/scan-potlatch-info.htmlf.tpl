@@ -1,6 +1,7 @@
 <p>
-	OSM Haritasına değişmek için aşağıda hezabına girmen lazım veya
-    <a href="http://www.openstreetmap.org/user/new">yeni hesabı oluşturabilirsin</a>.
+	OSM Haritasına değişmek için aşağıdaki formu doldurarak
+	OpenStreetMap hezabına girmen lazım veya
+    <a href="http://www.openstreetmap.org/user/new">yeni hesabı oluştur</a>.
     <strong><i>Walking Papers</i>, senin şifreni ne görecek ne kaydedecektir.</strong>
     OpenStreetMap'a direkt veriliyor.
 </p>
