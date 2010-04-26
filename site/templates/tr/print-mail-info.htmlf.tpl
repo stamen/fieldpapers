@@ -1,6 +1,6 @@
 <p>
 	Yadırıcınız yoksa bize <b>basma kodu “{$print.id}” ile beraber
-	<a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">gönderici adresi basılı posta pululu zarfı</a>
+	<a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">gönderici adresi basılı posta pululu zarfı</a></b>
 	gönderebilirsiniz ve geriye bu haritanın baskısını göndeririz. Tarama makinesiniz yoksa <b>eposta adresinizle</b> beraber
 	açıklamalı basılı haritalarınızı da bize gönderebilirsiniz ve tarayıp size göndeririz.
 </p>
