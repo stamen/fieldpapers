@@ -1,4 +1,4 @@
-<h2>Taramış Haritasını Yüklüyorsun</h2>
+<h2>Taramış Haritayı Yüklüyorsun</h2>
 
 <p>
     You’re here because you have a paper version of a

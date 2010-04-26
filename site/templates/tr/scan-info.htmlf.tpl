@@ -46,4 +46,3 @@
 <p>
     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">#{$scan.print_id|escape} baskıdan bu yerin güncel harıtasını</a> indirin.
 </p>
-

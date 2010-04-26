@@ -1,5 +1,5 @@
 <h2>Edit The Map</h2>
-    
+
 <p>
     There are two ways to edit OpenStreetMap using this scanned
     map as a guide. If you prefer to use the advanced OSM editor
