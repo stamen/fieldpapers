@@ -6,7 +6,7 @@
     ATM'lar, cafeler, okullar, parklar, dükkânlar gibi yersel detaylar
     eksik. Bu kısmen haritalanmış yerlerin ihtiyacı GPS izlerine değil fakat
     sokakların çevresindeki şeylerin bilgisi. Walking Papers'ın amacı, sizin
-    baskı haritalarını yapıp onların üzerinde bildiğiniz detaylarını çizmenizi
+    basılı haritalarını yapıp onların üzerinde bildiğiniz detaylarını çizmenizi
     ve bu bilgi OpenStreetMap'la paylaşmanızı kolaylaştırmaktır.
 </p>
 
