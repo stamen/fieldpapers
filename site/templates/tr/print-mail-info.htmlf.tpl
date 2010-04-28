@@ -1,9 +1,8 @@
 <p>
-    If you don’t have a printer, send us a
-    <b><a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">self-addressed, stamped envelope</a>
-    with the print ID, “{$print.id}”,</b> and we’ll mail you a printed copy of this map. If you don’t have a scanner,
-    mail us your printed map and an <b>e-mail address</b> and we’ll scan it for
-    you.
+	Yadırıcınız yoksa bize <b>basma kodu “{$print.id}” ile beraber
+	<a href="http://en.wikipedia.org/wiki/Self-addressed_stamped_envelope">gönderici adresi basılı posta pululu zarfı</a>
+	gönderebilirsiniz ve geriye bu haritanın baskısını göndeririz. Tarama makinesiniz yoksa <b>eposta adresinizle</b> beraber
+	açıklamalı basılı haritalarınızı da bize gönderebilirsiniz ve tarayıp size göndeririz.
 </p>
 
 <blockquote>
@@ -14,6 +13,6 @@
 </blockquote>
 
 <p>
-    Please allow a few weeks for scanning and printing.
+	Yazdırma ve tarama işler birkaç hafta sürebilir. Sabırınız için teşekkür ederiz.
 </p>
 
