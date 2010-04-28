@@ -250,7 +250,7 @@
         $pdf->text(62.61, 68.49, 'Walking Papers');
         
         $pdf->setFillColor(0xFF);
-        $pdf->rect(35, $pdf->h - 63, 200, 28, 'F');
+        $pdf->rect(35, $pdf->h - 63, 208, 28, 'F');
         
         $ccbysa_filename = realpath(dirname(__FILE__).'/../lib/print/CCBYSA.png');
         $pdf->image($ccbysa_filename, 30, $pdf->h - 60, 67, 30);
@@ -258,7 +258,7 @@
         $pdf->setFont('Helvetica', '', 9);
         $pdf->text($pdf->w - 358, 57.74, 'Help improve OpenStreetMap by drawing on this map, then visit');
         $pdf->text($pdf->w - 358, 68.74, $print_url);
-        $pdf->text(99, $pdf->h - 47.5, 'Map data ©2009 CC-BY-SA');
+        $pdf->text(99, $pdf->h - 47.5, sprintf('Map data ©2009-%s CC-BY-SA', date('Y')));
         $pdf->text(99, $pdf->h - 36.5, 'OpenStreetMap.org contributors');
 
         $size = 64;
