@@ -13,13 +13,13 @@
         <br />
         Niederländische Übersetzung von Milo van der Linden
         <br />
+        Spanische Übersetzung von Manuel González Noriega
+        <br />
         Französische Übersetzung von Jonathan Fretin
         <br />
         Japanische Übersetzung von Hiroshi Miura
         <br />
         Italienische Übersetzung von Emanuel Carnevale
-        <br />
-        Spanische Übersetzung von Manuel González Noriega
 		<br />
 		Türkische Übersetzung von Caleb Maclennan
 
@@ -37,7 +37,13 @@
         <br />
         Nederlandse vertaling door Milo van der Linden
         <br />
+        Spaanse vertaling door Manuel González Noriega
+        <br />
+        Franse vertaling door Jonathan Fretin
+        <br />
         Japonese vertaling door Hiroshi Miura
+        <br />
+        Italiaanse vertaling door Emanuel Carnevale
         <br />
         Turks vertaling door Caleb Maclennan
   
@@ -57,7 +63,11 @@
         <br />
         Traducción al español por Manuel González Noriega  
         <br />
-        Traduction al francés por Jonathan Fretin
+        Traducción al francés por Jonathan Fretin
+        <br />
+        Traducción al japonés por Hiroshi Miura
+        <br />
+        Traducción al italiano por Emanuel Carnevale
         <br />
         Traducción al turco por Caleb Maclennan
 
@@ -79,9 +89,11 @@
         <br />
         Traduction française par Jonathan Fretin
         <br />
-        Traduction Japonese par Hiroshi Miura
+        Traduction japonaise par Hiroshi Miura
         <br />
-        Traduction Turc par Caleb Maclennan
+        Traduction italienne par Emanuel Carnevale
+        <br />
+        Traduction turque par Caleb Maclennan
 
     {elseif $language == "it"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -125,9 +137,9 @@
         <br />
         フランス語訳Jonathan Fretin
         <br />
-        イタリア語訳Emanuel Carnevale
-        <br />
         日本語訳　三浦広志
+        <br />
+        イタリア語訳Emanuel Carnevale
 		<br />
 		トルコ語訳Caleb Maclennan
 
@@ -181,4 +193,4 @@
     {/if}
 </p>
 
-#{include file="language.htmlf.tpl"}
+{include file="language.htmlf.tpl"}
