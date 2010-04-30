@@ -75,10 +75,10 @@
         {elseif $language == "it"}
             Hai appena spedito una mappa scannerizzata e stai per aggiungere un paio di informazioni prima di iniziare a tracciarla.
         {elseif $language == "tr"}
-            You’ve just uploaded a scanned map, and you’re about to add a few bits of information about before you proceed to trace it.
+			Sen taranmış bir harita yükledin ve onu dayandırmaya devam etmeden önce onun hakkında birkaç ayrıntıyı eklemek üzeresin.
         {else}
             You’ve just uploaded a scanned map, and you’re about to add
-            a few bits of information about before you proceed to trace it.
+            a few bits of information about it before you proceed to trace it.
         {/if}
     </p>
     
@@ -121,7 +121,7 @@
                 {elseif $language == "it"}
                     Hai intenzione di iniziarla a modificare tu?
                 {elseif $language == "tr"}
-                    Do you plan to edit this yourself?
+					Bunu kendi kendine düzeltmeye planlanıyor musun?
                 {else}
                     Do you plan to edit this yourself?
                 {/if}
@@ -182,7 +182,7 @@
                 {elseif $language == "it"}
                     Non devi effettuare le modifiche OpenStreetMap. Rispondendo “no” renderai a conoscenza gli altri visitatori di scansioni che potrebbero beneficiare del loro aiuto.
                 {elseif $language == "tr"}
-                    You don’t have to do your own OpenStreetMap editing. Saying “no” will let other visitors know about scans they can help with.
+					Kendi kendine OpenStreetMap düzeltmek zorunda değilsin. "Hayır" diyerek yardım edebilecek taramalar konusunda başka ziyaretciyi haberdar eder.
                 {else}
                     You don’t have to do your own OpenStreetMap editing. Saying “no”
                     will let other visitors know about scans they can help with.
@@ -227,7 +227,7 @@
                 {elseif $language == "it"}
                     Hai aggiunto negozi, marciapiedi, segnato semafori, delimitato parchi, posizionato buche delle lettere? Scrivi un paio di parole a proposito delle modifiche in quest'area.
                 {elseif $language == "tr"}
-                    Did you add businesses, fix footpaths, mark traffic lights, outline parks, place mailboxes? Write a few words about the changes to this area.
+					Dükkanlar yükedin mi, yaya yolları düzelttin mi, trafik lambaları etiketlendin mi, park kenarları çizdin mi? Bu yere değişiklerinle ilgili birkaç söz yaz.
                 {else}
                     Did you add businesses, fix footpaths, mark traffic lights, outline parks,
                     place mailboxes? Write a few words about the changes to this area.

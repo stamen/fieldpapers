@@ -35,9 +35,9 @@
         Traduzione di <a href="http://github.com/mort">Manuel González Noriega</a>
     </li>
     <li>
-				<strong>Giapponese</strong>
-				<br/>
-				Traduzione di <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
+        <strong>Giapponese</strong>
+        <br/>
+        Traduzione di <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
     </li>
     <li>
         <strong>Italiano</strong>

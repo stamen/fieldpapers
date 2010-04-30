@@ -9,19 +9,19 @@
         <br />
         Web- und Druck-Kartographie &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
         <br />
-        German translation by Jonas Krückel
+        Deutsche Übersetzung von Jonas Krückel
         <br />
-        Dutch translation by Milo van der Linden
+        Niederländische Übersetzung von Milo van der Linden
         <br />
-        French translation by Jonathan Fretin
+        Französische Übersetzung von Jonathan Fretin
         <br />
-        Japanese translation by Hiroshi Miura
+        Japanische Übersetzung von Hiroshi Miura
         <br />
-        Italian translation by Emanuel Carnevale
+        Italienische Übersetzung von Emanuel Carnevale
         <br />
-        Spanish translation by Manuel González Noriega
+        Spanische Übersetzung von Manuel González Noriega
 		<br />
-		Türkisch übersetzung von Caleb Maclennan
+		Türkische Übersetzung von Caleb Maclennan
 
     {elseif $language == "nl"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>

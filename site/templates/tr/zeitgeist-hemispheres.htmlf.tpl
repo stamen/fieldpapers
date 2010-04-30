@@ -1,5 +1,5 @@
-<h3>Hemispheres</h3>
+<h3>Yarıküreler</h3>
 
 <p>
-    Number of prints by hemisphere in the past month.
+	Yarıküreye göre son ayın baskı sayısı.
 </p>

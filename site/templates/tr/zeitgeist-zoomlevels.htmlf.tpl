@@ -1,6 +1,6 @@
-<h3>Zoom Levels</h3>
+<h3>Zum Düzeyler</h3>
 
 <p>
-    Number of prints from the past month at each zoom level. Zoom level 0 is the whole world,
-    while zoom level 14 is recommended as a minimum for street-level mapping.
+	Son ay için her zum düzenin baskı sayısı. Zum düzey 0 tüm dünyadır; zum düzey 14 ise
+	sokak seviyesinde haritalamak için en az tavsiye edilen düzeydir.
 </p>

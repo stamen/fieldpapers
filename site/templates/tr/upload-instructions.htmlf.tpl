@@ -1,10 +1,10 @@
-<h2>Taramış Haritasını Yüklüyorsun</h2>
+<h2>Taramış Haritayı Yüklüyorsun</h2>
 
 <p>
-    You’re here because you have a paper version of a
-    <a href="{$base_dir}/prints.php">printed map</a> and you’d like to
-    send a scanned version to trace into OpenStreetMap.
-    Your scan should be a reasonably-high resolution
-    (200+ <a href="http://en.wikipedia.org/wiki/Dots_per_inch">dpi</a>)
-    image file, such as a JPEG. PDF dosyalar geçersizdir.
+	Elinde bir <a href="{$base_dir}/prints.php">baskı harita</a>'nın
+	kağıt versiyonu var olduğu için ve onu OpenStreetMap'a
+	dayandırmak amacıyla taramış versiyonu göndermek istediğin
+	için buradasın. Taramanın makul yüksek çözünürlüklü (200+ <a
+	href="http://tr.wikipedia.org/wiki/İnç_başına_nokta_sayısı">dpi</a>)
+	JPEG gibi resim dosya olmasının gerek. PDF dosyalar geçersizdir.
 </p>
