@@ -436,7 +436,7 @@
                 {if $language == "tr"}
                     Şebeke:
                     <input type="radio" name="grid" value="" checked="checked" /> Hiç biri
-                {if $language == "de"}
+                {elseif $language == "de"}
                     Gitternetz:
                     <input type="radio" name="grid" value="" checked="checked" /> ohne
                 {else}
@@ -521,7 +521,7 @@
         <br/>
         {if $language == "de"}
             <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> von <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie bei Flickr</a>
-        {if $language == "tr"}
+        {elseif $language == "tr"}
             <a href="http://www.flickr.com/photos/junipermarie/">Flickr'da ricajimarie</a> tarafından <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Kibera'da Walking Papers</a>
         {else}
             <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> by <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie on Flickr</a>
