@@ -1,3 +1,5 @@
+<h2>Modifier la carte</h2>
+    
 <p>
     Il y a deux moyens d'éditer OpenStreetMap en utilisant cette carte scannée en tant que guide.
     Si vous préférez utiliser l'éditeur avancé OSM <a href="http://josm.openstreetmap.de">JOSM</a>, allez jeter un œil 

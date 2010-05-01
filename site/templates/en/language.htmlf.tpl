@@ -1,7 +1,11 @@
 <h2>Localization</h2>
 
 <p>
-    Help us make Walking Papers available in a variety of languages. The <a href="http://github.com/migurski/paperwalking">project source code is hosted at Github</a>, corrections and complete translations can be performed by <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">forking the project code</a> and sending a pull request.
+    Help us make Walking Papers available in a variety of languages. The
+    <a href="http://github.com/migurski/paperwalking">project source code is hosted at Github</a>,
+    corrections and complete translations can be performed by
+    <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">forking the project code</a>
+    and sending a pull request.
 </p>
 
 <p>
@@ -35,13 +39,18 @@
         Translation by <a href="http://github.com/mort">Manuel González Noriega</a>
     </li>
     <li>
-			<strong>Japanese (日本語)</strong>
-			<br/>
-			Translation by <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
+		<strong>Japanese (日本語)</strong>
+		<br/>
+		Translation by <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
     </li>
     <li>
         <strong>Italian</strong>
         <br/>
         Translation by <a href="http://github.com/ecarnevale">Emanuel Carnevale</a>
+    </li>
+    <li>
+        <strong>Turkish</strong>
+        <br/>
+        Translation by <a href="http://github.com/alerque">Caleb Maclennan</a>.
     </li>
 </ul>

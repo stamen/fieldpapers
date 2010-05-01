@@ -1,5 +1,7 @@
+<h2>Print Map</h2>
+
 <p>
-    Imprimir mapa del área circundante
+    Print map of the area surrounding
     {if $print.place_woeid}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
@@ -11,20 +13,20 @@
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
     {/if}
     <br />
-    Creado {$print.age|nice_relativetime|escape}.
+    Created {$print.age|nice_relativetime|escape}.
     <span class="date-created" style="display: none;">{$print.created|escape}</span>
 </p>
 
 <p>
     <a href="{$print.pdf_url|escape}">
         <img src="{$base_dir}/tiny-doc.png" border="0" align="bottom"/>
-        Descargar PDF del mapa para imprimir</a>
+        Download map PDF for print</a>
 </p>
 
 <p>
-    <a href="{$print.pdf_url|escape}">Descargar mapa</a> para empezar a mapear este área a nivel de calle. 
-    Añade detalles como negocios, parques, escuelas, edificios, caminos, buzones, cajeros automáticos y otros lugares útiles.
-    Cuando hayas terminado, 
-    <a href="{$base_dir}/upload.php">sube un scan</a> de tu mapa anotado 
-    para importar tus cambios y notas manuscritas directamente a OpenStreetMap.
+    <a href="{$print.pdf_url|escape}">Download a map</a> to get started mapping this area
+    from street level. Add details like businesses, parks, schools, buildings, paths,
+    post boxes, cash machines and other useful landmarks. When you’re finished,
+    <a href="{$base_dir}/upload.php">post a scan</a> of your annotated map
+    to trace your handwritten changes and notes directly into OpenStreetMap.
 </p>

@@ -17,6 +17,8 @@
             アップロードした取込データ
         {elseif $language == "it"}
             Scansione inviata
+        {elseif $language == "tr"}
+            Yüklenmiş Tarama
         {else}
             Uploaded Scan
         {/if}
@@ -50,6 +52,8 @@
             スキャンしたアップロードしました
         {elseif $language == "it"}
             Hai spedito una mappa scannerizzata.
+        {elseif $language == "tr"}
+            Bir Taramış Haritasını Yükledin
         {else}
             You’ve Uploaded A Scanned Map
         {/if}    
@@ -70,9 +74,11 @@
             スキャナーした地図をアップロードしました。そして、トレースを行う前に若干の情報を追加する段階になりました。
         {elseif $language == "it"}
             Hai appena spedito una mappa scannerizzata e stai per aggiungere un paio di informazioni prima di iniziare a tracciarla.
+        {elseif $language == "tr"}
+			Sen taranmış bir harita yükledin ve onu dayandırmaya devam etmeden önce onun hakkında birkaç ayrıntıyı eklemek üzeresin.
         {else}
             You’ve just uploaded a scanned map, and you’re about to add
-            a few bits of information about before you proceed to trace it.
+            a few bits of information about it before you proceed to trace it.
         {/if}
     </p>
     
@@ -91,6 +97,8 @@
                 プライベート?
             {elseif $language == "it"}
                 privato?
+            {elseif $language == "tr"}
+                kişisel mi?
             {else}
                 private?
             {/if}
@@ -112,6 +120,8 @@
                     この地図をご自身で編集する予定ですか？
                 {elseif $language == "it"}
                     Hai intenzione di iniziarla a modificare tu?
+                {elseif $language == "tr"}
+					Bunu kendi kendine düzeltmeye planlanıyor musun?
                 {else}
                     Do you plan to edit this yourself?
                 {/if}
@@ -124,10 +134,12 @@
                         {assign var="label" value="Sí"}    
                     {elseif $language == "fr"}
                         {assign var="label" value="Oui"}
-                    {elseif $language == "it"}
-                        {assign var="label" value="Si"}
                     {elseif $language == "ja"}
                         {assign var="label" value="はい"}
+                    {elseif $language == "it"}
+                        {assign var="label" value="Si"}
+                    {elseif $language == "tr"}
+                        {assign var="label" value="Evet"}
                     {else}
                         {assign var="label" value="Yes"}
                     {/if}    
@@ -144,6 +156,8 @@
                         {assign var="label" value="いいえ"}
                     {elseif $language == "it"}
                         {assign var="label" value="No"}
+                    {elseif $language == "tr"}
+                        {assign var="label" value="Hayır"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}    
@@ -167,6 +181,8 @@
                     ご自身で、OpenStreetMapの編集を行う必要はありません。ここで"no"と答えれば、他の訪問者がこのスキャン結果について知ることができ、助けることができます。
                 {elseif $language == "it"}
                     Non devi effettuare le modifiche OpenStreetMap. Rispondendo “no” renderai a conoscenza gli altri visitatori di scansioni che potrebbero beneficiare del loro aiuto.
+                {elseif $language == "tr"}
+					Kendi kendine OpenStreetMap düzeltmek zorunda değilsin. "Hayır" diyerek yardım edebilecek taramalar konusunda başka ziyaretciyi haberdar eder.
                 {else}
                     You don’t have to do your own OpenStreetMap editing. Saying “no”
                     will let other visitors know about scans they can help with.
@@ -187,6 +203,8 @@
                     Describe tus modificaciones.    
                 {elseif $language == "it"}
                     Descrivi le tue modifiche.
+                {elseif $language == "tr"}
+                    Describe your additions.
                 {else}
                     Describe your additions.
                 {/if}
@@ -208,6 +226,8 @@
                     ¿Has añadido negocios, corregido aceras, señalado semáforos, delineado parques, colocado buzones de correos? Describe en pocas palabras tus modificaciones a éste área.
                 {elseif $language == "it"}
                     Hai aggiunto negozi, marciapiedi, segnato semafori, delimitato parchi, posizionato buche delle lettere? Scrivi un paio di parole a proposito delle modifiche in quest'area.
+                {elseif $language == "tr"}
+					Dükkanlar yükedin mi, yaya yolları düzelttin mi, trafik lambaları etiketlendin mi, park kenarları çizdin mi? Bu yere değişiklerinle ilgili birkaç söz yaz.
                 {else}
                     Did you add businesses, fix footpaths, mark traffic lights, outline parks,
                     place mailboxes? Write a few words about the changes to this area.
@@ -229,6 +249,8 @@
             {assign var="label" value="Guardar"}
         {elseif $language == "it"}
             {assign var="label" value="Salva"}
+        {elseif $language == "tr"}
+            {assign var="label" value="Kaydet"}
         {else}
             {assign var="label" value="Save"}
         {/if}

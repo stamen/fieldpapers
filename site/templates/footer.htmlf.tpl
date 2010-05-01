@@ -9,17 +9,20 @@
         <br />
         Web- und Druck-Kartographie &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
         <br />
-        German translation by Jonas Krückel
+        Deutsche Übersetzung von Jonas Krückel
         <br />
-        Dutch translation by Milo van der Linden
+        Niederländische Übersetzung von Milo van der Linden
         <br />
-        French translation by Jonathan Fretin
+        Französische Übersetzung von Jonathan Fretin
         <br />
-        Japanese translation by Hiroshi Miura
+        Japanische Übersetzung von Hiroshi Miura
         <br />
-        Italian translation by Emanuel Carnevale
+        Italienische Übersetzung von Emanuel Carnevale
         <br />
-        Spanish translation by Manuel González Noriega
+        Spanische Übersetzung von Manuel González Noriega
+		<br />
+		Türkische Übersetzung von Caleb Maclennan
+
     {elseif $language == "nl"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -35,6 +38,8 @@
         Nederlandse vertaling door Milo van der Linden
         <br />
         Japonese vertaling door Hiroshi Miura
+        <br />
+        Turks vertaling door Caleb Maclennan
   
     {elseif $language == "es"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -53,6 +58,8 @@
         Traducción al español por Manuel González Noriega  
         <br />
         Traduction al francés por Jonathan Fretin
+        <br />
+        Traducción al turco por Caleb Maclennan
 
     {elseif $language == "fr"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -73,6 +80,9 @@
         Traduction française par Jonathan Fretin
         <br />
         Traduction Japonese par Hiroshi Miura
+        <br />
+        Traduction Turc par Caleb Maclennan
+
     {elseif $language == "it"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -94,6 +104,9 @@
         Traduzione giapponese di Hiroshi Miura
         <br />
         Traduzione italiana di Emanuel Carnevale
+        <br />
+        Traduzione Turco di Caleb Maclennan
+
     {elseif $language == "ja"}
         ウオーキングペーパー(Walking Papers) &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -115,6 +128,33 @@
         イタリア語訳Emanuel Carnevale
         <br />
         日本語訳　三浦広志
+		<br />
+		トルコ語訳Caleb Maclennan
+
+    {elseif $language == "tr"}
+        Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
+        <br />
+        Bize ulaşmak için <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
+        <br />
+        Harita verisi <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
+            <a href="http://openstreetmap.org">OpenStreetMap</a>
+        <br />
+        Web ve basılım kartografi &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
+        <br />
+        Jonas Krückel tarafından Alman çevirisi 
+        <br />
+        Milo van der Linden tarafından Flemenkçe çeviri 
+        <br />
+        Manuel González Noriega tarafından İsanyolca çeviri
+        <br />
+        Jonathan Fretin tarafından Fransızca çeviri
+        <br />
+        Hiroshi Miura tarafından Japonca çeviri
+        <br />
+        Emanuel Carnevale tarafından İtalyanca çeviri
+        <br />
+        Caleb Maclennan tarafından Türkçe çeviri
+
     {else}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -136,7 +176,9 @@
         Japanese translation by Hiroshi Miura
         <br />
         Italian translation by Emanuel Carnevale
+        <br />
+        Turkish translation by Caleb Maclennan
     {/if}
 </p>
 
-{include file="language.htmlf.tpl"}
+#{include file="language.htmlf.tpl"}

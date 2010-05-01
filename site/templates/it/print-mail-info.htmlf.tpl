@@ -7,8 +7,8 @@
 <blockquote>
     Walking Papers<br />
     c/o Stamen Design<br />
-    3012 16th St. #200<br />
-    San Francisco, CA 94103
+    2017 Mission St. #300<br />
+    San Francisco, CA 94110
 		USA
 </blockquote>
 

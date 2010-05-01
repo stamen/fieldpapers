@@ -1,24 +1,25 @@
-<p>
-    Print map of the area surrounding
-    {if $print.place_woeid}
-        <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
-            {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
-        <br />
-        {$print.place_name|escape}
+<h2>Haritayı yazdır</h2>
 
+<p>
+	<a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
+		{$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a> 
+	çevresinin basılı haritası.
+	<br />
+    {if $print.place_woeid}
+        {$print.place_name|escape}
     {else}
-        <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
-            {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
+		{$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
     {/if}
     <br />
-    Created {$print.age|nice_relativetime|escape}.
+
+    {$print.age|nice_relativetime|escape} yapıldı.
     <span class="date-created" style="display: none;">{$print.created|escape}</span>
 </p>
 
 <p>
     <a href="{$print.pdf_url|escape}">
         <img src="{$base_dir}/tiny-doc.png" border="0" align="bottom"/>
-        Download map PDF for print</a>
+        Yazdırmak için PDF haritayı indir</a>
 </p>
 
 <p>

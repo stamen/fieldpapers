@@ -1,3 +1,5 @@
+<h2>Imprimer la carte</h2>
+
 <p>
     Imprimer une carte aux alentours de la zone
     {if $print.place_woeid}

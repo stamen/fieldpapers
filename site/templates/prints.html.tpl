@@ -17,6 +17,8 @@
             最近の印刷
         {elseif $language == "it"}
             Stampe recenti
+        {elseif $language == "tr"}
+            Son Baskılar
         {else}
             Recent Prints
         {/if}
@@ -41,6 +43,8 @@
             最近の印刷
         {elseif $language == "it"}
             Stampe recenti    
+        {elseif $language == "tr"}
+            Son Baskılar
         {else}
             Recent Prints
         {/if}
