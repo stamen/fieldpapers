@@ -25,7 +25,7 @@
 
 <ul>
     <li>
-        <strong>English</strong>
+        <strong>Englisch</strong>
         <br/>
         Original von <a href="http://github.com/migurski">Michal Migurski</a>
     </li>
