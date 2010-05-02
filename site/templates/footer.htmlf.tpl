@@ -39,6 +39,12 @@
         <br />
         Japonese vertaling door Hiroshi Miura
         <br />
+        Italiaanse vertaling door Emanuel Carnevale
+        <br />
+        Spaanse vertaling door Manuel González Noriega
+        <br />
+        Franse vertaling door Jonathan Fretin
+        <br />
         Turks vertaling door Caleb Maclennan
   
     {elseif $language == "es"}
@@ -79,9 +85,11 @@
         <br />
         Traduction française par Jonathan Fretin
         <br />
-        Traduction Japonese par Hiroshi Miura
+        Traduction japonese par Hiroshi Miura
         <br />
-        Traduction Turc par Caleb Maclennan
+        Traduction italienne par Emanuel Carnevale
+        <br />
+        Traduction turc par Caleb Maclennan
 
     {elseif $language == "it"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
