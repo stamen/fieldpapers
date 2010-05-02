@@ -13,13 +13,13 @@
         <br />
         Niederländische Übersetzung von Milo van der Linden
         <br />
+        Spanische Übersetzung von Manuel González Noriega
+        <br />
         Französische Übersetzung von Jonathan Fretin
         <br />
         Japanische Übersetzung von Hiroshi Miura
         <br />
         Italienische Übersetzung von Emanuel Carnevale
-        <br />
-        Spanische Übersetzung von Manuel González Noriega
 		<br />
 		Türkische Übersetzung von Caleb Maclennan
 
@@ -37,13 +37,13 @@
         <br />
         Nederlandse vertaling door Milo van der Linden
         <br />
-        Japonese vertaling door Hiroshi Miura
-        <br />
-        Italiaanse vertaling door Emanuel Carnevale
-        <br />
         Spaanse vertaling door Manuel González Noriega
         <br />
         Franse vertaling door Jonathan Fretin
+        <br />
+        Japonese vertaling door Hiroshi Miura
+        <br />
+        Italiaanse vertaling door Emanuel Carnevale
         <br />
         Turks vertaling door Caleb Maclennan
   
@@ -137,9 +137,9 @@
         <br />
         フランス語訳Jonathan Fretin
         <br />
-        イタリア語訳Emanuel Carnevale
-        <br />
         日本語訳　三浦広志
+        <br />
+        イタリア語訳Emanuel Carnevale
 		<br />
 		トルコ語訳Caleb Maclennan
 
