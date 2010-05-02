@@ -63,7 +63,11 @@
         <br />
         Traducción al español por Manuel González Noriega  
         <br />
-        Traduction al francés por Jonathan Fretin
+        Traduccion al francés por Jonathan Fretin
+        <br />
+        Traduccion al japonés por Hiroshi Miura
+        <br />
+        Traduccion al italiano por Emanuel Carnevale
         <br />
         Traducción al turco por Caleb Maclennan
 
