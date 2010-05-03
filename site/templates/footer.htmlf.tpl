@@ -63,11 +63,11 @@
         <br />
         Traducción al español por Manuel González Noriega  
         <br />
-        Traduccion al francés por Jonathan Fretin
+        Traducción al francés por Jonathan Fretin
         <br />
-        Traduccion al japonés por Hiroshi Miura
+        Traducción al japonés por Hiroshi Miura
         <br />
-        Traduccion al italiano por Emanuel Carnevale
+        Traducción al italiano por Emanuel Carnevale
         <br />
         Traducción al turco por Caleb Maclennan
 
@@ -89,11 +89,11 @@
         <br />
         Traduction française par Jonathan Fretin
         <br />
-        Traduction japonese par Hiroshi Miura
+        Traduction japonaise par Hiroshi Miura
         <br />
         Traduction italienne par Emanuel Carnevale
         <br />
-        Traduction turc par Caleb Maclennan
+        Traduction turque par Caleb Maclennan
 
     {elseif $language == "it"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
