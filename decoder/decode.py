@@ -30,6 +30,9 @@ class Point:
         self.x = x
         self.y = y
 
+    def __repr__(self):
+        return '(%(x)d, %(y)d)' % self.__dict__
+
 class Marker:
     def __init__(self, basepath):
         data = open(basepath + '.sift', 'r')
@@ -116,6 +119,12 @@ def main(url, markers, apibase, message_id, password):
     
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
+        
+        # we have enough here to make a GeoTIFF, e.g.:
+        # gdal_translate -a_srs ... -gcp ... -of GTiff -co COMPRESS=JPEG -co JPEG_QUALITY=85 in.jpg out.tif
+        print 'Northwest:', (north, west), 'at', markers['Header'].anchor
+        print 'Northeast:', (north, east), 'at', markers['Hand'].anchor
+        print 'Southwest:', (south, west), 'at', markers['CCBYSA'].anchor
         
         # tiling and uploading
         updateStepLocal(5, 180)
