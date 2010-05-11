@@ -105,6 +105,15 @@ def main(hImage, hData, nImage, nData):
 
     return out
 
+def feature2row(feature):
+    """ Given a feature with x, y, scale, rotation list of descriptors,
+        return a row as a string as if it had come from bin/sift.
+    """
+    location = ['%.6f' % f for f in (feature.x, feature.y, feature.s, feature.r)]
+    description = ['%d' % i for i in feature.d[:]]
+    
+    return ' '.join(location + description)
+
 def row2feature(row):
     """ Given a row as string, split and convert into a feature:
         x, y, scale, rotation, list of descriptors.

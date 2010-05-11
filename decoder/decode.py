@@ -81,6 +81,15 @@ def main(url, markers, apibase, message_id, password):
         
         image, features, scale = siftImage(url)
         
+        sifted_bytes = StringIO.StringIO()
+        
+        for feature in features:
+            print >> sifted_bytes, matchup.feature2row(feature)
+        
+        sifted_name = 'sift.txt'
+        sifted_bytes = sifted_bytes.getvalue()
+        appendScanFile(scan_id, sifted_name, sifted_bytes, apibase, password)
+        
         # finding needles
         updateStepLocal(3, 30)
         
