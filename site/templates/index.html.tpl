@@ -396,7 +396,7 @@
                 {/if}
                 <select name="provider" onchange="setProvider(this.value);">
                     {assign var="label" value="OpenStreetMap"}
-                    <option label="{$label}" selected="selected" value="http://tile.openstreetmap.org/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    <option label="{$label}" selected="selected" value="http://10.211.55.4/tilestache/tile.py/osm/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
                     
                     {assign var="label" value="OpenStreetMap: CycleMap"}
                     <option label="{$label}" value="http://andy.sandbox.cloudmade.com/tiles/cycle/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
