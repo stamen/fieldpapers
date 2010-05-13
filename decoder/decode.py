@@ -135,6 +135,8 @@ def main(url, markers, apibase, message_id, password):
         bottomright = gym.locationCoordinate(ModestMaps.Geo.Location(south, east))
         
         print topleft, bottomright
+        
+        print 'Mercator:', poorMansSphericalMercator(topleft), poorMansSphericalMercator(bottomright)
 
         renders = {}
         
@@ -600,6 +602,24 @@ def readCode(image):
         #image.show()
 
         raise CodeReadException('Attempt to read QR code failed')
+
+def poorMansSphericalMercator(coordinate):
+    """ Accepts a coordinate *already in spherical mercator* and returns
+        a point in EPSG:900913 by linearly transforming the coordinate.
+        
+        +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs
+    """
+    # the zoom at which we're dealing with meters on the ground
+    diameter = 2 * math.pi * 6378137
+    zoom = math.log(diameter) / math.log(2)
+    coordinate = coordinate.zoomTo(zoom)
+    
+    # global offsets
+    point = Point(coordinate.column, coordinate.row)
+    point.x = point.x - diameter/2
+    point.y = diameter/2 - point.y
+    
+    return point
 
 if __name__ == '__main__':
     url = sys.argv[1]
