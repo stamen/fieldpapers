@@ -120,12 +120,6 @@ def main(url, markers, apibase, message_id, password):
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
         
-        # we have enough here to make a GeoTIFF, e.g.:
-        # gdal_translate -a_srs ... -gcp ... -of GTiff -co COMPRESS=JPEG -co JPEG_QUALITY=85 in.jpg out.tif
-        print 'Northwest:', (north, west), 'at', markers['Header'].anchor
-        print 'Northeast:', (north, east), 'at', markers['Hand'].anchor
-        print 'Southwest:', (south, west), 'at', markers['CCBYSA'].anchor
-        
         # tiling and uploading
         updateStepLocal(5, 180)
 
@@ -134,8 +128,7 @@ def main(url, markers, apibase, message_id, password):
         topleft = gym.locationCoordinate(ModestMaps.Geo.Location(north, west))
         bottomright = gym.locationCoordinate(ModestMaps.Geo.Location(south, east))
         
-        print topleft, bottomright
-        
+        print 'Coordinates:', topleft, bottomright
         print 'Mercator:', poorMansSphericalMercator(topleft), poorMansSphericalMercator(bottomright)
 
         renders = {}
@@ -157,6 +150,24 @@ def main(url, markers, apibase, message_id, password):
         large_image.save(large_bytes, 'JPEG')
         large_bytes = large_bytes.getvalue()
         appendScanFile(scan_id, large_name, large_bytes, apibase, password)
+        
+        # make a geotiff
+        ul = poorMansSphericalMercator(topleft)
+        lr = poorMansSphericalMercator(bottomright)
+        xmin, ymin, xmax, ymax = ul.x, lr.y, lr.x, ul.y
+        
+        ul, ur, ll = markers['Header'].anchor, markers['Hand'].anchor, markers['CCBYSA'].anchor
+        
+        gdal_command = 'gdal_translate -a_srs ... -of GTiff -co COMPRESS=JPEG -co JPEG_QUALITY=85 ... ...'.split()
+        gdal_command[2] = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
+        gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ll.x, ll.y, xmin, ymin)).split()
+        gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ur.x, ur.y, xmax, ymax)).split()
+        gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ul.x, ul.y, xmin, ymax)).split()
+        gdal_command[-2:] = 'in.jpg', 'out.tif'
+        
+        print ' '.join(gdal_command)
+        
+        geotiff_name = 'scan.tif'
         
         min_zoom, max_zoom = 20, 0
         
