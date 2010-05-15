@@ -648,6 +648,14 @@ def uploadGeoTiff(apibase, password, markers, scan_id, input_image, topleft, bot
     gdal_command = subprocess.Popen(gdal_command)
     gdal_command.wait()
     
+    gdal_command = 'gdaladdo --config COMPRESS_OVERVIEW JPEG ... 2 4 8 16'.split()
+    gdal_command[4] = output_filename
+    
+    print ' '.join(gdal_command)
+    
+    gdal_command = subprocess.Popen(gdal_command)
+    gdal_command.wait()
+    
     geotiff_name = 'scan.tif'
     geotiff_bytes = open(output_filename, 'r').read()
     appendScanFile(scan_id, geotiff_name, geotiff_bytes, apibase, password)
