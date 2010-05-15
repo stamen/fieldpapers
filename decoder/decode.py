@@ -109,14 +109,7 @@ def main(url, markers, apibase, message_id, password):
         updateStepLocal(4, 10)
         
         qrcode = extractCode(image, markers)
-
-        qrcode_name = 'qrcode.jpg'
-        qrcode_bytes = StringIO.StringIO()
-        qrcode_image = qrcode.copy()
-        qrcode_image.save(qrcode_bytes, 'JPEG')
-        qrcode_bytes = qrcode_bytes.getvalue()
-        appendScanFile(scan_id, qrcode_name, qrcode_bytes, apibase, password)
-    
+        
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
         
@@ -133,23 +126,7 @@ def main(url, markers, apibase, message_id, password):
 
         renders = {}
         
-        # make a smallish preview image
-        preview_name = 'preview.jpg'
-        preview_bytes = StringIO.StringIO()
-        preview_image = image.copy()
-        preview_image.thumbnail((409, 280), PIL.Image.ANTIALIAS)
-        preview_image.save(preview_bytes, 'JPEG')
-        preview_bytes = preview_bytes.getvalue()
-        appendScanFile(scan_id, preview_name, preview_bytes, apibase, password)
-        
-        # make a largish image
-        large_name = 'large.jpg'
-        large_bytes = StringIO.StringIO()
-        large_image = image.copy()
-        large_image.thumbnail((900, 900), PIL.Image.ANTIALIAS)
-        large_image.save(large_bytes, 'JPEG')
-        large_bytes = large_bytes.getvalue()
-        appendScanFile(scan_id, large_name, large_bytes, apibase, password)
+        uploadScanImages(apibase, password, scan_id, image, qrcode)
         
         # make a geotiff
         
@@ -651,6 +628,31 @@ def poorMansSphericalMercator(coordinate):
     point.y = diameter/2 - point.y
     
     return point
+
+def uploadScanImages(apibase, password, scan_id, scan_img, qrcode_img):
+    """
+    """
+    # just the QR code
+    qrcode_bytes = StringIO.StringIO()
+    qrcode_img.save(qrcode_bytes, 'JPEG')
+    qrcode_bytes = qrcode_bytes.getvalue()
+    appendScanFile(scan_id, 'qrcode.jpg', qrcode_bytes, apibase, password)
+
+    # make a smallish preview image
+    preview_bytes = StringIO.StringIO()
+    preview_image = scan_img.copy()
+    preview_image.thumbnail((409, 280), PIL.Image.ANTIALIAS)
+    preview_image.save(preview_bytes, 'JPEG')
+    preview_bytes = preview_bytes.getvalue()
+    appendScanFile(scan_id, 'preview.jpg', preview_bytes, apibase, password)
+    
+    # make a largish image
+    large_bytes = StringIO.StringIO()
+    large_image = scan_img.copy()
+    large_image.thumbnail((900, 900), PIL.Image.ANTIALIAS)
+    large_image.save(large_bytes, 'JPEG')
+    large_bytes = large_bytes.getvalue()
+    appendScanFile(scan_id, 'large.jpg', large_bytes, apibase, password)
 
 if __name__ == '__main__':
     url = sys.argv[1]
