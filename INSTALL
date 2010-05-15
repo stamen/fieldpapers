@@ -13,6 +13,10 @@ produced using ami-19a34270 (alestic/ubuntu-9.10-karmic-base-20090623).
 When setting up an EC2 instance, make sure it's in a security group that can
 accept both SSH and HTTP connections!
 
+With the addition of GeoTIFF creation in decoder/decode.py, a new dependency
+on GDAL 1.6+ has been added. This version is present in version of Ubuntu Linux
+starting at 10.4 (Lucid Lynx). Try to use the latest version where possible.
+
 Start by logging into the server via SSH, as the root user.
 
 Software
