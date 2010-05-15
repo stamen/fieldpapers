@@ -124,49 +124,12 @@ def main(url, markers, apibase, message_id, password):
         print 'Coordinates:', topleft, bottomright
         print 'Mercator:', poorMansSphericalMercator(topleft), poorMansSphericalMercator(bottomright)
 
-        renders = {}
-        
         uploadScanImages(apibase, password, scan_id, image, qrcode)
-        
-        # make a geotiff
-        
-        input_bytes = StringIO.StringIO()
-        input_image = image.copy()
-        input_image.save(input_bytes, 'PNG')
-
-        handle, input_filename = tempfile.mkstemp(prefix='decode-', suffix='.png')
-        os.write(handle, input_bytes.getvalue())
-        os.close(handle)
-
-        handle, output_filename = tempfile.mkstemp(prefix='decode-', suffix='.tif')
-        os.close(handle)
-
-        ul = poorMansSphericalMercator(topleft)
-        lr = poorMansSphericalMercator(bottomright)
-        xmin, ymin, xmax, ymax = ul.x, lr.y, lr.x, ul.y
-        
-        ul, ur, ll = markers['Header'].anchor, markers['Hand'].anchor, markers['CCBYSA'].anchor
-        
-        gdal_command = 'gdal_translate -a_srs ... -of GTiff -co COMPRESS=JPEG -co JPEG_QUALITY=85 -co BLOCKYSIZE=8 ... ...'.split()
-        gdal_command[2] = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
-        gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ll.x, ll.y, xmin, ymin)).split()
-        gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ur.x, ur.y, xmax, ymax)).split()
-        gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ul.x, ul.y, xmin, ymax)).split()
-        gdal_command[-2:] = input_filename, output_filename
-        
-        print ' '.join(gdal_command)
-        
-        gdal_command = subprocess.Popen(gdal_command)
-        gdal_command.wait()
-        
-        geotiff_name = 'scan.tif'
-        geotiff_bytes = open(output_filename, 'r').read()
-        appendScanFile(scan_id, geotiff_name, geotiff_bytes, apibase, password)
-        
-        os.unlink(input_filename)
-        os.unlink(output_filename)
+        uploadGeoTiff(apibase, password, markers, scan_id, image, topleft, bottomright)
         
         min_zoom, max_zoom = 20, 0
+        
+        renders = {}
         
         for zoom in range(20, 0, -1):
             localTopLeft = topleft.zoomTo(zoom)
@@ -653,6 +616,44 @@ def uploadScanImages(apibase, password, scan_id, scan_img, qrcode_img):
     large_image.save(large_bytes, 'JPEG')
     large_bytes = large_bytes.getvalue()
     appendScanFile(scan_id, 'large.jpg', large_bytes, apibase, password)
+
+def uploadGeoTiff(apibase, password, markers, scan_id, input_image, topleft, bottomright):
+    """
+    """
+    input_bytes = StringIO.StringIO()
+    input_image.save(input_bytes, 'PNG')
+
+    handle, input_filename = tempfile.mkstemp(prefix='decode-', suffix='.png')
+    os.write(handle, input_bytes.getvalue())
+    os.close(handle)
+
+    handle, output_filename = tempfile.mkstemp(prefix='decode-', suffix='.tif')
+    os.close(handle)
+
+    ul = poorMansSphericalMercator(topleft)
+    lr = poorMansSphericalMercator(bottomright)
+    xmin, ymin, xmax, ymax = ul.x, lr.y, lr.x, ul.y
+    
+    ul, ur, ll = markers['Header'].anchor, markers['Hand'].anchor, markers['CCBYSA'].anchor
+    
+    gdal_command = 'gdal_translate -a_srs ... -of GTiff -co COMPRESS=JPEG -co JPEG_QUALITY=80 ... ...'.split()
+    gdal_command[2] = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
+    gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ll.x, ll.y, xmin, ymin)).split()
+    gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ur.x, ur.y, xmax, ymax)).split()
+    gdal_command[3:3] = ('-gcp %d %d %.2f %.2f' % (ul.x, ul.y, xmin, ymax)).split()
+    gdal_command[-2:] = input_filename, output_filename
+    
+    print ' '.join(gdal_command)
+    
+    gdal_command = subprocess.Popen(gdal_command)
+    gdal_command.wait()
+    
+    geotiff_name = 'scan.tif'
+    geotiff_bytes = open(output_filename, 'r').read()
+    appendScanFile(scan_id, geotiff_name, geotiff_bytes, apibase, password)
+    
+    os.unlink(input_filename)
+    os.unlink(output_filename)
 
 if __name__ == '__main__':
     url = sys.argv[1]
