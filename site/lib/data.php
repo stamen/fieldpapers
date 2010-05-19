@@ -1039,7 +1039,7 @@
     *                   - "bucket": bucket ID
     *                   - "redirect": URL
     */
-    function s3_get_post_details($scan_id, $expires, $dirname)
+    function s3_get_post_details($scan_id, $expires, $dirname, $mimetype='')
     {
         $acl = 'public-read';
         $key = rtrim("scans/{$scan_id}", '/').'/'.ltrim($dirname."/\${filename}", '/');
@@ -1052,6 +1052,7 @@
                             array('bucket' => $bucket),
                             array('acl' => $acl),
                             array('starts-with', '$key', "scans/{$scan_id}/"),
+                            array('starts-with', '$Content-Type', $mimetype),
                             array('redirect' => $redirect)));
 
         $policy = base64_encode(json_encode($policy));

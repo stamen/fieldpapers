@@ -15,6 +15,7 @@
     
     $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
     $dirname = $_GET['dirname'] ? $_GET['dirname'] : null;
+    $mimetype = $_GET['mimetype'] ? $_GET['mimetype'] : null;
     
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
@@ -33,7 +34,7 @@
         $scan = get_scan($dbh, $scan_id);
 
     $s3post = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
-        ? s3_get_post_details($scan['id'], time() + 600, $dirname)
+        ? s3_get_post_details($scan['id'], time() + 600, $dirname, $mimetype)
         : null;
 
     $localpost = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
@@ -44,6 +45,7 @@
     $sm->assign('s3post', $s3post);
     $sm->assign('localpost', $localpost);
     $sm->assign('language', $language);
+    $sm->assign('mimetype', $mimetype);
     
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("append.html.tpl");

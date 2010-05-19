@@ -30,6 +30,7 @@
             <input name="signature" type="hidden" value="{$s3post.signature|escape}" />
             
             <input name="file" type="file" />
+            {if $mimetype}<input name="Content-Type" type="hidden" value="{$mimetype|escape}" />{/if}
             <input class="mac-button" type="submit" value="Send" />
         </form>
 
@@ -42,6 +43,7 @@
             <input name="signature" type="hidden" value="{$localpost.signature|escape}" />
             
             <input name="file" type="file" />
+            {if $mimetype}<input name="Content-Type" type="hidden" value="{$mimetype|escape}" />{/if}
             <input class="mac-button" type="submit" value="Send" />
         </form>
     {/if}

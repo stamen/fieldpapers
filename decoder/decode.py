@@ -211,7 +211,9 @@ def appendScanFile(scan_id, file_path, file_contents, apibase, password):
 
     s, host, path, p, q, f = urlparse.urlparse(apibase)
     
-    query = urllib.urlencode({'scan': scan_id, 'password': password, 'dirname': os.path.dirname(file_path)})
+    query = urllib.urlencode({'scan': scan_id, 'password': password,
+                              'dirname': os.path.dirname(file_path),
+                              'mimetype': (mimetypes.guess_type(file_path)[0] or '')})
     
     req = httplib.HTTPConnection(host, 80)
     req.request('GET', path + '/append.php?' + query)
