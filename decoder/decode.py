@@ -171,8 +171,13 @@ def main(url, markers, apibase, password):
 
     except CodeReadException:
         print 'Failed QR code, maybe will try again?'
-        updateStepLocal(98)
-        yield 10
+        try:
+            updateStepLocal(98)
+        except UpdateScanException:
+            print 'Giving up after many scan update attempts'
+            yield False
+        else:
+            yield 10
     
     except UpdateScanException:
         print 'Giving up after many scan update attempts'
@@ -181,11 +186,16 @@ def main(url, markers, apibase, password):
     except KeyboardInterrupt:
         raise
 
-    except:
-        # an error
-        updateStepLocal(99)
-        yield 90
-        raise
+    except Exception:
+        # some other error occured...
+        try:
+            updateStepLocal(99)
+        except UpdateScanException:
+            print 'Giving up after many scan update attempts'
+            yield False
+        else:
+            yield 90
+            raise
 
 def test(url, markers):
     """ A simpler, dumbed-down version of main() meant for testing.
