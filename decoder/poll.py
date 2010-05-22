@@ -83,7 +83,6 @@ if __name__ == '__main__':
                 progress = decode.main(url, getMarkers(), options.apibase, options.password)
                 
                 for timeout in progress:
-                    print 'updateQueue', message_id, timeout
                     updateQueue(options.apibase, options.password, message_id, timeout)
 
         except KeyboardInterrupt:
