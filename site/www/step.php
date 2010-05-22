@@ -23,31 +23,23 @@
     
     if($scan_id && $step_number)
     {
-        switch($step_number)
+        $bad_steps = array(STEP_ERROR, STEP_BAD_QRCODE);
+        
+        if(in_array($step_number, $bad_steps) && count(get_steps($dbh, $scan_id, 31)))
         {
-            case STEP_ERROR:
-                if(count(get_steps($dbh, $scan_id, 31)) > 30)
-                {
-                    // sort of a magic number, presumably we've tried and tried and tried
-                    add_step($dbh, $scan_id, STEP_FATAL_ERROR);
-                    echo "Too many errors\n"; // this is magic text! TODO: remove this responsibility from decode.py
-                    exit();
-                }
-                break;
+            $next_step = ($step_number == STEP_BAD_QRCODE)
+                ? STEP_FATAL_QRCODE_ERROR
+                : STEP_FATAL_ERROR;
+            
+            // sort of another magic number, presumably we've tried and tried and tried
+            add_step($dbh, $scan_id, $next_step);
+            echo "Too many errors\n"; // this is magic text! TODO: remove this responsibility from decode.py
 
-            case STEP_BAD_QRCODE:
-                if(count(get_steps($dbh, $scan_id, 21)) > 20)
-                {
-                    // sort of another magic number, presumably we've tried and tried and tried
-                    add_step($dbh, $scan_id, STEP_FATAL_QRCODE_ERROR);
-                    echo "Too many errors\n"; // this is magic text! TODO: remove this responsibility from decode.py
-                    exit();
-                }
-                break;
+        } else {
+            add_step($dbh, $scan_id, $step_number);
+            echo "OK\n";
         }
         
-        add_step($dbh, $scan_id, $step_number);
-        echo "OK\n";
         exit();
     }
 
