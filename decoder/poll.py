@@ -31,6 +31,26 @@ def getMarkers():
 
     return markers
 
+def updateQueue(apibase, password, message_id, timeout):
+    """
+    """
+    params = {'id': message_id, 'password': password}
+
+    if timeout is False:
+        params['delete'] = 'yes'
+    else:
+        params['timeout'] = timeout
+    
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+    req = httplib.HTTPConnection(host, 80)
+    req.request('POST', path + '/dequeue.php', urllib.urlencode(params), headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to dequeue.php resulting in status %s instead of 200' % res.status
+    
+    return
+
 if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
@@ -60,7 +80,11 @@ if __name__ == '__main__':
                 pass
             else:
                 print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                decode.main(url, getMarkers(), options.apibase, message_id, options.password)
+                progress = decode.main(url, getMarkers(), options.apibase, options.password)
+                
+                for timeout in progress:
+                    print 'updateQueue', message_id, timeout
+                    updateQueue(options.apibase, options.password, message_id, timeout)
 
         except KeyboardInterrupt:
             raise

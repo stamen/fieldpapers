@@ -22,6 +22,9 @@ import matchup
 sys.path.append('ModestMaps')
 import ModestMaps
 
+class UpdateScanException(Exception):
+    pass
+
 class CodeReadException(Exception):
     pass
 
@@ -63,7 +66,7 @@ class Marker:
 
         self.anchor = Point(x, y)
 
-def main(url, markers, apibase, message_id, password):
+def main(url, markers, apibase, password):
     """
     """
     url_pat = re.compile(r'^http://.+/scans/([^/]+)/(.*)$', re.I)
@@ -76,11 +79,12 @@ def main(url, markers, apibase, message_id, password):
         return
 
     # shorthand
-    updateStepLocal = lambda step_number, timeout: updateStep(apibase, password, scan_id, step_number, message_id, timeout)
+    updateStepLocal = lambda step_number: updateStep(apibase, password, scan_id, step_number)
     
     try:
         # sifting
-        updateStepLocal(2, 60)
+        updateStepLocal(2)
+        yield 60
         
         image, features, scale = siftImage(url)
         
@@ -94,7 +98,8 @@ def main(url, markers, apibase, message_id, password):
         appendScanFile(scan_id, sifted_name, sifted_bytes, apibase, password)
         
         # finding needles
-        updateStepLocal(3, 30)
+        updateStepLocal(3)
+        yield 30
         
         for (name, marker) in markers.items():
             print >> sys.stderr, name, '...',
@@ -106,15 +111,18 @@ def main(url, markers, apibase, message_id, password):
             marker.anchor = Point(x, y)
         
         # reading QR code
-        updateStepLocal(4, 10)
+        updateStepLocal(4)
+        yield 10
         
         qrcode = extractCode(image, markers)
+        uploadScanCodeImage(apibase, password, scan_id, qrcode)
         
         print_id, north, west, south, east = readCode(qrcode)
         print 'code contents:', 'Print', print_id, (north, west, south, east)
         
         # tiling and uploading
-        updateStepLocal(5, 180)
+        updateStepLocal(5)
+        yield 180
 
         gym = ModestMaps.OpenStreetMap.Provider()
         
@@ -124,7 +132,7 @@ def main(url, markers, apibase, message_id, password):
         print 'Coordinates:', topleft, bottomright
         print 'Mercator:', poorMansSphericalMercator(topleft), poorMansSphericalMercator(bottomright)
 
-        uploadScanImages(apibase, password, scan_id, image, qrcode)
+        uploadScanImages(apibase, password, scan_id, image)
         uploadGeoTiff(apibase, password, markers, scan_id, image, topleft, bottomright)
         
         min_zoom, max_zoom = 20, 0
@@ -159,20 +167,25 @@ def main(url, markers, apibase, message_id, password):
         updateScan(apibase, password, scan_id, print_id, topleft.zoomTo(min_zoom), bottomright.zoomTo(max_zoom))
         updateStepLocal(6, None)
 
+        yield False
+
     except CodeReadException:
         print 'Failed QR code, maybe will try again?'
-        updateStepLocal(98, 10)
+        updateStepLocal(98)
+        yield 10
+    
+    except UpdateScanException:
+        print 'Giving up after many scan update attempts'
+        yield False
     
     except KeyboardInterrupt:
         raise
 
     except:
         # an error
-        updateStepLocal(99, 90)
-
+        updateStepLocal(99)
+        yield 90
         raise
-
-    return 0
 
 def test(url, markers):
     """ A simpler, dumbed-down version of main() meant for testing.
@@ -281,7 +294,7 @@ def encodeMultipartFormdata(fields, files):
 
     return content_type, bytes.tostring()
 
-def updateStep(apibase, password, scan_id, step_number, message_id, timeout):
+def updateStep(apibase, password, scan_id, step_number):
     """
     """
     s, host, path, p, q, f = urlparse.urlparse(apibase)
@@ -295,19 +308,8 @@ def updateStep(apibase, password, scan_id, step_number, message_id, timeout):
     
     assert res.status == 200, 'POST to step.php %s/%d resulting in status %s instead of 200' % (scan_id, step_number, res.status)
     
-    # TODO: move this responsibility to step.php
-    if step_number == 6 or res.read().strip() == 'Too many errors':
-        # magic number for "finished"
-        params = urllib.urlencode({'id': message_id, 'password': password, 'delete': 'yes'})
-
-    else:
-        params = urllib.urlencode({'id': message_id, 'password': password, 'timeout': timeout})
-    
-    req = httplib.HTTPConnection(host, 80)
-    req.request('POST', path + '/dequeue.php', params, headers)
-    res = req.getresponse()
-    
-    assert res.status == 200, 'POST to dequeue.php resulting in status %s instead of 200' % res.status
+    if res.read().strip() == 'Too many errors':
+        raise UpdateScanException('Server says bugger off')
     
     return
 
@@ -594,7 +596,7 @@ def poorMansSphericalMercator(coordinate):
     
     return point
 
-def uploadScanImages(apibase, password, scan_id, scan_img, qrcode_img):
+def uploadScanCodeImage(apibase, password, scan_id, qrcode_img):
     """
     """
     # just the QR code
@@ -603,6 +605,9 @@ def uploadScanImages(apibase, password, scan_id, scan_img, qrcode_img):
     qrcode_bytes = qrcode_bytes.getvalue()
     appendScanFile(scan_id, 'qrcode.jpg', qrcode_bytes, apibase, password)
 
+def uploadScanImages(apibase, password, scan_id, scan_img):
+    """
+    """
     # make a smallish preview image
     preview_bytes = StringIO.StringIO()
     preview_image = scan_img.copy()
