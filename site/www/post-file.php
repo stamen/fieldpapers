@@ -19,6 +19,9 @@
     if(strtotime($expiration) < time())
         die_with_code(401, "Sorry, expiration date $expiration has come and gone - ".date('r', strtotime($expiration)));
     
+    if($file['error'] > 0)
+        die_with_code(400, "Sorry, encountered error #{$file['error']} (see http://us.php.net/manual/en/features.file-upload.errors.php)");
+    
     $posted_signature = $_POST['signature'] ? $_POST['signature'] : null;
     $expected_signature = sign_post_details($dirname, $expiration, API_PASSWORD);
     
@@ -45,5 +48,7 @@
 
     header('Content-Type: text/plain');
     echo "Thanks, I think I handled your file, so thanks.\n";
+    echo "That's: {$file['name']}\n";
+    echo "Or? {$file['error']}\n";
 
 ?>
