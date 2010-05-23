@@ -258,6 +258,8 @@ def appendScanFile(scan_id, file_path, file_contents, apibase, password):
             req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
             res = req.getresponse()
             
+            # res.read().startswith("Sorry, encountered error #1 ")
+            
             assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
 
             return True
