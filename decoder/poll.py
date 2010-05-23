@@ -1,13 +1,14 @@
 import sys
 import time
 import math
+import json
 import urllib
 import httplib
 import os.path
 import datetime
 import urlparse
 import optparse
-import decode
+import decode, compose
 
 parser = optparse.OptionParser(usage="""poll.py [options]
 """)
@@ -73,14 +74,29 @@ if __name__ == '__main__':
             poll_failures = 0
             
             try:
-                message_id, url = res.read().split()
+                message_id, content = res.read().split()
                 message_id = int(message_id)
             except ValueError:
                 # probably no queue message
                 pass
             else:
-                print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                progress = decode.main(url, getMarkers(), options.apibase.rstrip('/'), options.password)
+                try:
+                    message = json.loads(content)
+                    
+                    print_id, url, paper = [message[p] for p in ('print_id', 'geotiff_url', 'paper_size')]
+
+                    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
+                    progress = compose.main(print_id, url, paper, options.apibase.rstrip('/'), options.password)
+                    
+                except ValueError:
+                    if content.startswith('http://'):
+                        url = content
+
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
+                        progress = decode.main(url, getMarkers(), options.apibase.rstrip('/'), options.password)
+
+                    else:
+                        raise Exception('Not sure what to do with this message: ' + content)
                 
                 for timeout in progress:
                     updateQueue(options.apibase.rstrip('/'), options.password, message_id, timeout)
@@ -90,6 +106,7 @@ if __name__ == '__main__':
 
         except Exception, e:
             print >> sys.stderr, 'Something went wrong:', e
+            raise e
 
             poll_failures += 1
             
