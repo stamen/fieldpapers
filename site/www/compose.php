@@ -16,6 +16,7 @@
     /*
     header('Content-Type: text/plain');
     print_r($_POST);
+    print_r($_FILES);
     die();
     */
     
@@ -43,6 +44,34 @@
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
 
+    if($_POST['action'] == 'Upload' && ADVANCED_COMPOSE_FORM)
+    {
+        $dbh->query('START TRANSACTION');
+        
+        $print = add_print($dbh, $user['id']);
+        
+        $geotiff_filename = str_replace(' ', '-', $_FILES['file']['name']);
+        $geotiff_contents = file_get_contents($_FILES['file']['tmp_name']);
+        $geotiff_mimetype = trim(`file -bi {$_FILES['file']['tmp_name']}`);
+        
+        $print['geotiff_url'] = post_file("prints/{$print['id']}/{$geotiff_filename}", $geotiff_contents, $geotiff_mimetype);
+        
+        print_r($print);
+        
+        set_print($dbh, $print);
+        
+        
+        $message = array('print_id' => $print['id'],
+                         'paper_size' => $print['paper_size'],
+                         'geotiff_url' => $print['geotiff_url']);
+        
+        add_message($dbh, json_encode($message));
+        
+        $dbh->query('COMMIT');
+
+        die();
+    }
+    
     if($zoom && $north && $south && $east && $west)
     {
         $dbh->query('START TRANSACTION');

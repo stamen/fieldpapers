@@ -397,12 +397,13 @@
                              {$orientation_column_name}
                              {$provider_column_name}
                              {$url_column_names}
-                             id, north, south, east, west, zoom,
+                             id, last_step, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                             geotiff_url,
                              user_id
                       FROM prints
                       ORDER BY created DESC
@@ -461,12 +462,13 @@
                              {$orientation_column_name}
                              {$provider_column_name}
                              {$url_column_names}
-                             id, north, south, east, west, zoom,
+                             id, last_step, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                             geotiff_url,
                              user_id
                       FROM prints
                       WHERE id = %s",
@@ -737,7 +739,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for provider
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'provider', 'pdf_url', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+        foreach(array('last_step', 'north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'provider', 'pdf_url', 'preview_url', 'geotiff_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
             if(in_array($field, $column_names) && !is_null($print[$field]))
                 if($print[$field] != $old_print[$field] || in_array($field, array('provider')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));

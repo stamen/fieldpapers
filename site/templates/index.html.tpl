@@ -282,7 +282,7 @@
     // ]]>
     </script>
 
-    <form action="{$base_dir}/compose.php" method="post" name="bounds">
+    <form action="{$base_dir}/compose.php" method="post" name="bounds" enctype="multipart/form-data">
         <input name="north" type="hidden" />
         <input name="south" type="hidden" />
         <input name="east" type="hidden" />
@@ -446,6 +446,13 @@
                 <input type="radio" name="grid" value="utm" /> UTM
                 <input type="radio" name="grid" value="mgrs" /> MGRS/USNG
             </p>
+            
+            {if $constants.ADVANCED_COMPOSE_FORM}
+                <p>
+                    <input name="file" type="file" />
+                    <input class="mac-button" type="submit" name="action" value="Upload" />
+                </p>
+            {/if}
         {/if}
     </form>
 

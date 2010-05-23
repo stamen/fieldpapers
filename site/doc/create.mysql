@@ -19,6 +19,8 @@ CREATE TABLE prints (
 
     id          VARCHAR(8) NOT NULL,
     
+    last_step   INT NULL,
+    
     north       DOUBLE,
     south       DOUBLE,
     east        DOUBLE,
@@ -32,6 +34,7 @@ CREATE TABLE prints (
     
     pdf_url     VARCHAR(255),
     preview_url VARCHAR(255),
+    geotiff_url VARCHAR(255),
     
     country_name    VARCHAR(64),
     country_woeid   INT UNSIGNED,

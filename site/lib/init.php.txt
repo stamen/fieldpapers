@@ -24,5 +24,8 @@
     define('AWS_ACCESS_KEY', '*** http://aws.amazon.com/ ***');
     define('AWS_SECRET_KEY', '');
     define('S3_BUCKET_ID',   '');
+    
+    // Advanced compose form, on or off
+    define('ADVANCED_COMPOSE_FORM', 1);
 
 ?>
