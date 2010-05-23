@@ -178,13 +178,13 @@ def main(url, markers, apibase, password):
         print 'Giving up after many scan update attempts'
         yield False
     
-    except KeyboardInterrupt:
-        raise
+    except KeyboardInterrupt, e:
+        yield 1
+        raise e
 
-    except Exception:
+    except:
         # some other error occured...
         updateStepLocal(99)
-        yield 10
         raise
 
 def test(url, markers):

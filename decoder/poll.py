@@ -80,10 +80,10 @@ if __name__ == '__main__':
                 pass
             else:
                 print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                progress = decode.main(url, getMarkers(), options.apibase, options.password)
+                progress = decode.main(url, getMarkers(), options.apibase.rstrip('/'), options.password)
                 
                 for timeout in progress:
-                    updateQueue(options.apibase, options.password, message_id, timeout)
+                    updateQueue(options.apibase.rstrip('/'), options.password, message_id, timeout)
 
         except KeyboardInterrupt:
             raise
