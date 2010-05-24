@@ -14,6 +14,7 @@
         die_with_code(401, 'Sorry, bad password');
     
     $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
+    $print_id = $_GET['print'] ? $_GET['print'] : null;
     $dirname = $_GET['dirname'] ? $_GET['dirname'] : null;
     $mimetype = $_GET['mimetype'] ? $_GET['mimetype'] : null;
     
@@ -30,16 +31,26 @@
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
         */
     
-    if($scan_id)
+    if($scan_id) {
         $scan = get_scan($dbh, $scan_id);
+    
+        $dirname = "scans/{$scan['id']}/".ltrim($dirname, '/');
+        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan['id']);
+
+    } elseif($print_id) {
+        $print = get_print($dbh, $print_id);
+    
+        $dirname = "prints/{$print['id']}/".ltrim($dirname, '/');
+        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?print='.rawurlencode($print['id']);
+    }
 
     $s3post = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
-        ? s3_get_post_details($scan['id'], time() + 600, $dirname, $mimetype)
+        ? s3_get_post_details(time() + 600, $dirname, $redirect, $mimetype)
         : null;
 
     $localpost = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
         ? null
-        : local_get_post_details($scan['id'], time() + 600, $dirname);
+        : local_get_post_details(time() + 600, $dirname, $redirect);
 
     $sm = get_smarty_instance();
     $sm->assign('s3post', $s3post);

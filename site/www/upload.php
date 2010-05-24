@@ -27,14 +27,17 @@
     $scan = add_scan($dbh, $user['id']);
     flush_scans($dbh, 3600);
     $dbh->query('COMMIT');
+    
+    $dirname = "scans/{$scan['id']}";
+    $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan['id']);
 
     $s3post = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
-        ? s3_get_post_details($scan['id'], time() + 600, '')
+        ? s3_get_post_details(time() + 600, $dirname, $redirect)
         : null;
 
     $localpost = (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
         ? null
-        : local_get_post_details($scan['id'], time() + 600, '');
+        : local_get_post_details(time() + 600, $dirname, $redirect);
 
     $sm = get_smarty_instance();
     $sm->assign('s3post', $s3post);

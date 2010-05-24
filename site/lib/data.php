@@ -1041,11 +1041,10 @@
     *                   - "bucket": bucket ID
     *                   - "redirect": URL
     */
-    function s3_get_post_details($scan_id, $expires, $dirname, $mimetype='')
+    function s3_get_post_details($expires, $dirname, $redirect, $mimetype='')
     {
         $acl = 'public-read';
-        $key = rtrim("scans/{$scan_id}", '/').'/'.ltrim($dirname."/\${filename}", '/');
-        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id);
+        $key = rtrim($dirname, '/')."/\${filename}"; // note the literal '$'
         $access = AWS_ACCESS_KEY;
         $bucket = S3_BUCKET_ID;
         
@@ -1102,11 +1101,8 @@
     *                   - "expiration": date when this post will expire
     *                   - "signature": md5 summed, signed string
     */
-    function local_get_post_details($scan_id, $expires, $dirname)
+    function local_get_post_details($expires, $dirname, $redirect)
     {
-        $dirname = rtrim("scans/{$scan_id}", '/').'/'.ltrim($dirname, '/');
-        $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan_id);
-
         $expiration = gmdate("D, d M Y H:i:s", $expires).' UTC';
         $signature = sign_post_details($dirname, $expiration, API_PASSWORD);
         
