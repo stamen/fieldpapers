@@ -32,6 +32,8 @@
             <input name="file" type="file" />
             {if $mimetype}<input name="Content-Type" type="hidden" value="{$mimetype|escape}" />{/if}
             <input class="mac-button" type="submit" value="Send" />
+
+            <span id="base-url" style="display: none;">{$s3post.base_url|escape}</span>
         </form>
 
     {elseif $localpost}
@@ -45,6 +47,8 @@
             <input name="file" type="file" />
             {if $mimetype}<input name="Content-Type" type="hidden" value="{$mimetype|escape}" />{/if}
             <input class="mac-button" type="submit" value="Send" />
+
+            <span id="base-url" style="display: none;">{$localpost.base_url|escape}</span>
         </form>
     {/if}
     

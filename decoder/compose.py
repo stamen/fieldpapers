@@ -37,15 +37,15 @@ def main(print_id, geotiff_url, paper_size, apibase, password):
     
     zoom = int(mmap.coordinate.zoom)
     
-    update_print(apibase, password, print_id, north, west, south, east, zoom, orientation)
-    
     out = StringIO()
     print_img.save(out, format='JPEG')
     append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
     
     out = StringIO()
     preview_img.save(out, format='JPEG')
-    append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
+    preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
+    
+    update_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url)
     
     print '-' * 80
     
@@ -239,7 +239,7 @@ def adjust_geotiff(filename, paper_size):
 
     return print_img, preview_img, (north, west, south, east), orientation
 
-def update_print(apibase, password, print_id, north, west, south, east, zoom, orientation):
+def update_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -248,6 +248,7 @@ def update_print(apibase, password, print_id, north, west, south, east, zoom, or
     query = urlencode({'id': print_id})
     params = urlencode({'password': password,
                         'orientation': orientation,
+                        'preview_url': preview_url,
                         'north': north, 'west': west,
                         'south': south, 'east': east,
                         'zoom': zoom})
@@ -292,6 +293,9 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
                  if input.attrib['type'] == 'file']
 
         if len(files) == 1:
+            base_url = [el.text for el in form.findall(".//*") if el.get('id', '') == 'base-url'][0]
+            resource_url = urljoin(base_url, file_path)
+        
             post_type, post_body = encode_multipart_formdata(fields, files)
             
             s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
@@ -304,7 +308,7 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
             
             assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
 
-            return True
+            return resource_url
         
     raise Exception('Did not find a form with a file input, why is that?')
 

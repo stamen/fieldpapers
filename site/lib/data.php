@@ -1058,8 +1058,9 @@
 
         $policy = base64_encode(json_encode($policy));
         $signature = base64_encode(s3_sign_auth_string($policy));
+        $base_url = "http://{$bucket}.s3.amazonaws.com/".trim($dirname, '/').'/';
 
-        return compact('access', 'policy', 'signature', 'acl', 'key', 'redirect', 'bucket');
+        return compact('access', 'policy', 'signature', 'acl', 'key', 'redirect', 'bucket', 'base_url');
     }
     
    /**
@@ -1105,8 +1106,9 @@
     {
         $expiration = gmdate("D, d M Y H:i:s", $expires).' UTC';
         $signature = sign_post_details($dirname, $expiration, API_PASSWORD);
+        $base_url = 'http://'.get_domain_name().get_base_dir().'/files/'.trim($dirname, '/').'/';
         
-        return compact('dirname', 'expiration', 'signature', 'redirect');
+        return compact('dirname', 'expiration', 'signature', 'redirect', 'base_url');
     }
     
     function sign_post_details($dirname, $expiration, $api_password)

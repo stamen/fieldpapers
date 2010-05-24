@@ -36,7 +36,8 @@
                            'east' => $_POST['east'],
                            'west' => $_POST['west'],
                            'zoom' => $_POST['zoom'],
-                           'orientation' => $_POST['orientation']);
+                           'orientation' => $_POST['orientation'],
+                           'preview_url' => $_POST['preview_url']);
             
             $dbh->query('START TRANSACTION');
             $print = set_print($dbh, $print);
