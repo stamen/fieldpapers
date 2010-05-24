@@ -23,6 +23,27 @@
     
     $print = get_print($dbh, $print_id);
     
+    if($_SERVER['REQUEST_METHOD'] == 'POST')
+    {
+        if($_POST['password'] != API_PASSWORD)
+            die_with_code(401, 'Sorry, bad password');
+        
+        if($print)
+        {
+            $print = array('id' => $print_id,
+                           'north' => $_POST['north'],
+                           'south' => $_POST['south'],
+                           'east' => $_POST['east'],
+                           'west' => $_POST['west'],
+                           'zoom' => $_POST['zoom'],
+                           'orientation' => $_POST['orientation']);
+            
+            $dbh->query('START TRANSACTION');
+            $print = set_print($dbh, $print);
+            $dbh->query('COMMIT');
+        }
+    }
+    
     $sm = get_smarty_instance();
     $sm->assign('print', $print);
     $sm->assign('language', $language);
