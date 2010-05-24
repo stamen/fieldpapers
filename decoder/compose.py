@@ -1,12 +1,16 @@
 import os
 import os.path
 import httplib
+import xml.etree.ElementTree
 
 from urllib import urlopen, urlencode
-from urlparse import urlparse
+from urlparse import urlparse, urljoin
 from tempfile import mkdtemp
 from subprocess import Popen
 from pyproj import Proj
+from mimetypes import guess_type
+from array import array
+from StringIO import StringIO
 
 import osgeo.gdal as gdal
 import PIL.Image as Image
@@ -22,18 +26,28 @@ def main(print_id, geotiff_url, paper_size, apibase, password):
     print 'Paper:', paper_size
     
     filename = prepare_geotiff(geotiff_url)
-    out, (north, west, south, east), orientation = adjust_geotiff(filename, paper_size)
+    print_img, preview_img, (north, west, south, east), orientation = adjust_geotiff(filename, paper_size)
     os.unlink(filename)
     
-    out.save(os.path.dirname(filename)+'/out.jpg')
+    print_img.save(os.path.dirname(filename)+'/out.jpg')
     
     mmap = mm.mapByExtent(mm.OpenStreetMap.Provider(),
                           mm.Geo.Location(north, west), mm.Geo.Location(south, east),
-                          mm.Core.Point(*out.size))
+                          mm.Core.Point(*print_img.size))
     
     zoom = int(mmap.coordinate.zoom)
     
     update_print(apibase, password, print_id, north, west, south, east, zoom, orientation)
+    
+    out = StringIO()
+    print_img.save(out, format='JPEG')
+    append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
+    
+    out = StringIO()
+    preview_img.save(out, format='JPEG')
+    append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
+    
+    print '-' * 80
     
     return [] # to make it iterable for now
 
@@ -184,8 +198,9 @@ def adjust_geotiff(filename, paper_size):
 
         print 'total height', total_height, 'extra height', extra_height
         
-        out = Image.new('RGB', (warped_img.size[0], total_height), bgcolor)
-        out.paste(warped_img, (0, extra_height/2))
+        print_img = Image.new('RGB', (warped_img.size[0], total_height), bgcolor)
+        print_img.paste(warped_img, (0, extra_height/2))
+        preview_img = print_img.resize((w, h), Image.ANTIALIAS)
         
         ulx, uly, lrx, lry = bounds
         
@@ -206,8 +221,9 @@ def adjust_geotiff(filename, paper_size):
 
         print 'total width', total_width, 'extra width', extra_width
         
-        out = Image.new('RGB', (total_width, warped_img.size[1]), bgcolor)
-        out.paste(warped_img, (extra_width/2, 0))
+        print_img = Image.new('RGB', (total_width, warped_img.size[1]), bgcolor)
+        print_img.paste(warped_img, (extra_width/2, 0))
+        preview_img = print_img.resize((w, h))
         
         ulx, uly, lrx, lry = bounds
         
@@ -221,7 +237,7 @@ def adjust_geotiff(filename, paper_size):
         
         print north, west, south, east
 
-    return out, (north, west, south, east), orientation
+    return print_img, preview_img, (north, west, south, east), orientation
 
 def update_print(apibase, password, print_id, north, west, south, east, zoom, orientation):
     """
@@ -243,6 +259,84 @@ def update_print(apibase, password, print_id, north, west, south, east, zoom, or
     assert res.status == 200, 'POST to print.php resulting in status %s instead of 200' % res.status
 
     return
+
+def append_print_file(print_id, file_path, file_contents, apibase, password):
+    """ Upload a file via the API append.php form input provision thingie.
+    """
+
+    s, host, path, p, q, f = urlparse(apibase)
+    
+    query = urlencode({'print': print_id, 'password': password,
+                       'dirname': os.path.dirname(file_path),
+                       'mimetype': (guess_type(file_path)[0] or '')})
+    
+    req = httplib.HTTPConnection(host, 80)
+    req.request('GET', path + '/append.php?' + query)
+    res = req.getresponse()
+    
+    html = xml.etree.ElementTree.parse(res)
+    
+    for form in html.findall('*/form'):
+        form_action = form.attrib['action']
+        
+        inputs = form.findall('.//input')
+        
+        file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
+        
+        fields = [(input.attrib['name'], input.attrib['value'])
+                  for input in inputs
+                  if input.attrib['type'] != 'file' and 'name' in input.attrib]
+        
+        files = [(input.attrib['name'], os.path.basename(file_path), file_contents)
+                 for input in inputs
+                 if input.attrib['type'] == 'file']
+
+        if len(files) == 1:
+            post_type, post_body = encode_multipart_formdata(fields, files)
+            
+            s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
+            
+            req = httplib.HTTPConnection(host, 80)
+            req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
+            res = req.getresponse()
+            
+            # res.read().startswith("Sorry, encountered error #1 ")
+            
+            assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
+
+            return True
+        
+    raise Exception('Did not find a form with a file input, why is that?')
+
+def encode_multipart_formdata(fields, files):
+    """ fields is a sequence of (name, value) elements for regular form fields.
+        files is a sequence of (name, filename, value) elements for data to be uploaded as files
+        Return (content_type, body) ready for httplib.HTTP instance
+        
+        Adapted from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/146306
+    """
+    BOUNDARY = '----------multipart-boundary-multipart-boundary-multipart-boundary$'
+    CRLF = '\r\n'
+
+    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+    bytes = array('c')
+
+    for (key, value) in fields:
+        bytes.fromstring('--' + BOUNDARY + CRLF)
+        bytes.fromstring('Content-Disposition: form-data; name="%s"' % key + CRLF)
+        bytes.fromstring(CRLF)
+        bytes.fromstring(value + CRLF)
+
+    for (key, filename, value) in files:
+        bytes.fromstring('--' + BOUNDARY + CRLF)
+        bytes.fromstring('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename) + CRLF)
+        bytes.fromstring('Content-Type: %s' % (guess_type(filename)[0] or 'application/octet-stream') + CRLF)
+        bytes.fromstring(CRLF)
+        bytes.fromstring(value + CRLF)
+
+    bytes.fromstring('--' + BOUNDARY + '--' + CRLF)
+
+    return content_type, bytes.tostring()
 
 if __name__ == '__main__':
     src = gdal.Open(sys.argv[1])
