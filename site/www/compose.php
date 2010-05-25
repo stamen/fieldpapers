@@ -75,12 +75,20 @@
         exit();
     }
     
-    if($zoom && $north && $south && $east && $west)
+    if($source == 'bounds')
     {
         $dbh->query('START TRANSACTION');
         
         $print = add_print($dbh, $user['id']);
         
+        if(preg_match('/^(portrait|landscape)-(letter|a4|a3)$/', $paper, $parts)) {
+            $orientation = $parts[1];
+            $paper_size = $parts[2];
+            
+        } else {
+            die_with_code(500, "Give us a meaningful paper, not \"{$print['paper']}\"\n");
+        }
+
         $print['north'] = $north;
         $print['south'] = $south;
         $print['east'] = $east;
@@ -88,7 +96,10 @@
         $print['zoom'] = $zoom;
         $print['paper'] = $paper;
         $print['provider'] = $provider;
+        $print['orientation'] = $orientation;
+        $print['paper_size'] = $paper_size;
         
+        /*
         list($print['country_name'], $print['country_woeid'],
              $print['region_name'], $print['region_woeid'],
              $print['place_name'], $print['place_woeid'])
@@ -102,15 +113,26 @@
             die_with_code(500, "{$print['preview_url']->message}\n{$q}\n");
 
         $print = compose_map($print, $print_jpg);
+        */
         
-        $print['last_step'] = STEP_FINISHED;
+        $print['last_step'] = STEP_QUEUED;
 
         set_print($dbh, $print);
+        
+        $message = array('print_id' => $print['id'],
+                         'bounds' => array($north, $west, $south, $east),
+                         'provider' => $provider,
+                         'paper_size' => $paper_size,
+                         'orientation' => $orientation);
+        
+        add_message($dbh, json_encode($message));
         
         $dbh->query('COMMIT');
         
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
         header("Location: {$print_url}");
+        
+        exit();
     }
     
     /**** ... ****/

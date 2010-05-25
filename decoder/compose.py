@@ -20,7 +20,7 @@ import ModestMaps as mm
 
 srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
 
-def main(apibase, password, print_id, geotiff_url=None, paper_size=None):
+def main(apibase, password, print_id, paper_size, orientation=None, provider=None, bounds=None, geotiff_url=None):
     """
     """
     yield 60

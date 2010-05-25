@@ -370,7 +370,7 @@
                 {assign var="label" value="Make"}
             {/if}
             <input class="mac-button" type="submit" name="action" value="{$label}" />
-            <input type="hidden" name="source" value="bbox" />
+            <input type="hidden" name="source" value="bounds" />
         </p>
         
         {if $request.get.provider}
@@ -451,7 +451,7 @@
     </form>
 
     {if $constants.ADVANCED_COMPOSE_FORM}
-        <form action="{$base_dir}/compose.php" method="post" name="bounds" enctype="multipart/form-data">
+        <form action="{$base_dir}/compose.php" method="post" name="uploads" enctype="multipart/form-data">
             <p>
                 <input name="file" type="file" />
                 <input class="mac-button" type="submit" name="action" value="Upload" />

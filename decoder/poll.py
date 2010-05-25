@@ -84,16 +84,11 @@ if __name__ == '__main__':
                 pass
             else:
                 try:
-                    message = json.loads(content)
-                    
-                    props = 'print_id', 'geotiff_url', 'paper_size'
-                    print_id, url, paper = [message[p] for p in props]
-                    kwargs = {'geotiff_url': url, 'paper_size': paper}
-
-                    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                    progress = compose.main(apibase, password, print_id, **kwargs)
+                    msg = json.loads(content)
                     
                 except ValueError:
+                    # JSON parse failed so it's likely we've got a scan to do.
+
                     if content.startswith('http://'):
                         url = content
 
@@ -102,6 +97,21 @@ if __name__ == '__main__':
 
                     else:
                         raise Exception('Not sure what to do with this message: ' + content)
+
+                else:
+                    # JSON parse successed so we'll assume there's a print here.
+
+                    kwargs = {'paper_size': msg['paper_size']}
+                    
+                    try:
+                        kwargs['geotiff_url'] = msg['geotiff_url']
+                    except KeyError:
+                        kwargs['bounds'] = msg['bounds']
+                        kwargs['provider'] = msg['provider']
+                        kwargs['orientation'] = msg['orientation']
+
+                    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
+                    progress = compose.main(apibase, password, msg['print_id'], **kwargs)
                 
                 for timeout in progress:
                     updateQueue(apibase, password, message_id, timeout)
