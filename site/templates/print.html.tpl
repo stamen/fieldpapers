@@ -57,8 +57,7 @@
                         <input name="east" type="hidden" value="{$print.east|escape}" />
                         <input name="west" type="hidden" value="{$print.west|escape}" />
                         <input name="zoom" type="hidden" value="{$print.zoom|escape}" />
-                        <input name="paper_size" type="hidden" value="{$print.paper_size|escape}" />
-                        <input name="orientation" type="hidden" value="{$print.orientation|escape}" />
+                        <input name="paper" type="hidden" value="{$print.orientation|escape}-{$print.paper_size|escape}" />
                         <input name="provider" type="hidden" value="{$print.provider|escape}" />
                 
                         {if $language == "de"}
@@ -98,6 +97,7 @@
                             {assign var="label" value="Redo"}
                         {/if}
                         <input class="mac-button" type="submit" name="action" value="{$label}" />
+                        <input type="hidden" name="source" value="bounds" />
                     </p>
                 </form>
             {/if}

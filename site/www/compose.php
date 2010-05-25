@@ -121,6 +121,7 @@
         
         $message = array('print_id' => $print['id'],
                          'bounds' => array($north, $west, $south, $east),
+                         'zoom' => $zoom,
                          'provider' => $provider,
                          'paper_size' => $paper_size,
                          'orientation' => $orientation);
