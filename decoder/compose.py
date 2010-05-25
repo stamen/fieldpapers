@@ -20,30 +20,74 @@ import ModestMaps as mm
 
 srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
 
-def main(apibase, password, print_id, paper_size, orientation=None, provider=None, bounds=None, geotiff_url=None):
+def main(apibase, password, print_id, paper_size, orientation=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
     """
     """
     yield 60
     
     print 'Print:', print_id
-    print 'URL:', geotiff_url
     print 'Paper:', paper_size
+
+    if orientation and bounds and zoom and provider:
     
-    filename = prepare_geotiff(geotiff_url)
-    print_img, preview_img, (north, west, south, east), orientation = adjust_geotiff(filename, paper_size)
-    os.unlink(filename)
+        print 'Orientation:', orientation
+        print 'Bounds:', bounds
+        print 'Provider:', provider
+        print 'Size:', get_preview_map_size(orientation, paper_size)
+        
+        north, west, south, east = bounds
+        width, height = get_preview_map_size(orientation, paper_size)
+        
+        northwest = mm.Geo.Location(north, west)
+        southeast = mm.Geo.Location(south, east)
+        
+        # we need it to cover a specific area
+        mmap = mm.mapByExtentZoom(mm.Providers.TemplatedMercatorProvider(provider),
+                                  northwest, southeast, zoom)
+                              
+        # but we also we need it at a specific size
+        mmap = mm.Map(mmap.provider, mm.Core.Point(width, height), mmap.coordinate, mmap.offset)
+        
+        out = StringIO()
+        mmap.draw().save(out, format='JPEG')
+        preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
+        
+        print preview_url
+        
+        zdiff = min(18, zoom + 2) - zoom
+        print 'Zoom diff:', zdiff
+        
+        # we need it to cover a specific area
+        mmap = mm.mapByExtentZoom(mm.Providers.TemplatedMercatorProvider(provider),
+                                  northwest, southeast, zoom + zdiff)
+                              
+        # but we also we need it at a specific size
+        mmap = mm.Map(mmap.provider, mm.Core.Point(width * 2**zdiff, height * 2**zdiff), mmap.coordinate, mmap.offset)
+        
+        out = StringIO()
+        mmap.draw().save(out, format='JPEG')
+        print_url = append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
     
-    print_img.save(os.path.dirname(filename)+'/out.jpg')
+    elif geotiff_url:
     
-    out = StringIO()
-    print_img.save(out, format='JPEG')
-    append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
-    
-    out = StringIO()
-    preview_img.save(out, format='JPEG')
-    preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
-    
-    zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
+        print 'URL:', geotiff_url
+        
+        filename = prepare_geotiff(geotiff_url)
+        print_img, preview_img, (north, west, south, east), orientation = adjust_geotiff(filename, paper_size)
+        os.unlink(filename)
+        
+        print_img.save(os.path.dirname(filename)+'/out.jpg')
+        
+        out = StringIO()
+        print_img.save(out, format='JPEG')
+        append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
+        
+        out = StringIO()
+        preview_img.save(out, format='JPEG')
+        preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
+        
+        zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
+
     paper = '%(orientation)s-%(paper_size)s' % locals()
 
     print 'Finishing...'
@@ -116,25 +160,25 @@ def geotiff_edge_color(filename):
     
     return tuple(rgb)
 
-def get_preview_map_size(paper):
+def get_preview_map_size(*paper):
     """
     """
-    if paper == 'portrait-letter':
+    if paper == ('portrait', 'letter'):
         return (360, 480 - 24)
 
-    if paper == 'portrait-a4':
+    if paper == ('portrait', 'a4'):
         return (360, 504.897)
 
-    if paper == 'portrait-a3':
+    if paper == ('portrait', 'a3'):
         return (360, 506.200)
 
-    if paper == 'landscape-letter':
+    if paper == ('landscape', 'letter'):
         return (480, 360 - 24)
 
-    if paper == 'landscape-a4':
+    if paper == ('landscape', 'a4'):
         return (480, 303.800)
 
-    if paper == 'landscape-a3':
+    if paper == ('landscape', 'a3'):
         return (480, 314.932)
 
 def warp_geotiff(filename1):
@@ -182,7 +226,7 @@ def adjust_geotiff(filename, paper_size):
     
     orientation = (img_aspect < 1.0) and 'portrait' or 'landscape'
     
-    w, h = get_preview_map_size(orientation+'-'+paper_size)
+    w, h = get_preview_map_size(orientation, paper_size)
         
     paper_aspect = float(w) / float(h)
     

@@ -106,9 +106,10 @@ if __name__ == '__main__':
                     try:
                         kwargs['geotiff_url'] = msg['geotiff_url']
                     except KeyError:
-                        kwargs['bounds'] = msg['bounds']
                         kwargs['provider'] = msg['provider']
                         kwargs['orientation'] = msg['orientation']
+                        kwargs['bounds'] = msg['bounds']
+                        kwargs['zoom'] = msg['zoom']
 
                     print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
                     progress = compose.main(apibase, password, msg['print_id'], **kwargs)
