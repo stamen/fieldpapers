@@ -39,7 +39,7 @@ def main(print_id, geotiff_url, paper_size, apibase, password):
     preview_img.save(out, format='JPEG')
     preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
     
-    zoom = infer_zoom(north, west, south, east)
+    zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
 
     update_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url)
     
@@ -235,12 +235,12 @@ def adjust_geotiff(filename, paper_size):
 
     return print_img, preview_img, (north, west, south, east), orientation
 
-def infer_zoom(north, west, south, east):
+def infer_zoom(width, height, north, west, south, east):
     """
     """
     mmap = mm.mapByExtent(mm.OpenStreetMap.Provider(),
                           mm.Geo.Location(north, west), mm.Geo.Location(south, east),
-                          mm.Core.Point(*print_img.size))
+                          mm.Core.Point(width, height))
     
     zoom = int(mmap.coordinate.zoom)
     
