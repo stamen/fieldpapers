@@ -906,6 +906,16 @@
     }
     
    /**
+    * Get a base URL (incl. trailing slash) for the current file post service.
+    */
+    function get_post_baseurl($dirname)
+    {
+        return (AWS_ACCESS_KEY && AWS_SECRET_KEY && S3_BUCKET_ID)
+            ? s3_get_post_baseurl($dirname)
+            : local_get_post_baseurl($dirname);
+    }
+    
+   /**
     * @param    $object_id      Name to assign
     * @param    $content_bytes  Content of file
     * @param    $mime_type      MIME/Type to assign
@@ -1058,9 +1068,14 @@
 
         $policy = base64_encode(json_encode($policy));
         $signature = base64_encode(s3_sign_auth_string($policy));
-        $base_url = "http://{$bucket}.s3.amazonaws.com/".trim($dirname, '/').'/';
+        $base_url = s3_get_post_baseurl($dirname);
 
         return compact('access', 'policy', 'signature', 'acl', 'key', 'redirect', 'bucket', 'base_url');
+    }
+    
+    function s3_get_post_baseurl($dirname)
+    {
+        return "http://{$bucket}.s3.amazonaws.com/".trim($dirname, '/').'/';
     }
     
    /**
@@ -1106,9 +1121,14 @@
     {
         $expiration = gmdate("D, d M Y H:i:s", $expires).' UTC';
         $signature = sign_post_details($dirname, $expiration, API_PASSWORD);
-        $base_url = 'http://'.get_domain_name().get_base_dir().'/files/'.trim($dirname, '/').'/';
+        $base_url = local_get_post_baseurl($dirname);
         
         return compact('dirname', 'expiration', 'signature', 'redirect', 'base_url');
+    }
+    
+    function local_get_post_baseurl($dirname)
+    {
+        return 'http://'.get_domain_name().get_base_dir().'/files/'.trim($dirname, '/').'/';
     }
     
     function sign_post_details($dirname, $expiration, $api_password)

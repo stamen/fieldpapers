@@ -41,7 +41,7 @@ def main(print_id, geotiff_url, paper_size, apibase, password):
     
     zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
 
-    update_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url)
+    finish_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url)
     
     print '-' * 80
     
@@ -246,7 +246,7 @@ def infer_zoom(width, height, north, west, south, east):
     
     return zoom
 
-def update_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url):
+def finish_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -254,6 +254,7 @@ def update_print(apibase, password, print_id, north, west, south, east, zoom, or
     
     query = urlencode({'id': print_id})
     params = urlencode({'password': password,
+                        'last_step': 6,
                         'orientation': orientation,
                         'preview_url': preview_url,
                         'north': north, 'west': west,

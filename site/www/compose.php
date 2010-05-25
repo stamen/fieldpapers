@@ -55,6 +55,7 @@
         $geotiff_mimetype = trim(`file -bi {$_FILES['file']['tmp_name']}`);
         
         $print['geotiff_url'] = post_file("prints/{$print['id']}/{$geotiff_filename}", $geotiff_contents, $geotiff_mimetype);
+        $print['last_step'] = STEP_QUEUED;
         
         print_r($print);
         

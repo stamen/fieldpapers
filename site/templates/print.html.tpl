@@ -25,8 +25,12 @@
     {/strip} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <link rel="data" type="application/xml" href="{$base_dir}{$base_href}?id={$print.id|escape:"url"}&amp;type=xml" />
-    <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
-    <script type="text/javascript" src="{$base_dir}/script.js"></script>
+    {if $print && $print.last_step != STEP_FINISHED && $print.last_step != $constants.STEP_FATAL_ERROR}
+        <meta http-equiv="refresh" content="5" />
+    {else}
+        <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
+        <script type="text/javascript" src="{$base_dir}/script.js"></script>
+    {/if}
 </head>
 <body>
 
@@ -40,86 +44,96 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    {include file="$language/print-info.htmlf.tpl"}
+    {if $print}
+        {if $print.last_step == $constants.STEP_FINISHED}
 
-    {if $print.zoom}
-        <form action="{$base_dir}/compose.php" method="post" name="bounds">
-            <p>
-                <input name="north" type="hidden" value="{$print.north|escape}" />
-                <input name="south" type="hidden" value="{$print.south|escape}" />
-                <input name="east" type="hidden" value="{$print.east|escape}" />
-                <input name="west" type="hidden" value="{$print.west|escape}" />
-                <input name="zoom" type="hidden" value="{$print.zoom|escape}" />
-                <input name="paper_size" type="hidden" value="{$print.paper_size|escape}" />
-                <input name="orientation" type="hidden" value="{$print.orientation|escape}" />
-                <input name="provider" type="hidden" value="{$print.provider|escape}" />
+            {include file="$language/print-info.htmlf.tpl"}
         
-                {if $language == "de"}
-                    Ist diese Karte falsch oder veraltet?
-                {elseif $language == "nl"}
-                    Is deze kaart onjuist of verouderd?
-                {elseif $language == "es"}
-                    ¿Es este mapa erróneo o desfasado?
-                {elseif $language == "fr"}
-                    La carte est-elle mauvaise, ou obsolète ?
-                {elseif $language == "ja"}
-                    この地図が間違っているか、古いですか？
-                {elseif $language == "it"}
-                    Questa mappa é vecchia o sbagliata?
-                {elseif $language == "tr"}
-                    Bu hariyta yanlış veya geçerliğini yitirmiş mi?
-                {else}
-                    Is this map wrong, or out of date?
-                {/if}
+            {if $print.zoom}
+                <form action="{$base_dir}/compose.php" method="post" name="bounds">
+                    <p>
+                        <input name="north" type="hidden" value="{$print.north|escape}" />
+                        <input name="south" type="hidden" value="{$print.south|escape}" />
+                        <input name="east" type="hidden" value="{$print.east|escape}" />
+                        <input name="west" type="hidden" value="{$print.west|escape}" />
+                        <input name="zoom" type="hidden" value="{$print.zoom|escape}" />
+                        <input name="paper_size" type="hidden" value="{$print.paper_size|escape}" />
+                        <input name="orientation" type="hidden" value="{$print.orientation|escape}" />
+                        <input name="provider" type="hidden" value="{$print.provider|escape}" />
                 
-                {if $language == "de"}
-                    {assign var="label" value="Aktualisieren"}
-                {elseif $language == "nl"}
-                    {* nl: WRITE ME *}
-                    {assign var="label" value="Redo"}
-                {elseif $language == "es"}
-                      {assign var="label" value="Repetir"}
-                {elseif $language == "fr"}
-                    {assign var="label" value="Recommencer"}
-                {elseif $language == "ja"}
-                    {assign var="label" value="再実行"}
-                {elseif $language == "it"}
-                    {assign var="label" value="Rifai"}
-                {elseif $language == "tr"}
-                    {assign var="label" value="Yenile"}
-                {else}
-                    {assign var="label" value="Redo"}
-                {/if}
-                <input class="mac-button" type="submit" name="action" value="{$label}" />
+                        {if $language == "de"}
+                            Ist diese Karte falsch oder veraltet?
+                        {elseif $language == "nl"}
+                            Is deze kaart onjuist of verouderd?
+                        {elseif $language == "es"}
+                            ¿Es este mapa erróneo o desfasado?
+                        {elseif $language == "fr"}
+                            La carte est-elle mauvaise, ou obsolète ?
+                        {elseif $language == "ja"}
+                            この地図が間違っているか、古いですか？
+                        {elseif $language == "it"}
+                            Questa mappa é vecchia o sbagliata?
+                        {elseif $language == "tr"}
+                            Bu hariyta yanlış veya geçerliğini yitirmiş mi?
+                        {else}
+                            Is this map wrong, or out of date?
+                        {/if}
+                        
+                        {if $language == "de"}
+                            {assign var="label" value="Aktualisieren"}
+                        {elseif $language == "nl"}
+                            {* nl: WRITE ME *}
+                            {assign var="label" value="Redo"}
+                        {elseif $language == "es"}
+                              {assign var="label" value="Repetir"}
+                        {elseif $language == "fr"}
+                            {assign var="label" value="Recommencer"}
+                        {elseif $language == "ja"}
+                            {assign var="label" value="再実行"}
+                        {elseif $language == "it"}
+                            {assign var="label" value="Rifai"}
+                        {elseif $language == "tr"}
+                            {assign var="label" value="Yenile"}
+                        {else}
+                            {assign var="label" value="Redo"}
+                        {/if}
+                        <input class="mac-button" type="submit" name="action" value="{$label}" />
+                    </p>
+                </form>
+            {/if}
+            
+            <div class="sheet {$print.paper_size|escape} {$print.orientation|escape}">
+                <img src="{$print.preview_url|escape}"/>
+                <div class="dummy-qrcode"><img src="http://chart.apis.google.com/chart?chs=44x44&amp;cht=qr&amp;chld=L%7C0&amp;chl=example" alt="" border="0" /></div>
+                <div class="dog-ear"> </div>
+            </div>
+            
+            <p id="mini-map">
+                <img class="doc" src="{$base_dir}/c-thru-doc.png" />
             </p>
-        </form>
-    {/if}
-    
-    <div class="sheet {$print.paper_size|escape} {$print.orientation|escape}">
-        <img src="{$print.preview_url|escape}"/>
-        <div class="dummy-qrcode"><img src="http://chart.apis.google.com/chart?chs=44x44&amp;cht=qr&amp;chld=L%7C0&amp;chl=example" alt="" border="0" /></div>
-        <div class="dog-ear"> </div>
-    </div>
-    
-    <p id="mini-map">
-        <img class="doc" src="{$base_dir}/c-thru-doc.png" />
-    </p>
-    
-    <script type="text/javascript" language="javascript1.2">
-    // <![CDATA[
-    
-        var onPlaces = new Function('res', "appendPlacename(res, document.getElementById('print-location'))");
-        var flickrKey = '{$constants.FLICKR_KEY|escape}';
-        var lat = {$print.latitude|escape};
-        var lon = {$print.longitude|escape};
+            
+            <script type="text/javascript" language="javascript1.2">
+            // <![CDATA[
+            
+                var onPlaces = new Function('res', "appendPlacename(res, document.getElementById('print-location'))");
+                var flickrKey = '{$constants.FLICKR_KEY|escape}';
+                var lat = {$print.latitude|escape};
+                var lon = {$print.longitude|escape};
+                
+                {if !$print.place_woeid}getPlacename(lat, lon, flickrKey, 'onPlaces');{/if}
+                makeStaticMap('mini-map', lat, lon);
         
-        {if !$print.place_woeid}getPlacename(lat, lon, flickrKey, 'onPlaces');{/if}
-        makeStaticMap('mini-map', lat, lon);
+            // ]]>
+            </script>
+        
+            {include file="$language/print-mail-info.htmlf.tpl"}
+        {else}
 
-    // ]]>
-    </script>
+            {* include file="$language/print-process-info.htmlf.tpl" *}
+            <p>Gabba gabba hey.</p>
 
-    {include file="$language/print-mail-info.htmlf.tpl"}
+        {/if}
+    {/if}
 
     {include file="footer.htmlf.tpl"}
     
