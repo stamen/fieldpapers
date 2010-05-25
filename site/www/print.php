@@ -1,12 +1,17 @@
 <?php
    /**
     * Display page for a single print with a given ID.
+    *
+    * When this page receives a POST request, it's probably from compose.py
+    * (check the API_PASSWORD) with new information on print components for
+    * building into a new PDF.
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
+    require_once 'composition.php';
     
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -23,27 +28,26 @@
     
     $print = get_print($dbh, $print_id);
     
-    if($_SERVER['REQUEST_METHOD'] == 'POST')
+    if($print && $_SERVER['REQUEST_METHOD'] == 'POST')
     {
         if($_POST['password'] != API_PASSWORD)
             die_with_code(401, 'Sorry, bad password');
         
-        if($print)
+        // we accept a subset of print properties here
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper', 'preview_url', 'last_step') as $field)
+            if(isset($_POST[$field]))
+                $print[$field] = $_POST[$field];
+        
+        if($_POST['last_step'] == STEP_FINISHED)
         {
-            $print = array('id' => $print_id,
-                           'north' => $_POST['north'],
-                           'south' => $_POST['south'],
-                           'east' => $_POST['east'],
-                           'west' => $_POST['west'],
-                           'zoom' => $_POST['zoom'],
-                           'orientation' => $_POST['orientation'],
-                           'preview_url' => $_POST['preview_url'],
-                           'last_step' => $_POST['last_step']);
-            
-            $dbh->query('START TRANSACTION');
-            $print = set_print($dbh, $print);
-            $dbh->query('COMMIT');
+            $print_url = get_post_baseurl("prints/{$print['id']}/").'print.jpg';
+            $print_jpg = file_get_contents($print_url);
+            $print = compose_map($print, $print_jpg);
         }
+        
+        $dbh->query('START TRANSACTION');
+        $print = set_print($dbh, $print);
+        $dbh->query('COMMIT');
     }
     
     $sm = get_smarty_instance();

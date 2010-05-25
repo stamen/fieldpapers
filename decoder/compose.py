@@ -21,6 +21,10 @@ import ModestMaps as mm
 srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
 
 def main(print_id, geotiff_url, paper_size, apibase, password):
+    """
+    """
+    yield 60
+    
     print 'Print:', print_id
     print 'URL:', geotiff_url
     print 'Paper:', paper_size
@@ -40,12 +44,13 @@ def main(print_id, geotiff_url, paper_size, apibase, password):
     preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
     
     zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
+    paper = '%(orientation)s-%(paper_size)s' % locals()
 
-    finish_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url)
+    finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, preview_url)
     
     print '-' * 80
     
-    return [] # to make it iterable for now
+    yield False
 
 def prepare_geotiff(geotiff_url):
     """
@@ -246,7 +251,7 @@ def infer_zoom(width, height, north, west, south, east):
     
     return zoom
 
-def finish_print(apibase, password, print_id, north, west, south, east, zoom, orientation, preview_url):
+def finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, preview_url):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -255,7 +260,7 @@ def finish_print(apibase, password, print_id, north, west, south, east, zoom, or
     query = urlencode({'id': print_id})
     params = urlencode({'password': password,
                         'last_step': 6,
-                        'orientation': orientation,
+                        'paper': paper,
                         'preview_url': preview_url,
                         'north': north, 'west': west,
                         'south': south, 'east': east,
