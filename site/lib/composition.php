@@ -192,7 +192,29 @@
         }
     }
     
-    function compose_map($print)
+    function get_print_images($paper, $provider, $north, $south, $east, $west, $zoom)
+    {
+        list($width, $height) = get_preview_map_size($paper);
+
+        $preview_png = compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height);
+        
+        // prepare the actual print image
+        $factors = array('letter' => 2, 'a4' => 2, 'a3' => 3);
+        $max_zoom = min(18, $zoom + $factors[ get_page_size($paper) ]);
+        
+        while($zoom < $max_zoom)
+        {
+            $zoom += 1;
+            $width *= 2;
+            $height *= 2;
+        }
+
+        $print_jpg = compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height, 'jpeg');
+        
+        return array($print_jpg, $preview_png);
+    }
+    
+    function compose_map($print, $jpg)
     {
         if(preg_match('/^(portrait|landscape)-(letter|a4|a3)$/', $print['paper'], $parts)) {
             $print['orientation'] = $parts[1];
@@ -202,29 +224,6 @@
             die_with_code(500, "Give us a meaningful paper, not \"{$print['paper']}\"\n");
         }
         
-        list($width, $height) = get_preview_map_size($print['paper']);
-        
-        $png = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $print['zoom'], $width, $height);
-
-        // post a preview
-        $print['preview_url'] = post_file("prints/{$print['id']}/preview.png", $png, 'image/png');
-        
-        if(PEAR::isError($print['preview_url']))
-            die_with_code(500, "{$print['preview_url']->message}\n{$q}\n");
-        
-        $zoom = $print['zoom'];
-        $factors = array('letter' => 2, 'a4' => 2, 'a3' => 3);
-        $max_zoom = min(18, $print['zoom'] + $factors[ get_page_size($print['paper']) ]);
-        
-        while($zoom < $max_zoom)
-        {
-            $zoom += 1;
-            $width *= 2;
-            $height *= 2;
-        }
-
-        $jpg = compose_map_image($print['provider'], $print['north'], $print['south'], $print['east'], $print['west'], $zoom, $width, $height, 'jpeg');
-
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
     
         $pdf = new FPDF(get_page_orientation($print['paper']), 'pt', get_page_size($print['paper']));

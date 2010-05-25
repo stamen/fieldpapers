@@ -246,9 +246,10 @@
             $print_id = generate_id();
             
             $q = sprintf('INSERT INTO prints
-                          SET id = %s, user_id = %s',
+                          SET id = %s, user_id = %s, last_step = %d',
                          $dbh->quoteSmart($print_id),
-                         $dbh->quoteSmart($user_id));
+                         $dbh->quoteSmart($user_id),
+                         $dbh->quoteSmart(STEP_QUEUED));
 
             error_log(preg_replace('/\s+/', ' ', $q));
     

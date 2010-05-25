@@ -92,7 +92,16 @@
              $print['place_name'], $print['place_woeid'])
          = latlon_placeinfo(($north + $south) / 2, ($west + $east) / 2, $zoom - 1);
 
-        $print = compose_map($print);
+        // post a preview
+        list($print_jpg, $preview_png) = get_print_images($paper, $provider, $north, $south, $east, $west, $zoom);
+        $print['preview_url'] = post_file("prints/{$print['id']}/preview.png", $preview_png, 'image/png');
+        
+        if(PEAR::isError($print['preview_url']))
+            die_with_code(500, "{$print['preview_url']->message}\n{$q}\n");
+
+        $print = compose_map($print, $print_jpg);
+        
+        $print['last_step'] = STEP_FINISHED;
 
         set_print($dbh, $print);
         
