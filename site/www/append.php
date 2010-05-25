@@ -1,8 +1,8 @@
 <?php
    /**
-    * POST endpoint for attaching new files to a scan, e.g. tiles.
+    * POST endpoint for attaching new files to a scan or print, e.g. tiles.
     *
-    * Requires global site API password and a scan ID, shows an HTML upload form.
+    * Requires global site API password and a scan or print ID, shows an HTML upload form.
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
