@@ -20,7 +20,7 @@ import ModestMaps as mm
 
 srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
 
-def main(print_id, geotiff_url, paper_size, apibase, password):
+def main(apibase, password, print_id, geotiff_url=None, paper_size=None):
     """
     """
     yield 60
@@ -46,6 +46,7 @@ def main(print_id, geotiff_url, paper_size, apibase, password):
     zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
     paper = '%(orientation)s-%(paper_size)s' % locals()
 
+    print 'Finishing...'
     finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, preview_url)
     
     print '-' * 80

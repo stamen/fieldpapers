@@ -56,13 +56,16 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
     
-    s, host, path, p, q, f = urlparse.urlparse(options.apibase)
+    s, host, path, p, q, f = urlparse.urlparse(options.apibase.rstrip('/'))
+    
+    apibase = options.apibase.rstrip('/')
+    password = options.password
     
     poll_failures = 0
 
     while True:
         try:
-            params = urllib.urlencode({'timeout': 5, 'password': options.password})
+            params = urllib.urlencode({'timeout': 5, 'password': password})
             
             req = httplib.HTTPConnection(host, 80)
             req.request('POST', path+'/dequeue.php', params, {'Content-Type': 'application/x-www-form-urlencoded'})
@@ -83,23 +86,25 @@ if __name__ == '__main__':
                 try:
                     message = json.loads(content)
                     
-                    print_id, url, paper = [message[p] for p in ('print_id', 'geotiff_url', 'paper_size')]
+                    props = 'print_id', 'geotiff_url', 'paper_size'
+                    print_id, url, paper = [message[p] for p in props]
+                    kwargs = {'geotiff_url': url, 'paper_size': paper}
 
                     print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                    progress = compose.main(print_id, url, paper, options.apibase.rstrip('/'), options.password)
+                    progress = compose.main(apibase, password, print_id, **kwargs)
                     
                 except ValueError:
                     if content.startswith('http://'):
                         url = content
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                        progress = decode.main(url, getMarkers(), options.apibase.rstrip('/'), options.password)
+                        progress = decode.main(url, getMarkers(), apibase, password)
 
                     else:
                         raise Exception('Not sure what to do with this message: ' + content)
                 
                 for timeout in progress:
-                    updateQueue(options.apibase.rstrip('/'), options.password, message_id, timeout)
+                    updateQueue(apibase, password, message_id, timeout)
 
         except KeyboardInterrupt:
             raise
