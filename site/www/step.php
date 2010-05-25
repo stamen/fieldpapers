@@ -23,10 +23,9 @@
     
     if($scan_id && $step_number)
     {
-        $bad_steps = array(STEP_ERROR, STEP_BAD_QRCODE);
         $steps_so_far = count(get_steps($dbh, $scan_id, 31));
         
-        if(in_array($step_number, $bad_steps) && ($steps_so_far > 30))
+        if($steps_so_far > 30)
         {
             $next_step = ($step_number == STEP_BAD_QRCODE)
                 ? STEP_FATAL_QRCODE_ERROR
