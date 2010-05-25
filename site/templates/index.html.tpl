@@ -282,7 +282,7 @@
     // ]]>
     </script>
 
-    <form action="{$base_dir}/compose.php" method="post" name="bounds" enctype="multipart/form-data">
+    <form action="{$base_dir}/compose.php" method="post" name="bounds">
         <input name="north" type="hidden" />
         <input name="south" type="hidden" />
         <input name="east" type="hidden" />
@@ -370,6 +370,7 @@
                 {assign var="label" value="Make"}
             {/if}
             <input class="mac-button" type="submit" name="action" value="{$label}" />
+            <input type="hidden" name="source" value="bbox" />
         </p>
         
         {if $request.get.provider}
@@ -446,15 +447,18 @@
                 <input type="radio" name="grid" value="utm" /> UTM
                 <input type="radio" name="grid" value="mgrs" /> MGRS/USNG
             </p>
-            
-            {if $constants.ADVANCED_COMPOSE_FORM}
-                <p>
-                    <input name="file" type="file" />
-                    <input class="mac-button" type="submit" name="action" value="Upload" />
-                </p>
-            {/if}
         {/if}
     </form>
+
+    {if $constants.ADVANCED_COMPOSE_FORM}
+        <form action="{$base_dir}/compose.php" method="post" name="bounds" enctype="multipart/form-data">
+            <p>
+                <input name="file" type="file" />
+                <input class="mac-button" type="submit" name="action" value="Upload" />
+                <input type="hidden" name="source" value="upload" />
+            </p>
+        </form>
+    {/if}
 
     <h2>{strip}
         {if $language == "de"}

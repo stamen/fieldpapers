@@ -22,7 +22,7 @@
     
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
-    $action = $_POST['action'];
+    $source = $_POST['source'];
     
     $north = is_numeric($_POST['north']) ? floatval($_POST['north']) : null;
     $south = is_numeric($_POST['south']) ? floatval($_POST['south']) : null;
@@ -46,7 +46,7 @@
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
 
-    if($action == 'Upload' && ADVANCED_COMPOSE_FORM)
+    if($source == 'upload' && ADVANCED_COMPOSE_FORM)
     {
         $dbh->query('START TRANSACTION');
         
