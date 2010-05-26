@@ -70,88 +70,6 @@
         return array(null, null, null, null, null, null);
     }
     
-    function compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height, $format='png')
-    {
-        if(!WSCOMPOSE_HOSTPORTS)
-        {
-            require_once 'ModestMaps/ModestMaps.php';
-            
-            $provider = new MMaps_Templated_Spherical_Mercator_Provider($provider);
-            $center = new MMaps_Location(($north + $south) / 2, ($east + $west) / 2);
-            $dimensions = new MMaps_Point($width, $height);
-
-            $map = MMaps_mapByCenterZoom($provider, $center, $zoom, $dimensions);
-            $img = $map->draw();
-            $fn = tempnam('/tmp', 'composed-map-');
-            
-            if($format == 'jpeg') {
-                imagejpeg($img, $fn);
-            
-            } elseif($format == 'png') {
-                imagepng($img, $fn);
-            }
-            
-            $data = file_get_contents($fn);
-            unlink($fn);
-            return $data;
-        }
-        
-        $hostports = explode(',', WSCOMPOSE_HOSTPORTS);
-        shuffle($hostports);
-        
-        foreach($hostports as $hostport)
-        {
-            $req = new HTTP_Request("http://{$hostport}/");
-            $req->addQueryString('provider', $provider);
-            $req->addQueryString('latitude', ($north + $south) / 2);
-            $req->addQueryString('longitude', ($east + $west) / 2);
-            $req->addQueryString('zoom', $zoom);
-            $req->addQueryString('width', round($width));
-            $req->addQueryString('height', round($height));
-            $req->addQueryString('output', $format);
-            
-            $res = $req->sendRequest();
-            
-            if(PEAR::isError($res))
-                continue;
-    
-            if($req->getResponseCode() == 200)
-            {
-                // return some raw PNG or JPEG data
-                return $req->getResponseBody();
-            }
-        }
-
-        die_with_code(500, "Tried all the ws-compose host-ports, and none of them worked.\n");
-    }
-    
-   /**
-    * Pixel dimensions of preview map, sized for placement on print web page.
-    */
-    function get_preview_map_size($paper)
-    {
-        switch($paper)
-        {
-            case 'portrait-letter':
-                return array(360, 480 - 24);
-
-            case 'portrait-a4':
-                return array(360, 504.897);
-
-            case 'portrait-a3':
-                return array(360, 506.200);
-
-            case 'landscape-letter':
-                return array(480, 360 - 24);
-
-            case 'landscape-a4':
-                return array(480, 303.800);
-
-            case 'landscape-a3':
-                return array(480, 314.932);
-        }
-    }
-    
    /**
     * 
     */
@@ -190,28 +108,6 @@
             case 'landscape-a4':
                 return 'a4';
         }
-    }
-    
-    function get_print_images($paper, $provider, $north, $south, $east, $west, $zoom)
-    {
-        list($width, $height) = get_preview_map_size($paper);
-
-        $preview_png = compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height);
-        
-        // prepare the actual print image
-        $factors = array('letter' => 2, 'a4' => 2, 'a3' => 3);
-        $max_zoom = min(18, $zoom + $factors[ get_page_size($paper) ]);
-        
-        while($zoom < $max_zoom)
-        {
-            $zoom += 1;
-            $width *= 2;
-            $height *= 2;
-        }
-
-        $print_jpg = compose_map_image($provider, $north, $south, $east, $west, $zoom, $width, $height, 'jpeg');
-        
-        return array($print_jpg, $preview_png);
     }
     
     function compose_map($print, $jpg)

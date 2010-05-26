@@ -7,9 +7,6 @@
     define('API_PASSWORD', '*** you choose this ***');
     define('COOKIE_SIGNATURE', '*** you choose this ***');
 
-    // Comma-delimited list of ws-compose.py host:ports
-    define('WSCOMPOSE_HOSTPORTS', '');
-
     // Yahoo GeoPlanet application ID
     define('GEOPLANET_APPID', '*** http://developer.yahoo.com/geo/geoplanet/ ***');
 

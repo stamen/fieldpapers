@@ -47,6 +47,20 @@
             $print = compose_map($print, $print_jpg);
         }
         
+        $north = $print['north'];
+        $south = $print['south'];
+        $east = $print['east'];
+        $west = $print['west'];
+        $zoom = $print['zoom'];
+        
+        if(isset($north) && isset($south) && isset($east) && isset($west) && $zoom)
+        {
+            list($print['country_name'], $print['country_woeid'],
+                 $print['region_name'], $print['region_woeid'],
+                 $print['place_name'], $print['place_woeid'])
+             = latlon_placeinfo(($north + $south) / 2, ($west + $east) / 2, $zoom - 1);
+        }
+        
         $dbh->query('START TRANSACTION');
         $print = set_print($dbh, $print);
         $dbh->query('COMMIT');
