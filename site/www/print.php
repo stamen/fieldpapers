@@ -11,7 +11,9 @@
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
-    require_once 'composition.php';
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST')
+        require_once 'composition.php';
     
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);

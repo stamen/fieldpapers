@@ -281,8 +281,46 @@
     
     // ]]>
     </script>
+    
+    <form action="#">
+        <script type="text/javascript" language="javascript1.2">
+        // <![CDATA[{literal}
+            
+            function setComposeForm(name)
+            {
+                var names = ['bounds', 'uploads'];
 
-    <form action="{$base_dir}/compose.php" method="post" name="bounds">
+                for(var i in names)
+                {
+                    var form = document.forms[names[i]];
+                
+                    if(names[i] == name) {
+                        form.style.display = 'block';
+
+                    } else {
+                        form.style.display = 'none';
+                    }
+                }
+
+                return false;
+            }
+
+        // {/literal}]]>
+        </script>
+        <p>
+            Compose by:
+            <label>
+                <input type="radio" name="compose-form" value="bounds" onchange="setComposeForm(this.value);" checked="checked" />
+                map area,
+            </label>
+            <label>
+                <input type="radio" name="compose-form" value="uploads" onchange="setComposeForm(this.value);"/>
+                file upload.
+            </label>
+        </p>
+    </form>
+
+    <form action="{$base_dir}/compose.php" method="post" name="bounds" style="display: block;">
         <input name="north" type="hidden" />
         <input name="south" type="hidden" />
         <input name="east" type="hidden" />
@@ -451,7 +489,7 @@
     </form>
 
     {if $constants.ADVANCED_COMPOSE_FORM}
-        <form action="{$base_dir}/compose.php" method="post" name="uploads" enctype="multipart/form-data">
+        <form action="{$base_dir}/compose.php" method="post" name="uploads" style="display: none;" enctype="multipart/form-data">
             <p>
                 <input name="file" type="file" />
                 <input class="mac-button" type="submit" name="action" value="Upload" />
