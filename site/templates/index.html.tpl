@@ -308,14 +308,14 @@
         // {/literal}]]>
         </script>
         <p>
-            Compose by:
+            Compose:
             <label>
                 <input type="radio" name="compose-form" value="bounds" onchange="setComposeForm(this.value);" checked="checked" />
-                map area,
+                by map area,
             </label>
             <label>
                 <input type="radio" name="compose-form" value="uploads" onchange="setComposeForm(this.value);"/>
-                file upload.
+                by file upload.
             </label>
         </p>
     </form>
@@ -492,6 +492,16 @@
         <form action="{$base_dir}/compose.php" method="post" name="uploads" style="display: none;" enctype="multipart/form-data">
             <p>
                 <input name="file" type="file" />
+            </p>
+            <p>
+                Paper size:
+                
+                <select name="paper">
+                    {foreach from=$paper_sizes item="size"}
+                        <option label="{$size|ucwords}" value="{$size|lower}">{$label}</option>
+                    {/foreach}
+                </select>
+
                 <input class="mac-button" type="submit" name="action" value="Upload" />
                 <input type="hidden" name="source" value="upload" />
             </p>

@@ -59,6 +59,13 @@
         $print['geotiff_url'] = post_file("prints/{$print['id']}/{$geotiff_filename}", $geotiff_contents, $geotiff_mimetype);
         $print['last_step'] = STEP_QUEUED;
         
+        if(preg_match('/\b(letter|a4|a3)\b/', $paper, $parts)) {
+            $print['paper_size'] = $parts[1];
+            
+        } else {
+            die_with_code(500, "Give us a meaningful paper, not \"{$print['paper']}\"\n");
+        }
+
         set_print($dbh, $print);
         
         $message = array('print_id' => $print['id'],
