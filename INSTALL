@@ -99,23 +99,6 @@ but I've had processes like this one stay up for months at a time this way.
 Use of screen to maintain long-running shell sessions is described here:
 	http://www.rackaid.com/resources/linux-screen-tutorial-and-how-to/
 
-Now for a few optional niceties.
-
-First, we can speed up the creation of print maps by using Modest Maps ws-compose.
-
-% cd ~
-% git clone http://github.com/migurski/modestmaps-py.git modestmaps
-
-And in a screen as above:
-
-% cd modestmaps
-% python ws-compose.py
-
-Back in the site configuration, configure ws-compose.
-
-% pico /var/www/paperwalking/site/lib/init.php 
-	define('WSCOMPOSE_HOSTPORTS', '127.0.0.1:9999');
-
 Finally we can get applications IDs for three external information services,
 for specific improvements to the site.
 
