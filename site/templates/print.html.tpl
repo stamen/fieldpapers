@@ -49,7 +49,7 @@
 
             {include file="$language/print-info.htmlf.tpl"}
         
-            {if $print.zoom}
+            {if $print.zoom && !$print.geotiff_url}
                 <form action="{$base_dir}/compose.php" method="post" name="bounds">
                     <p>
                         <input name="north" type="hidden" value="{$print.north|escape}" />
@@ -130,7 +130,14 @@
         {else}
 
             {* include file="$language/print-process-info.htmlf.tpl" *}
-            <p>Gabba gabba hey.</p>
+            <p>Preparing your print.</p>
+
+            <p>
+                This may take a little while, generally a few minutes.
+                You don’t need to keep this browser window open—you can
+                <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark this page</a>
+                and come back later.
+            </p>
 
         {/if}
     {/if}
