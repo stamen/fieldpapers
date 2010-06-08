@@ -65,6 +65,11 @@
         {if $scan.last_step == $constants.STEP_FINISHED}
 
             {include file="$language/scan-info.htmlf.tpl"}
+            
+            <p>
+                Download a <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">GeoTIFF of scan #{$scan.id|escape}</a>.
+            </p>
+            
             {include file="$language/scan-editor-info.htmlf.tpl"}
             
             <div id="editor">
