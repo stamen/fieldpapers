@@ -34,7 +34,7 @@
 
 <h3>Контекст</h3>
 <p>
-    The project is most particularly inspired by <a href="http://aaronland.info/">Aaron Cope of Flickr</a> and <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom at Really Interesting Group</a>, whose <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> and <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> help all this post-digital, medieval technology make sense.
+    Этот проект был вдохновлен <a href="http://aaronland.info/">Aaron Cope из Flickr</a> и <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom из Really Interesting Group</a>, чьи <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> and <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> help all this post-digital, medieval technology make sense.
 </p>
 <p>
     <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
