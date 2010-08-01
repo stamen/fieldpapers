@@ -30,7 +30,7 @@ function makeStaticMap(elementID, lat, lon)
     var mm = com.modestmaps;
     
     var tileURL = function(coord) {
-        return 'http://10.211.55.4/tilestache/tile.py/osm/' + coord.zoom + '/' + coord.column + '/' + coord.row + '.png';
+        return 'http://tile.openstreetmap.org/' + coord.zoom + '/' + coord.column + '/' + coord.row + '.png';
     }
     
     var map = new com.modestmaps.Map(elementID, new mm.MapProvider(tileURL), new mm.Point(408, 252))
