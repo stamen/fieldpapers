@@ -53,6 +53,7 @@ Now, to install Paperwalking itself.
 % cd /var/www
 % git clone http://github.com/migurski/paperwalking.git paperwalking
 % cd paperwalking
+% git checkout geotiff-io
 % git submodule init && git submodule update
 
 % mysql -u root
