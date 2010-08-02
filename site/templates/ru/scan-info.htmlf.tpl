@@ -1,4 +1,4 @@
-<h2>Отсканированная карта</h2>
+<h2>РћС‚СЃРєР°РЅРёСЂРѕРІР°РЅРЅР°СЏ РєР°СЂС‚Р°</h2>
             
 {if $scan.description}
     <p style="font-style: italic;">
@@ -7,7 +7,7 @@
 {/if}
 
 <p>
-    Охватывает территорию рядом с 
+    РћС…РІР°С‚С‹РІР°РµС‚ С‚РµСЂСЂРёС‚РѕСЂРёСЋ СЂСЏРґРѕРј СЃ 
 
     {if $print.place_woeid}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
@@ -20,7 +20,7 @@
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
     {/if}
     <br/>
-    Загружена {$scan.age|nice_relativetime|escape}.
+    Р—Р°РіСЂСѓР¶РµРЅР° {$scan.age|nice_relativetime|escape}.
 </p>
 
 {if !$print.place_woeid}
@@ -44,5 +44,5 @@
 </p>
         
 <p>
-    Загрузите <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">свежую карту этой территории с распечатки  #{$scan.print_id|escape}</a>.
+    Р—Р°РіСЂСѓР·РёС‚Рµ <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">СЃРІРµР¶СѓСЋ РєР°СЂС‚Сѓ СЌС‚РѕР№ С‚РµСЂСЂРёС‚РѕСЂРёРё СЃ СЂР°СЃРїРµС‡Р°С‚РєРё  #{$scan.print_id|escape}</a>.
 </p>
