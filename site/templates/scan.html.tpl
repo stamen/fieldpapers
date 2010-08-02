@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
             #{$scan.id|escape} Taramış Harita
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Отсканированная карта #{$scan.id|escape}
         {else}
             Scanned Map #{$scan.id|escape}
         {/if}
@@ -91,7 +91,7 @@
                         {elseif $language == "tr"}
                             {assign var="label" value="Değiştir"}
                         {elseif $language == "ru"}
-                            {* TRANSLATE *}
+                            {assign var="label" value="Редактировать"}
                         {else}
                             {assign var="label" value="Edit"}
                         {/if}
