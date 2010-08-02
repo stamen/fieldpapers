@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
             Son Baskılar
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Недавние распечатки
         {else}
             Recent Prints
         {/if}
@@ -48,7 +48,7 @@
         {elseif $language == "tr"}
             Son Baskılar
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Недавние распечатки
         {else}
             Recent Prints
         {/if}
