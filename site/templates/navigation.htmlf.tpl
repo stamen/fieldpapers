@@ -61,7 +61,12 @@
 		<a href="{$base_dir}/about.php">Hakkında</a>
 
 	{elseif $language == "ru"}
-		{* TRANSLATE *}
+		<a href="{$base_dir}/">На главную</a>
+		<a href="{$base_dir}/prints.php">Распечатки</a>
+		<a href="{$base_dir}/scans.php">Сканы</a>
+		<a href="{$base_dir}/upload.php">Загрузка</a>
+		<a href="{$base_dir}/zeitgeist.php">Статистика</a>
+		<a href="{$base_dir}/about.php">О сервисе</a>
 
     {else}
         <a href="{$base_dir}/">Home</a>
