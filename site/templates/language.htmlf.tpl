@@ -10,7 +10,7 @@
 		<button type="submit" class="{if $language == "ja"}selected{/if}" name="language" value="ja">日本語</button>
 		<button type="submit" class="{if $language == "it"}selected{/if}" name="language" value="it">Italiano</button>
 		<button type="submit" class="{if $language == "tr"}selected{/if}" name="language" value="tr">Türkçe</button>
-		<button type="submit" class="{if $language == "ru"}selected{/if}" name="language" value="ru">(Russian)</button>
+		<button type="submit" class="{if $language == "ru"}selected{/if}" name="language" value="ru">Русский</button>
         
         {if $language == "de"}
             (<a href="{$base_dir}/language.php"><abbr title="Lokalisierung">l10n</abbr></a>)
