@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
             #{$print.id|escape} baskıyı yazdır
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Распечатка #{$print.id|escape}
         {else}
             Print #{$print.id|escape}
         {/if}
@@ -71,9 +71,9 @@
                 {elseif $language == "tr"}
                     Bu hariyta yanlış veya geçerliğini yitirmiş mi?
                 {elseif $language == "ru"}
-                    {* TRANSLATE *}
-                {else}
                     Is this map wrong, or out of date?
+                {else}
+                    Эта карта неправильная или устарела?
                 {/if}
                 
                 {if $language == "de"}
@@ -92,7 +92,7 @@
                 {elseif $language == "tr"}
                     {assign var="label" value="Yenile"}
                 {elseif $language == "ru"}
-                    {* TRANSLATE *}
+                    {assign var="label" value="Переделать"}
                 {else}
                     {assign var="label" value="Redo"}
                 {/if}
