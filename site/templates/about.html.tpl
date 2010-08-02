@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
             Hakkında
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            О сервисе
         {else}
             About
         {/if}
