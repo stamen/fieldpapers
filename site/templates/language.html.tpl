@@ -21,7 +21,7 @@
         {elseif $language == "tr"}
             Yerelleştirme
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Локализация
         {else}
             Localization
         {/if}
