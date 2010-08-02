@@ -4,7 +4,7 @@
     OpenStreetMap - вики-карта всего мира, которую может редактировать каждый. Walking Papers - это способ “round trip” карту через бумажную, чтобы облегчить ввод изменений полученных непосредственно на местности, а также облегчить работу засчет удобного способа обмена фрагментами карты с подписями. 
 </p>
 <p>
-    Walking Papers - сервис который воплощает идею использования бумажный карт основанную на <a href="http://mike.teczno.com/notes/walking-papers.html"> первом эксперименте</a> проведенном в Феврале. 
+    Walking Papers - сервис который воплощает идею использования бумажных карт основанную на <a href="http://mike.teczno.com/notes/walking-papers.html"> первом эксперименте</a> проведенном в Феврале. 
 </p>
 
 <h3>Есть три способа картировать</h3>
@@ -22,19 +22,19 @@
 <h3>Решаем проблему #3</h3>
 
 <p>
-    Currently, there aren’t any methods in place specifically designed to address this third kind of casual local mapping. 
+    До настоящего времени, удобных методов картировать третьим методом не было. 
 </p>
 <p>
-    Walking Papers is a website and a service designed to close this final loop by providing OpenStreetMap print maps that can be marked up with a pen, scanned back into the computer, and traced using OSM’s regular web-based editor, Potlatch. It’s designed for the casual mapper who doesn’t want to fill their pockets with gadgets to record what’s around them, the social mapper who might be out and about taking notes and comparing them with friends, and the opportunistic mapper who might make notes during a commute or a walk if they had a notebook-sized slip of paper to write on. Finally, it’s designed for the luddite mapper who would like to help the OpenStreetMap project but needs help from a distributed community to convert their handwritten annotations into OpenStreetMap’s tagged data and local conventions. 
+    Walking Papers - вебсайт и сервис созданный специально для решения этой проблемы, он предоставляет карты OpenStreetMap для распечатки, на которых можно рисовать, после сканирования, их можно оцифровывать используя обычный веб-редактор OSM Potlatch. Этот сервис создан для тех, кому не хочется заполнять свои карманы кучей устройств для записи всего вокруг них, то есть для обычного человека, который может захватить с собой бумажку специально для картирования или просто по дороге куда-нибудь. 
 </p>
 <p>
-    We’re trying to bridge some of these uses with web service opportunism and old-fashioned undigital fulfillment. Each scanned map is reverse-geocoded using Flickr’s 
-    <a href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon API feature</a>, which coughs up a meaningful local name for a given geographical area so you can look at a collection of everyone’s scans and perhaps recognize a place you know and might help trace. Each print and scan action is also backed by a (possibly optimistic) promise to snail-mail printed maps to users, and to accept snail-mailed annotated maps in return. If you want to play neogeography pen-pal or simply don’t have a scanner at your disposal, Walking Papers can help. 
+    Мы пытаемся совместить эти виды использования с веб-авантюризмом и старомодными нецифровыми методами. Каждая карта обратно геокодируется используя функцию 
+    <a href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon API Flickr</a>, которая выдает значимое название места для заданной географической области так что вы можете посмотреть на коллекцию сканов других людей и, возможно, узнаете местность которую знаете и по которой можете помочь нанести объекты. Каждый отпечаток и скан также сопровождается (возможно оптимистичным) обещанием отправить отпечаток по обычной почте, и принять возвращенную такой же почтой карту обратно. Так что, если вы хотите поиграть в неогеографических друзей по переписке или у вас просто нет сканера Walking Papers могут помочь. 
 </p>
 
-<h3>Context</h3>
+<h3>Контекст</h3>
 <p>
-    The project is most particularly inspired by <a href="http://aaronland.info/">Aaron Cope of Flickr</a> and <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom at Really Interesting Group</a>, whose <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> and <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> help all this post-digital, medieval technology make sense.
+    Этот проект был вдохновлен <a href="http://aaronland.info/">Aaron Cope из Flickr</a> и <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom из Really Interesting Group</a>, чьи <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> и <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> помогли наполнить смыслом всю эту пост-цифровую, средневековую технологию.
 </p>
 <p>
     <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>

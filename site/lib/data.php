@@ -187,6 +187,10 @@
             // tr or tr-
             if(preg_match('/^tr\b/', $language))
             return 'tr';
+
+            // ru or ru-
+            if(preg_match('/^ru\b/', $language))
+            return 'ru';
         }
         
         // english is the default
