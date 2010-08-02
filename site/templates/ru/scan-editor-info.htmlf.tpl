@@ -1,12 +1,12 @@
 <p>
-    яСЫЕЯРБСЕР ДБЮ ЯОНЯНАЮ ПЕДЮЙРХПНБЮРЭ OpenStreetMap ХЯОНКЭГСЪ ЩРС
-    НРЯЙЮМХПНБЮММСЧ ЙЮПРС. еЯКХ БШ ОПЕДОНВХРЮЕРЕ ХЯОНКЭГНБЮРЭ ОПНДБХМСРШИ ПЕДЮЙРНП OSM
-    <a href="http://josm.openstreetmap.de">JOSM</a>, ГЮЦПСГХРЕ ОКЮЦХМ 
+    Существует два способа редактировать OpenStreetMap используя эту
+    отсканированную карту. Если вы предпочитаете использовать продвинутый редактор OSM
+    <a href="http://josm.openstreetmap.de">JOSM</a>, загрузите плагин 
     <a href="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WalkingPapers">JOSM WalkingPapers</a>.
 </p>
 
 <p>
-    бШ РЮЙФЕ ЛНФЕРЕ ПЕДЮЙРХПНБЮРЭ OpenStreetMap ОПЪЛН ГДЕЯЭ
-    МЮ ЩРНИ ЯРПЮМХЖЕ, Я ОНЛНЫЭЧ НМКЮИМ-ПЕДЮЙРНПЮ 
+    Вы также можете редактировать OpenStreetMap прямо здесь
+    на этой странице, с помощью онлайн-редактора 
     <a href="http://wiki.openstreetmap.org/index.php/Potlatch">Potlatch</a>.
 </p>
