@@ -60,6 +60,9 @@
 		<a href="{$base_dir}/zeitgeist.php">İstatistik</a>
 		<a href="{$base_dir}/about.php">Hakkında</a>
 
+	{elseif $language == "ru"}
+		{* TRANSLATE *}
+
     {else}
         <a href="{$base_dir}/">Home</a>
         <a href="{$base_dir}/prints.php">Prints</a>

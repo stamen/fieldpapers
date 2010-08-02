@@ -36,6 +36,8 @@
             Scansioni recenti
         {elseif $language == "tr"}
             Son Taramalar
+        {elseif $language == "ru"}
+            {* TRANSLATE *}
         {else}
             Recent Scans
         {/if}
@@ -90,6 +92,8 @@
                 Altre scansioni recenti...
             {elseif $language == "tr"}
                 Daha taramalar...
+            {elseif $language == "ru"}
+                {* TRANSLATE *}
             {else}
                 More recent scans...
             {/if}
@@ -112,6 +116,8 @@
                 Stampare
             {elseif $language == "tr"}
                 Baskı Oluştur
+            {elseif $language == "ru"}
+                {* TRANSLATE *}
             {else}
                 Make A Print
             {/if}
@@ -137,6 +143,8 @@
             {assign var="label" value="検索"}
         {elseif $language == "tr"}
             {assign var="label" value="Ara"}
+        {elseif $language == "ru"}
+            {* TRANSLATE *}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -177,6 +185,8 @@
                 ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {elseif $language == "tr"}
 				Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
+            {elseif $language == "ru"}
+				{* TRANSLATE *}
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -223,6 +233,8 @@
                     alert("Ci dispiace non siamo riusciti a trovare un posto con quel nome.");
                 {elseif $language == "tr"}
                     alert("Üzgünüz. O adlı yeri bulunamadı.");
+                {elseif $language == "ru"}
+                    {* TRANSLATE *}
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
                 {/if}
@@ -304,6 +316,8 @@
                 Orientamento del foglio:
             {elseif $language == "tr"}
                 Yönelim:
+            {elseif $language == "ru"}
+                {* TRANSLATE *}
             {else}
                 Orientation:
             {/if}
@@ -324,6 +338,8 @@
                         {assign var="label" value="Verticale ($size)"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Dikey ($size)"}
+                    {elseif $language == "ru"}
+                        {* TRANSLATE *}
                     {else}
                         {assign var="label" value="Portrait ($size)"}
                     {/if}
@@ -345,6 +361,8 @@
                         {assign var="label" value="Orizzontale ($size)"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Yatay ($size)"}
+                    {elseif $language == "ru"}
+                        {* TRANSLATE *}
                     {else}
                         {assign var="label" value="Landscape ($size)"}
                     {/if}
@@ -366,6 +384,8 @@
                 {assign var="label" value="Crea"}
             {elseif $language == "tr"}
                 {assign var="label" value="Üret"}
+            {elseif $language == "ru"}
+                {* TRANSLATE *}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -391,6 +411,8 @@
                     Provider:
                 {elseif $language == "tr"}
                     Kaynak:
+                {elseif $language == "ru"}
+                    {* TRANSLATE *}
                 {else}
                     Provider:
                 {/if}
@@ -464,6 +486,8 @@
             Stampe recenti
         {elseif $language == "tr"}
             Son Baskılar
+        {elseif $language == "ru"}
+            {* TRANSLATE *}
         {else}
             Recent Prints
         {/if}
@@ -510,6 +534,8 @@
                 Altre stampe recenti...
             {elseif $language == "tr"}
                 Daha baskılar...
+            {elseif $language == "ru"}
+                {* TRANSLATE *}
             {else}
                 More recent prints...
             {/if}
@@ -523,6 +549,8 @@
             <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> von <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie bei Flickr</a>
         {elseif $language == "tr"}
             <a href="http://www.flickr.com/photos/junipermarie/">Flickr'da ricajimarie</a> tarafından <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Kibera'da Walking Papers</a>
+        {elseif $language == "ru"}
+            {* TRANSLATE *}
         {else}
             <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> by <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie on Flickr</a>
         {/if}

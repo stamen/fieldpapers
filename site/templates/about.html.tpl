@@ -19,6 +19,8 @@
             Di cosa si tratta  
         {elseif $language == "tr"}
             Hakkında
+        {elseif $language == "ru"}
+            {* TRANSLATE *}
         {else}
             About
         {/if}
