@@ -93,7 +93,7 @@
             {elseif $language == "tr"}
                 Daha taramalar...
             {elseif $language == "ru"}
-                {* TRANSLATE *}
+                Еще недавние сканы...
             {else}
                 More recent scans...
             {/if}
@@ -117,7 +117,7 @@
             {elseif $language == "tr"}
                 Baskı Oluştur
             {elseif $language == "ru"}
-                {* TRANSLATE *}
+                Распечатать
             {else}
                 Make A Print
             {/if}
@@ -144,7 +144,7 @@
         {elseif $language == "tr"}
             {assign var="label" value="Ara"}
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            {assign var="label" value="Найти"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -186,7 +186,7 @@
             {elseif $language == "tr"}
 				Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
             {elseif $language == "ru"}
-				{* TRANSLATE *}
+				Для картирования на уровне улиц рекомендуется масштабный уровень <b>14 или крупнее</b>.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -234,7 +234,7 @@
                 {elseif $language == "tr"}
                     alert("Üzgünüz. O adlı yeri bulunamadı.");
                 {elseif $language == "ru"}
-                    {* TRANSLATE *}
+                    alert("Не могу найти места с таким именем.");
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
                 {/if}
@@ -317,7 +317,7 @@
             {elseif $language == "tr"}
                 Yönelim:
             {elseif $language == "ru"}
-                {* TRANSLATE *}
+                Ориентация:
             {else}
                 Orientation:
             {/if}
@@ -339,7 +339,7 @@
                     {elseif $language == "tr"}
                         {assign var="label" value="Dikey ($size)"}
                     {elseif $language == "ru"}
-                        {* TRANSLATE *}
+                        {assign var="label" value="Портрет ($size)"}
                     {else}
                         {assign var="label" value="Portrait ($size)"}
                     {/if}
@@ -362,7 +362,7 @@
                     {elseif $language == "tr"}
                         {assign var="label" value="Yatay ($size)"}
                     {elseif $language == "ru"}
-                        {* TRANSLATE *}
+                        {assign var="label" value="Альбом ($size)"}
                     {else}
                         {assign var="label" value="Landscape ($size)"}
                     {/if}
@@ -385,7 +385,7 @@
             {elseif $language == "tr"}
                 {assign var="label" value="Üret"}
             {elseif $language == "ru"}
-                {* TRANSLATE *}
+                {assign var="label" value="Создать"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -412,7 +412,7 @@
                 {elseif $language == "tr"}
                     Kaynak:
                 {elseif $language == "ru"}
-                    {* TRANSLATE *}
+                    Основа:
                 {else}
                     Provider:
                 {/if}
@@ -487,7 +487,7 @@
         {elseif $language == "tr"}
             Son Baskılar
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Недавние распечатки
         {else}
             Recent Prints
         {/if}
@@ -535,7 +535,7 @@
             {elseif $language == "tr"}
                 Daha baskılar...
             {elseif $language == "ru"}
-                {* TRANSLATE *}
+                Еще недавние распечатки...
             {else}
                 More recent prints...
             {/if}
