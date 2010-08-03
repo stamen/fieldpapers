@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
             Son Taramalar
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Недавние сканы
         {else}
             Recent Scans
         {/if}
@@ -48,7 +48,7 @@
         {elseif $language == "tr"}
             Son Taramalar
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Недавние сканы
         {else}
             Recent Scans
         {/if}
