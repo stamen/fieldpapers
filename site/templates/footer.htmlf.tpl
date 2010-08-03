@@ -190,6 +190,8 @@
         Italian translation by Emanuel Carnevale
         <br />
         Turkish translation by Caleb Maclennan
+        <br />
+        Russian translation by Maxim Dubinin
     {/if}
 </p>
 
