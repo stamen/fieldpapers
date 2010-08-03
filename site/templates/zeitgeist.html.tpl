@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
             İstatistik
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Статистика
         {else}
             Zeitgeist
         {/if}
@@ -48,7 +48,7 @@
         {elseif $language == "tr"}
             İstatistik
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Статистика
         {else}
             Zeitgeist
         {/if}
