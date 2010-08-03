@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
             Yüklenmiş Tarama
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Загруженный скан
         {else}
             Uploaded Scan
         {/if}
@@ -57,7 +57,7 @@
         {elseif $language == "tr"}
             Bir Taramış Haritasını Yükledin
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            Вы загрузили отсканированную карту
         {else}
             You’ve Uploaded A Scanned Map
         {/if}    
@@ -81,7 +81,8 @@
         {elseif $language == "tr"}
 			Sen taranmış bir harita yükledin ve onu dayandırmaya devam etmeden önce onun hakkında birkaç ayrıntıyı eklemek üzeresin.
         {elseif $language == "ru"}
-			{* TRANSLATE *}
+			Вы загрузили отсканированную карту и вам осталось добавить немного
+            информации о ней, перед тем как перейти к оцифровке.
         {else}
             You’ve just uploaded a scanned map, and you’re about to add
             a few bits of information about it before you proceed to trace it.
@@ -106,7 +107,7 @@
             {elseif $language == "tr"}
                 kişisel mi?
             {elseif $language == "ru"}
-                {* TRANSLATE *}
+                только для вас?
             {else}
                 private?
             {/if}
@@ -131,7 +132,7 @@
                 {elseif $language == "tr"}
 					Bunu kendi kendine düzeltmeye planlanıyor musun?
                 {elseif $language == "ru"}
-					{* TRANSLATE *}
+					Вы планируете редактировать карту сами?
                 {else}
                     Do you plan to edit this yourself?
                 {/if}
@@ -151,7 +152,7 @@
                     {elseif $language == "tr"}
                         {assign var="label" value="Evet"}
                     {elseif $language == "ru"}
-                        {* TRANSLATE *}
+                        {assign var="label" value="Да"}
                     {else}
                         {assign var="label" value="Yes"}
                     {/if}    
@@ -171,7 +172,7 @@
                     {elseif $language == "tr"}
                         {assign var="label" value="Hayır"}
                     {elseif $language == "ru"}
-                        {* TRANSLATE *}
+                        {assign var="label" value="Нет"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}    
@@ -198,7 +199,8 @@
                 {elseif $language == "tr"}
 					Kendi kendine OpenStreetMap düzeltmek zorunda değilsin. "Hayır" diyerek yardım edebilecek taramalar konusunda başka ziyaretciyi haberdar eder.
                 {elseif $language == "ru"}
-					{* TRANSLATE *}
+					Вам не обязательно самим редатировать карту. Ответив “нет”
+                    позволит другим пользователям узнать о вашем скане и поработать над ним.
                 {else}
                     You don’t have to do your own OpenStreetMap editing. Saying “no”
                     will let other visitors know about scans they can help with.
@@ -222,7 +224,7 @@
                 {elseif $language == "tr"}
                     Describe your additions.
                 {elseif $language == "ru"}
-                    {* TRANSLATE *}
+                    Опишите ваши добавления.
                 {else}
                     Describe your additions.
                 {/if}
@@ -247,7 +249,8 @@
                 {elseif $language == "tr"}
 					Dükkanlar yükedin mi, yaya yolları düzelttin mi, trafik lambaları etiketlendin mi, park kenarları çizdin mi? Bu yere değişiklerinle ilgili birkaç söz yaz.
                 {elseif $language == "ru"}
-					{* TRANSLATE *}
+					Что вы добавили? Офисы, исправленные дороги, сигналы дорожного движения,
+                    парки, почтовые ящики? Добавьте несколько слов про ваши изменения.
                 {else}
                     Did you add businesses, fix footpaths, mark traffic lights, outline parks,
                     place mailboxes? Write a few words about the changes to this area.
@@ -272,7 +275,7 @@
         {elseif $language == "tr"}
             {assign var="label" value="Kaydet"}
         {elseif $language == "ru"}
-            {* TRANSLATE *}
+            {assign var="label" value="Сохранить"}
         {else}
             {assign var="label" value="Save"}
         {/if}
