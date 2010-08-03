@@ -20,7 +20,7 @@
         {elseif $language == "tr"}
 			Taramayı yükle
         {elseif $language == "ru"}
-			{* TRANSLATE *}
+			Загрузить скан
         {else}
             Upload Scan
         {/if}
@@ -50,7 +50,7 @@
     {elseif $language == "tr"}
         {assign var="label" value="Gönder"}
     {elseif $language == "ru"}
-        {* TRANSLATE *}
+        {assign var="label" value="Отправить"}
     {else}
         {assign var="label" value="Send"}
     {/if}
