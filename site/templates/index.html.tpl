@@ -282,43 +282,64 @@
     // ]]>
     </script>
     
-    <form action="#">
-        <script type="text/javascript" language="javascript1.2">
-        // <![CDATA[{literal}
-            
-            function setComposeForm(name)
-            {
-                var names = ['bounds', 'uploads'];
-
-                for(var i in names)
-                {
-                    var form = document.forms[names[i]];
+    {if $constants.ADVANCED_COMPOSE_FORM}
+        <form action="#">
+            <script type="text/javascript" language="javascript1.2">
+            // <![CDATA[{literal}
                 
-                    if(names[i] == name) {
-                        form.style.display = 'block';
-
-                    } else {
-                        form.style.display = 'none';
+                function setComposeForm(name)
+                {
+                    var names = ['bounds', 'uploads'];
+    
+                    for(var i in names)
+                    {
+                        var form = document.forms[names[i]];
+                    
+                        if(names[i] == name) {
+                            form.style.display = 'block';
+    
+                        } else {
+                            form.style.display = 'none';
+                        }
                     }
+    
+                    return false;
                 }
+    
+            // {/literal}]]>
+            </script>
+            
+            <p>
+                Compose:
+                <label>
+                    <input type="radio" name="compose-form" value="bounds" onchange="setComposeForm(this.value);" checked="checked" />
+                    by map area,
+                </label>
+                <label>
+                    <input type="radio" name="compose-form" value="uploads" onchange="setComposeForm(this.value);"/>
+                    by file upload.
+                </label>
+            </p>
+        </form>
 
-                return false;
-            }
+        <form action="{$base_dir}/compose.php" method="post" name="uploads" style="display: none;" enctype="multipart/form-data">
+            <p>
+                <input name="file" type="file" />
+            </p>
+            <p>
+                Paper size:
+                
+                <select name="paper">
+                    {foreach from=$paper_sizes item="size"}
+                        <option label="{$size|ucwords}" value="{$size|lower}">{$label}</option>
+                    {/foreach}
+                </select>
 
-        // {/literal}]]>
-        </script>
-        <p>
-            Compose:
-            <label>
-                <input type="radio" name="compose-form" value="bounds" onchange="setComposeForm(this.value);" checked="checked" />
-                by map area,
-            </label>
-            <label>
-                <input type="radio" name="compose-form" value="uploads" onchange="setComposeForm(this.value);"/>
-                by file upload.
-            </label>
-        </p>
-    </form>
+                <input class="mac-button" type="submit" name="action" value="Upload" />
+                <input type="hidden" name="source" value="upload" />
+            </p>
+        </form>
+    {/if}
 
     <form action="{$base_dir}/compose.php" method="post" name="bounds" style="display: block;">
         <input name="north" type="hidden" />
@@ -464,26 +485,6 @@
 
     // ]]>
     </script>
-
-    {if $constants.ADVANCED_COMPOSE_FORM}
-        <form action="{$base_dir}/compose.php" method="post" name="uploads" style="display: none;" enctype="multipart/form-data">
-            <p>
-                <input name="file" type="file" />
-            </p>
-            <p>
-                Paper size:
-                
-                <select name="paper">
-                    {foreach from=$paper_sizes item="size"}
-                        <option label="{$size|ucwords}" value="{$size|lower}">{$label}</option>
-                    {/foreach}
-                </select>
-
-                <input class="mac-button" type="submit" name="action" value="Upload" />
-                <input type="hidden" name="source" value="upload" />
-            </p>
-        </form>
-    {/if}
 
     <h2>{strip}
         {if $language == "de"}
