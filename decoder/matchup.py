@@ -300,6 +300,9 @@ def group_matches(matches, hFeatures, nFeatures):
 
                 # this and that feature may be self-consistent
                 matches_graph[hIndexes[i], hIndexes[k]] = 1
+                
+                # be optimistic, too
+                matches_graph[hIndexes[k], hIndexes[i]] = 1
 
     return matches_graph
 
