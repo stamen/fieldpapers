@@ -434,41 +434,9 @@
                     Provider:
                 {/if}
                 <select name="provider" onchange="setProvider(this.value);">
-                    {assign var="label" value="OpenStreetMap"}
-                    <option label="{$label}" selected="selected" value="http://tile.openstreetmap.org/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="OpenStreetMap: CycleMap"}
-                    <option label="{$label}" value="http://andy.sandbox.cloudmade.com/tiles/cycle/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="OpenStreetMap: Osmarender"}
-                    <option label="{$label}" value="http://tah.openstreetmap.org/Tiles/tile/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Cloudmade: Fineline"}
-                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/2/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Cloudmade: Fresh"}
-                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/997/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Cloudmade: No Name"}
-                    <option label="{$label}" value="http://tile.cloudmade.com/{$constants.CLOUDMADE_KEY|escape}/3/256/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-
-                    {assign var="label" value="Haiti (OpenStreetMap)"}
-                    <option label="{$label}" value="http://live.openstreetmap.nl/haiti/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Haiti (Current Satellite Mosaic)"}
-                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/haiti-current/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Haiti (Jan. 16 GeoEye Satellite)"}
-                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/geoeye_100116/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Haiti (Jan. 14-15 IKONOS Satellite)"}
-                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/ikonos_100114/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Haiti (Jan. 13 GeoEye Satellite)"}
-                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/geoeye/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
-                    
-                    {assign var="label" value="Haiti (Digital Globe Crisis Satellite)"}
-                    <option label="{$label}" value="http://maps.nypl.org/tilecache/1/dg_crisis/{literal}{Z}/{X}/{Y}{/literal}.png">{$label}</option>
+                    {foreach from=$providers item="provider" name="providers"}
+                        <option label="{$provider.1|escape}" value="{$provider.0|escape}" {if $smarty.foreach.providers.first}selected="selected"{/if}>{$provider.1|escape}</option>
+                    {/foreach}
                 </select>
             </p>
             <p>

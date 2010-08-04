@@ -422,7 +422,7 @@
         {
             // TODO: ditch special-case for provider
             if(empty($row['provider']))
-                $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
+                $row['provider'] = reset(reset(get_map_providers()));
 
             // TODO: ditch special-case for pdf_url
             if(empty($row['pdf_url']) && S3_BUCKET_ID)
@@ -484,7 +484,7 @@
         
         // TODO: ditch special-case for provider
         if(empty($row['provider']))
-            $row['provider'] = sprintf('http://tile.cloudmade.com/%s/2/256/{Z}/{X}/{Y}.png', CLOUDMADE_KEY);
+            $row['provider'] = reset(reset(get_map_providers()));
 
         // TODO: ditch special-case for pdf_url
         if(empty($row['pdf_url']) && S3_BUCKET_ID)

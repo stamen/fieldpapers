@@ -20,6 +20,7 @@
         $s->assign('base_href', get_base_href());
         $s->assign('constants', get_defined_constants());
         $s->assign('request', array('get' => $_GET, 'uri' => $_SERVER['REQUEST_URI']));
+        $s->assign('providers', get_map_providers());
         
         $s->register_modifier('nice_relativetime', 'nice_relativetime');
         $s->register_modifier('nice_datetime', 'nice_datetime');
@@ -54,6 +55,14 @@
         
         return ($query_pos === false) ? $_SERVER['REQUEST_URI']
                                       : substr($_SERVER['REQUEST_URI'], 0, $query_pos);
+    }
+    
+    function get_map_providers()
+    {
+        if(preg_match_all('#^(http://\S+)\b\s+\b(.+)$#mi', TILE_PROVIDERS, $m))
+            return array_map(null, $m[1], $m[2]);
+    
+        return array(array('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 'OpenStreetMap'));
     }
     
     function nice_datetime($ts)

@@ -10,9 +10,6 @@
     // Yahoo GeoPlanet application ID
     define('GEOPLANET_APPID', '*** http://developer.yahoo.com/geo/geoplanet/ ***');
 
-    // Cloudmade developer key
-    define('CLOUDMADE_KEY', '*** http://developers.cloudmade.com/ ***');
-
     // Flickr application key
     define('FLICKR_KEY', '*** http://www.flickr.com/services/api/keys/ ***');
 
@@ -24,5 +21,17 @@
     
     // Advanced compose form, on or off
     define('ADVANCED_COMPOSE_FORM', 1);
+    
+    // List of tile providers as a multi-line string.
+    // Each line is a URL followed by a space followed by a text description.
+    // Defaults to plain OpenStreetMap if omitted.
+    define('TILE_PROVIDERS', <<<PROVIDERS_LIST
+
+http://tile.openstreetmap.org/{Z}/{X}/{Y}.png	OpenStreetMap
+http://andy.sandbox.cloudmade.com/tiles/cycle/{Z}/{X}/{Y}.png	OpenStreetMap: CycleMap
+http://tah.openstreetmap.org/Tiles/tile/{Z}/{X}/{Y}.png	OpenStreetMap: Osmarender
+
+PROVIDERS_LIST
+);
 
 ?>
