@@ -456,6 +456,15 @@
         {/if}
     </form>
 
+    <script type="text/javascript" language="javascript1.2">
+    // <![CDATA[
+
+        // do this just to dirty all the form fields
+        onMapChanged(map);
+
+    // ]]>
+    </script>
+
     {if $constants.ADVANCED_COMPOSE_FORM}
         <form action="{$base_dir}/compose.php" method="post" name="uploads" style="display: none;" enctype="multipart/form-data">
             <p>
