@@ -71,9 +71,9 @@
                 {elseif $language == "tr"}
                     Bu hariyta yanlış veya geçerliğini yitirmiş mi?
                 {elseif $language == "ru"}
-                    Is this map wrong, or out of date?
-                {else}
                     Эта карта неправильная или устарела?
+                {else}
+                    Is this map wrong, or out of date?
                 {/if}
                 
                 {if $language == "de"}
