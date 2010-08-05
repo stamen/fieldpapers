@@ -44,5 +44,5 @@
 </p>
         
 <p>
-    Загрузите <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">свежую карту этой территории с распечатки  #{$scan.print_id|escape}</a>.
+    Загрузите <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">свежую карту этой территории с обходного листа  #{$scan.print_id|escape}</a>.
 </p>
