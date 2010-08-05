@@ -950,7 +950,7 @@
             }
         }
         
-        $url = 'http://'.get_domain_name().get_base_dir().'/files/'.$object_id;
+        $url = get_base_dir().'/files/'.$object_id;
         
         if($fh = @fopen($filepath, 'w'))
         {
