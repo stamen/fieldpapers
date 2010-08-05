@@ -33,11 +33,6 @@ MySQL password a few times, it's fine to leave this blank.
 % apt-get install curl vim screen tcsh sudo build-essential git-core
 % apt-get install python-imaging python-numpy openjdk-6-jre-headless
 % apt-get install libapache2-mod-php5 php5-gd php5-mysql mysql-server-5.1 php-pear
-
-This last set of packages is optional, needed only if you plan to use
-GeoTIFF upload/download functionality. The feature flag for this is
-"ADVANCED_COMPOSE_FORM" in site/lib/init.php.
-
 % apt-get install python-pyproj python-gdal gdal-bin
 
 Paperwalking uses server packages from PHP's PEAR collection. The can be
