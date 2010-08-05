@@ -17,20 +17,27 @@ With the addition of GeoTIFF creation in decoder/decode.py, a new dependency
 on GDAL 1.6+ has been added. This version is present in version of Ubuntu Linux
 starting at 10.4 (Lucid Lynx). Try to use the latest version where possible.
 
-Start by logging into the server via SSH, as the root user.
+Start by logging into the server via SSH, as the root user. We assume that
+the public name of the server is "example.host" in this guide, replace it with
+whatever is appropriate for your own server.
 
 Software
 --------
 
 There are a few packages that you will need to install: some base material,
 packaged for use by the offline image decoder, and packages to help run the
-public-facing website. During the last step below, you'll be asked to create
-a root MySQL password a few times, it's fine to leave this blank.
+public-facing website. During the steps below, you'll be asked to create a root
+MySQL password a few times, it's fine to leave this blank.
 
 % apt-get update
 % apt-get install curl vim screen tcsh sudo build-essential git-core
 % apt-get install python-imaging python-numpy openjdk-6-jre-headless
 % apt-get install libapache2-mod-php5 php5-gd php5-mysql mysql-server-5.1 php-pear
+
+This last set of packages is optional, needed only if you plan to use
+GeoTIFF upload/download functionality. The feature flag for this is
+"ADVANCED_COMPOSE_FORM" in site/lib/init.php.
+
 % apt-get install python-pyproj python-gdal gdal-bin
 
 Paperwalking uses server packages from PHP's PEAR collection. The can be
@@ -49,7 +56,7 @@ restart Apache.
 
 Try http://example.host in a browser.
 
-Now, to install Paperwalking itself.
+Now, to install Paperwalking itself:
 
 % cd /var/www
 % git clone http://github.com/migurski/paperwalking.git paperwalking
@@ -67,7 +74,7 @@ Now, to install Paperwalking itself.
 % cd site && make
 
 The main site configuration information is kept in lib/init.php. Paperwalking
-comes with a blank that you have to copy and edit with your favorite text editor.
+comes with a blank that you have to copy and edit with your favorite text editor:
 
 % cp lib/init.php.txt lib/init.php
 % pico lib/init.php
@@ -76,17 +83,25 @@ Change these two lines (choose your own password):
 1.	define('DB_DSN', 'mysql://paperwalking:w4lks@localhost/paperwalking');
 2.	define('API_PASSWORD', 'swordfish');
 
-Now try http://example.host in a browser to see it work. Make a new print, it
-might take a little while (we'll get back to this later). Print it, scan it, or
-just convert it to a JPEG, and post the image back to your instance of Paperwalking.
-Note that it's just sitting there, "queued for processing". Keep this browser
-window open, because we need to build SIFT.
+Now try http://example.host in a browser to see it work. If you try to make
+a new print, you'll see a note that Paperwalking is "Preparing your print".
+Leave the window open for now. You will need to start the back-end Python
+process to create prints and decode scans. Run the poll.py process once with
+the password you chose above:
 
 % cd ../decoder
+% python poll.py -p swordfish -b http://example.host once
+
+You'll see a few messages scroll by, and eventually the print page will be
+replaced by an image of your selected area and a PDF download link. Print it,
+scan it, or just convert it to a JPEG, and post the image back to your instance
+of Paperwalking. Note that it's just sitting there, "queued for processing".
+Keep this browser window open, because we need to build SIFT using make:
+
 % make
 
 Some stuff will scroll by, you may see compiler warnings, ignore these unless
-actual errors show up. Run the decoder once with the password chosen above.
+actual errors show up. Run poll.py once again with the password chosen above:
 
 % python poll.py -p swordfish -b http://localhost once
 
