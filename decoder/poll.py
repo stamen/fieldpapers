@@ -122,7 +122,6 @@ if __name__ == '__main__':
 
         except Exception, e:
             print >> sys.stderr, 'Something went wrong:', e
-            raise e
 
             poll_failures += 1
             
