@@ -78,6 +78,11 @@ Change these two lines (choose your own password):
 1.	define('DB_DSN', 'mysql://paperwalking:w4lks@localhost/paperwalking');
 2.	define('API_PASSWORD', 'swordfish');
 
+And these three lines (if you want to have the map start someplace else):
+1.  define('DEFAULT_LATITUDE', 37.791);
+2.  define('DEFAULT_LONGITUDE', -122.343);
+3.  define('DEFAULT_ZOOM', 11);
+
 Now try http://example.host in a browser to see it work. If you try to make
 a new print, you'll see a note that Paperwalking is "Preparing your print".
 Leave the window open for now. You will need to start the back-end Python
@@ -98,7 +103,7 @@ Keep this browser window open, because we need to build SIFT using make:
 Some stuff will scroll by, you may see compiler warnings, ignore these unless
 actual errors show up. Run poll.py once again with the password chosen above:
 
-% python poll.py -p swordfish -b http://localhost once
+% python poll.py -p swordfish -b http://example.host once
 
 Watch the scan page in your browser update as it progresses through the image.
 
