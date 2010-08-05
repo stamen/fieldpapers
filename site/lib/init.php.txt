@@ -35,4 +35,9 @@ http://tah.openstreetmap.org/Tiles/tile/{Z}/{X}/{Y}.png	OpenStreetMap: Osmarende
 PROVIDERS_LIST
 );
 
+    // default latitude, longitude, and zoom - see http://getlatlon.com if in doubt.
+    define('DEFAULT_LATITUDE', 37.791);
+    define('DEFAULT_LONGITUDE', -122.343);
+    define('DEFAULT_ZOOM', 11);
+
 ?>

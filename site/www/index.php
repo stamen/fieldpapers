@@ -12,9 +12,9 @@
     
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     $provider = is_null($_GET['provider']) ? reset(reset(get_map_providers())) : $_GET['provider'];
-    $latitude = is_numeric($_GET['lat']) ? floatval($_GET['lat']) : 37.791;
-    $longitude = is_numeric($_GET['lon']) ? floatval($_GET['lon']) : -122.343;
-    $zoom = is_numeric($_GET['zoom']) ? intval($_GET['zoom']) : 11;
+    $latitude = is_numeric($_GET['lat']) ? floatval($_GET['lat']) : DEFAULT_LATITUDE;
+    $longitude = is_numeric($_GET['lon']) ? floatval($_GET['lon']) : DEFAULT_LONGITUDE;
+    $zoom = is_numeric($_GET['zoom']) ? intval($_GET['zoom']) : DEFAULT_ZOOM;
 
     /**** ... ****/
     
