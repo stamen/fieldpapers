@@ -19,8 +19,9 @@
     define('AWS_SECRET_KEY', '');
     define('S3_BUCKET_ID',   '');
     
-    // Advanced compose form, on or off
-    define('ADVANCED_COMPOSE_FORM', 1);
+    // Advanced compose form, on or off. Currently allows for uploading
+    // of GeoTIFFs as an alternative to using the slippy map to compose prints.
+    define('ADVANCED_COMPOSE_FORM', 0);
     
     // List of tile providers as a multi-line string.
     // Each line is a URL followed by a space followed by a text description.
