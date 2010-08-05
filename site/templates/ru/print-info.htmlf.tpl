@@ -1,7 +1,7 @@
-<h2>Распечатать карту</h2>
+<h2>Напечатать карту</h2>
 
 <p>
-    Распечатать карту территории вокруг
+    Напечатать карту территории вокруг
     {if $print.place_woeid}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
