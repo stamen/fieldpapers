@@ -300,8 +300,7 @@ def finish_print(apibase, password, print_id, north, west, south, east, zoom, pa
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, '80')
-    print 'finish_print:', host, port
+    host, port = (':' in host) and host.split(':') or (host, 80)
     
     if urlparse(preview_url)[1] == 'localhost':
         # just use an absolute path for preview URL if it's on localhost
@@ -332,7 +331,7 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
     """
 
     s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, '80')
+    host, port = (':' in host) and host.split(':') or (host, 80)
     
     query = urlencode({'print': print_id, 'password': password,
                        'dirname': os.path.dirname(file_path),
@@ -366,7 +365,7 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
             post_type, post_body = encode_multipart_formdata(fields, files)
             
             s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
-            host, port = (':' in host) and host.split(':') or (host, '80')
+            host, port = (':' in host) and host.split(':') or (host, 80)
             
             req = httplib.HTTPConnection(host, port)
             req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})

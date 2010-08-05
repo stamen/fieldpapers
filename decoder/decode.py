@@ -223,12 +223,13 @@ def appendScanFile(scan_id, file_path, file_contents, apibase, password):
     """
 
     s, host, path, p, q, f = urlparse.urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, 80)
     
     query = urllib.urlencode({'scan': scan_id, 'password': password,
                               'dirname': os.path.dirname(file_path),
                               'mimetype': (mimetypes.guess_type(file_path)[0] or '')})
     
-    req = httplib.HTTPConnection(host, 80)
+    req = httplib.HTTPConnection(host, port)
     req.request('GET', path + '/append.php?' + query)
     res = req.getresponse()
     
@@ -253,8 +254,9 @@ def appendScanFile(scan_id, file_path, file_contents, apibase, password):
             post_type, post_body = encodeMultipartFormdata(fields, files)
             
             s, host, path, p, query, f = urlparse.urlparse(urlparse.urljoin(apibase, form_action))
+            host, port = (':' in host) and host.split(':') or (host, 80)
             
-            req = httplib.HTTPConnection(host, 80)
+            req = httplib.HTTPConnection(host, port)
             req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
             res = req.getresponse()
             
