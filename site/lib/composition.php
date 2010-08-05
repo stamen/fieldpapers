@@ -161,6 +161,8 @@
         
         $pdf->setFillColor(0xFF);
         $pdf->rect($pdf->w - 36 - $size - $pad, $pdf->h - 36 - $size - $pad, $size + $pad * 2, $size + $pad * 2, 'F');
+        
+        //$print_url .= sprintf('#n=%.6f,w=%.6f,s=%.6f,e=%.6f', $print['north'], $print['west'], $print['south'], $print['east']);
 
         $req = new HTTP_Request('http://chart.apis.google.com/chart?chs=264x264&cht=qr&chld=Q|0');
         $req->addQueryString('chl', $print_url);
