@@ -543,7 +543,7 @@ def extractCode(image, markers):
 def readCode(image):
     """
     """
-    decode = 'java', '-classpath', ':'.join(glob.glob('lib/*.jar')), 'qrdecode'
+    decode = 'java', '-classpath', ':'.join(glob.glob(os.path.dirname(__file__) + '/lib/*.jar')), 'qrdecode'
     decode = subprocess.Popen(decode, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     
     image.save(decode.stdin, 'PNG')
