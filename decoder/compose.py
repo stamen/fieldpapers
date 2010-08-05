@@ -4,7 +4,7 @@ import httplib
 import xml.etree.ElementTree
 
 from urllib import urlopen, urlencode
-from urlparse import urlparse, urljoin
+from urlparse import urlparse, urljoin, urlunparse
 from tempfile import mkdtemp
 from subprocess import Popen
 from pyproj import Proj
@@ -300,6 +300,14 @@ def finish_print(apibase, password, print_id, north, west, south, east, zoom, pa
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, '80')
+    print 'finish_print:', host, port
+    
+    if urlparse(preview_url)[1] == 'localhost':
+        # just use an absolute path for preview URL if it's on localhost
+        parts = urlparse(preview_url)
+        preview_url = urlunparse((None, None, parts[2], parts[3], parts[4], parts[5]))
+    
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
     query = urlencode({'id': print_id})
@@ -311,7 +319,7 @@ def finish_print(apibase, password, print_id, north, west, south, east, zoom, pa
                         'south': south, 'east': east,
                         'zoom': zoom})
     
-    req = httplib.HTTPConnection(host, 80)
+    req = httplib.HTTPConnection(host, port)
     req.request('POST', path + '/print.php?' + query, params, headers)
     res = req.getresponse()
     
@@ -324,12 +332,13 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
     """
 
     s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, '80')
     
     query = urlencode({'print': print_id, 'password': password,
                        'dirname': os.path.dirname(file_path),
                        'mimetype': (guess_type(file_path)[0] or '')})
     
-    req = httplib.HTTPConnection(host, 80)
+    req = httplib.HTTPConnection(host, port)
     req.request('GET', path + '/append.php?' + query)
     res = req.getresponse()
     
@@ -357,8 +366,9 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
             post_type, post_body = encode_multipart_formdata(fields, files)
             
             s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
+            host, port = (':' in host) and host.split(':') or (host, '80')
             
-            req = httplib.HTTPConnection(host, 80)
+            req = httplib.HTTPConnection(host, port)
             req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
             res = req.getresponse()
             

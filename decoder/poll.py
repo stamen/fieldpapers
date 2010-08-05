@@ -35,6 +35,9 @@ def getMarkers():
 def updateQueue(apibase, password, message_id, timeout):
     """
     """
+    s, host, path, p, q, f = urlparse.urlparse(apibase.rstrip('/'))
+    host, port = (':' in host) and host.split(':') or (host, '80')
+
     params = {'id': message_id, 'password': password}
 
     if timeout is False:
@@ -57,6 +60,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     
     s, host, path, p, q, f = urlparse.urlparse(options.apibase.rstrip('/'))
+    host, port = (':' in host) and host.split(':') or (host, '80')
     
     apibase = options.apibase.rstrip('/')
     password = options.password
