@@ -35,6 +35,9 @@
         if(php_sapi_name() == 'cli')
             return CLI_DOMAIN_NAME;
         
+        if($_SERVER['SERVER_PORT'] != 80)
+            return "{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}";
+        
         return $_SERVER['SERVER_NAME'];
     }
     
