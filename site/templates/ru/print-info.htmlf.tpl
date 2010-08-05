@@ -1,7 +1,7 @@
-<h2>Распечатать карту</h2>
+<h2>Напечатать карту</h2>
 
 <p>
-    Распечатать карту территории вокруг
+    Напечатать карту территории вокруг
     {if $print.place_woeid}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
@@ -20,13 +20,13 @@
 <p>
     <a href="{$print.pdf_url|escape}">
         <img src="{$base_dir}/tiny-doc.png" border="0" align="bottom"/>
-        Загрузить PDF карты для печати</a>
+        Карта в формате PDF для печати</a>
 </p>
 
 <p>
-    <a href="{$print.pdf_url|escape}">Загрузите карту</a> чтобы начать картировать. 
-    Добавляйте детали, такие как офисы, парки, школы, здания, дорожки, почтовые ящики,
-    банкоматы и другие полезности. Когда вы закончили,
-    <a href="{$base_dir}/upload.php">отправьте скан</a> карты с пометками
-    чтобы начать переносить их в цифровую форму прямо в OpenStreetMap.
+    <a href="{$print.pdf_url|escape}">Скачайте карту</a> чтобы начать редактировать. 
+    Добавляйте на карту детали, такие как дороги, парки, школы, здания, почтовые отделения, 
+    банкоматы и другие полезные объекты. Когда вы закончите, отсканируйте карту с пометками и
+    <a href="{$base_dir}/upload.php">загрузите изображение на наш сайт,</a> чтобы ваши правки
+    можно было затем перенести в OpenStreetMap..
 </p>
