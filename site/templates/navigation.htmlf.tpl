@@ -1,6 +1,12 @@
 {include file="language.htmlf.tpl"}
 
-<h1><a href="{$base_dir}/"><img src="{$base_dir}/icon.png" border="0" align="bottom" alt="" /> Walking Papers</a></h1>
+<h1><a href="{$base_dir}/"><img src="{$base_dir}/icon.png" border="0" align="bottom" alt="" /> {strip}
+    {if $language == "ru"}
+        Walking Papers!
+    {else}
+        Walking Papers
+    {/if}
+{/strip}</a></h1>
 
 <p id="navigation">
     {if $language == "de"}
