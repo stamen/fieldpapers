@@ -2,7 +2,7 @@
 
 <h1><a href="{$base_dir}/"><img src="{$base_dir}/icon.png" border="0" align="bottom" alt="" /> {strip}
     {if $language == "ru"}
-        Walking Papers!
+        Обходной лист
     {else}
         Walking Papers
     {/if}
