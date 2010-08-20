@@ -19,6 +19,8 @@
             Scansione inviata
         {elseif $language == "tr"}
             Yüklenmiş Tarama
+        {elseif $language == "ru"}
+            Загруженный скан
         {else}
             Uploaded Scan
         {/if}
@@ -54,6 +56,8 @@
             Hai spedito una mappa scannerizzata.
         {elseif $language == "tr"}
             Bir Taramış Haritasını Yükledin
+        {elseif $language == "ru"}
+            Вы загрузили отсканированную карту
         {else}
             You’ve Uploaded A Scanned Map
         {/if}    
@@ -76,6 +80,9 @@
             Hai appena spedito una mappa scannerizzata e stai per aggiungere un paio di informazioni prima di iniziare a tracciarla.
         {elseif $language == "tr"}
 			Sen taranmış bir harita yükledin ve onu dayandırmaya devam etmeden önce onun hakkında birkaç ayrıntıyı eklemek üzeresin.
+        {elseif $language == "ru"}
+			Вы загрузили отсканированную карту и вам осталось добавить немного
+            информации о ней, перед тем как перейти к оцифровке.
         {else}
             You’ve just uploaded a scanned map, and you’re about to add
             a few bits of information about it before you proceed to trace it.
@@ -99,6 +106,8 @@
                 privato?
             {elseif $language == "tr"}
                 kişisel mi?
+            {elseif $language == "ru"}
+                только для вас?
             {else}
                 private?
             {/if}
@@ -122,6 +131,8 @@
                     Hai intenzione di iniziarla a modificare tu?
                 {elseif $language == "tr"}
 					Bunu kendi kendine düzeltmeye planlanıyor musun?
+                {elseif $language == "ru"}
+					Вы планируете редактировать карту сами?
                 {else}
                     Do you plan to edit this yourself?
                 {/if}
@@ -140,6 +151,8 @@
                         {assign var="label" value="Si"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Evet"}
+                    {elseif $language == "ru"}
+                        {assign var="label" value="Да"}
                     {else}
                         {assign var="label" value="Yes"}
                     {/if}    
@@ -158,6 +171,8 @@
                         {assign var="label" value="No"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Hayır"}
+                    {elseif $language == "ru"}
+                        {assign var="label" value="Нет"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}    
@@ -183,6 +198,9 @@
                     Non devi effettuare le modifiche OpenStreetMap. Rispondendo “no” renderai a conoscenza gli altri visitatori di scansioni che potrebbero beneficiare del loro aiuto.
                 {elseif $language == "tr"}
 					Kendi kendine OpenStreetMap düzeltmek zorunda değilsin. "Hayır" diyerek yardım edebilecek taramalar konusunda başka ziyaretciyi haberdar eder.
+                {elseif $language == "ru"}
+					Вам не обязательно самим редатировать карту. Ответив “нет”
+                    позволит другим пользователям узнать о вашем скане и поработать над ним.
                 {else}
                     You don’t have to do your own OpenStreetMap editing. Saying “no”
                     will let other visitors know about scans they can help with.
@@ -205,6 +223,8 @@
                     Descrivi le tue modifiche.
                 {elseif $language == "tr"}
                     Describe your additions.
+                {elseif $language == "ru"}
+                    Опишите ваши добавления.
                 {else}
                     Describe your additions.
                 {/if}
@@ -228,6 +248,9 @@
                     Hai aggiunto negozi, marciapiedi, segnato semafori, delimitato parchi, posizionato buche delle lettere? Scrivi un paio di parole a proposito delle modifiche in quest'area.
                 {elseif $language == "tr"}
 					Dükkanlar yükedin mi, yaya yolları düzelttin mi, trafik lambaları etiketlendin mi, park kenarları çizdin mi? Bu yere değişiklerinle ilgili birkaç söz yaz.
+                {elseif $language == "ru"}
+					Что вы добавили? Офисы, исправленные дороги, сигналы дорожного движения,
+                    парки, почтовые ящики? Добавьте несколько слов про ваши изменения.
                 {else}
                     Did you add businesses, fix footpaths, mark traffic lights, outline parks,
                     place mailboxes? Write a few words about the changes to this area.
@@ -251,6 +274,8 @@
             {assign var="label" value="Salva"}
         {elseif $language == "tr"}
             {assign var="label" value="Kaydet"}
+        {elseif $language == "ru"}
+            {assign var="label" value="Сохранить"}
         {else}
             {assign var="label" value="Save"}
         {/if}

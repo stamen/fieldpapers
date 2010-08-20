@@ -19,6 +19,8 @@
             Stampe recenti
         {elseif $language == "tr"}
             Son Baskılar
+        {elseif $language == "ru"}
+            Недавние распечатки
         {else}
             Recent Prints
         {/if}
@@ -45,6 +47,8 @@
             Stampe recenti    
         {elseif $language == "tr"}
             Son Baskılar
+        {elseif $language == "ru"}
+            Недавние распечатки
         {else}
             Recent Prints
         {/if}

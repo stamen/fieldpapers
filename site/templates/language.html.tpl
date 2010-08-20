@@ -20,6 +20,8 @@
             Localizzazione
         {elseif $language == "tr"}
             Yerelleştirme
+        {elseif $language == "ru"}
+            Локализация
         {else}
             Localization
         {/if}
