@@ -19,13 +19,10 @@
             Statistiche
         {elseif $language == "tr"}
             İstatistik
-<<<<<<< HEAD
         {elseif $language == "sv"}
             Statistik
-=======
         {elseif $language == "ru"}
             Статистика
->>>>>>> upstream/master
         {else}
             Zeitgeist
         {/if}
@@ -52,13 +49,10 @@
             Statistiche
         {elseif $language == "tr"}
             İstatistik
-<<<<<<< HEAD
         {elseif $language == "sv"}
             Statistik
-=======
         {elseif $language == "ru"}
             Статистика
->>>>>>> upstream/master
         {else}
             Zeitgeist
         {/if}

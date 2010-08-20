@@ -19,13 +19,10 @@
             Di cosa si tratta  
         {elseif $language == "tr"}
             Hakkında
-<<<<<<< HEAD
         {elseif $language == "sv"}
             Om
-=======
         {elseif $language == "ru"}
             О сервисе
->>>>>>> upstream/master
         {else}
             About
         {/if}
