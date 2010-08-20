@@ -19,6 +19,8 @@
             Di cosa si tratta  
         {elseif $language == "tr"}
             Hakkında
+        {elseif $language == "sv"}
+            Om
         {else}
             About
         {/if}

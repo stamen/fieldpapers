@@ -19,6 +19,8 @@
             Compositore
         {elseif $language == "tr"}
             Oluşturucu
+        {elseif $language == "sv"}
+        	Sammanställning
         {else}
             Componer
         {/if}

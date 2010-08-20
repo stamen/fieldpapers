@@ -36,6 +36,8 @@
             Scansioni recenti
         {elseif $language == "tr"}
             Son Taramalar
+        {elseif $language == "sv"}
+            Senaste inskanningar
         {else}
             Recent Scans
         {/if}
@@ -90,6 +92,8 @@
                 Altre scansioni recenti...
             {elseif $language == "tr"}
                 Daha taramalar...
+            {elseif $language == "sv"}
+                Fler inskanningar...
             {else}
                 More recent scans...
             {/if}
@@ -112,6 +116,8 @@
                 Stampare
             {elseif $language == "tr"}
                 Baskı Oluştur
+            {elseif $language == "sv"}
+                Gör en utskrift
             {else}
                 Make A Print
             {/if}
@@ -137,6 +143,8 @@
             {assign var="label" value="検索"}
         {elseif $language == "tr"}
             {assign var="label" value="Ara"}
+        {elseif $language == "sv"}
+            {assign var="label" value="Hitta"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -177,6 +185,8 @@
                 ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {elseif $language == "tr"}
 				Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
+            {elseif $language == "sv"}
+				En zoom-nivå på <b>14 eller mer</b> är rekommenderat för kartläggning på gatunivå.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -223,6 +233,8 @@
                     alert("Ci dispiace non siamo riusciti a trovare un posto con quel nome.");
                 {elseif $language == "tr"}
                     alert("Üzgünüz. O adlı yeri bulunamadı.");
+                {elseif $language == "sv"}
+                	alert("Tyvärr, Jag kunde inte hitta en plats med det namnet.");
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
                 {/if}
@@ -304,6 +316,8 @@
                 Orientamento del foglio:
             {elseif $language == "tr"}
                 Yönelim:
+            {elseif $language == "sv"}
+                Orientering:
             {else}
                 Orientation:
             {/if}
@@ -324,6 +338,8 @@
                         {assign var="label" value="Verticale ($size)"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Dikey ($size)"}
+                    {elseif $language == "tr"}
+                        {assign var="label" value="Porträtt ($size)"}
                     {else}
                         {assign var="label" value="Portrait ($size)"}
                     {/if}
@@ -345,6 +361,8 @@
                         {assign var="label" value="Orizzontale ($size)"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Yatay ($size)"}
+                    {elseif $language == "sv"}
+                        {assign var="label" value="Landskap ($size)"}
                     {else}
                         {assign var="label" value="Landscape ($size)"}
                     {/if}
@@ -366,6 +384,8 @@
                 {assign var="label" value="Crea"}
             {elseif $language == "tr"}
                 {assign var="label" value="Üret"}
+            {elseif $language == "sv"}
+                {assign var="label" value="Skapa"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -391,6 +411,8 @@
                     Provider:
                 {elseif $language == "tr"}
                     Kaynak:
+                {elseif $language == "sv"}
+                	Kartstil:
                 {else}
                     Provider:
                 {/if}
@@ -439,6 +461,9 @@
                 {elseif $language == "de"}
                     Gitternetz:
                     <input type="radio" name="grid" value="" checked="checked" /> ohne
+                {elseif $language == "sv"}
+                    Rutnät:
+                    <input type="radio" name="grid" value="" checked="checked" /> inget
                 {else}
                     Grid:
                     <input type="radio" name="grid" value="" checked="checked" /> None
@@ -464,6 +489,8 @@
             Stampe recenti
         {elseif $language == "tr"}
             Son Baskılar
+        {elseif $language == "sv"}
+        	Nyligen utskrivet
         {else}
             Recent Prints
         {/if}

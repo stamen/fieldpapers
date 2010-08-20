@@ -60,6 +60,14 @@
 		<a href="{$base_dir}/zeitgeist.php">İstatistik</a>
 		<a href="{$base_dir}/about.php">Hakkında</a>
 
+	{elseif $language == "sv"}
+        <a href="{$base_dir}/">Hem</a>
+        <a href="{$base_dir}/prints.php">Utskrifter</a>
+        <a href="{$base_dir}/scans.php">Inskanningar</a>
+        <a href="{$base_dir}/upload.php">Ladda upp</a>
+        <a href="{$base_dir}/zeitgeist.php">Statistik</a>
+        <a href="{$base_dir}/about.php">Om</a>
+
     {else}
         <a href="{$base_dir}/">Home</a>
         <a href="{$base_dir}/prints.php">Prints</a>

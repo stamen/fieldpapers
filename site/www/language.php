@@ -27,7 +27,7 @@
     if($_POST['language'])
     {
         // change to some other language
-        $language = in_array($_POST['language'], array('en', 'de', 'nl', 'es', 'fr', 'ja', 'it', 'tr'))
+        $language = in_array($_POST['language'], array('en', 'de', 'nl', 'es', 'fr', 'ja', 'it', 'tr', 'sv'))
             ? $_POST['language']
             : $language;
     

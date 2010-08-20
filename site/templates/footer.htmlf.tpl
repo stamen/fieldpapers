@@ -22,6 +22,10 @@
         Italienische Übersetzung von Emanuel Carnevale
 		<br />
 		Türkische Übersetzung von Caleb Maclennan
+		<br />
+		Russische Übersetzung von Maxim Dubinin
+		<br />
+		Schwedische Übersetzung von Frank Eriksson
 
     {elseif $language == "nl"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -46,6 +50,10 @@
         Italiaanse vertaling door Emanuel Carnevale
         <br />
         Turks vertaling door Caleb Maclennan
+        <br />
+        Russische vertaling door Maxim Dubinin
+        <br />
+        Zweedse vertaling door Frank Eriksson
   
     {elseif $language == "es"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -70,6 +78,10 @@
         Traducción al italiano por Emanuel Carnevale
         <br />
         Traducción al turco por Caleb Maclennan
+        <br />
+        Traducción al ruso de Maxim Dubinin
+        <br />
+        Traducción al sueco por Frank Eriksson
 
     {elseif $language == "fr"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -94,6 +106,10 @@
         Traduction italienne par Emanuel Carnevale
         <br />
         Traduction turque par Caleb Maclennan
+        <br />
+        Traduction russe par Maxim Dubinin
+        <br />
+        Traduction suédois par Frank Eriksson
 
     {elseif $language == "it"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -118,6 +134,10 @@
         Traduzione italiana di Emanuel Carnevale
         <br />
         Traduzione Turco di Caleb Maclennan
+        <br />
+        Traduzione russa da Maxim Dubinin
+        <br />
+        Traduzione svedese di Frank Eriksson
 
     {elseif $language == "ja"}
         ウオーキングペーパー(Walking Papers) &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -142,6 +162,10 @@
         イタリア語訳Emanuel Carnevale
 		<br />
 		トルコ語訳Caleb Maclennan
+		<br />
+		ロシア語訳Maxim Dubinin
+		<br />
+		スウェーデン語訳Frank Eriksson
 
     {elseif $language == "tr"}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
@@ -166,7 +190,39 @@
         Emanuel Carnevale tarafından İtalyanca çeviri
         <br />
         Caleb Maclennan tarafından Türkçe çeviri
-
+        <br />
+        Maxim Dubinin tarafından Rusça çeviri
+        <br />
+        Frank Eriksson tarafından İsveççe çeviri
+        
+    {elseif $language == "sv"}
+        Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
+        <br />
+        Kontakt <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
+        <br />
+        Kartdata <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
+            <a href="http://openstreetmap.org">OpenStreetMap</a>
+        <br />
+        Web- och print-kartografi &#xA9; <a href="http://cloudmade.com">Cloudmade</a>
+        <br />
+        Tysk översättning av Jonas Krückel
+        <br />
+        Nederlänsk översättning av Milo van der Linden
+        <br />
+        Spansk översättning av Manuel González Noriega
+        <br />
+        Fransk översättning av Jonathan Fretin
+        <br />
+        Japansk översättning av Hiroshi Miura
+        <br />
+        Italiensk översättning av Emanuel Carnevale
+        <br />
+        Turkisk översättning av Caleb Maclennan
+        <br />
+        Rysk översättning av Maxim Dubinin
+        <br />
+        Svensk översättning av Caleb Maclennan
+        
     {else}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
         <br />
@@ -190,6 +246,11 @@
         Italian translation by Emanuel Carnevale
         <br />
         Turkish translation by Caleb Maclennan
+        <br />
+        Russian translation by Maxim Dubinin
+        <br />
+        Swedish translation by Frank Eriksson
+        
     {/if}
 </p>
 

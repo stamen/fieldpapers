@@ -19,6 +19,8 @@
             Scansioni recenti
         {elseif $language == "tr"}
             Son Taramalar
+        {elseif $language == "sv"}
+            Senast inskannat
         {else}
             Recent Scans
         {/if}
@@ -45,6 +47,8 @@
             Scansioni recenti
         {elseif $language == "tr"}
             Son Taramalar
+        {elseif $language == "sv"}
+            Senaste inskanningarna
         {else}
             Recent Scans
         {/if}
