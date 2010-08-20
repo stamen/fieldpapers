@@ -36,6 +36,8 @@
             Scansioni recenti
         {elseif $language == "tr"}
             Son Taramalar
+        {elseif $language == "ru"}
+            Недавние сканы
         {elseif $language == "sv"}
             Senaste inskanningar
         {else}
@@ -92,6 +94,8 @@
                 Altre scansioni recenti...
             {elseif $language == "tr"}
                 Daha taramalar...
+            {elseif $language == "ru"}
+                Еще недавние сканы...
             {elseif $language == "sv"}
                 Fler inskanningar...
             {else}
@@ -116,6 +120,8 @@
                 Stampare
             {elseif $language == "tr"}
                 Baskı Oluştur
+            {elseif $language == "ru"}
+                Распечатать
             {elseif $language == "sv"}
                 Gör en utskrift
             {else}
@@ -143,6 +149,8 @@
             {assign var="label" value="検索"}
         {elseif $language == "tr"}
             {assign var="label" value="Ara"}
+        {elseif $language == "ru"}
+            {assign var="label" value="Найти"}
         {elseif $language == "sv"}
             {assign var="label" value="Hitta"}
         {else}
@@ -185,6 +193,8 @@
                 ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {elseif $language == "tr"}
 				Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
+            {elseif $language == "ru"}
+				Для картирования на уровне улиц рекомендуется масштабный уровень <b>14 или крупнее</b>.
             {elseif $language == "sv"}
 				En zoom-nivå på <b>14 eller mer</b> är rekommenderat för kartläggning på gatunivå.
             {else}
@@ -233,6 +243,8 @@
                     alert("Ci dispiace non siamo riusciti a trovare un posto con quel nome.");
                 {elseif $language == "tr"}
                     alert("Üzgünüz. O adlı yeri bulunamadı.");
+                {elseif $language == "ru"}
+                    alert("Не могу найти места с таким именем.");
                 {elseif $language == "sv"}
                 	alert("Tyvärr, Jag kunde inte hitta en plats med det namnet.");
                 {else}
@@ -316,6 +328,8 @@
                 Orientamento del foglio:
             {elseif $language == "tr"}
                 Yönelim:
+            {elseif $language == "ru"}
+                Ориентация:
             {elseif $language == "sv"}
                 Orientering:
             {else}
@@ -338,7 +352,9 @@
                         {assign var="label" value="Verticale ($size)"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Dikey ($size)"}
-                    {elseif $language == "tr"}
+                    {elseif $language == "ru"}
+                        {assign var="label" value="Портрет ($size)"}
+                    {elseif $language == "sv"}
                         {assign var="label" value="Porträtt ($size)"}
                     {else}
                         {assign var="label" value="Portrait ($size)"}
@@ -361,6 +377,8 @@
                         {assign var="label" value="Orizzontale ($size)"}
                     {elseif $language == "tr"}
                         {assign var="label" value="Yatay ($size)"}
+                    {elseif $language == "ru"}
+                        {assign var="label" value="Альбом ($size)"}
                     {elseif $language == "sv"}
                         {assign var="label" value="Landskap ($size)"}
                     {else}
@@ -384,6 +402,8 @@
                 {assign var="label" value="Crea"}
             {elseif $language == "tr"}
                 {assign var="label" value="Üret"}
+            {elseif $language == "ru"}
+                {assign var="label" value="Создать"}
             {elseif $language == "sv"}
                 {assign var="label" value="Skapa"}
             {else}
@@ -411,6 +431,8 @@
                     Provider:
                 {elseif $language == "tr"}
                     Kaynak:
+                {elseif $language == "ru"}
+                    Основа:
                 {elseif $language == "sv"}
                 	Kartstil:
                 {else}
@@ -489,8 +511,10 @@
             Stampe recenti
         {elseif $language == "tr"}
             Son Baskılar
+        {elseif $language == "ru"}
+            Недавние распечатки
         {elseif $language == "sv"}
-        	Nyligen utskrivet
+        	Senaste utskrifter
         {else}
             Recent Prints
         {/if}
@@ -537,6 +561,10 @@
                 Altre stampe recenti...
             {elseif $language == "tr"}
                 Daha baskılar...
+            {elseif $language == "ru"}
+                Еще недавние распечатки...
+            {elseif $language == "sv"}
+                Fler utskrifter...
             {else}
                 More recent prints...
             {/if}
@@ -550,6 +578,8 @@
             <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> von <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie bei Flickr</a>
         {elseif $language == "tr"}
             <a href="http://www.flickr.com/photos/junipermarie/">Flickr'da ricajimarie</a> tarafından <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Kibera'da Walking Papers</a>
+        {elseif $language == "ru"}
+            <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG, Автор: ricajimarie, на Flickr">Walking Papers в Кибере</a> by <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie на Flickr</a>
         {else}
             <a href="http://www.flickr.com/photos/junipermarie/4133315811/" title="IMG_4806.JPG by ricajimarie, on Flickr">Walking Papers in Kibera</a> by <a href="http://www.flickr.com/photos/junipermarie/">ricajimarie on Flickr</a>
         {/if}

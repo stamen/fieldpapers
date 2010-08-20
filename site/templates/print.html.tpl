@@ -19,6 +19,8 @@
             Stampa #{$print.id|escape} 
         {elseif $language == "tr"}
             #{$print.id|escape} baskıyı yazdır
+        {elseif $language == "ru"}
+            Распечатка #{$print.id|escape}
         {elseif $language == "sv"}
         	Utskrift #{$print.id|escape}
         {else}
@@ -70,8 +72,10 @@
                     Questa mappa é vecchia o sbagliata?
                 {elseif $language == "tr"}
                     Bu hariyta yanlış veya geçerliğini yitirmiş mi?
+                {elseif $language == "ru"}
+                    Эта карта неправильная или устарела?
                 {elseif $language == "sv"}
-                    Är denna karta fel, eller föråldrad?
+                    Är detta fel karta, eller föråldrad?
                 {else}
                     Is this map wrong, or out of date?
                 {/if}
@@ -91,6 +95,8 @@
                     {assign var="label" value="Rifai"}
                 {elseif $language == "tr"}
                     {assign var="label" value="Yenile"}
+                {elseif $language == "ru"}
+                    {assign var="label" value="Переделать"}
                 {elseif $language == "sv"}
                     {assign var="label" value="Gör om"}
                 {else}

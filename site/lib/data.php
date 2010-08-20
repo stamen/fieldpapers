@@ -188,6 +188,10 @@
             if(preg_match('/^tr\b/', $language))
             return 'tr';
 
+            // ru or ru-
+            if(preg_match('/^ru\b/', $language))
+            return 'ru';
+
             // sv or sv-
             if(preg_match('/^sv\b/', $language))
             return 'sv';

@@ -19,6 +19,8 @@
             Mappa scansionata #{$scan.id|escape}
         {elseif $language == "tr"}
             #{$scan.id|escape} Taramış Harita
+        {elseif $language == "ru"}
+            Отсканированная карта #{$scan.id|escape}
         {elseif $language == "sv"}
             Skannad Karta #{$scan.id|escape}
         {else}
@@ -90,6 +92,8 @@
                             {assign var="label" value="Modifica"}
                         {elseif $language == "tr"}
                             {assign var="label" value="Değiştir"}
+                        {elseif $language == "ru"}
+                            {assign var="label" value="Редактировать"}
                         {elseif $language == "sv"}
                             {assign var="label" value="Redigera"}
                         {else}

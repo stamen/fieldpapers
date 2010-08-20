@@ -250,7 +250,7 @@
         Russian translation by Maxim Dubinin
         <br />
         Swedish translation by Frank Eriksson
-        
+
     {/if}
 </p>
 
