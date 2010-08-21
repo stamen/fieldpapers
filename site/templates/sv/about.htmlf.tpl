@@ -22,7 +22,7 @@
     Det finns en tredje form av kartläggning som bäst lämpar sig med papper, och det noteringen av saker på marknivå som är osynliga på ett flygfotografi, och omöjliga att samla in utan att faktiskt besöka platsen; såsom gatuljus, cyckelaffärer, toaletter, bankautomater, trappor, kaféer, pubar, adresser och andra delar av geografiskt sammanhang som gör OpenStreetMap till en så stark utmanare till de större, kommersiella tjänsteleverantörerna.
 </p>
 
-<h3>Korrigera #3</h3>
+<h3>Rätta till #3</h3>
 
 <p>
     För närvarande finns det inga metoder på plats som är speciellt utformad för denna tredje typ av sporadisk lokal kartläggning.

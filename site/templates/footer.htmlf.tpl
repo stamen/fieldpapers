@@ -221,7 +221,7 @@
         <br />
         Rysk översättning av Maxim Dubinin
         <br />
-        Svensk översättning av Caleb Maclennan
+        Svensk översättning av Frank M. Eriksson
         
     {else}
         Walking Papers &#xA9; <a href="http://mike.teczno.com">Michal Migurski</a>, <a href="http://stamen.com">Stamen Design</a>
