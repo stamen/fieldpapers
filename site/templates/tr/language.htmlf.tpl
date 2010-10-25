@@ -50,10 +50,20 @@
 		<br/>
 		<a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a> tarafından çeviri.
     </li>
+	<li>
+        <strong>Rusça</strong>
+        <br/>
+        <a href="http://github.com/simgislab">Maxim Dubinin</a> tarafından çeviri. (<a href="http://gis-lab.info">GIS-Lab.info</a>)
+    </li>
     <li>
         <strong>İspanyolca</strong>
         <br/>
         <a href="http://github.com/mort">Manuel González Noriega</a> tarafından çeviri.
+    </li>
+    <li>
+        <strong>İsveççe</strong>
+        <br/>
+        <a href="http://github.com/knarf-se">Frank M. Eriksson</a> tarafından çevri. (<a href="http://knarf.se/">knarF.se</a>)
     </li>
     <li>
         <strong>Türkçe</strong>
