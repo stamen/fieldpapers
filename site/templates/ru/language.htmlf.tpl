@@ -53,4 +53,14 @@
         <br/>
         Перевод <a href="http://github.com/mort">Manuel González Noriega</a>
     </li>
+    <li>
+        <strong>Шведский</strong>
+        <br/>
+        Перевод <a href="http://github.com/knarf-se">Frank M. Eriksson</a> (<a href="http://knarf.se/">knarF.se</a>)
+    </li>
+    <li>
+        <strong>Турецкий</strong>
+        <br/>
+        Перевод <a href="http://github.com/alerque">Caleb Maclennan</a>.
+    </li>
 </ul>
