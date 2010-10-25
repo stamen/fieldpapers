@@ -14,19 +14,14 @@
 
 <ul>
     <li>
-        <strong>Anglais</strong>
-        <br/>
-        Original par <a href="http://github.com/migurski">Michal Migurski</a>
-    </li>
-    <li>
-        <strong>Allemand</strong>
-        <br/>
-        Traduction par <a href="http://github.com/John07">Jonas Krückel</a>
-    </li>
-    <li>
         <strong>Néerlandais</strong>
         <br/>
         Traduction par <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
+    </li>
+    <li>
+        <strong>Anglais</strong>
+        <br/>
+        Original par <a href="http://github.com/migurski">Michal Migurski</a>
     </li>
     <li>
         <strong>Français</strong>
@@ -34,14 +29,9 @@
         Traduction par <a href="http://github.com/jfretin">Jonathan Fretin</a>
     </li>
     <li>
-        <strong>Espagnole</strong>
+        <strong>Allemand</strong>
         <br/>
-        Translation by <a href="http://github.com/mort">Manuel González Noriega</a>
-    </li>
-    <li>
-		<strong>Japonaise (日本語)</strong>
-		<br/>
-		Traduction par <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
+        Traduction par <a href="http://github.com/John07">Jonas Krückel</a>
     </li>
     <li>
         <strong>Italienne</strong>
@@ -49,9 +39,9 @@
         Traduction par <a href="http://github.com/ecarnevale">Emanuel Carnevale</a>
     </li>
     <li>
-        <strong>Turque</strong>
-        <br/>
-        Traduction par <a href="http://github.com/alerque">Caleb Maclennan</a>
+		<strong>Japonaise (日本語)</strong>
+		<br/>
+		Traduction par <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
     </li>
     <li>
         <strong>Russe</strong>
@@ -59,8 +49,18 @@
         Traduction par <a href="http://github.com/simgislab">Maxim Dubinin</a> (<a href="http://gis-lab.info/">GIS-Lab.info</a>)
     </li>
     <li>
+        <strong>Espagnole</strong>
+        <br/>
+        Translation by <a href="http://github.com/mort">Manuel González Noriega</a>
+    </li>
+    <li>
         <strong>Suédois</strong>
         <br/>
         Traduction par <a href="http://github.com/knarf-se">Frank M. Eriksson</a> (<a href="http://knarf.se/">knarF.se</a>)
+    </li>
+    <li>
+        <strong>Turque</strong>
+        <br/>
+        Traduction par <a href="http://github.com/alerque">Caleb Maclennan</a>
     </li>
 </ul>
