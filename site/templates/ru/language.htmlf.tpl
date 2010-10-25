@@ -1,7 +1,11 @@
 <h2>Локализация</h2>
 
 <p>
-    Помогите нам сделать так, чтобы этот сервис был доступен каждому. Исходный <a href="http://github.com/migurski/paperwalking">код проекта размещен на Github</a>, исправления и переводы могут быть внесены с помощью <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">создания форка</a> и последующей отправки нам запроса pull.
+    Помогите нам сделать так, чтобы этот сервис был доступен каждому. Исходный
+	<a href="http://github.com/migurski/paperwalking">код проекта размещен на Github</a>,
+	исправления и переводы могут быть внесены с помощью
+	<a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">создания форка</a>
+	и последующей отправки нам запроса pull.
 </p>
 
 <p>
