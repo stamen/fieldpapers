@@ -1,11 +1,15 @@
 <h2>Traduction</h2>
 
 <p>
-    Aidez-nous à rendre disponible Walking Papers dans une multitude de langages. Le <a href="http://github.com/migurski/paperwalking">code source est hébergé sur GitHub</a>, des corrections et des traductions complètes peuvent être effectuées en <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">faisant un fork du code du projet</a> et en envoyant une requête de pull (pull request).
+    Aidez-nous à rendre disponible Walking Papers dans une multitude de langages. Le
+	<a href="http://github.com/migurski/paperwalking">code source est hébergé sur GitHub</a>,
+	des corrections et des traductions complètes peuvent être effectuées en
+	<a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">faisant un fork du code du projet</a>
+	et en envoyant une requête de pull (pull request).
 </p>
 
 <p>
-    Nous proposons actuellement une traduction dans les langages suivants :
+    Nous proposons actuellement une traduction dans les langages suivants:
 </p>
 
 <ul>
