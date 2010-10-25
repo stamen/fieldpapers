@@ -16,7 +16,7 @@
     <li>
         <strong>オランダ語</strong>
         <br/>
-        Translation by <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
+        <a href="http://github.com/milovanderlinden">Milo van der Linden</a>による翻訳
     </li>
     <li>
         <strong>英語</strong>
@@ -31,7 +31,7 @@
     <li>
         <strong>ドイツ語</strong>
         <br/>
-        Translation by <a href="http://github.com/John07">Jonas Krückel</a>
+        <a href="http://github.com/John07">Jonas Krückel</a>による翻訳
     </li>
     <li>
         <strong>イタリア語</strong>
