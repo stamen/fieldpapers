@@ -2,11 +2,10 @@
 
 <p>
     Hjälp oss med att göra Walking Papers tillgänglig i många olika språk. 
-    <a href="http://github.com/migurski/paperwalking">Projektet ligger på 
-    Github</a>, korrigeringar och fullständiga översättningar kan skapas genom att 
-    <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications"
-    >förgrena projektets kod</a> (en: fork) och sedan skicka en förfrågan om
-    import (en: pull request).
+    <a href="http://github.com/migurski/paperwalking">Projektet ligger på Github</a>,
+	korrigeringar och fullständiga översättningar kan skapas genom att 
+    <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">förgrena projektets kod</a> (en: fork)
+	och sedan skicka en förfrågan om import (en: pull request).
 </p>
 
 <p>
