@@ -1,7 +1,11 @@
 <h2>Localizzazione</h2>
 
 <p>
-    Aiutaci a rendere Walking Papers disponibile in molti altre lingue. Il <a href="http://github.com/migurski/paperwalking">codice sorgente del progetto e' disponibile su Github</a>, correzioni e traduzioni complete possono venire effettuate <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">facendo un fork del codice del progetto</a> ed inviando una richiesta di pull.
+    Aiutaci a rendere Walking Papers disponibile in molti altre lingue. Il
+	<a href="http://github.com/migurski/paperwalking">codice sorgente del progetto e' disponibile su Github</a>,
+	correzioni e traduzioni complete possono venire effettuate
+	<a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">facendo un fork del codice del progetto</a>
+	ed inviando una richiesta di pull.
 </p>
 
 <p>
