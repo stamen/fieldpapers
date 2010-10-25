@@ -24,6 +24,11 @@
         Original de <a href="http://github.com/migurski">Michal Migurski</a>
     </li>
     <li>
+        <strong>Francés</strong>
+        <br/>
+        Traducción de <a href="http://github.com/jfretin">Jonathan Fretin</a>
+    </li>
+    <li>
         <strong>Alemán</strong>
         <br/>
         Traducción de <a href="http://github.com/John07">Jonas Krückel</a>
