@@ -1,7 +1,11 @@
 <h2>Traducción</h2>
 
 <p>
-    Ayudanos a que Walking Papers esté disponible en varios idiomas. El <a href="http://github.com/migurski/paperwalking">código del proyecto está disponible en Github</a>, correcciones y traducciones completas pueden hacerse <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">forkeando el proyecto</a> y haciendo una pull request.
+    Ayudanos a que Walking Papers esté disponible en varios idiomas. El
+	<a href="http://github.com/migurski/paperwalking">código del proyecto está disponible en Github</a>,
+	correcciones y traducciones completas pueden hacerse
+	<a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">forkeando el proyecto</a>
+	y haciendo una pull request.
 </p>
 
 <p>
