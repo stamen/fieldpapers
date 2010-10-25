@@ -1,11 +1,11 @@
-<h2>Yerelleştirme ve Tercüme</h2>
+<h2>Yerelleştirme</h2>
 
 <p>
     Walking Papers birçok dilde mevcut olsun diye bize yardım edin. Pojenin
     <a href="http://github.com/migurski/paperwalking">kaynak kodusu Github'da bulunur</a>.
     Düzeltmeler yapmak ve bütün çevirileri oluşturmak için
-    <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">proje koduna "fork" yapıp</a>
-    değişiklerini bitirdikten sonra bize "pull" isteğı gönder.
+    <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications">proje koduna bölüp</a> (en: fork)
+    değişiklerini bitirdikten sonra bize çekme (en: pull) isteği gönder.
 </p>
 
 <p>
