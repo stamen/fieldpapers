@@ -219,6 +219,17 @@ form.language
     {
         left: 499px;
     }
+
+.pagination
+{
+    text-align: right;
+}
+
+.pagination .newer
+{
+    display: block;
+    float: left;
+}
     
 #footer
 {

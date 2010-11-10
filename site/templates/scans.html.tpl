@@ -58,7 +58,14 @@
         {/if}
     {/strip}</h2>
     
-    <ol>
+    {if $page > 1}
+        <p class="pagination">
+            <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
+            <span class="older"><a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
+        </p>
+    {/if}
+    
+    <ol start="{$offset+1}">
         {foreach from=$scans item="scan"}
             <li>
                 {if $scan.print_place_woeid}
@@ -90,6 +97,13 @@
             </li>
         {/foreach}
     </ol>
+    
+    <p class="pagination">
+        {if $page > 1}
+            <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
+        {/if}
+        <span class="older"><a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
+    </p>
     
     {include file="footer.htmlf.tpl"}
     

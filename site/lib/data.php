@@ -201,6 +201,34 @@
         return 'en';
     }
     
+   /**
+    * Returns count, offset, per-page, page.
+    */
+    function get_pagination($input)
+    {
+        if(is_numeric($input))
+            return array(intval($input), 0, intval($input), 1);
+    
+        if(!is_array($input))
+            return array(10, 0, 10, 1);
+        
+        $count = intval(is_numeric($input['count']) ? $input['count'] : 50);
+        $offset = intval(is_numeric($input['offset']) ? $input['offset'] : 0);
+        $perpage = intval(is_numeric($input['perpage']) ? $input['perpage'] : 50);
+        $page = intval(is_numeric($input['page']) ? $input['page'] : 1);
+        
+        if(is_numeric($input['offset'])) {
+            $perpage = $count;
+            $page = 1 + floor($offset / $count);
+        
+        } elseif(is_numeric($input['page'])) {
+            $count = $perpage;
+            $offset = ($page - 1) * $perpage;
+        }
+        
+        return array(max(0, $count), max(0, $offset), max(0, $perpage), max(1, $page));
+    }
+    
     if(!function_exists('json_encode'))
     {
         function json_encode($value)
@@ -502,8 +530,10 @@
         return $row;
     }
     
-    function get_scans(&$dbh, $count, $include_private=false)
+    function get_scans(&$dbh, $page, $include_private=false)
     {
+        list($count, $offset, $perpage, $page) = get_pagination($page);
+    
         // TODO: ditch dependency on table_columns()
         $column_names = array_keys(table_columns($dbh, 'prints'));
         
@@ -531,10 +561,10 @@
                       WHERE s.last_step = %d
                         AND %s
                       ORDER BY s.created DESC
-                      LIMIT %d",
+                      LIMIT %d OFFSET %d",
                      STEP_FINISHED,
                      ($include_private ? '1' : "s.is_private='no'"),
-                     $count);
+                     $count, $offset);
     
         $res = $dbh->query($q);
         

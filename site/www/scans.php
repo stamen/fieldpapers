@@ -20,11 +20,19 @@
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
     
-    $scans = get_scans($dbh, 50, false);
+    $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
+    
+    $scans = get_scans($dbh, $pagination, false);
+    list($count, $offset, $perpage, $page) = get_pagination($pagination);
 
     $sm = get_smarty_instance();
     $sm->assign('scans', $scans);
     $sm->assign('language', $language);
+
+    $sm->assign('count', $count);
+    $sm->assign('offset', $offset);
+    $sm->assign('perpage', $perpage);
+    $sm->assign('page', $page);
     
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("scans.html.tpl");
