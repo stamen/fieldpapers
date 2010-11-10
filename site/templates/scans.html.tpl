@@ -58,7 +58,9 @@
         {/if}
     {/strip}</h2>
     
-    {if $page > 1}
+    {assign var="scans_count" value=$scans|@count}
+    
+    {if $page > 1 and $scans_count > 0}
         <p class="pagination">
             <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
             <span class="older"><a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
@@ -99,10 +101,14 @@
     </ol>
     
     <p class="pagination">
-        {if $page > 1}
-            <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
+        {if $scans_count > 0}
+            {if $page > 1}
+                <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
+            {/if}
+            <span class="older"><a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
+        {else}
+            <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page=1">Newest</a></span>
         {/if}
-        <span class="older"><a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
     </p>
     
     {include file="footer.htmlf.tpl"}
