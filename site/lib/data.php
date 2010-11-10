@@ -547,15 +547,20 @@
             ? 's.base_url,'
             : '';
         
+        $uploaded_file = in_array('uploaded_file', $column_names)
+            ? 's.uploaded_file,'
+            : '';
+        
         $q = sprintf("SELECT {$woeid_column_names}
                              s.id, s.print_id, s.last_step,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
-                             s.description, s.is_private, s.will_edit, {$base_url}
+                             s.description, s.is_private, s.will_edit,
                              (p.north + p.south) / 2 AS print_latitude,
                              (p.east + p.west) / 2 AS print_longitude,
                              UNIX_TIMESTAMP(s.created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
+                             {$base_url} {$uploaded_file}
                              s.user_id
                       FROM scans AS s
                       LEFT JOIN prints AS p
@@ -596,12 +601,17 @@
             ? 'base_url,'
             : '';
         
+        $uploaded_file = in_array('uploaded_file', $column_names)
+            ? 'uploaded_file,'
+            : '';
+        
         $q = sprintf("SELECT id, print_id, last_step,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
-                             description, is_private, will_edit, {$base_url}
+                             description, is_private, will_edit,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             {$base_url} {$uploaded_file}
                              user_id
                       FROM scans
                       WHERE id = %s",

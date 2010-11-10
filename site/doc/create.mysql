@@ -85,6 +85,7 @@ CREATE TABLE scans (
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
 ALTER TABLE scans ADD COLUMN base_url VARCHAR(255) AFTER will_edit;
+ALTER TABLE scans ADD COLUMN uploaded_file VARCHAR(255) AFTER base_url;
 
 
 
