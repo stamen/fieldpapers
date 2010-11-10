@@ -230,6 +230,12 @@ form.language
     display: block;
     float: left;
 }
+
+p.wide
+{
+    width: 960px;
+    text-align: center;
+}
     
 #footer
 {

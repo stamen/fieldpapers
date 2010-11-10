@@ -38,9 +38,9 @@
     </script>
 {/if}
 
-<p>
-    <a href="{$base_dir}/scan-large.php?id={$scan.id}">
-        <img border="1" src="{$scan.base_url}/preview.jpg" /></a>
+<p class="wide">
+    <a href="{$scan.base_url}/large.jpg">
+        <img border="1" src="{$scan.base_url}/large.jpg" /></a>
 </p>
 
 <p>
