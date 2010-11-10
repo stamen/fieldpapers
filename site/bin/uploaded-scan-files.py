@@ -30,7 +30,7 @@ if __name__ == '__main__':
             if actual_base_url != base_url:
                 raise Exception('failed match', actual_base_url, base_url)
 
-            db.execute('UPDATE scans SET uploaded_file = %s WHERE id = %s', (uploaded_file, scan_id))
+            db.execute('UPDATE scans SET created = created, uploaded_file = %s WHERE id = %s', (uploaded_file, scan_id))
             
             print scan_id, '-', base_url, uploaded_file
 
