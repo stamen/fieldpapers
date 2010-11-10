@@ -537,7 +537,7 @@
         list($count, $offset, $perpage, $page) = get_pagination($page);
     
         // TODO: ditch dependency on table_columns()
-        $column_names = array_keys(table_columns($dbh, 'prints'));
+        $column_names = array_keys(table_columns($dbh, 'scans'));
         
         $woeid_column_names = in_array('place_woeid', $column_names)
             ? 'p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,'
