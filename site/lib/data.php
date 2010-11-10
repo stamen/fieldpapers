@@ -408,8 +408,10 @@
         return true;
     }
     
-    function get_prints(&$dbh, $count)
+    function get_prints(&$dbh, $page)
     {
+        list($count, $offset, $perpage, $page) = get_pagination($page);
+    
         // TODO: ditch dependency on table_columns()
         $column_names = array_keys(table_columns($dbh, 'prints'));
         
@@ -442,8 +444,8 @@
                              user_id
                       FROM prints
                       ORDER BY created DESC
-                      LIMIT %d",
-                      $count);
+                      LIMIT %d OFFSET %d",
+                     $count, $offset);
     
         $res = $dbh->query($q);
         
