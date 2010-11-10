@@ -9,9 +9,15 @@ if __name__ == '__main__':
     db = {'user': argv[1], 'passwd': argv[2], 'db': argv[3], 'host': argv[4]}
     db = MySQLdb.connect(**db).cursor()
     
-    db.execute('SELECT content FROM messages WHERE content LIKE "http://%"')
+    db.execute('SELECT content FROM messages WHERE content LIKE "http://%%" ORDER BY created DESC')
+    
+    scans = int(argv[5])
     
     for (url, ) in db.fetchall():
+        
+        if scans == 0:
+            break
+    
         match = pat.match(url)
         
         if match:
@@ -28,10 +34,13 @@ if __name__ == '__main__':
                 continue
             
             if actual_base_url != base_url:
-                raise Exception('failed match', actual_base_url, base_url)
+                print 'failed match', actual_base_url, base_url
+                continue
 
             db.execute('UPDATE scans SET created = created, uploaded_file = %s WHERE id = %s', (uploaded_file, scan_id))
             
             print scan_id, '-', base_url, uploaded_file
+            
+            scans -= 1
 
     db.connection.commit()
