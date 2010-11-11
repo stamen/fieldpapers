@@ -31,6 +31,7 @@
                           'print_id' => $_POST['print_id'],
                           'last_step' => $_POST['last_step'],
                           'user_name' => $_POST['user_name'],
+                          'uploaded_file' => $_POST['uploaded_file'],
                           'min_row' => $_POST['min_row'],
                           'min_column' => $_POST['min_column'],
                           'min_zoom' => $_POST['min_zoom'],

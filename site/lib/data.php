@@ -828,7 +828,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url') as $field)
+        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file') as $field)
             if(in_array($field, $column_names) && !is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
@@ -1000,7 +1000,7 @@
             }
         }
         
-        $url = get_base_dir().'/files/'.$object_id;
+        $url = 'http://'.get_domain_name().get_base_dir().'/files/'.$object_id;
         
         if($fh = @fopen($filepath, 'w'))
         {
