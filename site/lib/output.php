@@ -151,6 +151,7 @@
         header(sprintf('X-Scan-Maximum-Coord: %.3f %.3f %d', $scan['max_row'], $scan['max_column'], $scan['max_zoom']));
         header(sprintf('X-Scan-Provider-URL: %s/{Z}/{X}/{Y}.jpg', $scan['base_url']));
         header(sprintf('X-Scan-QRCode-URL: %s/qrcode.jpg', $scan['base_url']));
+        header(sprintf('X-Scan-Preview-URL: %s/preview.jpg', $scan['base_url']));
         header(sprintf('X-Scan-Large-URL: %s/large.jpg', $scan['base_url']));
     }
     
