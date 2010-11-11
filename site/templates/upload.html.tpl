@@ -19,6 +19,10 @@
             Invia una mappa scannerizzata
         {elseif $language == "tr"}
 			Taramayı yükle
+        {elseif $language == "ru"}
+			Загрузить скан
+        {elseif $language == "sv"}
+            Ladda upp en inskanning
         {else}
             Upload Scan
         {/if}
@@ -47,6 +51,10 @@
         {assign var="label" value="Invia"}
     {elseif $language == "tr"}
         {assign var="label" value="Gönder"}
+    {elseif $language == "ru"}
+        {assign var="label" value="Отправить"}
+    {elseif $language == "sv"}
+        {assign var="label" value="Skicka"}
     {else}
         {assign var="label" value="Send"}
     {/if}

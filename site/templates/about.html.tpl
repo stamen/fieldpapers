@@ -19,6 +19,10 @@
             Di cosa si tratta  
         {elseif $language == "tr"}
             Hakkında
+        {elseif $language == "sv"}
+            Om
+        {elseif $language == "ru"}
+            О сервисе
         {else}
             About
         {/if}

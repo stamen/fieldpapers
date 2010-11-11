@@ -19,6 +19,10 @@
             Stampe recenti
         {elseif $language == "tr"}
             Son Baskılar
+        {elseif $language == "ru"}
+            Недавние распечатки
+        {elseif $language == "sv"}
+            Senaste Utskrifter
         {else}
             Recent Prints
         {/if}
@@ -45,12 +49,25 @@
             Stampe recenti    
         {elseif $language == "tr"}
             Son Baskılar
+        {elseif $language == "ru"}
+            Недавние распечатки
+        {elseif $language == "sv"}
+            Senaste Utskrifter
         {else}
             Recent Prints
         {/if}
     {/strip}</h2>
     
-    <ol>
+    {assign var="prints_count" value=$prints|@count}
+    
+    {if $page > 1 and $prints_count > 0}
+        <p class="pagination">
+            <span class="newer">← <a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
+            <span class="older"><a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
+        </p>
+    {/if}
+    
+    <ol start="{$offset+1}">
         {foreach from=$prints item="print"}
             <li>
                 {if $print.place_woeid}
@@ -75,6 +92,17 @@
             </li>
         {/foreach}
     </ol>
+    
+    <p class="pagination">
+        {if $prints_count > 0}
+            {if $page > 1}
+                <span class="newer">← <a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
+            {/if}
+            <span class="older"><a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
+        {else}
+            <span class="newer">← <a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page=1">Newest</a></span>
+        {/if}
+    </p>
     
     {include file="footer.htmlf.tpl"}
     

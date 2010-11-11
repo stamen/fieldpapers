@@ -1,6 +1,12 @@
 {include file="language.htmlf.tpl"}
 
-<h1><a href="{$base_dir}/"><img src="{$base_dir}/icon.png" border="0" align="bottom" alt="" /> Walking Papers</a></h1>
+<h1><a href="{$base_dir}/"><img src="{$base_dir}/icon.png" border="0" align="bottom" alt="" /> {strip}
+    {if $language == "ru"}
+        Обходной лист
+    {else}
+        Walking Papers
+    {/if}
+{/strip}</a></h1>
 
 <p id="navigation">
     {if $language == "de"}
@@ -59,6 +65,22 @@
 		<a href="{$base_dir}/upload.php">Yükle</a>
 		<a href="{$base_dir}/zeitgeist.php">İstatistik</a>
 		<a href="{$base_dir}/about.php">Hakkında</a>
+
+	{elseif $language == "ru"}
+		<a href="{$base_dir}/">На главную</a>
+		<a href="{$base_dir}/prints.php">Распечатки</a>
+		<a href="{$base_dir}/scans.php">Сканы</a>
+		<a href="{$base_dir}/upload.php">Загрузка</a>
+		<a href="{$base_dir}/zeitgeist.php">Статистика</a>
+		<a href="{$base_dir}/about.php">О сервисе</a>
+
+	{elseif $language == "sv"}
+        <a href="{$base_dir}/">Hem</a>
+        <a href="{$base_dir}/prints.php">Utskrifter</a>
+        <a href="{$base_dir}/scans.php">Inskanningar</a>
+        <a href="{$base_dir}/upload.php">Ladda upp</a>
+        <a href="{$base_dir}/zeitgeist.php">Statistik</a>
+        <a href="{$base_dir}/about.php">Om</a>
 
     {else}
         <a href="{$base_dir}/">Home</a>

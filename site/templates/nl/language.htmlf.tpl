@@ -26,4 +26,39 @@
         <br/>
         Translation by <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
     </li>
+    <li>
+        <strong>French</strong>
+        <br/>
+        Translation by <a href="http://github.com/jfretin">Jonathan Fretin</a>
+    </li>
+    <li>
+        <strong>Spanish</strong>
+        <br/>
+        Translation by <a href="http://github.com/mort">Manuel González Noriega</a>
+    </li>
+    <li>
+		<strong>Japanese (日本語)</strong>
+		<br/>
+		Translation by <a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>
+    </li>
+    <li>
+        <strong>Italian</strong>
+        <br/>
+        Translation by <a href="http://github.com/ecarnevale">Emanuel Carnevale</a>
+    </li>
+    <li>
+        <strong>Turkish</strong>
+        <br/>
+        Translation by <a href="http://github.com/alerque">Caleb Maclennan</a>.
+    </li>
+    <li>
+        <strong>Russian</strong>
+        <br/>
+        Translation by <a href="http://github.com/simgislab">Maxim Dubinin</a> (<a href="http://gis-lab.info/">GIS-Lab.info</a>)
+    </li>
+    <li>
+        <strong>Swedish</strong>
+        <br/>
+        Translation by <a href="http://github.com/knarf-se">Frank M. Eriksson</a> (<a href="http://knarf.se/">knarF.se</a>)
+    </li>
 </ul>

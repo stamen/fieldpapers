@@ -64,4 +64,14 @@
         <br/>
         Übersetzung durch <a href="http://github.com/alerque">Caleb Maclennan</a>.
     </li>
+    <li>
+        <strong>Russische</strong>
+        <br/>
+        Übersetzung durch <a href="http://github.com/simgislab">Maxim Dubinin</a> (<a href="http://gis-lab.info/">GIS-Lab.info</a>)
+    </li>
+    <li>
+        <strong>Schwedische</strong>
+        <br/>
+        Übersetzung durch <a href="http://github.com/knarf-se">Frank M. Eriksson</a> (<a href="http://knarf.se/">knarF.se</a>)
+    </li>
 </ul>

@@ -19,6 +19,10 @@
             Statistiche
         {elseif $language == "tr"}
             İstatistik
+        {elseif $language == "sv"}
+            Statistik
+        {elseif $language == "ru"}
+            Статистика
         {else}
             Zeitgeist
         {/if}
@@ -45,6 +49,10 @@
             Statistiche
         {elseif $language == "tr"}
             İstatistik
+        {elseif $language == "sv"}
+            Statistik
+        {elseif $language == "ru"}
+            Статистика
         {else}
             Zeitgeist
         {/if}
