@@ -201,6 +201,34 @@
         return 'en';
     }
     
+   /**
+    * Returns count, offset, per-page, page.
+    */
+    function get_pagination($input)
+    {
+        if(is_numeric($input))
+            return array(intval($input), 0, intval($input), 1);
+    
+        if(!is_array($input))
+            return array(10, 0, 10, 1);
+        
+        $count = intval(is_numeric($input['count']) ? $input['count'] : 50);
+        $offset = intval(is_numeric($input['offset']) ? $input['offset'] : 0);
+        $perpage = intval(is_numeric($input['perpage']) ? $input['perpage'] : 50);
+        $page = intval(is_numeric($input['page']) ? $input['page'] : 1);
+        
+        if(is_numeric($input['offset'])) {
+            $perpage = $count;
+            $page = 1 + floor($offset / $count);
+        
+        } elseif(is_numeric($input['page'])) {
+            $count = $perpage;
+            $offset = ($page - 1) * $perpage;
+        }
+        
+        return array(max(0, $count), max(0, $offset), max(0, $perpage), max(1, $page));
+    }
+    
     if(!function_exists('json_encode'))
     {
         function json_encode($value)
@@ -380,8 +408,10 @@
         return true;
     }
     
-    function get_prints(&$dbh, $count)
+    function get_prints(&$dbh, $page)
     {
+        list($count, $offset, $perpage, $page) = get_pagination($page);
+    
         // TODO: ditch dependency on table_columns()
         $column_names = array_keys(table_columns($dbh, 'prints'));
         
@@ -414,8 +444,8 @@
                              user_id
                       FROM prints
                       ORDER BY created DESC
-                      LIMIT %d",
-                      $count);
+                      LIMIT %d OFFSET %d",
+                     $count, $offset);
     
         $res = $dbh->query($q);
         
@@ -502,10 +532,12 @@
         return $row;
     }
     
-    function get_scans(&$dbh, $count, $include_private=false)
+    function get_scans(&$dbh, $page, $include_private=false)
     {
+        list($count, $offset, $perpage, $page) = get_pagination($page);
+    
         // TODO: ditch dependency on table_columns()
-        $column_names = array_keys(table_columns($dbh, 'prints'));
+        $column_names = array_keys(table_columns($dbh, 'scans'));
         
         $woeid_column_names = in_array('place_woeid', $column_names)
             ? 'p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,'
@@ -515,15 +547,20 @@
             ? 's.base_url,'
             : '';
         
+        $uploaded_file = in_array('uploaded_file', $column_names)
+            ? 's.uploaded_file,'
+            : '';
+        
         $q = sprintf("SELECT {$woeid_column_names}
                              s.id, s.print_id, s.last_step,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
-                             s.description, s.is_private, s.will_edit, {$base_url}
+                             s.description, s.is_private, s.will_edit,
                              (p.north + p.south) / 2 AS print_latitude,
                              (p.east + p.west) / 2 AS print_longitude,
                              UNIX_TIMESTAMP(s.created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
+                             {$base_url} {$uploaded_file}
                              s.user_id
                       FROM scans AS s
                       LEFT JOIN prints AS p
@@ -531,10 +568,10 @@
                       WHERE s.last_step = %d
                         AND %s
                       ORDER BY s.created DESC
-                      LIMIT %d",
+                      LIMIT %d OFFSET %d",
                      STEP_FINISHED,
                      ($include_private ? '1' : "s.is_private='no'"),
-                     $count);
+                     $count, $offset);
     
         $res = $dbh->query($q);
         
@@ -564,12 +601,17 @@
             ? 'base_url,'
             : '';
         
+        $uploaded_file = in_array('uploaded_file', $column_names)
+            ? 'uploaded_file,'
+            : '';
+        
         $q = sprintf("SELECT id, print_id, last_step,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
-                             description, is_private, will_edit, {$base_url}
+                             description, is_private, will_edit,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             {$base_url} {$uploaded_file}
                              user_id
                       FROM scans
                       WHERE id = %s",
