@@ -74,6 +74,10 @@
                 Download a <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">GeoTIFF of scan #{$scan.id|escape}</a>.
             </p>
             
+            <p>
+                Download a <a href="{$scan.base_url|escape}/stickers.csv">CSV of stickers on scan #{$scan.id|escape}</a>.
+            </p>
+            
             {include file="$language/scan-editor-info.htmlf.tpl"}
             
             <div id="editor">

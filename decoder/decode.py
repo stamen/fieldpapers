@@ -1,6 +1,8 @@
 import os
 import sys
 import re
+import csv
+import copy
 import math
 import time
 import glob
@@ -44,6 +46,30 @@ class Marker:
         point = open(basepath + '.txt', 'r')
         self.anchor = Point(*[int(c) for c in point.read().split()])
 
+    def markersInFeatures(self, features):
+        """
+        """
+        start = time.time()
+        
+        matches = matchup.find_matches(features, self.features)
+        matches_graph = matchup.group_matches(matches, features, self.features)
+        needles = matchup.find_needles(matches, matches_graph, features, self.features)
+        
+        print >> sys.stderr, 'Found', len(needles), 'needles',
+        print >> sys.stderr, 'in %.2f sec.' % (time.time() - start)
+        
+        for (fs1, fs2, transform) in needles:
+            marker = copy.deepcopy(self)
+    
+            print >> sys.stderr, (marker.anchor.x, marker.anchor.y),
+    
+            x, y = transform(marker.anchor.x, marker.anchor.y)
+            print >> sys.stderr, '->', '(%.2f, %.2f)' % (x, y),
+    
+            marker.anchor = Point(x, y)
+            
+            yield marker
+    
     def locateInFeatures(self, features):
         """
         """
@@ -69,10 +95,11 @@ class Marker:
 def main(url, markers, apibase, password):
     """
     """
-    url_pat = re.compile(r'^http://.+/scans/([^/]+)/(.*)$', re.I)
+    url_match = re.match(r'^http://.+/scans/([^/]+)/(.*)$', url, re.I)
     
-    if url_pat.match(url):
-        scan_id = url_pat.sub(r'\1', url)
+    if url_match:
+        scan_id = url_match.group(1)
+        uploaded_file = url_match.group(2)
 
     else:
         print >> sys.stderr, url, "doesn't match expected form"
@@ -101,6 +128,16 @@ def main(url, markers, apibase, password):
         updateStepLocal(3)
         yield 30
         
+        # remove just the sticker from the markers dict
+        stickers, sticker = [], markers.pop('Sticker', None)
+        
+        for marker in sticker.markersInFeatures(features):
+            x, y = int(marker.anchor.x / scale), int(marker.anchor.y / scale)
+            print >> sys.stderr, '->', (x, y)
+    
+            marker.anchor = Point(x, y)
+            stickers.append(marker)
+        
         for (name, marker) in markers.items():
             print >> sys.stderr, name, '...',
             marker.locateInFeatures(features)
@@ -126,11 +163,44 @@ def main(url, markers, apibase, password):
 
         gym = ModestMaps.OpenStreetMap.Provider()
         
-        topleft = gym.locationCoordinate(ModestMaps.Geo.Location(north, west))
-        bottomright = gym.locationCoordinate(ModestMaps.Geo.Location(south, east))
+        topleft = gym.locationCoordinate(ModestMaps.Geo.Location(north, west)).zoomTo(20)
+        bottomright = gym.locationCoordinate(ModestMaps.Geo.Location(south, east)).zoomTo(20)
         
         print 'Coordinates:', topleft, bottomright
         print 'Mercator:', poorMansSphericalMercator(topleft), poorMansSphericalMercator(bottomright)
+        
+        
+        
+        top, left, bottom, right = topleft.row, topleft.column, bottomright.row, bottomright.column
+        
+        ax, bx, cx = linearSolution(markers['Header'].anchor.x, markers['Header'].anchor.y, left,
+                                    markers['Hand'].anchor.x,   markers['Hand'].anchor.y,   right,
+                                    markers['CCBYSA'].anchor.x, markers['CCBYSA'].anchor.y, left)
+        
+        ay, by, cy = linearSolution(markers['Header'].anchor.x, markers['Header'].anchor.y, top,
+                                    markers['Hand'].anchor.x,   markers['Hand'].anchor.y,   top,
+                                    markers['CCBYSA'].anchor.x, markers['CCBYSA'].anchor.y, bottom)
+        
+        print (ax, bx, cx), (ay, by, cy)
+        
+        pixelCoordinate = lambda x, y, z: ModestMaps.Core.Coordinate(ay * x + by * y + cy, ax * x + bx * y + cx, z)
+        
+        outfile = StringIO.StringIO()
+        output = csv.writer(outfile, dialect='excel')
+        output.writerow('scan id\tsticker number\tlatitude\tlongitude'.split('\t'))
+        
+        for (i, sticker) in enumerate(stickers):
+            coord = pixelCoordinate(sticker.anchor.x, sticker.anchor.y, topleft.zoom)
+            location = gym.coordinateLocation(coord)
+
+            print coord, '-->', '(%(lat).6f %(lon).6f)' % location.__dict__
+            
+            row = scan_id, str(i), str(location.lat), str(location.lon)
+            output.writerow(row)
+        
+        appendScanFile(scan_id, 'stickers.csv', outfile.getvalue(), apibase, password)
+        
+        
 
         uploadScanImages(apibase, password, scan_id, image)
         uploadGeoTiff(apibase, password, markers, scan_id, image, topleft, bottomright)
@@ -142,6 +212,7 @@ def main(url, markers, apibase, password):
         for zoom in range(20, 0, -1):
             localTopLeft = topleft.zoomTo(zoom)
             localBottomRight = bottomright.zoomTo(zoom)
+            print '*' * 10, localTopLeft, localBottomRight
 
             zoom_renders = tileZoomLevel(image, localTopLeft, localBottomRight, markers, renders)
             
@@ -164,7 +235,7 @@ def main(url, markers, apibase, password):
         print 'max:', bottomright.zoomTo(max_zoom)
         
         # finished!
-        updateScan(apibase, password, scan_id, print_id, topleft.zoomTo(min_zoom), bottomright.zoomTo(max_zoom))
+        updateScan(apibase, password, scan_id, uploaded_file, print_id, topleft.zoomTo(min_zoom), bottomright.zoomTo(max_zoom))
         updateStepLocal(6)
 
         yield False
@@ -317,7 +388,7 @@ def updateStep(apibase, password, scan_id, step_number):
     
     return
 
-def updateScan(apibase, password, scan_id, print_id, min_coord, max_coord):
+def updateScan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord):
     """
     """
     s, host, path, p, q, f = urlparse.urlparse(apibase)
@@ -326,6 +397,7 @@ def updateScan(apibase, password, scan_id, print_id, min_coord, max_coord):
     query = urllib.urlencode({'id': scan_id})
     params = urllib.urlencode({'print_id': print_id,
                                'password': password,
+                               'uploaded_file': uploaded_file,
                                'min_row': min_coord.row, 'max_row': max_coord.row,
                                'min_column': min_coord.column, 'max_column': max_coord.column,
                                'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom})

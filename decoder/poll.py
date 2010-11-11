@@ -25,11 +25,13 @@ def getMarkers():
     """
     """
     markers = {}
+    basepath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'corners')
 
     for basename in ('Header', 'Hand', 'CCBYSA'):
-        basepath = os.path.dirname(os.path.realpath(__file__)) + '/corners/' + basename
-        markers[basename] = decode.Marker(basepath)
+        markers[basename] = decode.Marker(os.path.join(basepath, basename))
 
+    markers['Sticker'] = decode.Marker(os.path.join(basepath, 'mrs-star'))
+    
     return markers
 
 def updateQueue(apibase, password, message_id, timeout):
