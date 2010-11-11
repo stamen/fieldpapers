@@ -55,6 +55,8 @@ CREATE TABLE prints (
 
 ALTER TABLE prints ADD COLUMN paper_size  ENUM('letter', 'a4', 'a3') DEFAULT 'letter' AFTER zoom;
 
+ALTER TABLE prints CHANGE COLUMN created created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
 
 
 DROP TABLE IF EXISTS scans;
