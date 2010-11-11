@@ -81,7 +81,7 @@ if __name__ == '__main__':
             poll_failures = 0
             
             try:
-                message_id, content = res.read().split()
+                message_id, content = res.read().split(' ', 1)
                 message_id = int(message_id)
             except ValueError:
                 # probably no queue message
@@ -94,7 +94,7 @@ if __name__ == '__main__':
                     # JSON parse failed so it's likely we've got a scan to do.
 
                     if content.startswith('http://'):
-                        url = content
+                        url = content.strip()
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
                         progress = decode.main(url, getMarkers(), apibase, password)
