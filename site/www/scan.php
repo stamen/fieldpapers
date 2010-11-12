@@ -72,8 +72,40 @@
     
     } elseif($type == 'application/xml') { 
         header("Content-Type: application/xml; charset=UTF-8");
+        header("Access-Control-Allow-Origin: *");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
         print $sm->fetch("scan.xml.tpl");
+    
+    } elseif($type == 'application/json') { 
+        header("Content-Type: application/json; charset=UTF-8");
+        header("Access-Control-Allow-Origin: *");
+        
+        unset($scan['last_step']);
+        unset($scan['age']);
+
+        $scan['min_row'] = floatval($scan['min_row']);
+        $scan['min_column'] = floatval($scan['min_column']);
+        $scan['min_zoom'] = intval($scan['min_zoom']);
+        $scan['max_row'] = floatval($scan['max_row']);
+        $scan['max_column'] = floatval($scan['max_column']);
+        $scan['max_zoom'] = intval($scan['max_zoom']);
+        $scan['created'] = intval($scan['created']);
+        
+        unset($print['last_step']);
+        unset($print['age']);
+
+        $print['north'] = floatval($print['north']);
+        $print['south'] = floatval($print['south']);
+        $print['east'] = floatval($print['east']);
+        $print['west'] = floatval($print['west']);
+        $print['zoom'] = intval($print['zoom']);
+        $print['latitude'] = floatval($print['latitude']);
+        $print['longitude'] = floatval($print['longitude']);
+        $print['created'] = intval($print['created']);
+        
+        $scan['print'] = $print;
+        
+        echo json_encode($scan)."\n";
     
     } else {
         header('HTTP/1.1 400');

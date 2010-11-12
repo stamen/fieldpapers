@@ -94,6 +94,9 @@
         if($accept_type_header == 'html')
             return 'text/html';
         
+        if($accept_type_header == 'json')
+            return 'application/json';
+        
         // break up string into pieces (types and q factors)
         preg_match_all('#([\*a-z]+/([\*a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);
 
