@@ -187,7 +187,7 @@ def main(url, markers, apibase, password):
         
         outfile = StringIO.StringIO()
         output = csv.writer(outfile, dialect='excel')
-        output.writerow('scan id\tsticker number\tlatitude\tlongitude'.split('\t'))
+        output.writerow('walkingpapers:scanid\twalkingpapers:sticker\tlatitude\tlongitude'.split('\t'))
         
         for (i, sticker) in enumerate(stickers):
             coord = pixelCoordinate(sticker.anchor.x, sticker.anchor.y, topleft.zoom)
