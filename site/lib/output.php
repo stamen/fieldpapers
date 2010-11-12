@@ -35,10 +35,12 @@
         if(php_sapi_name() == 'cli')
             return CLI_DOMAIN_NAME;
         
-        if($_SERVER['SERVER_PORT'] != 80)
-            return "{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}";
+        $server_name = defined('SERVER_NAME') ? SERVER_NAME : $_SERVER['SERVER_NAME'];
         
-        return $_SERVER['SERVER_NAME'];
+        if($_SERVER['SERVER_PORT'] != 80)
+            return "{$server_name}:{$_SERVER['SERVER_PORT']}";
+        
+        return $server_name;
     }
     
     function get_base_dir()
