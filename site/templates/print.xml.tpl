@@ -1,6 +1,6 @@
-<print id="{$print.id|escape}" user="{$print.user_id|escape}" href="http://{$domain}{$base_dir}{$base_href}?id={$print.id|escape:"url"}">
+<print id="{$print.id|escape}" user="{$print.user_id|escape}" href="http://{$domain}{$base_dir}/print.php?id={$print.id|escape:"url"}">
     <paper size="{$print.paper_size|escape}" orientation="{$print.orientation|escape}" />
-    <provider>{$print.provider|escape}"</provider>
+    <provider>{$print.provider|escape}</provider>
     <preview href="{$print.preview_url|escape}" />
     <pdf href="{$print.pdf_url|escape}" />
     <bounds>

@@ -1,4 +1,4 @@
-<scan id="{$scan.id|escape}" user="{$scan.user_id|escape}" href="http://{$domain}{$base_dir}{$base_href}?id={$scan.id|escape:"url"}">
+<scan id="{$scan.id|escape}" user="{$scan.user_id|escape}" href="http://{$domain}{$base_dir}/scan.php?id={$scan.id|escape:"url"}">
     <provider href="{$scan.base_url|escape}/{literal}{Z}/{X}/{Y}{/literal}.jpg" />
     <large href="{$scan.base_url|escape}/large.jpg" />
     <qrcode href="{$scan.base_url|escape}/qrcode.jpg" />
