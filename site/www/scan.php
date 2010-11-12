@@ -90,6 +90,9 @@
         $scan['max_column'] = floatval($scan['max_column']);
         $scan['max_zoom'] = intval($scan['max_zoom']);
         $scan['created'] = intval($scan['created']);
+        $scan['large_url'] = $scan['base_url'].'/large.jpg';
+        $scan['qrcode_url'] = $scan['base_url'].'/qrcode.jpg';
+        $scan['preview_url'] = $scan['base_url'].'/preview.jpg';
         
         unset($print['last_step']);
         unset($print['age']);

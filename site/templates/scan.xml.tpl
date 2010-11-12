@@ -2,6 +2,7 @@
     <provider href="{$scan.base_url|escape}/{literal}{Z}/{X}/{Y}{/literal}.jpg" />
     <large href="{$scan.base_url|escape}/large.jpg" />
     <qrcode href="{$scan.base_url|escape}/qrcode.jpg" />
+    <preview href="{$scan.base_url|escape}/preview.jpg" />
     <private>{$scan.is_private|escape}</private>
     <will-edit>{$scan.will_edit|escape}</will-edit>
     <minimum-coord row="{$scan.min_row|escape}" column="{$scan.min_column|escape}" zoom="{$scan.min_zoom|escape}" />
