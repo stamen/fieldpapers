@@ -75,11 +75,10 @@
                 {if $scan.has_geotiff == "yes"}
                     <li>GeoTIFF: <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">walking-paper-{$scan.id|escape}.tif</a></li>
                 {/if}
+                {if $scan.has_stickers == "yes"}
+                    <li>Stickers: <a href="{$scan.base_url|escape}/stickers.csv">stickers.csv</a></li>
+                {/if}
             </ul>
-            
-            <p>
-                Download a <a href="{$scan.base_url|escape}/stickers.csv">CSV of stickers on scan #{$scan.id|escape}</a>.
-            </p>
             
             {include file="$language/scan-editor-info.htmlf.tpl"}
             
