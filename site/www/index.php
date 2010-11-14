@@ -29,7 +29,7 @@
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
     
     $prints = get_prints($dbh, 3);
-    $scans = get_scans($dbh, 3);
+    $scans = get_scans($dbh, 4);
 
     $sm = get_smarty_instance();
     $sm->assign('prints', $prints);

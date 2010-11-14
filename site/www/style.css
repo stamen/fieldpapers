@@ -231,6 +231,31 @@ form.language
     float: left;
 }
 
+table.scans
+{
+    margin: 1em auto;
+    width: 816px;
+    border-collapse: collapse;
+}
+
+table.scans tr td
+{
+    width: 204px;
+    padding: 0 10px 10px 0;
+    vertical-align: top;
+}
+
+table.scans tr.preview td
+{
+    padding-top: 20px;
+    vertical-align: bottom;
+}
+
+table.scans tr.preview td img
+{
+    width: 80%;
+}
+
 p.wide
 {
     width: 960px;
