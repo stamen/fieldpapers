@@ -2,6 +2,7 @@ import sys
 import time
 import math
 import json
+import time
 import urllib
 import httplib
 import os.path
@@ -76,6 +77,12 @@ if __name__ == '__main__':
             req = httplib.HTTPConnection(host, 80)
             req.request('POST', path+'/dequeue.php', params, {'Content-Type': 'application/x-www-form-urlencoded'})
             res = req.getresponse()
+            
+            if res.status == 503:
+                retry = int(res.getheader('Retry-After', 60))
+                print >> sys.stderr, 'poll POST to dequeue.php resulted in status 503; will sleep for %d seconds' % retry
+                time.sleep(retry)
+                continue
             
             assert res.status == 200, 'poll POST to dequeue.php resulting in status %s instead of 200' % res.status
             
