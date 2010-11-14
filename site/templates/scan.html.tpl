@@ -71,9 +71,11 @@
 
             {include file="$language/scan-info.htmlf.tpl"}
             
-            <p>
-                Download a <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">GeoTIFF of scan #{$scan.id|escape}</a>.
-            </p>
+            <ul>
+                {if $scan.has_geotiff == "yes"}
+                    <li>GeoTIFF: <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">walking-paper-{$scan.id|escape}.tif</a></li>
+                {/if}
+            </ul>
             
             <p>
                 Download a <a href="{$scan.base_url|escape}/stickers.csv">CSV of stickers on scan #{$scan.id|escape}</a>.

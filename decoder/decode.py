@@ -398,6 +398,7 @@ def updateScan(apibase, password, scan_id, uploaded_file, print_id, min_coord, m
     params = urllib.urlencode({'print_id': print_id,
                                'password': password,
                                'uploaded_file': uploaded_file,
+                               'has_geotiff': 'yes',
                                'min_row': min_coord.row, 'max_row': max_coord.row,
                                'min_column': min_coord.column, 'max_column': max_coord.column,
                                'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom})
