@@ -157,9 +157,22 @@
         header(sprintf('X-Scan-Large-URL: %s/large.jpg', $scan['base_url']));
     }
     
+    function enforce_master_on_off_switch($language)
+    {
+        if(defined('MASTER_ON_OFF_SWITCH') and MASTER_ON_OFF_SWITCH)
+            return;
+
+        $sm = get_smarty_instance();
+        $sm->assign('language', $language);
+        header('Retry-After: 300'); // let's just say five minutes
+        die_with_code(503, $sm->fetch("unavailable.html.tpl"));
+    }
+    
     function die_with_code($code, $message)
     {
-        error_log("die_with_code: $code, $message");
+        if($code != 503)
+            error_log("die_with_code: $code, $message");
+
         header("HTTP/1.1 {$code}");
         die($message);
     }

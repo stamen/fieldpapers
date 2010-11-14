@@ -20,6 +20,10 @@
     define('AWS_SECRET_KEY', '');
     define('S3_BUCKET_ID',   '');
     
+    // Master on/off switch for the whole site.
+    // Displays a "go away" message for any page when turned off.
+    define('MASTER_ON_OFF_SWITCH', 1);
+    
     // Advanced compose form, on or off. Currently allows for uploading
     // of GeoTIFFs as an alternative to using the slippy map to compose prints.
     define('ADVANCED_COMPOSE_FORM', 0);
