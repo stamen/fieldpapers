@@ -168,42 +168,12 @@ def main(url, markers, apibase, password):
         
         print 'Coordinates:', topleft, bottomright
         print 'Mercator:', poorMansSphericalMercator(topleft), poorMansSphericalMercator(bottomright)
-        
-        
-        
-        top, left, bottom, right = topleft.row, topleft.column, bottomright.row, bottomright.column
-        
-        ax, bx, cx = linearSolution(markers['Header'].anchor.x, markers['Header'].anchor.y, left,
-                                    markers['Hand'].anchor.x,   markers['Hand'].anchor.y,   right,
-                                    markers['CCBYSA'].anchor.x, markers['CCBYSA'].anchor.y, left)
-        
-        ay, by, cy = linearSolution(markers['Header'].anchor.x, markers['Header'].anchor.y, top,
-                                    markers['Hand'].anchor.x,   markers['Hand'].anchor.y,   top,
-                                    markers['CCBYSA'].anchor.x, markers['CCBYSA'].anchor.y, bottom)
-        
-        print (ax, bx, cx), (ay, by, cy)
-        
-        pixelCoordinate = lambda x, y, z: ModestMaps.Core.Coordinate(ay * x + by * y + cy, ax * x + bx * y + cx, z)
-        
-        outfile = StringIO.StringIO()
-        output = csv.writer(outfile, dialect='excel')
-        output.writerow('walkingpapers:scanid\twalkingpapers:sticker\tlatitude\tlongitude'.split('\t'))
-        
-        for (i, sticker) in enumerate(stickers):
-            coord = pixelCoordinate(sticker.anchor.x, sticker.anchor.y, topleft.zoom)
-            location = gym.coordinateLocation(coord)
-
-            print coord, '-->', '(%(lat).6f %(lon).6f)' % location.__dict__
-            
-            row = scan_id, str(i), str(location.lat), str(location.lon)
-            output.writerow(row)
-        
-        appendScanFile(scan_id, 'stickers.csv', outfile.getvalue(), apibase, password)
-        
-        
 
         uploadScanImages(apibase, password, scan_id, image)
         uploadGeoTiff(apibase, password, markers, scan_id, image, topleft, bottomright)
+        
+        if stickers:
+            uploadScanStickers(apibase, password, scan_id, markers, stickers, topleft, bottomright)
         
         min_zoom, max_zoom = 20, 0
         
@@ -235,7 +205,7 @@ def main(url, markers, apibase, password):
         print 'max:', bottomright.zoomTo(max_zoom)
         
         # finished!
-        updateScan(apibase, password, scan_id, uploaded_file, print_id, topleft.zoomTo(min_zoom), bottomright.zoomTo(max_zoom))
+        updateScan(apibase, password, scan_id, uploaded_file, print_id, bool(stickers), topleft.zoomTo(min_zoom), bottomright.zoomTo(max_zoom))
         updateStepLocal(6)
 
         yield False
@@ -388,7 +358,7 @@ def updateStep(apibase, password, scan_id, step_number):
     
     return
 
-def updateScan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord):
+def updateScan(apibase, password, scan_id, uploaded_file, print_id, has_stickers, min_coord, max_coord):
     """
     """
     s, host, path, p, q, f = urlparse.urlparse(apibase)
@@ -399,6 +369,7 @@ def updateScan(apibase, password, scan_id, uploaded_file, print_id, min_coord, m
                                'password': password,
                                'uploaded_file': uploaded_file,
                                'has_geotiff': 'yes',
+                               'has_stickers': (has_stickers and 'yes' or 'no'),
                                'min_row': min_coord.row, 'max_row': max_coord.row,
                                'min_column': min_coord.column, 'max_column': max_coord.column,
                                'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom})
@@ -672,6 +643,40 @@ def poorMansSphericalMercator(coordinate):
     point.y = diameter/2 - point.y
     
     return point
+
+def uploadScanStickers(apibase, password, scan_id, markers, stickers, topleft, bottomright):
+    """
+    """
+    gym = ModestMaps.OpenStreetMap.Provider()
+    
+    top, left, bottom, right = topleft.row, topleft.column, bottomright.row, bottomright.column
+    
+    ax, bx, cx = linearSolution(markers['Header'].anchor.x, markers['Header'].anchor.y, left,
+                                markers['Hand'].anchor.x,   markers['Hand'].anchor.y,   right,
+                                markers['CCBYSA'].anchor.x, markers['CCBYSA'].anchor.y, left)
+    
+    ay, by, cy = linearSolution(markers['Header'].anchor.x, markers['Header'].anchor.y, top,
+                                markers['Hand'].anchor.x,   markers['Hand'].anchor.y,   top,
+                                markers['CCBYSA'].anchor.x, markers['CCBYSA'].anchor.y, bottom)
+    
+    print (ax, bx, cx), (ay, by, cy)
+    
+    pixelCoordinate = lambda x, y, z: ModestMaps.Core.Coordinate(ay * x + by * y + cy, ax * x + bx * y + cx, z)
+    
+    outfile = StringIO.StringIO()
+    output = csv.writer(outfile, dialect='excel')
+    output.writerow('walkingpapers:scanid\twalkingpapers:sticker\tlatitude\tlongitude'.split('\t'))
+    
+    for (i, sticker) in enumerate(stickers):
+        coord = pixelCoordinate(sticker.anchor.x, sticker.anchor.y, topleft.zoom)
+        location = gym.coordinateLocation(coord)
+
+        print coord, '-->', '(%(lat).6f %(lon).6f)' % location.__dict__
+        
+        row = scan_id, str(i), str(location.lat), str(location.lon)
+        output.writerow(row)
+    
+    appendScanFile(scan_id, 'stickers.csv', outfile.getvalue(), apibase, password)
 
 def uploadScanCodeImage(apibase, password, scan_id, qrcode_img):
     """
