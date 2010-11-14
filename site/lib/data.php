@@ -215,9 +215,9 @@
         if(!is_array($input))
             return array(10, 0, 10, 1);
         
-        $count = intval(is_numeric($input['count']) ? $input['count'] : 50);
+        $count = intval(is_numeric($input['count']) ? $input['count'] : 32);
         $offset = intval(is_numeric($input['offset']) ? $input['offset'] : 0);
-        $perpage = intval(is_numeric($input['perpage']) ? $input['perpage'] : 50);
+        $perpage = intval(is_numeric($input['perpage']) ? $input['perpage'] : 32);
         $page = intval(is_numeric($input['page']) ? $input['page'] : 1);
         
         if(is_numeric($input['offset'])) {
