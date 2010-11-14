@@ -41,7 +41,8 @@
                           'description' => $_POST['description'],
                           'is_private' => $_POST['is_private'],
                           'will_edit' => $_POST['will_edit'],
-                          'has_geotiff' => $_POST['has_geotiff']);
+                          'has_geotiff' => $_POST['has_geotiff'],
+                          'has_stickers' => $_POST['has_stickers']);
             
             $dbh->query('START TRANSACTION');
             $scan = set_scan($dbh, $scan);

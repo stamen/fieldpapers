@@ -94,6 +94,7 @@ ALTER TABLE scans ADD COLUMN uploaded_file VARCHAR(255) AFTER base_url;
 
 ALTER TABLE scans CHANGE COLUMN created created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
+ALTER TABLE scans ADD COLUMN has_stickers ENUM('yes', 'no') DEFAULT 'no' AFTER uploaded_file;
 ALTER TABLE scans ADD COLUMN has_geotiff ENUM('yes', 'no') DEFAULT 'no' AFTER will_edit;
 
 

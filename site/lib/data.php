@@ -561,6 +561,10 @@
             ? 's.has_geotiff,'
             : '';
         
+        $has_stickers = in_array('has_stickers', $column_names)
+            ? 's.has_stickers,'
+            : '';
+        
         $q = sprintf("SELECT {$woeid_column_names}
                              s.id, s.print_id, s.last_step,
                              s.min_row, s.min_column, s.min_zoom,
@@ -570,7 +574,8 @@
                              (p.east + p.west) / 2 AS print_longitude,
                              UNIX_TIMESTAMP(s.created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
-                             {$base_url} {$uploaded_file} {$has_geotiff}
+                             {$base_url} {$uploaded_file}
+                             {$has_geotiff} {$has_stickers}
                              s.user_id
                       FROM scans AS s
                       LEFT JOIN prints AS p
@@ -619,13 +624,18 @@
             ? 'has_geotiff,'
             : '';
         
+        $has_stickers = in_array('has_stickers', $column_names)
+            ? 'has_stickers,'
+            : '';
+        
         $q = sprintf("SELECT id, print_id, last_step,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
                              description, is_private, will_edit,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
-                             {$base_url} {$uploaded_file} {$has_geotiff}
+                             {$base_url} {$uploaded_file}
+                             {$has_geotiff} {$has_stickers}
                              user_id
                       FROM scans
                       WHERE id = %s",
@@ -839,7 +849,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'has_geotiff') as $field)
+        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'has_geotiff', 'has_stickers') as $field)
             if(in_array($field, $column_names) && !is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
