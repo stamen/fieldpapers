@@ -10,7 +10,9 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'Net/URL.php';
-    
+
+    enforce_master_on_off_switch();
+
     $dirname = $_POST['dirname'] ? $_POST['dirname'] : null;
     $redirect = preg_match('#^http://#', $_POST['redirect']) ? $_POST['redirect'] : null;
     $expiration = $_POST['expiration'] ? $_POST['expiration'] : null;

@@ -15,6 +15,8 @@
     $latitude = is_numeric($_GET['lat']) ? floatval($_GET['lat']) : DEFAULT_LATITUDE;
     $longitude = is_numeric($_GET['lon']) ? floatval($_GET['lon']) : DEFAULT_LONGITUDE;
     $zoom = is_numeric($_GET['zoom']) ? intval($_GET['zoom']) : DEFAULT_ZOOM;
+    
+    enforce_master_on_off_switch($language);
 
     /**** ... ****/
     

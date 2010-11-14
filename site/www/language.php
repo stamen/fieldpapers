@@ -18,10 +18,12 @@
     die();
     */
     
+    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    
+    enforce_master_on_off_switch($language);
+
     $dbh =& get_db_connection();
     
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
 
     if($_POST['language'])
