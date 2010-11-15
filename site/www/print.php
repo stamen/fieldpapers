@@ -45,7 +45,9 @@
         if($_POST['last_step'] == STEP_FINISHED)
         {
             $print_url = get_post_baseurl("prints/{$print['id']}/").'print.jpg';
-            $print_jpg = file_get_contents($print_url);
+            $print_req = new HTTP_Request($print_url);
+            $print_req->sendRequest();
+            $print_jpg = $print_req->getResponseBody();
             $print = compose_map($print, $print_jpg);
         }
         
