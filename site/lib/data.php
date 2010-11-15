@@ -1147,6 +1147,7 @@
     
     function s3_get_post_baseurl($dirname)
     {
+        $bucket = S3_BUCKET_ID;
         return "http://{$bucket}.s3.amazonaws.com/".trim($dirname, '/').'/';
     }
     
