@@ -1134,7 +1134,7 @@
                         'conditions' => array(
                             array('bucket' => $bucket),
                             array('acl' => $acl),
-                            array('starts-with', '$key', "scans/{$scan_id}/"),
+                            array('starts-with', '$key', $dirname),
                             array('starts-with', '$Content-Type', $mimetype),
                             array('redirect' => $redirect)));
 
