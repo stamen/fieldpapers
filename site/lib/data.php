@@ -1135,7 +1135,7 @@
                             array('bucket' => $bucket),
                             array('acl' => $acl),
                             array('starts-with', '$key', $dirname),
-                            array('starts-with', '$Content-Type', $mimetype),
+                         // array('starts-with', '$Content-Type', $mimetype),   // why did this seemingly stop working?
                             array('redirect' => $redirect)));
 
         $policy = base64_encode(json_encode($policy));
