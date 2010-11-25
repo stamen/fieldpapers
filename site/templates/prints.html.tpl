@@ -70,7 +70,11 @@
     <ol start="{$offset+1}">
         {foreach from=$prints item="print"}
             <li>
-                {if $print.place_woeid}
+                {if $print.last_step != $constants.STEP_FINISHED}
+                    <strike>
+                        <b id="print-{$print.id|escape}">{$print.age|nice_relativetime|escape}</b></strike>
+                
+                {elseif $print.place_woeid}
                     <a href="{$base_dir}/print.php?id={$print.id|escape}">
                         <b id="print-{$print.id|escape}">{$print.age|nice_relativetime|escape}</b>
                         <br />
