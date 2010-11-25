@@ -17,24 +17,24 @@ DROP TABLE IF EXISTS prints;
 
 CREATE TABLE prints (
 
-    id          VARCHAR(8) NOT NULL,
+    id              VARCHAR(8) NOT NULL,
     
-    last_step   INT NULL,
+    last_step       INT NULL,
     
-    north       DOUBLE,
-    south       DOUBLE,
-    east        DOUBLE,
-    west        DOUBLE,
+    north           DOUBLE,
+    south           DOUBLE,
+    east            DOUBLE,
+    west            DOUBLE,
     
-    zoom        INT UNSIGNED,
+    zoom            INT UNSIGNED,
     
-    # paper_size
-    orientation ENUM('portrait', 'landscape') DEFAULT 'portrait',
-    provider    VARCHAR(255),
+    paper_size      ENUM('letter', 'a4', 'a3') DEFAULT 'letter',
+    orientation     ENUM('portrait', 'landscape') DEFAULT 'portrait',
+    provider        VARCHAR(255),
     
-    pdf_url     VARCHAR(255),
-    preview_url VARCHAR(255),
-    geotiff_url VARCHAR(255),
+    pdf_url         VARCHAR(255),
+    preview_url     VARCHAR(255),
+    geotiff_url     VARCHAR(255),
     
     country_name    VARCHAR(64),
     country_woeid   INT UNSIGNED,
@@ -45,17 +45,13 @@ CREATE TABLE prints (
     place_name      VARCHAR(128),
     place_woeid     INT UNSIGNED,
     
-    user_id     VARCHAR(8) NOT NULL,
-    created     TIMESTAMP NOT NULL,
+    user_id         VARCHAR(8) NOT NULL,
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     PRIMARY KEY (id),
     INDEX `user` (user_id)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
-
-ALTER TABLE prints ADD COLUMN paper_size  ENUM('letter', 'a4', 'a3') DEFAULT 'letter' AFTER zoom;
-
-ALTER TABLE prints CHANGE COLUMN created created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 
 
@@ -63,24 +59,29 @@ DROP TABLE IF EXISTS scans;
 
 CREATE TABLE scans (
 
-    id          VARCHAR(8) NOT NULL,
+    id              VARCHAR(8) NOT NULL,
 
-    print_id    VARCHAR(8) NOT NULL,
-    last_step   INT NULL,
+    print_id        VARCHAR(8) NOT NULL,
+    last_step       INT NULL,
     
-    min_row     FLOAT,
-    min_column  FLOAT,
-    min_zoom    INT,
-    max_row     FLOAT,
-    max_column  FLOAT,
-    max_zoom    INT,
+    min_row         FLOAT,
+    min_column      FLOAT,
+    min_zoom        INT,
+    max_row         FLOAT,
+    max_column      FLOAT,
+    max_zoom        INT,
     
-    description TEXT,
-    is_private  ENUM('yes', 'no') DEFAULT 'no',
-    will_edit   ENUM('yes', 'no') DEFAULT 'yes',
+    description     TEXT,
+    is_private      ENUM('yes', 'no') DEFAULT 'no',
+    will_edit       ENUM('yes', 'no') DEFAULT 'yes',
+    has_geotiff     ENUM('yes', 'no') DEFAULT 'no',
+    has_stickers    ENUM('yes', 'no') DEFAULT 'no',
+    
+    base_url        VARCHAR(255),
+    uploaded_file   VARCHAR(255),
 
-    user_id     VARCHAR(8) NOT NULL,
-    created     TIMESTAMP,
+    user_id         VARCHAR(8) NOT NULL,
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     PRIMARY KEY (id),
     INDEX print (print_id),
@@ -88,14 +89,6 @@ CREATE TABLE scans (
     INDEX step (last_step)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
-
-ALTER TABLE scans ADD COLUMN base_url VARCHAR(255) AFTER will_edit;
-ALTER TABLE scans ADD COLUMN uploaded_file VARCHAR(255) AFTER base_url;
-
-ALTER TABLE scans CHANGE COLUMN created created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
-ALTER TABLE scans ADD COLUMN has_stickers ENUM('yes', 'no') DEFAULT 'no' AFTER uploaded_file;
-ALTER TABLE scans ADD COLUMN has_geotiff ENUM('yes', 'no') DEFAULT 'no' AFTER will_edit;
 
 
 

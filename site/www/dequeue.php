@@ -10,7 +10,7 @@
     require_once 'init.php';
     require_once 'data.php';
     
-    enforce_master_on_off_switch();
+    enforce_master_on_off_switch('');
 
     if($_POST['password'] != API_PASSWORD)
         die_with_code(401, 'Sorry, bad password');

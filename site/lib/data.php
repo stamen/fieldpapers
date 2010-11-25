@@ -1134,8 +1134,8 @@
                         'conditions' => array(
                             array('bucket' => $bucket),
                             array('acl' => $acl),
-                            array('starts-with', '$key', "scans/{$scan_id}/"),
-                            array('starts-with', '$Content-Type', $mimetype),
+                            array('starts-with', '$key', $dirname),
+                         // array('starts-with', '$Content-Type', $mimetype),   // why did this seemingly stop working?
                             array('redirect' => $redirect)));
 
         $policy = base64_encode(json_encode($policy));
@@ -1147,6 +1147,7 @@
     
     function s3_get_post_baseurl($dirname)
     {
+        $bucket = S3_BUCKET_ID;
         return "http://{$bucket}.s3.amazonaws.com/".trim($dirname, '/').'/';
     }
     

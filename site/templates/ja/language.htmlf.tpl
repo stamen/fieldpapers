@@ -8,26 +8,20 @@
    現在、以下の翻訳が提供されています。
 </p>
 
+
+
+
+
 <ul>
+    <li>
+        <strong>オランダ語</strong>
+        <br/>
+        <a href="http://github.com/milovanderlinden">Milo van der Linden</a>による翻訳
+    </li>
     <li>
         <strong>英語</strong>
         <br/>
         Original by <a href="http://github.com/migurski">Michal Migurski</a>
-    </li>
-    <li>
-        <strong>ドイツ語</strong>
-        <br/>
-        Translation by <a href="http://github.com/John07">Jonas Krückel</a>
-    </li>
-    <li>
-        <strong>オランダ語</strong>
-        <br/>
-        Translation by <a href="http://github.com/milovanderlinden">Milo van der Linden</a>
-    </li>
-    <li>
-	<strong>日本語</strong>
-	<br/>
-	<a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>による翻訳
     </li>
     <li>
         <strong>フランス語</strong>
@@ -35,9 +29,9 @@
         <a href="http://github.com/jfretin">Jonathan Fretin</a>による翻訳
     </li>
     <li>
-        <strong> スペイン語</strong>
+        <strong>ドイツ語</strong>
         <br/>
-        <a href="http://github.com/mort">Manuel González Noriega</a>による翻訳
+        <a href="http://github.com/John07">Jonas Krückel</a>による翻訳
     </li>
     <li>
         <strong>イタリア語</strong>
@@ -45,9 +39,9 @@
         <aa href="http://github.com/ecarnevale">Emanuel Carnevale</a>による翻訳
     </li>
     <li>
-        <strong>トルコ語</strong>
-        <br/>
-        <a href="http://github.com/alerque">Caleb Maclennan</a>による翻訳
+		<strong>日本語</strong>
+		<br/>
+		<a href="http://github.com/miurahr">Hiroshi Miura(三浦広志)</a>による翻訳
     </li>
     <li>
         <strong>ロシア語</strong>
@@ -55,8 +49,18 @@
         <a href="http://github.com/simgislab">Maxim Dubinin</a>による翻訳 (<a href="http://gis-lab.info/">GIS-Lab.info</a>)
     </li>
     <li>
+        <strong> スペイン語</strong>
+        <br/>
+        <a href="http://github.com/mort">Manuel González Noriega</a>による翻訳
+    </li>
+    <li>
         <strong>スウェーデン語</strong>
         <br/>
         <a href="http://github.com/knarf-se">Frank M. Eriksson</a>による翻訳 (<a href="http://knarf.se/">knarF.se</a>)
+    </li>
+    <li>
+        <strong>トルコ語</strong>
+        <br/>
+        <a href="http://github.com/alerque">Caleb Maclennan</a>による翻訳
     </li>
 </ul>
