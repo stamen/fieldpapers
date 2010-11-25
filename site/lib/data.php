@@ -1135,9 +1135,11 @@
                             array('bucket' => $bucket),
                             array('acl' => $acl),
                             array('starts-with', '$key', $dirname),
-                         // array('starts-with', '$Content-Type', $mimetype),   // why did this seemingly stop working?
                             array('redirect' => $redirect)));
 
+        if($mimetype)
+            $policy['conditions'][] = array('starts-with', '$Content-Type', $mimetype);
+        
         $policy = base64_encode(json_encode($policy));
         $signature = base64_encode(s3_sign_auth_string($policy));
         $base_url = s3_get_post_baseurl($dirname);
