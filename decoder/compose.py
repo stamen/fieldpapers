@@ -88,6 +88,11 @@ def main(apibase, password, print_id, paper_size, orientation=None, provider=Non
         
         zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
 
+    else:
+        print 'Missing orientation, bounds, zoom, provider and geotiff_url'
+        yield False
+        return
+    
     paper = '%(orientation)s-%(paper_size)s' % locals()
 
     print 'Finishing...'
