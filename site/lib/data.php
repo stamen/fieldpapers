@@ -412,6 +412,22 @@
         return true;
     }
     
+    function add_log(&$dbh, $content)
+    {
+        $q = sprintf('INSERT INTO logs
+                      SET content = %s',
+                     $dbh->quoteSmart($content));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        return true;
+    }
+    
     function get_prints(&$dbh, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);

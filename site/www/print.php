@@ -42,8 +42,12 @@
             if(isset($_POST[$field]))
                 $print[$field] = $_POST[$field];
         
+        add_log($dbh, "Posting additional details to print {$print['id']}");
+
         if($_POST['last_step'] == STEP_FINISHED)
         {
+            add_log($dbh, "Composing PDF for print {$print['id']}");
+
             $print_url = get_post_baseurl("prints/{$print['id']}/").'print.jpg';
             $print_req = new HTTP_Request($print_url);
             $print_req->sendRequest();

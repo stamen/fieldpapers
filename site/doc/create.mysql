@@ -125,3 +125,15 @@ CREATE TABLE messages (
     INDEX deleted (deleted)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
+
+
+
+DROP TABLE IF EXISTS `logs`;
+
+CREATE TABLE `logs` (
+
+    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    content     TEXT,
+    created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+) ENGINE=MyISAM, CHARACTER SET utf8;
