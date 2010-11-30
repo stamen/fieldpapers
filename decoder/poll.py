@@ -121,6 +121,7 @@ if __name__ == '__main__':
                     except KeyError:
                         kwargs['provider'] = msg['provider']
                         kwargs['orientation'] = msg['orientation']
+                        kwargs['layout'] = msg['layout']
                         kwargs['bounds'] = msg['bounds']
                         kwargs['zoom'] = msg['zoom']
 
