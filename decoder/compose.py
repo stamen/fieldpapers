@@ -39,6 +39,8 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         print 'Provider:', provider
         print 'Size:', get_preview_map_size(orientation, paper_size)
         
+        print_data = {'preview': None, 'pages': []}
+        
         north, west, south, east = bounds
         width, height = get_preview_map_size(orientation, paper_size)
         
@@ -57,8 +59,13 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
         
         print preview_url
+
+        print_data['preview'] = 'preview.jpg'
+        
+        yield 60
         
         zdiff = min(18, zoom + 2) - zoom
+        zdiff = 1 # for now!
         print 'Zoom diff:', zdiff
         
         # we need it to cover a specific area
@@ -74,20 +81,21 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         
         print 'Sent print.jpg'
         
-        pages_data = []
-        
         page_nw = mmap.pointLocation(mm.Core.Point(0, 0))
         page_se = mmap.pointLocation(mmap.dimensions)
         
         page_data = {'name': 'print.jpg', 'bounds': {}}
         page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
         page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-        pages_data.append(page_data)
+        print_data['pages'].append(page_data)
         
         rows, cols = map(int, layout.split(','))
         
         if rows > 1 and cols > 1:
             for (row, col) in product(range(rows), range(cols)):
+                
+                yield 60
+                
                 sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
                 sub_part = '%(row)d,%(col)d' % locals()
                 sub_name = 'print-%(sub_part)s.jpg' % locals()
@@ -104,14 +112,10 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                 page_data = {'part': sub_part, 'name': sub_name, 'bounds': {}}
                 page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
                 page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-                pages_data.append(page_data)
+                print_data['pages'].append(page_data)
         
-        print 'pages.json:', append_print_file(print_id, 'pages.json', json.dumps(pages_data, indent=2), apibase, password)
-
-        #-----------------------------------------------------------------------
-        yield 5
-        raise Exception('stop')
-        #-----------------------------------------------------------------------
+        print_data_url = append_print_file(print_id, 'print-data.json', json.dumps(print_data, indent=2), apibase, password)
+        print 'Sent', print_data_url
     
     elif geotiff_url:
         
@@ -141,10 +145,12 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         yield False
         return
     
+    yield 10
+    
     paper = '%(orientation)s-%(paper_size)s' % locals()
 
     print 'Finishing...'
-    finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, preview_url)
+    finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, print_data_url)
     
     print '-' * 80
     
@@ -371,16 +377,16 @@ def infer_zoom(width, height, north, west, south, east):
     
     return zoom
 
-def finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, preview_url):
+def finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, print_data_url):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
     host, port = (':' in host) and host.split(':') or (host, 80)
     
-    if urlparse(preview_url)[1] == 'localhost':
+    if urlparse(print_data_url)[1] == 'localhost':
         # just use an absolute path for preview URL if it's on localhost
-        parts = urlparse(preview_url)
-        preview_url = urlunparse((None, None, parts[2], parts[3], parts[4], parts[5]))
+        parts = urlparse(print_data_url)
+        print_data_url = urlunparse((None, None, parts[2], parts[3], parts[4], parts[5]))
     
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
@@ -388,7 +394,7 @@ def finish_print(apibase, password, print_id, north, west, south, east, zoom, pa
     params = urlencode({'password': password,
                         'last_step': 6,
                         'paper': paper,
-                        'preview_url': preview_url,
+                        'print_data_url': print_data_url,
                         'north': north, 'west': west,
                         'south': south, 'east': east,
                         'zoom': zoom})
@@ -398,6 +404,10 @@ def finish_print(apibase, password, print_id, north, west, south, east, zoom, pa
     res = req.getresponse()
     
     assert res.status == 200, 'POST to print.php resulting in status %s instead of 200' % res.status
+
+    #-----------------------------------------------------------------------
+    raise Exception('stop')
+    #-----------------------------------------------------------------------
 
     return
 
