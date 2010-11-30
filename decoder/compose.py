@@ -5,6 +5,7 @@ import xml.etree.ElementTree
 import json
 
 from math import log
+from itertools import product
 from urllib import urlopen, urlencode
 from urlparse import urlparse, urljoin, urlunparse
 from tempfile import mkdtemp
@@ -85,10 +86,11 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         
         rows, cols = map(int, layout.split(','))
         
-        for row in range(rows):
-            for col in range(cols):
+        if rows > 1 and cols > 1:
+            for (row, col) in product(range(rows), range(cols)):
                 sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
-                sub_name = 'print-%(row)d,%(col)d.jpg' % locals()
+                sub_part = '%(row)d,%(col)d' % locals()
+                sub_name = 'print-%(sub_part)s.jpg' % locals()
         
                 out = StringIO()
                 sub_mmap.draw().save(out, format='JPEG')
@@ -99,12 +101,12 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                 page_nw = sub_mmap.pointLocation(mm.Core.Point(0, 0))
                 page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
                 
-                page_data = {'row': row, 'col': col, 'name': sub_name, 'bounds': {}}
+                page_data = {'part': sub_part, 'name': sub_name, 'bounds': {}}
                 page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
                 page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
                 pages_data.append(page_data)
         
-        append_print_file(print_id, 'pages.json', json.dumps(pages_data, indent=2), apibase, password)
+        print 'pages.json:', append_print_file(print_id, 'pages.json', json.dumps(pages_data, indent=2), apibase, password)
 
         #-----------------------------------------------------------------------
         yield 5
@@ -112,6 +114,9 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         #-----------------------------------------------------------------------
     
     elif geotiff_url:
+        
+        # we'll need pages_data, a few other things
+        raise Exception("I'm pretty sure support for geotiffs is currently broken, with the new atlas feature.")
     
         print 'URL:', geotiff_url
         
