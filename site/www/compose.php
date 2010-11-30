@@ -31,6 +31,7 @@
     $zoom = is_numeric($_POST['zoom']) ? intval($_POST['zoom']) : null;
     $paper = $_POST['paper'] ? $_POST['paper'] : null;
     $provider = $_POST['provider'] ? $_POST['provider'] : null;
+    $layout = $_POST['layout'] ? $_POST['layout'] : null;
     
     switch(strtolower($_POST['grid']))
     {
@@ -106,15 +107,18 @@
         $print['orientation'] = $orientation;
         $print['paper_size'] = $paper_size;
         $print['last_step'] = STEP_QUEUED;
+        $print['layout'] = $layout;
 
         set_print($dbh, $print);
         
-        $message = array('print_id' => $print['id'],
+        $message = array('action' => 'compose',
+                         'print_id' => $print['id'],
                          'bounds' => array($north, $west, $south, $east),
                          'zoom' => $zoom,
                          'provider' => $provider,
                          'paper_size' => $paper_size,
-                         'orientation' => $orientation);
+                         'orientation' => $orientation,
+                         'layout' => $layout);
         
         add_message($dbh, json_encode($message));
         
