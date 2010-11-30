@@ -46,6 +46,8 @@
                           'has_geotiff' => $_POST['has_geotiff'],
                           'has_stickers' => $_POST['has_stickers']);
             
+            add_log($dbh, "Posting additional details to scan {$print['id']}");
+    
             $dbh->query('START TRANSACTION');
             $scan = set_scan($dbh, $scan);
             $dbh->query('COMMIT');

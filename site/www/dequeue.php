@@ -24,6 +24,8 @@
     $dbh =& get_db_connection();
     
     if($message_id && $delete) {
+        add_log($dbh, "Deleting message {$message_id}");
+
         $dbh->query('START TRANSACTION');
         delete_message($dbh, $message_id);
         $dbh->query('COMMIT');
@@ -31,6 +33,8 @@
         echo "OK\n";
     
     } elseif($message_id && $timeout) {
+        add_log($dbh, "Postponing message {$message_id} for {$timeout} seconds");
+
         $dbh->query('START TRANSACTION');
         postpone_message($dbh, $message_id, $timeout);
         $dbh->query('COMMIT');
@@ -45,6 +49,8 @@
         header('Content-Type: text/plain');
         
         if($message) {
+            add_log($dbh, "Dequeued message {$message_id} with {$timeout} second timeout");
+    
             printf("%d %s\n", $message['id'], $message['content']);
         
         } else {

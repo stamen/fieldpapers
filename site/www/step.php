@@ -33,11 +33,14 @@
                 ? STEP_FATAL_QRCODE_ERROR
                 : STEP_FATAL_ERROR;
             
+            add_log($dbh, "Giving up on scan {$scan_id} at step {$next_step} because it has had {$steps_so_far} steps so far");
+
             // sort of another magic number, presumably we've tried and tried and tried
             add_step($dbh, $scan_id, $next_step);
             echo "Too many errors\n"; // this is magic text! TODO: remove this responsibility from decode.py
 
         } else {
+            add_log($dbh, "Adding step {$step_number} to scan {$scan_id}");
             add_step($dbh, $scan_id, $step_number);
             echo "OK\n";
         }
