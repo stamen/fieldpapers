@@ -49,7 +49,7 @@
         header('Content-Type: text/plain');
         
         if($message) {
-            add_log($dbh, "Dequeued message {$message_id} with {$timeout} second timeout");
+            add_log($dbh, "Dequeued message {$message['id']} with {$timeout} second timeout");
     
             printf("%d %s\n", $message['id'], $message['content']);
         
