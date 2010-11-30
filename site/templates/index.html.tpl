@@ -148,6 +148,7 @@
             <area shape="rect" alt="up" coords="14,0,28,13" href="javascript:map.panUp()">
             <area shape="rect" alt="left" coords="0,21,13,35" href="javascript:map.panLeft()">
         </map>
+        <img id="atlas-pages" src="{$base_dir}/img/portrait-letter-1,1.png"/>
         <div class="dog-ear"> </div>
         <div id="zoom-warning" style="display: none;">
             {if $language == "de"}
@@ -270,6 +271,15 @@
             map.parent.style.width = parseInt(map.dimensions.x) + 'px';
             map.parent.style.height = parseInt(map.dimensions.y) + 'px';
             map.draw();
+            
+            var atlas_pages = document.getElementById('atlas-pages');
+            atlas_pages.src = atlas_pages.src.replace(/\b(portrait|landscape)-(letter|a4|a3)\b/, paper);
+        }
+        
+        function setLayout(layout)
+        {
+            var atlas_pages = document.getElementById('atlas-pages');
+            atlas_pages.src = atlas_pages.src.replace(/\b\d+,\d+\b/, layout);
         }
         
         // {/literal}
@@ -443,6 +453,20 @@
             <input type="hidden" name="source" value="bounds" />
         </p>
         
+        <p>
+            {* TRANSLATION NEEDED *}
+            Layout:
+            {assign var="label_single" value="page"}
+            {assign var="label_plural" value="pages"}
+
+            <select name="layout" onChange="setLayout(this.value);">
+                <option label="1 {$label_single}" selected="selected" value="1,1">1 {$label_single}</option>
+                <option label="4 {$label_plural} (2×2)" value="2,2">4 {$label_plural} (2×2)</option>
+                <option label="16 {$label_plural} (4×4)" value="4,4">16 {$label_plural} (4×4)</option>
+                {*<option label="64 {$label_plural} (8×8)" value="8,8">64 {$label_plural} (8×8)</option>*}
+            </select>
+        </p>
+
         {if $request.get.provider}
             <input type="hidden" name="provider" value="{$provider|escape}" />
 
