@@ -53,6 +53,8 @@ CREATE TABLE prints (
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
+ALTER TABLE prints ADD COLUMN layout VARCHAR(8) NOT NULL DEFAULT '1,1' AFTER orientation;
+
 
 
 DROP TABLE IF EXISTS scans;
