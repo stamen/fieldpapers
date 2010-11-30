@@ -2,7 +2,9 @@ import os
 import os.path
 import httplib
 import xml.etree.ElementTree
+import json
 
+from math import log
 from urllib import urlopen, urlencode
 from urlparse import urlparse, urljoin, urlunparse
 from tempfile import mkdtemp
@@ -20,7 +22,7 @@ import ModestMaps as mm
 
 srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
 
-def main(apibase, password, print_id, paper_size, orientation=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
+def main(apibase, password, print_id, paper_size, orientation=None, layout=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
     """
     """
     yield 60
@@ -28,10 +30,11 @@ def main(apibase, password, print_id, paper_size, orientation=None, provider=Non
     print 'Print:', print_id
     print 'Paper:', paper_size
 
-    if orientation and bounds and zoom and provider:
+    if orientation and bounds and zoom and provider and layout:
     
         print 'Orientation:', orientation
         print 'Bounds:', bounds
+        print 'Layout:', layout
         print 'Provider:', provider
         print 'Size:', get_preview_map_size(orientation, paper_size)
         
@@ -67,6 +70,46 @@ def main(apibase, password, print_id, paper_size, orientation=None, provider=Non
         out = StringIO()
         mmap.draw().save(out, format='JPEG')
         print_url = append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
+        
+        print 'Sent print.jpg'
+        
+        pages_data = []
+        
+        page_nw = mmap.pointLocation(mm.Core.Point(0, 0))
+        page_se = mmap.pointLocation(mmap.dimensions)
+        
+        page_data = {'name': 'print.jpg', 'bounds': {}}
+        page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
+        page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
+        pages_data.append(page_data)
+        
+        rows, cols = map(int, layout.split(','))
+        
+        for row in range(rows):
+            for col in range(cols):
+                sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
+                sub_name = 'print-%(row)d,%(col)d.jpg' % locals()
+        
+                out = StringIO()
+                sub_mmap.draw().save(out, format='JPEG')
+                append_print_file(print_id, sub_name, out.getvalue(), apibase, password)
+                
+                print 'Sent', sub_name
+                
+                page_nw = sub_mmap.pointLocation(mm.Core.Point(0, 0))
+                page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
+                
+                page_data = {'row': row, 'col': col, 'name': sub_name, 'bounds': {}}
+                page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
+                page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
+                pages_data.append(page_data)
+        
+        append_print_file(print_id, 'pages.json', json.dumps(pages_data, indent=2), apibase, password)
+
+        #-----------------------------------------------------------------------
+        yield 5
+        raise Exception('stop')
+        #-----------------------------------------------------------------------
     
     elif geotiff_url:
     
@@ -89,7 +132,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, provider=Non
         zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
 
     else:
-        print 'Missing orientation, bounds, zoom, provider and geotiff_url'
+        print 'Missing orientation, bounds, zoom, provider, layout and geotiff_url'
         yield False
         return
     
@@ -101,6 +144,28 @@ def main(apibase, password, print_id, paper_size, orientation=None, provider=Non
     print '-' * 80
     
     yield False
+
+def get_mmap_page(mmap, row, col, rows, cols):
+    """ Get a mmap instance for a sub-page in an atlas layout.
+    """
+    dim = mmap.dimensions
+    
+    # aim for ~5% overlap, vary dep. on total rows/cols
+    overlap = 0.1 / rows
+    overlap *= (dim.x + dim.y) / 2
+    
+    # inner width and height of sub-page
+    _w = (dim.x - (cols + 1) * overlap) / cols
+    _h = (dim.y - (rows + 1) * overlap) / rows
+    
+    # pixel offset of page center
+    x = (col * _w) + (_w / 2) + (col * overlap) + overlap
+    y = (row * _h) + (_h / 2) + (row * overlap) + overlap
+    
+    location = mmap.pointLocation(mm.Core.Point(x, y))
+    zoom = mmap.coordinate.zoom + (log(rows) / log(2))
+    
+    return mm.mapByCenterZoom(mmap.provider, location, zoom, mmap.dimensions)
 
 def prepare_geotiff(geotiff_url):
     """
