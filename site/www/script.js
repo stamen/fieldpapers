@@ -33,7 +33,7 @@ function makeStaticMap(elementID, lat, lon)
         return 'http://tile.openstreetmap.org/' + coord.zoom + '/' + coord.column + '/' + coord.row + '.png';
     }
     
-    var map = new com.modestmaps.Map(elementID, new mm.MapProvider(tileURL), new mm.Point(408, 252))
+    var map = new com.modestmaps.Map(elementID, new mm.MapProvider(tileURL), new mm.Point(408, 252), [])
 
     map.setCenterZoom(new mm.Location(lat, lon), 9);
     map.draw();
