@@ -65,7 +65,6 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         yield 60
         
         zdiff = min(18, zoom + 2) - zoom
-        zdiff = 1 # for now!
         print 'Zoom diff:', zdiff
         
         # we need it to cover a specific area
@@ -404,10 +403,6 @@ def finish_print(apibase, password, print_id, north, west, south, east, zoom, pa
     res = req.getresponse()
     
     assert res.status == 200, 'POST to print.php resulting in status %s instead of 200' % res.status
-
-    #-----------------------------------------------------------------------
-    raise Exception('stop')
-    #-----------------------------------------------------------------------
 
     return
 
