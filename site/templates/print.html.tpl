@@ -28,7 +28,11 @@
         {/if}
     {/strip} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
-    <link rel="data" type="application/xml" href="{$base_dir}{$base_href}?id={$print.id|escape:"url"}&amp;type=xml" />
+    {if $print.atlas_page}
+        <link rel="data" type="application/xml" href="{$base_dir}{$base_href}?id={$print.id|escape}/{$print.atlas_page.part|escape}&amp;type=xml" />
+    {else}
+        <link rel="data" type="application/xml" href="{$base_dir}{$base_href}?id={$print.id|escape}&amp;type=xml" />
+    {/if}
     {if $print && $print.last_step != STEP_FINISHED && $print.last_step != $constants.STEP_FATAL_ERROR}
         <meta http-equiv="refresh" content="5" />
     {else}
@@ -39,11 +43,19 @@
 <body>
 
     <span id="print-info" style="display: none;">
-        <span class="print">{$print.id|escape}</span>
-        <span class="north">{$print.north|escape}</span>
-        <span class="south">{$print.south|escape}</span>
-        <span class="east">{$print.east|escape}</span>
-        <span class="west">{$print.west|escape}</span>
+        {if $print.atlas_page}
+            <span class="print">{$print.id|escape}/{$print.atlas_page.part|escape}</span>
+            <span class="north">{$print.atlas_page.bounds.north|escape}</span>
+            <span class="south">{$print.atlas_page.bounds.south|escape}</span>
+            <span class="east">{$print.atlas_page.bounds.east|escape}</span>
+            <span class="west">{$print.atlas_page.bounds.west|escape}</span>
+        {else}
+            <span class="print">{$print.id|escape}</span>
+            <span class="north">{$print.north|escape}</span>
+            <span class="south">{$print.south|escape}</span>
+            <span class="east">{$print.east|escape}</span>
+            <span class="west">{$print.west|escape}</span>
+        {/if}
     </span>
 
     {include file="navigation.htmlf.tpl"}
@@ -115,7 +127,11 @@
             {/if}
             
             <div class="sheet {$print.paper_size|escape} {$print.orientation|escape}">
-                <img src="{$print.preview_url|escape}"/>
+                {if $print.atlas_page}
+                    <img src="{$print.atlas_page.preview_href|escape}"/>
+                {else}
+                    <img src="{$print.preview_url|escape}"/>
+                {/if}
                 <div class="dummy-qrcode"><img src="http://chart.apis.google.com/chart?chs=44x44&amp;cht=qr&amp;chld=L%7C0&amp;chl=example" alt="" border="0" /></div>
                 <div class="dog-ear"> </div>
             </div>
