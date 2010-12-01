@@ -38,7 +38,7 @@
             die_with_code(401, 'Sorry, bad password');
         
         // we accept a subset of print properties here
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper', 'preview_url', 'last_step') as $field)
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper', 'last_step') as $field)
             if(isset($_POST[$field]))
                 $print[$field] = $_POST[$field];
         
@@ -47,12 +47,43 @@
         if($_POST['last_step'] == STEP_FINISHED)
         {
             add_log($dbh, "Composing PDF for print {$print['id']}");
+            
+            error_log('----------------------------------------------------------------'."\n", 3, '/home/migurski/public_html/paperwalking/compose.log');
+            error_log($_POST['print_data_url']."\n", 3, '/home/migurski/public_html/paperwalking/compose.log');
+            
+            $data_req = new HTTP_Request($_POST['print_data_url']);
+            $data_req->sendRequest();
+            $data_arr = json_decode($data_req->getResponseBody(), true);
 
+            $data_url = new Net_URL($_POST['print_data_url']);
+            $data_dir = $data_url->protocol.'://'.$data_url->host.($data_url->port == 80 ? '' : ':'.$data_url->port).dirname($data_url->path);
+            
+            if($data_arr['preview'])
+                $print['preview_url'] = "{$data_dir}/{$data_arr['preview']}";
+
+            error_log(print_r($data_arr, 1), 3, '/home/migurski/public_html/paperwalking/compose.log');
+            error_log(print_r($data_url, 1), 3, '/home/migurski/public_html/paperwalking/compose.log');
+            
+            foreach($data_arr['pages'] as $p => $page)
+            {
+                error_log($page['name']."\n", 3, '/home/migurski/public_html/paperwalking/compose.log');
+                
+                $url = "{$data_dir}/{$page['name']}";
+
+                error_log($url."\n", 3, '/home/migurski/public_html/paperwalking/compose.log');
+                
+                $data_arr['pages'][$p]['href'] = $url;
+            }
+
+            /*
             $print_url = get_post_baseurl("prints/{$print['id']}/").'print.jpg';
             $print_req = new HTTP_Request($print_url);
             $print_req->sendRequest();
             $print_jpg = $print_req->getResponseBody();
-            $print = compose_map($print, $print_jpg);
+            */
+            $print = compose_map($print, $data_arr['pages']);
+
+            error_log(print_r($print, 1), 3, '/home/migurski/public_html/paperwalking/compose.log');
         }
         
         $north = $print['north'];
