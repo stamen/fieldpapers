@@ -39,7 +39,8 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         print 'Provider:', provider
         print 'Size:', get_preview_map_size(orientation, paper_size)
         
-        print_data = {'preview': None, 'pages': []}
+        print_data = {'pages': []}
+        print_pages = print_data['pages']
         
         north, west, south, east = bounds
         width, height = get_preview_map_size(orientation, paper_size)
@@ -58,9 +59,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         mmap.draw().save(out, format='JPEG')
         preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
         
-        print preview_url
-
-        print_data['preview'] = 'preview.jpg'
+        print 'Sent preview.jpg'
         
         yield 60
         
@@ -83,10 +82,10 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         page_nw = mmap.pointLocation(mm.Core.Point(0, 0))
         page_se = mmap.pointLocation(mmap.dimensions)
         
-        page_data = {'name': 'print.jpg', 'bounds': {}}
+        page_data = {'print': 'print.jpg', 'preview': 'preview.jpg', 'bounds': {}}
         page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
         page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-        print_data['pages'].append(page_data)
+        print_pages.append(page_data)
         
         rows, cols = map(int, layout.split(','))
         
@@ -105,13 +104,24 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                 
                 print 'Sent', sub_name
                 
+                prev_cen = sub_mmap.pointLocation(mm.Core.Point(sub_mmap.dimensions.x / 2, sub_mmap.dimensions.y / 2))
+                prev_dim = mm.Core.Point(sub_mmap.dimensions.x / 2**zdiff, sub_mmap.dimensions.y / 2**zdiff)
+                prev_mmap = mm.mapByCenterZoom(sub_mmap.provider, prev_cen, sub_mmap.coordinate.zoom - zdiff, prev_dim)
+                prev_name = 'preview-%(sub_part)s.jpg' % locals()
+        
+                out = StringIO()
+                prev_mmap.draw().save(out, format='JPEG')
+                append_print_file(print_id, prev_name, out.getvalue(), apibase, password)
+                
+                print 'Sent', prev_name
+                
                 page_nw = sub_mmap.pointLocation(mm.Core.Point(0, 0))
                 page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
                 
-                page_data = {'part': sub_part, 'name': sub_name, 'bounds': {}}
+                page_data = {'part': sub_part, 'print': sub_name, 'preview': prev_name, 'bounds': {}}
                 page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
                 page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-                print_data['pages'].append(page_data)
+                print_pages.append(page_data)
         
         print_data_url = append_print_file(print_id, 'print-data.json', json.dumps(print_data, indent=2), apibase, password)
         print 'Sent', print_data_url
