@@ -495,38 +495,17 @@
         return $rows;
     }
     
-    function get_print(&$dbh, $print_id)
+    function get_print(&$dbh, $print_id, $atlas_part=null)
     {
-        // TODO: ditch dependency on table_columns()
-        $column_names = array_keys(table_columns($dbh, 'prints'));
-        
-        $papersize_column_name = in_array('paper_size', $column_names)
-            ? 'paper_size,'
-            : '';
-        
-        $orientation_column_name = in_array('orientation', $column_names)
-            ? 'orientation,'
-            : '';
-        
-        $provider_column_name = in_array('provider', $column_names)
-            ? 'provider,'
-            : '';
-        
-        $url_column_names = (in_array('pdf_url', $column_names) && in_array('preview_url', $column_names))
-            ? 'pdf_url, preview_url,'
-            : '';
-        
-        $q = sprintf("SELECT {$papersize_column_name}
-                             {$orientation_column_name}
-                             {$provider_column_name}
-                             {$url_column_names}
+        $q = sprintf("SELECT layout, atlas_pages,
+                             paper_size, orientation, provider,
+                             pdf_url, preview_url, geotiff_url,
                              id, last_step, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             geotiff_url,
                              user_id
                       FROM prints
                       WHERE id = %s",
@@ -550,6 +529,15 @@
         // TODO: ditch special-case for preview_url
         if(empty($row['preview_url']) && S3_BUCKET_ID)
             $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
+        
+        if($atlas_part)
+        {
+            $pages = $row['atlas_pages'] ? json_decode($row['atlas_pages'], true) : array();
+            
+            foreach($pages as $page)
+                if($page['part'] == $atlas_part)
+                    $row['atlas_page'] = $page;
+        }
         
         return $row;
     }

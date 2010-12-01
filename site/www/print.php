@@ -16,6 +16,11 @@
         require_once 'composition.php';
     
     $print_id = $_GET['id'] ? $_GET['id'] : null;
+    $atlas_part = null;
+    
+    if(preg_match('#^(\w+)/(\d+,\d+)$#', $print_id, $m))
+        list($print_id, $atlas_part) = array($m[1], $m[2]);
+    
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     enforce_master_on_off_switch($language);
@@ -30,7 +35,7 @@
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
     
-    $print = get_print($dbh, $print_id);
+    $print = get_print($dbh, $print_id, $atlas_part);
     
     if($print && $_SERVER['REQUEST_METHOD'] == 'POST')
     {
