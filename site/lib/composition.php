@@ -150,7 +150,7 @@
             
             if($fh = @fopen($map_filename, 'w'))
             {
-                $req = new HTTP_Request($page['href']);
+                $req = new HTTP_Request($page['print_href']);
                 $req->sendRequest();
                 @fwrite($fh, $req->getResponseBody());
                 @fclose($fh);

@@ -55,13 +55,16 @@
             $data_url = new Net_URL($_POST['print_data_url']);
             $data_dir = $data_url->protocol.'://'.$data_url->host.($data_url->port == 80 ? '' : ':'.$data_url->port).dirname($data_url->path);
             
-            if($data_arr['preview'])
-                $print['preview_url'] = "{$data_dir}/{$data_arr['preview']}";
-
             foreach($data_arr['pages'] as $p => $page)
             {
-                $url = "{$data_dir}/{$page['name']}";
-                $data_arr['pages'][$p]['href'] = $url;
+                $print_url = "{$data_dir}/{$page['print']}";
+                $data_arr['pages'][$p]['print_href'] = $print_url;
+
+                $preview_url = "{$data_dir}/{$page['preview']}";
+                $data_arr['pages'][$p]['preview_href'] = $preview_url;
+                
+                if($p == 0)
+                    $print['preview_url'] = $preview_url;
             }
 
             $print = compose_map($print, $data_arr['pages']);
