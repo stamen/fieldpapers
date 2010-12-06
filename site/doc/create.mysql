@@ -93,6 +93,8 @@ CREATE TABLE scans (
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
+ALTER TABLE scans CHANGE COLUMN print_id print_id VARCHAR(16) NOT NULL;
+
 
 
 DROP TABLE IF EXISTS steps;
