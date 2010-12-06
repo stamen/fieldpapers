@@ -431,42 +431,21 @@
     function get_prints(&$dbh, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
-    
-        // TODO: ditch dependency on table_columns()
-        $column_names = array_keys(table_columns($dbh, 'prints'));
         
-        $papersize_column_name = in_array('paper_size', $column_names)
-            ? 'paper_size,'
-            : '';
-        
-        $orientation_column_name = in_array('orientation', $column_names)
-            ? 'orientation,'
-            : '';
-        
-        $provider_column_name = in_array('provider', $column_names)
-            ? 'provider,'
-            : '';
-        
-        $url_column_names = (in_array('pdf_url', $column_names) && in_array('preview_url', $column_names))
-            ? 'pdf_url, preview_url,'
-            : '';
-        
-        $q = sprintf("SELECT {$papersize_column_name}
-                             {$orientation_column_name}
-                             {$provider_column_name}
-                             {$url_column_names}
+        $q = sprintf("SELECT paper_size, orientation, provider,
+                             pdf_url, preview_url, geotiff_url,
                              id, last_step, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             geotiff_url,
                              user_id
                       FROM prints
+                      WHERE last_step = %d
                       ORDER BY created DESC
                       LIMIT %d OFFSET %d",
-                     $count, $offset);
+                     STEP_FINISHED, $count, $offset);
     
         $res = $dbh->query($q);
         
