@@ -75,6 +75,7 @@
                         <input name="zoom" type="hidden" value="{$print.zoom|escape}" />
                         <input name="paper" type="hidden" value="{$print.orientation|escape}-{$print.paper_size|escape}" />
                         <input name="provider" type="hidden" value="{$print.provider|escape}" />
+                        <input name="layout" type="hidden" value="{$print.layout|escape}" />
                 
                         {if $language == "de"}
                             Ist diese Karte falsch oder veraltet?

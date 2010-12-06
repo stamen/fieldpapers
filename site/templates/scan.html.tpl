@@ -56,11 +56,19 @@
         </span>
     
         <span id="print-info" style="display: none;">
-            <span class="print">{$print.id|escape}</span>
-            <span class="north">{$print.north|escape}</span>
-            <span class="south">{$print.south|escape}</span>
-            <span class="east">{$print.east|escape}</span>
-            <span class="west">{$print.west|escape}</span>
+            {if $print.atlas_page}
+                <span class="print">{$print.id|escape}/{$print.atlas_page.part|escape}</span>
+                <span class="north">{$print.atlas_page.bounds.north|escape}</span>
+                <span class="south">{$print.atlas_page.bounds.south|escape}</span>
+                <span class="east">{$print.atlas_page.bounds.east|escape}</span>
+                <span class="west">{$print.atlas_page.bounds.west|escape}</span>
+            {else}
+                <span class="print">{$print.id|escape}</span>
+                <span class="north">{$print.north|escape}</span>
+                <span class="south">{$print.south|escape}</span>
+                <span class="east">{$print.east|escape}</span>
+                <span class="west">{$print.west|escape}</span>
+            {/if}
         </span>
     {/if}
 
