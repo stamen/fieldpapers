@@ -20,6 +20,23 @@ import ModestMaps as mm
 
 srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
 
+class TemplatedMercatorProvider(mm.Providers.TemplatedMercatorProvider):
+    """ Also speaks Bing tiles.
+    """
+    def getTileUrls(self, coordinate):
+        """
+        """
+        x, y, z = int(coordinate.column), int(coordinate.row), int(coordinate.zoom)
+
+        tiles = [t.replace('{MS-server}', str((x + y) % 8)) for t in self.templates]
+        tiles = [t.replace('{MS-quadtile}', mm.Tiles.toMicrosoft(x, y, z)) for t in tiles]
+
+        x, y, z = str(x), str(y), str(z)
+
+        tiles = [t.replace('{X}', x).replace('{Y}', y).replace('{Z}', z) for t in tiles]
+
+        return tiles
+
 def main(apibase, password, print_id, paper_size, orientation=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
     """
     """
@@ -42,7 +59,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, provider=Non
         southeast = mm.Geo.Location(south, east)
         
         # we need it to cover a specific area
-        mmap = mm.mapByExtentZoom(mm.Providers.TemplatedMercatorProvider(provider),
+        mmap = mm.mapByExtentZoom(TemplatedMercatorProvider(provider),
                                   northwest, southeast, zoom)
                               
         # but we also we need it at a specific size
@@ -58,7 +75,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, provider=Non
         print 'Zoom diff:', zdiff
         
         # we need it to cover a specific area
-        mmap = mm.mapByExtentZoom(mm.Providers.TemplatedMercatorProvider(provider),
+        mmap = mm.mapByExtentZoom(TemplatedMercatorProvider(provider),
                                   northwest, southeast, zoom + zdiff)
                               
         # but we also we need it at a specific size
