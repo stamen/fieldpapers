@@ -57,11 +57,39 @@ function onMapChanged(map)
     form.elements['zoom'].value = map.coordinate.zoom;
 }
 
+function getTileURLFunction(providerURL)
+{
+    function toMicrosoftQuad(coord)
+    {
+        var quad = '',
+            corners = {'00': '0', '01': '1', '10': '2', '11': '3'},
+            x = coord.column.toString(2),
+            y = coord.row.toString(2);
+        
+        while(x.length < coord.zoom) { x = '0' + x; }
+        while(y.length < coord.zoom) { y = '0' + y; }
+        
+        for(var i = 0; i < coord.zoom; i += 1)
+        {
+            quad += corners[y[i] + x[i]];
+        }
+        
+        return quad;
+    }
+
+    return function(coord)
+    {
+        var tileURL = providerURL;
+    
+        tileURL = tileURL.replace('{MS-quadtile}', toMicrosoftQuad(coord));
+        tileURL = tileURL.replace('{MS-server}', ((coord.row + coord.column) % 8).toString());
+        return tileURL.replace('{X}', coord.column).replace('{Y}', coord.row).replace('{Z}', coord.zoom);
+    }
+}
+
 function makeMap(elementID, providerURL)
 {
-    var tileURL = function(coord) {
-        return providerURL.replace('{X}', coord.column).replace('{Y}', coord.row).replace('{Z}', coord.zoom);
-    }
+    var tileURL = getTileURLFunction(providerURL);
     
     var map = new mm.Map(elementID, new mm.MapProvider(tileURL), new mm.Point(360, 456))
 
