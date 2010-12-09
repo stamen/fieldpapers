@@ -228,10 +228,7 @@
         
         function setProvider(providerURL)
         {
-            var tileURL = function(coord) {
-                return providerURL.replace('{X}', coord.column).replace('{Y}', coord.row).replace('{Z}', coord.zoom);
-            }
-            
+            var tileURL = getTileURLFunction(providerURL);
             map.setProvider(new mm.MapProvider(tileURL));
             onMapChanged(map);
         }
