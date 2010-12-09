@@ -455,13 +455,11 @@
             Layout:
             {assign var="label_single" value="page"}
             {assign var="label_plural" value="pages"}
-
-            <select name="layout" onChange="setLayout(this.value);">
-                <option label="1 {$label_single}" selected="selected" value="1,1">1 {$label_single}</option>
-                <option label="4 {$label_plural} (2×2)" value="2,2">4 {$label_plural} (2×2)</option>
-                <option label="16 {$label_plural} (4×4)" value="4,4">16 {$label_plural} (4×4)</option>
-                {*<option label="64 {$label_plural} (8×8)" value="8,8">64 {$label_plural} (8×8)</option>*}
-            </select>
+            
+            <label><input name="layout" type="radio" value="1,1" onchange="setLayout(this.value);" checked="checked" /> 1 {$label_single}</label>
+            <label><input name="layout" type="radio" value="2,2" onchange="setLayout(this.value);" /> 4 {$label_plural} (2×2)</label>
+            <label><input name="layout" type="radio" value="4,4" onchange="setLayout(this.value);" /> 16 {$label_plural} (4×4)</label>
+            {* <label><input name="layout" type="radio" value="8,8" onchange="setLayout(this.value);" /> 64 {$label_plural} (8×8)</label> *}
         </p>
 
         {if $request.get.provider}
