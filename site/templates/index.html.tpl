@@ -164,11 +164,11 @@
             {elseif $language == "ja"}
                 ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {elseif $language == "tr"}
-				Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
+				    Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
             {elseif $language == "ru"}
-				Для картирования на уровне улиц рекомендуется масштабный уровень <b>14 или крупнее</b>.
+				    Для картирования на уровне улиц рекомендуется масштабный уровень <b>14 или крупнее</b>.
             {elseif $language == "sv"}
-				En zoom-nivå på <b>14 eller mer</b> är rekommenderat för kartläggning på gatunivå.
+				    En zoom-nivå på <b>14 eller mer</b> är rekommenderat för kartläggning på gatunivå.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
