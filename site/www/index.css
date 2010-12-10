@@ -25,3 +25,11 @@
     
 .sheet.landscape.a4 #zoom-warning { top: 287px; }
 .sheet.landscape.a3 #zoom-warning { top: 298px; }
+
+#atlas-pages
+{
+    pointer-events: none;
+    position: absolute;
+    top: 24px;
+    left: 24px;
+}

@@ -148,6 +148,7 @@
             <area shape="rect" alt="up" coords="14,0,28,13" href="javascript:map.panUp()">
             <area shape="rect" alt="left" coords="0,21,13,35" href="javascript:map.panLeft()">
         </map>
+        <img id="atlas-pages" src="{$base_dir}/img/portrait-letter-1,1.png"/>
         <div class="dog-ear"> </div>
         <div id="zoom-warning" style="display: none;">
             {if $language == "de"}
@@ -267,6 +268,15 @@
             map.parent.style.width = parseInt(map.dimensions.x) + 'px';
             map.parent.style.height = parseInt(map.dimensions.y) + 'px';
             map.draw();
+            
+            var atlas_pages = document.getElementById('atlas-pages');
+            atlas_pages.src = atlas_pages.src.replace(/\b(portrait|landscape)-(letter|a4|a3)\b/, paper);
+        }
+        
+        function setLayout(layout)
+        {
+            var atlas_pages = document.getElementById('atlas-pages');
+            atlas_pages.src = atlas_pages.src.replace(/\b\d+,\d+\b/, layout);
         }
         
         // {/literal}
@@ -440,6 +450,18 @@
             <input type="hidden" name="source" value="bounds" />
         </p>
         
+        <p>
+            {* TRANSLATION NEEDED *}
+            Layout:
+            {assign var="label_single" value="page"}
+            {assign var="label_plural" value="pages"}
+            
+            <label><input name="layout" type="radio" value="1,1" onchange="setLayout(this.value);" checked="checked" /> 1 {$label_single}</label>
+            <label><input name="layout" type="radio" value="2,2" onchange="setLayout(this.value);" /> 4 {$label_plural} (2×2)</label>
+            <label><input name="layout" type="radio" value="4,4" onchange="setLayout(this.value);" /> 16 {$label_plural} (4×4)</label>
+            {* <label><input name="layout" type="radio" value="8,8" onchange="setLayout(this.value);" /> 64 {$label_plural} (8×8)</label> *}
+        </p>
+
         {if $request.get.provider}
             <input type="hidden" name="provider" value="{$provider|escape}" />
 
