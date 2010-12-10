@@ -453,8 +453,13 @@
         <p>
             {* TRANSLATION NEEDED *}
             Layout:
-            {assign var="label_single" value="page"}
-            {assign var="label_plural" value="pages"}
+            {if $language == "de"}
+                {assign var="label_single" value="Seite"}
+                {assign var="label_plural" value="Seiten"}
+            {else}
+                {assign var="label_single" value="page"}
+                {assign var="label_plural" value="pages"}
+            {/if}
             
             <label><input name="layout" type="radio" value="1,1" onchange="setLayout(this.value);" checked="checked" /> 1 {$label_single}</label>
             <label><input name="layout" type="radio" value="2,2" onchange="setLayout(this.value);" /> 4 {$label_plural} (2×2)</label>
