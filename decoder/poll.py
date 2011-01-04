@@ -101,32 +101,44 @@ if __name__ == '__main__':
                     
                 except ValueError:
                     # JSON parse failed so it's likely we've got a scan to do.
+                    # This is legacy behavior - all messages are now JSON.
 
                     if content.startswith('http://'):
                         url = content.strip()
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                        progress = decode.main(url, getMarkers(), apibase, password)
+                        progress = decode.main(None, url, getMarkers(), apibase, password)
 
                     else:
                         raise Exception('Not sure what to do with this message: ' + content)
 
                 else:
-                    # JSON parse successed so we'll assume there's a print here.
+                    # JSON parse successed so we'll look at the intended action.
 
-                    kwargs = {'paper_size': msg['paper_size']}
-                    
-                    try:
-                        kwargs['geotiff_url'] = msg['geotiff_url']
-                    except KeyError:
-                        kwargs['provider'] = msg['provider']
-                        kwargs['orientation'] = msg['orientation']
-                        kwargs['layout'] = msg['layout']
-                        kwargs['bounds'] = msg['bounds']
-                        kwargs['zoom'] = msg['zoom']
+                    if msg['action'] == 'compose':
+                        #
+                        # Compose a new map.
+                        #
+                        kwargs = {'paper_size': msg['paper_size']}
+                        
+                        if 'geotiff_url' in msg:
+                            kwargs['geotiff_url'] = msg['geotiff_url']
+                        else:
+                            kwargs['provider'] = msg['provider']
+                            kwargs['orientation'] = msg['orientation']
+                            kwargs['layout'] = msg['layout']
+                            kwargs['bounds'] = msg['bounds']
+                            kwargs['zoom'] = msg['zoom']
+    
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
+                        progress = compose.main(apibase, password, msg['print_id'], **kwargs)
 
-                    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
-                    progress = compose.main(apibase, password, msg['print_id'], **kwargs)
+                    elif msg['action'] == 'decode':
+                        #
+                        # Decode a scan.
+                        #
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
+                        progress = decode.main(msg['scan_id'], msg['image_url'], getMarkers(), apibase, password)
                 
                 for timeout in progress:
                     updateQueue(apibase, password, message_id, timeout)

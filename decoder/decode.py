@@ -92,14 +92,18 @@ class Marker:
 
         self.anchor = Point(x, y)
 
-def main(url, markers, apibase, password):
+def main(scan_id, url, markers, apibase, password):
     """
     """
-    url_match = re.match(r'^http://.+/scans/([^/]+)/(.*)$', url, re.I)
+    scan_url_match = re.match(r'^http://.+/scans/([^/]+)/(.*)$', url, re.I)
+    any_url_match = re.match(r'^http://.+/([^/]+)$', url, re.I)
     
-    if url_match:
-        scan_id = url_match.group(1)
-        uploaded_file = url_match.group(2)
+    if scan_id and any_url_match:
+        uploaded_file = any_url_match.group(1)
+    
+    elif scan_url_match:
+        scan_id = scan_url_match.group(1)
+        uploaded_file = scan_url_match.group(2)
 
     else:
         print >> sys.stderr, url, "doesn't match expected form"
