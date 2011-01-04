@@ -107,7 +107,7 @@ if __name__ == '__main__':
                         url = content.strip()
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                        progress = decode.main(None, url, getMarkers(), apibase, password)
+                        progress = decode.main(None, url, getMarkers(), apibase, password, None)
 
                     else:
                         raise Exception('Not sure what to do with this message: ' + content)
@@ -137,8 +137,12 @@ if __name__ == '__main__':
                         #
                         # Decode a scan.
                         #
-                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
-                        progress = decode.main(msg['scan_id'], msg['image_url'], getMarkers(), apibase, password)
+                        scan_id = msg['scan_id']
+                        image_url = msg['image_url']
+                        markers = getMarkers()
+                        
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', scan_id
+                        progress = decode.main(scan_id, image_url, markers, apibase, password, None)
                 
                 for timeout in progress:
                     updateQueue(apibase, password, message_id, timeout)

@@ -6,6 +6,7 @@ import copy
 import math
 import time
 import glob
+import json
 import array
 import urllib
 import os.path
@@ -23,6 +24,19 @@ import matchup
 
 sys.path.append('ModestMaps')
 import ModestMaps
+
+# these must match site/lib/data.php
+STEP_UPLOADING = 0
+STEP_QUEUED = 1
+STEP_SIFTING = 2
+STEP_FINDING_NEEDLES = 3
+STEP_READING_QR_CODE = 4
+STEP_TILING_UPLOADING = 5
+STEP_FINISHED = 6
+STEP_BAD_QRCODE = 98
+STEP_ERROR = 99
+STEP_FATAL_ERROR = 100
+STEP_FATAL_QRCODE_ERROR = 101
 
 class UpdateScanException(Exception):
     pass
@@ -92,7 +106,7 @@ class Marker:
 
         self.anchor = Point(x, y)
 
-def main(scan_id, url, markers, apibase, password):
+def main(scan_id, url, markers, apibase, password, qrcode_contents):
     """
     """
     scan_url_match = re.match(r'^http://.+/scans/([^/]+)/(.*)$', url, re.I)
@@ -110,11 +124,11 @@ def main(scan_id, url, markers, apibase, password):
         return
 
     # shorthand
-    updateStepLocal = lambda step_number: updateStep(apibase, password, scan_id, step_number)
+    updateStepLocal = lambda step_number, extras: updateStep(apibase, password, scan_id, step_number, extras)
     
     try:
         # sifting
-        updateStepLocal(2)
+        updateStepLocal(STEP_SIFTING, None)
         yield 60
         
         image, features, scale = siftImage(url)
@@ -129,7 +143,7 @@ def main(scan_id, url, markers, apibase, password):
         appendScanFile(scan_id, sifted_name, sifted_bytes, apibase, password)
         
         # finding needles
-        updateStepLocal(3)
+        updateStepLocal(STEP_FINDING_NEEDLES, None)
         yield 30
         
         # remove just the sticker from the markers dict
@@ -151,18 +165,23 @@ def main(scan_id, url, markers, apibase, password):
     
             marker.anchor = Point(x, y)
         
-        # reading QR code
-        updateStepLocal(4)
-        yield 10
-        
-        qrcode = extractCode(image, markers)
-        uploadScanCodeImage(apibase, password, scan_id, qrcode)
-        
-        print_id, north, west, south, east = readCode(qrcode)
+        if qrcode_contents:
+            print_id, north, west, south, east = qrcode_contents
+
+        else:
+            # reading QR code
+            updateStepLocal(STEP_READING_QR_CODE, None)
+            yield 10
+            
+            qrcode = extractCode(image, markers)
+            uploadScanCodeImage(apibase, password, scan_id, qrcode)
+            
+            print_id, north, west, south, east = readCode(qrcode)
+
         print 'code contents:', 'Print', print_id, (north, west, south, east)
         
         # tiling and uploading
-        updateStepLocal(5)
+        updateStepLocal(STEP_TILING_UPLOADING, None)
         yield 180
 
         gym = ModestMaps.OpenStreetMap.Provider()
@@ -210,14 +229,22 @@ def main(scan_id, url, markers, apibase, password):
         
         # finished!
         updateScan(apibase, password, scan_id, uploaded_file, print_id, bool(stickers), topleft.zoomTo(min_zoom), bottomright.zoomTo(max_zoom))
-        updateStepLocal(6)
+        updateStepLocal(STEP_FINISHED, None)
 
         yield False
 
     except CodeReadException:
         print 'Failed QR code, maybe will try again?'
-        updateStepLocal(98)
-        yield 10
+    
+        extras = [(name, marker.anchor) for (name, marker) in markers.items()]
+        extras = [(name, {'x': anch.x, 'y': anch.y}) for (name, anch) in extras]
+        extras = {'image_url': url, 'markers': dict(extras)}
+        updateStepLocal(STEP_BAD_QRCODE, json.dumps(extras))
+        
+        # False, so that the current queue message can be appropriately deleted.
+        # It will get replaced with another future message with hand-entered
+        # QR code contents.
+        yield False
     
     except UpdateScanException:
         print 'Giving up after many scan update attempts'
@@ -229,7 +256,7 @@ def main(scan_id, url, markers, apibase, password):
 
     except:
         # some other error occured...
-        updateStepLocal(99)
+        updateStepLocal(STEP_ERROR, None)
         raise
 
 def test(url, markers):
@@ -343,13 +370,13 @@ def encodeMultipartFormdata(fields, files):
 
     return content_type, bytes.tostring()
 
-def updateStep(apibase, password, scan_id, step_number):
+def updateStep(apibase, password, scan_id, step_number, extras):
     """
     """
     s, host, path, p, q, f = urlparse.urlparse(apibase)
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
-    params = urllib.urlencode({'scan': scan_id, 'step': step_number, 'password': password})
+    params = urllib.urlencode({'scan': scan_id, 'step': step_number, 'extras': extras, 'password': password})
     
     req = httplib.HTTPConnection(host, 80)
     req.request('POST', path + '/step.php', params, headers)
