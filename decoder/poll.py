@@ -107,7 +107,7 @@ if __name__ == '__main__':
                         url = content.strip()
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                        progress = decode.main(None, url, getMarkers(), apibase, password, None)
+                        progress = decode.main(None, url, getMarkers(), apibase, password, None, True)
 
                     else:
                         raise Exception('Not sure what to do with this message: ' + content)
@@ -139,10 +139,20 @@ if __name__ == '__main__':
                         #
                         scan_id = msg['scan_id']
                         image_url = msg['image_url']
-                        markers = getMarkers()
+                        
+                        kwargs = {'qrcode_contents': msg.get('qrcode_contents', None)}
+                        
+                        if 'markers' in msg:
+                            kwargs['do_sifting'] = False
+                            markers = [(name, xy) for (name, xy) in msg['markers'].items()]
+                            markers = [(n, decode.Minimarker(**xy)) for (n, xy) in markers]
+                            markers = dict(markers)
+                        else:
+                            kwargs['do_sifting'] = True
+                            markers = getMarkers()
                         
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', scan_id
-                        progress = decode.main(scan_id, image_url, markers, apibase, password, None)
+                        progress = decode.main(scan_id, image_url, markers, apibase, password, **kwargs)
                 
                 for timeout in progress:
                     updateQueue(apibase, password, message_id, timeout)

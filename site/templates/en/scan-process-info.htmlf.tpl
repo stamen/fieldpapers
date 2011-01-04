@@ -18,6 +18,23 @@
         <p>
             <img width="65%" border="1" src="{$scan.base_url}/qrcode.jpg" />
         </p>
+        <p>
+            Does it look like a <a href="http://en.wikipedia.org/w/index.php?title=QR_Code&amp;oldid=405297309">QR code</a>?
+        </p>
+        <p>
+            All is not lost. Fill this:
+        </p>
+        <p>
+            <img border="1" src="{$base_dir}/img/sample-print-top.png" />
+        </p>
+        <p>
+            ...in here:
+        </p>
+        <form action="{$base_dir}/scan.php?id={$scan.id|escape}" method="post">
+            <input name="qrcode_contents" type="text" />
+            <input name="action" type="hidden" value="override QR code" />
+            <input class="mac-button" type="submit" value="Save" />
+        </form>
     {/if}
     
 {else}

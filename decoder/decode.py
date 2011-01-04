@@ -106,7 +106,15 @@ class Marker:
 
         self.anchor = Point(x, y)
 
-def main(scan_id, url, markers, apibase, password, qrcode_contents):
+class Minimarker:
+    """ Bare-bones Marker with only an anchor, no features.
+    
+        Implements just enough for the post-SIFT parts of main().
+    """
+    def __init__(self, x, y):
+        self.anchor = Point(x, y)
+
+def main(scan_id, url, markers, apibase, password, qrcode_contents, do_sifting):
     """
     """
     scan_url_match = re.match(r'^http://.+/scans/([^/]+)/(.*)$', url, re.I)
@@ -127,46 +135,51 @@ def main(scan_id, url, markers, apibase, password, qrcode_contents):
     updateStepLocal = lambda step_number, extras: updateStep(apibase, password, scan_id, step_number, extras)
     
     try:
-        # sifting
-        updateStepLocal(STEP_SIFTING, None)
-        yield 60
+        if do_sifting:
+            # sifting
+            updateStepLocal(STEP_SIFTING, None)
+            yield 60
+            
+            image, features, scale = siftImage(url)
+            
+            sifted_bytes = StringIO.StringIO()
+            
+            for feature in features:
+                print >> sifted_bytes, matchup.feature2row(feature)
+            
+            sifted_name = 'sift.txt'
+            sifted_bytes = sifted_bytes.getvalue()
+            appendScanFile(scan_id, sifted_name, sifted_bytes, apibase, password)
+            
+            # finding needles
+            updateStepLocal(STEP_FINDING_NEEDLES, None)
+            yield 30
+            
+            # remove just the sticker from the markers dict
+            stickers, sticker = [], markers.pop('Sticker', None)
+            
+            for marker in sticker.markersInFeatures(features):
+                x, y = int(marker.anchor.x / scale), int(marker.anchor.y / scale)
+                print >> sys.stderr, '->', (x, y)
         
-        image, features, scale = siftImage(url)
+                marker.anchor = Point(x, y)
+                stickers.append(marker)
+            
+            for (name, marker) in markers.items():
+                print >> sys.stderr, name, '...',
+                marker.locateInFeatures(features)
         
-        sifted_bytes = StringIO.StringIO()
+                x, y = int(marker.anchor.x / scale), int(marker.anchor.y / scale)
+                print >> sys.stderr, '->', (x, y)
         
-        for feature in features:
-            print >> sifted_bytes, matchup.feature2row(feature)
+                marker.anchor = Point(x, y)
         
-        sifted_name = 'sift.txt'
-        sifted_bytes = sifted_bytes.getvalue()
-        appendScanFile(scan_id, sifted_name, sifted_bytes, apibase, password)
-        
-        # finding needles
-        updateStepLocal(STEP_FINDING_NEEDLES, None)
-        yield 30
-        
-        # remove just the sticker from the markers dict
-        stickers, sticker = [], markers.pop('Sticker', None)
-        
-        for marker in sticker.markersInFeatures(features):
-            x, y = int(marker.anchor.x / scale), int(marker.anchor.y / scale)
-            print >> sys.stderr, '->', (x, y)
-    
-            marker.anchor = Point(x, y)
-            stickers.append(marker)
-        
-        for (name, marker) in markers.items():
-            print >> sys.stderr, name, '...',
-            marker.locateInFeatures(features)
-    
-            x, y = int(marker.anchor.x / scale), int(marker.anchor.y / scale)
-            print >> sys.stderr, '->', (x, y)
-    
-            marker.anchor = Point(x, y)
+        else:
+            image = loadImage(url)
+            stickers = False
         
         if qrcode_contents:
-            print_id, north, west, south, east = qrcode_contents
+            print_id, north, west, south, east = interpretCode(qrcode_contents)
 
         else:
             # reading QR code
@@ -205,7 +218,6 @@ def main(scan_id, url, markers, apibase, password, qrcode_contents):
         for zoom in range(20, 0, -1):
             localTopLeft = topleft.zoomTo(zoom)
             localBottomRight = bottomright.zoomTo(zoom)
-            print '*' * 10, localTopLeft, localBottomRight
 
             zoom_renders = tileZoomLevel(image, localTopLeft, localBottomRight, markers, renders)
             
@@ -480,7 +492,7 @@ def extractTile(image, coord, coordinatePixel, renders):
     
     return tile_img
 
-def siftImage(url):
+def loadImage(url):
     """
     """
     print >> sys.stderr, 'download...',
@@ -489,6 +501,13 @@ def siftImage(url):
     image = PIL.Image.open(bytes).convert('RGBA')
     
     print >> sys.stderr, image.size
+    
+    return image
+
+def siftImage(url):
+    """
+    """
+    image = loadImage(url)
     
     handle, sift_filename = tempfile.mkstemp(prefix='decode-', suffix='.sift')
     os.close(handle)
@@ -630,6 +649,11 @@ def readCode(image):
     decoded = decode.stdout.read().strip()
     print decoded
     
+    return interpretCode(decoded)
+
+def interpretCode(decoded):
+    """
+    """
     if decoded.startswith('http://'):
     
         html = xml.etree.ElementTree.parse(urllib.urlopen(decoded))

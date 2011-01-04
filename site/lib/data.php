@@ -597,34 +597,15 @@
     
     function get_scan(&$dbh, $scan_id)
     {
-        // TODO: ditch dependency on table_columns()
-        $column_names = array_keys(table_columns($dbh, 'scans'));
-        
-        $base_url = in_array('base_url', $column_names)
-            ? 'base_url,'
-            : '';
-        
-        $uploaded_file = in_array('uploaded_file', $column_names)
-            ? 'uploaded_file,'
-            : '';
-        
-        $has_geotiff = in_array('has_geotiff', $column_names)
-            ? 'has_geotiff,'
-            : '';
-        
-        $has_stickers = in_array('has_stickers', $column_names)
-            ? 'has_stickers,'
-            : '';
-        
         $q = sprintf("SELECT id, print_id, last_step,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
                              description, is_private, will_edit,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
-                             {$base_url} {$uploaded_file}
-                             {$has_geotiff} {$has_stickers}
-                             user_id
+                             base_url, uploaded_file,
+                             has_geotiff, has_stickers,
+                             decoding_json, user_id
                       FROM scans
                       WHERE id = %s",
                      $dbh->quoteSmart($scan_id));

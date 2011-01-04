@@ -29,28 +29,59 @@
     {
         if($scan)
         {
-            $scan = array('id' => $scan_id,
-                          'print_id' => $_POST['print_id'],
-                          'last_step' => $_POST['last_step'],
-                          'user_name' => $_POST['user_name'],
-                          'uploaded_file' => $_POST['uploaded_file'],
-                          'min_row' => $_POST['min_row'],
-                          'min_column' => $_POST['min_column'],
-                          'min_zoom' => $_POST['min_zoom'],
-                          'max_row' => $_POST['max_row'],
-                          'max_column' => $_POST['max_column'],
-                          'max_zoom' => $_POST['max_zoom'],
-                          'description' => $_POST['description'],
-                          'is_private' => $_POST['is_private'],
-                          'will_edit' => $_POST['will_edit'],
-                          'has_geotiff' => $_POST['has_geotiff'],
-                          'has_stickers' => $_POST['has_stickers']);
-            
-            add_log($dbh, "Posting additional details to scan {$print['id']}");
-    
-            $dbh->query('START TRANSACTION');
-            $scan = set_scan($dbh, $scan);
-            $dbh->query('COMMIT');
+            if($_POST['action'] == 'override QR code' && $scan['last_step'] == STEP_FATAL_QRCODE_ERROR)
+            {
+                add_log($dbh, "Thinking of maybe putting scan {$scan_id} back on the market");
+                
+                $decoding = json_decode($scan['decoding_json'], true);
+                
+                if(is_null($decoding) || PEAR::isError($decoding))
+                {
+                    add_log($dbh, "Failed to parse decoding_json for scan {$scan_id}: {$scan['decoding_json']}");
+                    die_with_code(400, "Failed to parse extras as JSON\n");
+                }
+
+                $dbh->query('START TRANSACTION');
+        
+                $added = add_step($dbh, $scan_id, 1);
+                
+                if($added)
+                {
+                    $message = array('action' => 'decode',
+                                     'scan_id' => $scan_id,
+                                     'image_url' => $decoding['image_url'],
+                                     'qrcode_contents' => $_POST['qrcode_contents'],
+                                     'markers' => $decoding['markers']);
+                    
+                    add_message($dbh, json_encode($message));
+                }
+                
+                $dbh->query('COMMIT');
+
+            } else {
+                $scan = array('id' => $scan_id,
+                              'print_id' => $_POST['print_id'],
+                              'last_step' => $_POST['last_step'],
+                              'user_name' => $_POST['user_name'],
+                              'uploaded_file' => $_POST['uploaded_file'],
+                              'min_row' => $_POST['min_row'],
+                              'min_column' => $_POST['min_column'],
+                              'min_zoom' => $_POST['min_zoom'],
+                              'max_row' => $_POST['max_row'],
+                              'max_column' => $_POST['max_column'],
+                              'max_zoom' => $_POST['max_zoom'],
+                              'description' => $_POST['description'],
+                              'is_private' => $_POST['is_private'],
+                              'will_edit' => $_POST['will_edit'],
+                              'has_geotiff' => $_POST['has_geotiff'],
+                              'has_stickers' => $_POST['has_stickers']);
+                
+                add_log($dbh, "Posting additional details to scan {$print['id']}");
+        
+                $dbh->query('START TRANSACTION');
+                $scan = set_scan($dbh, $scan);
+                $dbh->query('COMMIT');
+            }
         }
     }
     
