@@ -18,6 +18,9 @@
         <p>
             <img width="65%" border="1" src="{$scan.base_url}/qrcode.jpg" />
         </p>
+        
+        {* TODO: duplicate this file to languages other than English *}
+        {include file="en/scan-process-qrcode.htmlf.tpl"}
     {/if}
     
 {else}
