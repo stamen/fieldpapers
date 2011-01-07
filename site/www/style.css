@@ -77,6 +77,11 @@ input.mac-button
 }
 */
 
+input[name=qrcode_contents]
+{
+    width: 75%;
+}
+
 form.language
 {
     color: silver;

@@ -18,9 +18,6 @@
         <p>
             <img width="65%" border="1" src="{$scan.base_url}/qrcode.jpg" />
         </p>
-        <p>
-            Does it look like a <a href="http://en.wikipedia.org/w/index.php?title=QR_Code&amp;oldid=405297309">QR code</a>?
-        </p>
         
         {* TODO: duplicate this file to languages other than English *}
         {include file="en/scan-process-qrcode.htmlf.tpl"}
