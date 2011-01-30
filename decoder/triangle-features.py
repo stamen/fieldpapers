@@ -19,9 +19,9 @@ print 'a-b:', dab
 print 'b-c:', dbc
 print 'a-c:', dac
 
-print 'ab-bc (0, 1, 2):', (dab / dbc)
-print 'ba-ac (1, 0, 2):', (dab / dac)
-print 'bc-ca (1, 2, 0):', (dbc / dac)
+print 'ab-ac (0, 1, 2):', (dab / dac)
+print 'ba-bc (1, 0, 2):', (dab / dbc)
+print 'bc-ac (2, 1, 0):', (dbc / dac)
 
 # one-dimensional arrays of simple positions
 xs = array([blob[0] for blob in blobs], dtype=float)
@@ -48,8 +48,8 @@ print distances
 #   ratio = ab / bc
 #
 ab_dist = repeat(reshape(distances, (count, count, 1)), count, 2)
-bc_dist = repeat(reshape(distances, (1, count, count)), count, 0)
-ratios = ab_dist / bc_dist
+ac_dist = repeat(reshape(distances, (count, 1, count)), count, 1)
+ratios = ab_dist / ac_dist
 
 print ratios
 
