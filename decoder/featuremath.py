@@ -1,5 +1,5 @@
-from math import sqrt, atan2, sin, cos
-from numpy import array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
+from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi
+from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
 
 def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_ratio=0.796, max_ratio=0.806):
     """ Generate a stream of features conforming to limits.
@@ -26,8 +26,8 @@ def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_
     count = len(blobs)
     
     # one-dimensional arrays of simple positions
-    xs = array([(blob[0] + blob[2]) / 2 for blob in blobs], dtype=float)
-    ys = array([(blob[1] + blob[3]) / 2 for blob in blobs], dtype=float)
+    xs = _array([(blob[0] + blob[2]) / 2 for blob in blobs], dtype=float)
+    ys = _array([(blob[1] + blob[3]) / 2 for blob in blobs], dtype=float)
     
     #
     # two-dimensional arrays of component distances between each blob
@@ -60,13 +60,13 @@ def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_
         #
         # vector theta for hypotenuse (i, j)
         #
-        theta = atan2(dys[i,j], dxs[i,j])
+        theta = _atan2(dys[i,j], dxs[i,j])
         
         #
         # rotate each blob[k] around blob[i] by -theta, to get a hypotenuse-relative theta for (i, k)
         #
-        ik_xs = dxs[i,:] * cos(-theta) - dys[i,:] * sin(-theta)
-        ik_ys = dxs[i,:] * sin(-theta) + dys[i,:] * cos(-theta)
+        ik_xs = dxs[i,:] * _cos(-theta) - dys[i,:] * _sin(-theta)
+        ik_ys = dxs[i,:] * _sin(-theta) + dys[i,:] * _cos(-theta)
         
         ik_thetas = arctan2(ik_ys, ik_xs)
 
@@ -74,7 +74,7 @@ def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_
         ik_thetas[ik_thetas > max_theta] = 0
         
         #
-        # cheak each blob[k] for correct distance ratio
+        # check each blob[k] for correct distance ratio
         #
         for k in nonzero(ik_thetas)[0]:
             ratio = distances[i,k] / distances[i,j]
@@ -83,7 +83,10 @@ def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_
                 # outside the bounds.
                 continue
             
-            yield (i, j, k)
+            if i == j or i == k or j == k:
+                continue
+            
+            yield (i, j, k, ratio, ik_thetas[k])
 
 def stream_pairs(source1, source2):
     """ Generate a merged stream from two possibly-infinite streams.
@@ -132,47 +135,47 @@ if __name__ == '__main__':
     #
     # Set up some fake blobs.
     #
-    blobs = [(1, 1), (2, 5), (3, 2)]
+    blobs = [(1, 1, 1, 1), (2, 5, 2, 5), (3, 2, 3, 2)]
     count = len(blobs)
     
     x = lambda a: a[0]
     y = lambda a: a[1]
     a, b, c = blobs[0], blobs[1], blobs[2]
     
-    dab = sqrt((x(b) - x(a)) ** 2 + (y(b) - y(a)) ** 2)
-    dbc = sqrt((x(c) - x(b)) ** 2 + (y(c) - y(b)) ** 2)
-    dac = sqrt((x(c) - x(a)) ** 2 + (y(c) - y(a)) ** 2)
+    dab = _sqrt((x(b) - x(a)) ** 2 + (y(b) - y(a)) ** 2)
+    dbc = _sqrt((x(c) - x(b)) ** 2 + (y(c) - y(b)) ** 2)
+    dac = _sqrt((x(c) - x(a)) ** 2 + (y(c) - y(a)) ** 2)
     
-    ratios = {(0, 1, 2): dab/dac, (1, 0, 2): dab/dbc, (2, 1, 0): dbc/dac}
+    ratios = {(0, 1, 2): dac/dab, (1, 0, 2): dbc/dab, (2, 1, 0): dac/dbc}
     
-    tab = atan2(y(b) - y(a), x(b) - x(a))
-    tba = atan2(y(a) - y(b), x(a) - x(b))
-    tac = atan2(y(c) - y(a), x(c) - x(a))
-    tca = atan2(y(a) - y(c), x(a) - x(c))
-    tbc = atan2(y(c) - y(b), x(c) - x(b))
-    tcb = atan2(y(b) - y(c), x(b) - x(c))
+    tab = _atan2(y(b) - y(a), x(b) - x(a))
+    tba = _atan2(y(a) - y(b), x(a) - x(b))
+    tac = _atan2(y(c) - y(a), x(c) - x(a))
+    tca = _atan2(y(a) - y(c), x(a) - x(c))
+    tbc = _atan2(y(c) - y(b), x(c) - x(b))
+    tcb = _atan2(y(b) - y(c), x(b) - x(c))
     
     thetas = {
-        (0, 1, 2): atan2((x(c) - x(a)) * sin(-tab) + (y(c) - y(a)) * cos(-tab),
-                         (x(c) - x(a)) * cos(-tab) - (y(c) - y(a)) * sin(-tab)),
+        (0, 1, 2): _atan2((x(c) - x(a)) * _sin(-tab) + (y(c) - y(a)) * _cos(-tab),
+                          (x(c) - x(a)) * _cos(-tab) - (y(c) - y(a)) * _sin(-tab)),
         
-        (1, 0, 2): atan2((x(c) - x(b)) * sin(-tba) + (y(c) - y(b)) * cos(-tba),
-                         (x(c) - x(b)) * cos(-tba) - (y(c) - y(b)) * sin(-tba)),
+        (1, 0, 2): _atan2((x(c) - x(b)) * _sin(-tba) + (y(c) - y(b)) * _cos(-tba),
+                          (x(c) - x(b)) * _cos(-tba) - (y(c) - y(b)) * _sin(-tba)),
         
-        (0, 2, 1): atan2((x(b) - x(a)) * sin(-tac) + (y(b) - y(a)) * cos(-tac),
-                         (x(b) - x(a)) * cos(-tac) - (y(b) - y(a)) * sin(-tac)),
+        (0, 2, 1): _atan2((x(b) - x(a)) * _sin(-tac) + (y(b) - y(a)) * _cos(-tac),
+                          (x(b) - x(a)) * _cos(-tac) - (y(b) - y(a)) * _sin(-tac)),
         
-        (2, 0, 1): atan2((x(b) - x(c)) * sin(-tca) + (y(b) - y(c)) * cos(-tca),
-                         (x(b) - x(c)) * cos(-tca) - (y(b) - y(c)) * sin(-tca)),
+        (2, 0, 1): _atan2((x(b) - x(c)) * _sin(-tca) + (y(b) - y(c)) * _cos(-tca),
+                          (x(b) - x(c)) * _cos(-tca) - (y(b) - y(c)) * _sin(-tca)),
         
-        (1, 2, 0): atan2((x(a) - x(b)) * sin(-tbc) + (y(a) - y(b)) * cos(-tbc),
-                         (x(a) - x(b)) * cos(-tbc) - (y(a) - y(b)) * sin(-tbc)),
+        (1, 2, 0): _atan2((x(a) - x(b)) * _sin(-tbc) + (y(a) - y(b)) * _cos(-tbc),
+                          (x(a) - x(b)) * _cos(-tbc) - (y(a) - y(b)) * _sin(-tbc)),
         
-        (2, 1, 0): atan2((x(a) - x(c)) * sin(-tcb) + (y(a) - y(c)) * cos(-tcb),
-                         (x(a) - x(c)) * cos(-tcb) - (y(a) - y(c)) * sin(-tcb))
+        (2, 1, 0): _atan2((x(a) - x(c)) * _sin(-tcb) + (y(a) - y(c)) * _cos(-tcb),
+                          (x(a) - x(c)) * _cos(-tcb) - (y(a) - y(c)) * _sin(-tcb))
       }
     
     
-    for (i, j, k, ratio, theta) in blobs2features(blobs):
+    for (i, j, k, ratio, theta) in blobs2features(blobs, 0, -pi, pi, 0, 1):
         assert round(ratios[(i, j, k)], 9) == round(ratio, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (ratio, ratios[(i, j, k)], i, j, k)
         assert round(thetas[(i, j, k)], 9) == round(theta, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (theta, thetas[(i, j, k)], i, j, k)
