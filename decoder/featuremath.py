@@ -36,7 +36,7 @@ def blobs2features(blobs):
             
         yield (i, j, k, ratio, theta)
 
-def _unnamed(blobs, min_hypot=1000):
+def _unnamed(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_ratio=1.243, max_ratio=1.253):
     """ 
     """
     count = len(blobs)
@@ -59,47 +59,47 @@ def _unnamed(blobs, min_hypot=1000):
     #
     distances = nsqrt(dxs ** 2 + dys ** 2)
     
-    # just distances eligible as a hypotenuse
+    #
+    # make a list of eligible hypotenuses, sorted largest-to-smallest
+    #
     hypoteni = distances.copy()
     hypoteni[distances < min_hypot] = 0
     
     hypot_nonzero = nonzero(hypoteni)
-    hypot_indexes = empty((len(hypot_nonzero[0]), 2), dtype=int)
-    hypot_ratios = empty((hypot_indexes.shape[0], count), dtype=float)
-    
-    print hypoteni.shape, 'distances'
-    
-    ds, ixs, iys = [empty((1, count), dtype=int) for i in range(3)]
-    
-    for (row, (i, j)) in enumerate(zip(*hypot_nonzero)):
-        hypot_indexes[row,:] = i, j
-        
-        ds.fill(distances[i,j])
-        ixs.fill(xs[i])
-        iys.fill(ys[i])
-        
-        hypot_ratios[row,:] = nhypot(xs - ixs, ys - iys) / ds
-    
-    print hypot_indexes.shape, 'indexes'
-    print hypot_ratios.shape, 'ratios'
-    print len(hypot_nonzero[0]), 'non-zero of', (hypoteni.shape[0] * hypoteni.shape[1])
-    
-    hypot_ratios[hypot_ratios < 1.22] = 0
-    hypot_ratios[hypot_ratios > 1.26] = 0
-    
-    print len(nonzero(hypot_ratios)[0]), '???'
-    
-    exit(1)
+    hypot_sorted = [(distances[i,j], i, j) for (i, j) in zip(*hypot_nonzero)]
+    hypot_sorted.sort(reverse=True)
     
     #
-    # three-dimensional array of distance ratios between blob pairs
-    #   ratio = ab / bc
+    # check each hypotenuse for an eligible third point
     #
-    ab_dist = repeat(reshape(distances, (count, count, 1)), count, 2)
-    ac_dist = repeat(reshape(distances, (count, 1, count)), count, 1)
-    ratios = ab_dist / ac_dist
-    
-    return ratios, dxs, dys
+    for (row, (distance, i, j)) in enumerate(hypot_sorted):
+        #
+        # vector theta for hypotenuse (i, j)
+        #
+        theta = atan2(dys[i,j], dxs[i,j])
+        
+        #
+        # rotate each blob[k] around blob[i] by -theta, to get a hypotenuse-relative theta for (i, k)
+        #
+        ik_xs = dxs[i,:] * cos(-theta) - dys[i,:] * sin(-theta)
+        ik_ys = dxs[i,:] * sin(-theta) + dys[i,:] * cos(-theta)
+        
+        ik_thetas = arctan2(ik_ys, ik_xs)
+
+        ik_thetas[ik_thetas < min_theta] = 0
+        ik_thetas[ik_thetas > max_theta] = 0
+        
+        #
+        # cheak each blob[k] for correct distance ratio
+        #
+        for k in nonzero(ik_thetas)[0]:
+            ratio = distances[i,j] / distances[i,k]
+            
+            if ratio < min_ratio or max_ratio < ratio:
+                # outside the bounds.
+                continue
+            
+            yield (i, j, k)
 
 def _blobs2feature_ratios_components(blobs, min_hypot=1000):
     """ Convert list of blobs into three-dimensional array of segment length ratios.
@@ -178,6 +178,48 @@ def _components2feature_thetas(dxs, dys):
     
     return thetas
 
+def stream_pairs(source1, source2):
+    """ Generate a merged stream from two possibly-infinite streams.
+    
+        Imagine an infinite plane, swept diagonally from (0, 0) in alternating directions.
+    """
+    list1, list2 = [], []
+    iterator1, iterator2 = iter(source1), iter(source2)
+    northeast, southwest = 1, 2
+    direction = northeast
+    row, col = 0, 0
+    
+    while True:
+        while len(list1) <= row:
+            list1.append(iterator1.next())
+
+        while len(list2) <= col:
+            list2.append(iterator2.next())
+        
+        yield list1[row], list2[col]
+    
+        if direction == northeast:
+            if row == 0:
+                direction = southwest
+            else:
+                row -= 1
+            col += 1
+            
+        elif direction == southwest:
+            if col == 0:
+                direction = northeast
+            else:
+                col -= 1
+            row += 1
+
+def stream_triples(src1, src2, src3):
+    """ Generate a merged stream from three possibly-infinite streams.
+    
+        Items in the first stream will tend to be covered before the other two.
+    """
+    for (item1, (item2, item3)) in stream_pairs(src1, stream_pairs(src2, src3)):
+        yield item1, item2, item3
+            
 if __name__ == '__main__':
 
     #

@@ -9,6 +9,7 @@ from PIL.ImageFilter import MinFilter, MaxFilter
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
+from featuremath import blobs2features, _unnamed
 
 def imgblobs(img):
     """ Extract bboxes of blobs from an image.
@@ -107,12 +108,32 @@ def img2arr(im):
 
 if __name__ == '__main__':
     
+    print 'opening...'
     input = Image.open(argv[1])
+
+    print 'reading blobs...'
     blobs = imgblobs(input)
+    print len(blobs), 'blobs'
+    
+    print 'pulling something or other...'
+    indexes = _unnamed(blobs)
+    
+    print 'drawing...'
     draw = ImageDraw(input)
+    
+    for (count, (i, j, k)) in enumerate(indexes):
+        if count == 5:
+            break
+    
+        ix, iy = (blobs[i][0] + blobs[i][2]) / 2, (blobs[i][1] + blobs[i][3]) / 2
+        jx, jy = (blobs[j][0] + blobs[j][2]) / 2, (blobs[j][1] + blobs[j][3]) / 2
+        kx, ky = (blobs[k][0] + blobs[k][2]) / 2, (blobs[k][1] + blobs[k][3]) / 2
+        
+        draw.line((ix, iy, jx, jy), fill=(0xFF, 0, 0xFF))
+        draw.line((ix, iy, kx, ky), fill=(0, 0xCC, 0))
     
     for bbox in blobs:
         draw.rectangle(bbox, outline=(0xFF, 0, 0))
-    
-    print len(blobs), 'blobs'
+
+    print 'saving...'
     input.save('out.png')
