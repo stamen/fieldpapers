@@ -113,15 +113,15 @@ if __name__ == '__main__':
 
     print 'reading blobs...'
     blobs = imgblobs(input)
-    print len(blobs), 'blobs'
+    print len(blobs), 'blobs.'
     
-    print 'pulling something or other...'
-    features = blobs2features(blobs)
+    print 'preparing features...'
+    features = blobs2features(blobs, 1000, 0.636, 0.646, 0.796, 0.806)
     
     print 'drawing...'
     draw = ImageDraw(input)
     
-    for (count, (i, j, k)) in enumerate(features):
+    for (count, (i, j, k, ratio, theta)) in enumerate(features):
         if count == 5:
             break
     
