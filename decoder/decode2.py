@@ -9,7 +9,7 @@ from PIL.ImageFilter import MinFilter, MaxFilter
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
-from featuremath import blobs2features, _unnamed
+from featuremath import blobs2features
 
 def imgblobs(img):
     """ Extract bboxes of blobs from an image.
@@ -116,12 +116,12 @@ if __name__ == '__main__':
     print len(blobs), 'blobs'
     
     print 'pulling something or other...'
-    indexes = _unnamed(blobs)
+    features = blobs2features(blobs)
     
     print 'drawing...'
     draw = ImageDraw(input)
     
-    for (count, (i, j, k)) in enumerate(indexes):
+    for (count, (i, j, k)) in enumerate(features):
         if count == 5:
             break
     
