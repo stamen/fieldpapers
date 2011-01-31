@@ -1,12 +1,18 @@
 from math import sqrt, atan2, sin, cos
-from numpy import array, repeat, reshape, nonzero, transpose, sqrt as nsqrt
+from itertools import izip
+from numpy import array, empty, repeat, reshape, nonzero, transpose
 from numpy import isnan, isinf, arctan2, sin as nsin, cos as ncos
+from numpy import sqrt as nsqrt, hypot as nhypot
 
 def blobs2features(blobs):
     """
     """
+    _unnamed(blobs)
+    
     ratios, dxs, dys = _blobs2feature_ratios_components(blobs)
     thetas = _components2feature_thetas(dxs, dys)
+    
+    print '...did the first ugly part'
 
     #
     # Throw away a bunch we won't need
@@ -14,11 +20,88 @@ def blobs2features(blobs):
     ratios[ratios <= 1.0] = 0
     ratios[isnan(ratios)] = 0
     ratios[isinf(ratios)] = 0
+
+    # hardcoded
+    ratios[ratios <= 1.23] = 0
+    ratios[ratios >= 1.27] = 0
+    
+    print '...did the second ugly part'
     
     for (i, j, k) in zip(*nonzero(ratios)):
-        yield (i, j, k, ratios[i,j,k], thetas[i,j,k])
+        ratio, theta = ratios[i,j,k], thetas[i,j,k]
+        
+        # also hardcoded
+        if theta < 0.62 or 0.66 < theta:
+            continue
+            
+        yield (i, j, k, ratio, theta)
 
-def _blobs2feature_ratios_components(blobs):
+def _unnamed(blobs, min_hypot=1000):
+    """ 
+    """
+    count = len(blobs)
+    
+    # one-dimensional arrays of simple positions
+    xs = array([blob[0] for blob in blobs], dtype=float)
+    ys = array([blob[1] for blob in blobs], dtype=float)
+    
+    #
+    # two-dimensional arrays of component distances between each blob
+    #   dx = b.x - a.x, dy = b.y - a.y
+    #
+    xs_ = repeat(reshape(xs, (1, count)), count, 0)
+    ys_ = repeat(reshape(ys, (1, count)), count, 0)
+    dxs, dys = transpose(xs_) - xs_, transpose(ys_) - ys_
+    
+    #
+    # two-dimensional array of distances between each blob
+    #   distance = sqrt(dx^2 + dy^2)
+    #
+    distances = nsqrt(dxs ** 2 + dys ** 2)
+    
+    # just distances eligible as a hypotenuse
+    hypoteni = distances.copy()
+    hypoteni[distances < min_hypot] = 0
+    
+    hypot_nonzero = nonzero(hypoteni)
+    hypot_indexes = empty((len(hypot_nonzero[0]), 2), dtype=int)
+    hypot_ratios = empty((hypot_indexes.shape[0], count), dtype=float)
+    
+    print hypoteni.shape, 'distances'
+    
+    ds, ixs, iys = [empty((1, count), dtype=int) for i in range(3)]
+    
+    for (row, (i, j)) in enumerate(zip(*hypot_nonzero)):
+        hypot_indexes[row,:] = i, j
+        
+        ds.fill(distances[i,j])
+        ixs.fill(xs[i])
+        iys.fill(ys[i])
+        
+        hypot_ratios[row,:] = nhypot(xs - ixs, ys - iys) / ds
+    
+    print hypot_indexes.shape, 'indexes'
+    print hypot_ratios.shape, 'ratios'
+    print len(hypot_nonzero[0]), 'non-zero of', (hypoteni.shape[0] * hypoteni.shape[1])
+    
+    hypot_ratios[hypot_ratios < 1.22] = 0
+    hypot_ratios[hypot_ratios > 1.26] = 0
+    
+    print len(nonzero(hypot_ratios)[0]), '???'
+    
+    exit(1)
+    
+    #
+    # three-dimensional array of distance ratios between blob pairs
+    #   ratio = ab / bc
+    #
+    ab_dist = repeat(reshape(distances, (count, count, 1)), count, 2)
+    ac_dist = repeat(reshape(distances, (count, 1, count)), count, 1)
+    ratios = ab_dist / ac_dist
+    
+    return ratios, dxs, dys
+
+def _blobs2feature_ratios_components(blobs, min_hypot=1000):
     """ Convert list of blobs into three-dimensional array of segment length ratios.
     
         For any given index (i, j, k), ratios[i,j,k] will be the ratio
