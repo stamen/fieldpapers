@@ -10,6 +10,57 @@ from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
 
+def imgblobs(img):
+    """ Extract bboxes of blobs from an image.
+    
+        Assumes blobs somewhere in the neighborhood of 0.25" or so
+        on a scan not much smaller than 8" on its smallest side.
+        
+        Each blob is a bbox: (xmin, ymin, xmax, ymax)
+    """
+    thumb = img.copy().convert('L')
+    thumb.thumbnail((1500, 1500), ANTIALIAS)
+    
+    # needed to get back up to input image size later.
+    scale = float(img.size[0]) / float(thumb.size[0])
+    
+    # largest likely blob size, from scan size, 0.25", and floor of 8" for print.
+    maxdim = min(*img.size) * 0.25 / 8.0
+    
+    # smallest likely blob size, wild-ass-guessed.
+    mindim = 10
+    
+    thumb = autocontrast(thumb)
+    thumb = highpass(thumb, 16)
+    thumb = thumb.point(lambda p: (p < 120) and 0xFF or 0x00)
+    thumb = thumb.filter(MinFilter(5)).filter(MaxFilter(5))
+    
+    blobs = []
+    
+    for (xmin, ymin, xmax, ymax) in detect(thumb):
+        xmin *= scale
+        ymin *= scale
+        xmax *= scale
+        ymax *= scale
+    
+        w, h = xmax - xmin, ymax - ymin
+        
+        if w < mindim or h < mindim:
+            # too small
+            continue
+        
+        if w > maxdim or h > maxdim:
+            # too large
+            continue
+        
+        if max(w, h) / min(w, h) > 2:
+            # too weird
+            continue
+
+        blobs.append((xmin, ymin, xmax, ymax))
+    
+    return blobs
+
 def highpass(img, radius):
     """ Perform a high-pass with a given radius on the image, return a new image.
     """
@@ -57,16 +108,11 @@ def img2arr(im):
 if __name__ == '__main__':
     
     input = Image.open(argv[1])
-    input.thumbnail((1600, 1600), ANTIALIAS)
-
-    output = autocontrast(input.convert('L'))
-    output = highpass(output, 16)
-    output = output.point(lambda p: (p < 120) and 0xFF or 0x00)
-    output = output.filter(MinFilter(3)).filter(MaxFilter(3))
-    
+    blobs = imgblobs(input)
     draw = ImageDraw(input)
     
-    for bbox in detect(output):
+    for bbox in blobs:
         draw.rectangle(bbox, outline=(0xFF, 0, 0))
     
+    print len(blobs), 'blobs'
     input.save('out.png')
