@@ -1,7 +1,7 @@
 from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
 
-def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_ratio=0.796, max_ratio=0.806):
+def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0, max_ratio=1):
     """ Generate a stream of features conforming to limits.
     
         A feature is defined as a trio of points/blobs forming two line segments:
@@ -60,33 +60,32 @@ def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_
         #
         # vector theta for hypotenuse (i, j)
         #
-        theta = _atan2(dys[i,j], dxs[i,j])
+        ij_theta = _atan2(dys[i,j], dxs[i,j])
         
         #
         # rotate each blob[k] around blob[i] by -theta, to get a hypotenuse-relative theta for (i, k)
         #
-        ik_xs = dxs[i,:] * _cos(-theta) - dys[i,:] * _sin(-theta)
-        ik_ys = dxs[i,:] * _sin(-theta) + dys[i,:] * _cos(-theta)
+        ik_xs = dxs[i,:] * _cos(-ij_theta) - dys[i,:] * _sin(-ij_theta)
+        ik_ys = dxs[i,:] * _sin(-ij_theta) + dys[i,:] * _cos(-ij_theta)
         
         ik_thetas = arctan2(ik_ys, ik_xs)
-
-        ik_thetas[ik_thetas < min_theta] = 0
-        ik_thetas[ik_thetas > max_theta] = 0
         
         #
         # check each blob[k] for correct distance ratio
         #
-        for k in nonzero(ik_thetas)[0]:
+        for (k, theta) in enumerate(ik_thetas):
             ratio = distances[i,k] / distances[i,j]
             
+            if theta < min_theta or max_theta < theta:
+                continue
+
             if ratio < min_ratio or max_ratio < ratio:
-                # outside the bounds.
                 continue
             
             if i == j or i == k or j == k:
                 continue
             
-            yield (i, j, k, ratio, ik_thetas[k])
+            yield (i, j, k, ratio, theta)
 
 def stream_pairs(source1, source2):
     """ Generate a merged stream from two possibly-infinite streams.
