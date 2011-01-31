@@ -2,10 +2,26 @@ from math import sqrt, atan2, sin, cos
 from numpy import array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
 
 def blobs2features(blobs, min_hypot=1000, min_theta=0.636, max_theta=0.646, min_ratio=0.796, max_ratio=0.806):
-    """ Generate a stream of features cnoforming to the given limits.
+    """ Generate a stream of features conforming to limits.
     
-        A feature is defined as a trio of blobs forming two line segments, with
-        a given length ratio and angle from the shorter to the longer segment.
+        A feature is defined as a trio of points/blobs forming two line segments:
+        
+          b.
+          *
+          |   c.
+          |  *
+          | /
+          |/
+          *
+          a.
+        
+        Ratio is AC/AB and must be <= 1.0.
+        AB is the longest side of the triangle.
+        AC is the second-longest side by convention.
+        Theta is from AC to AB and can be positive or negative.
+        
+        Features are scale and rotation invariant, though this function
+        considers the largest ones first to spend less time on image noise.
     """
     count = len(blobs)
     
