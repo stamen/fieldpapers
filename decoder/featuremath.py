@@ -1,6 +1,12 @@
 from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, hypot as _hypot
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
 
+class Point:
+    """
+    """
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
 def feature(x1, y1, x2, y2, x3, y3):
     """ Return a feature for a trio of points.
     
@@ -66,8 +72,8 @@ def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0,
     count = len(blobs)
     
     # one-dimensional arrays of simple positions
-    xs = _array([(blob[0] + blob[2]) / 2 for blob in blobs], dtype=float)
-    ys = _array([(blob[1] + blob[3]) / 2 for blob in blobs], dtype=float)
+    xs = _array([blob.x for blob in blobs], dtype=float)
+    ys = _array([blob.y for blob in blobs], dtype=float)
     
     #
     # two-dimensional arrays of component distances between each blob
@@ -174,44 +180,42 @@ if __name__ == '__main__':
     #
     # Set up some fake blobs.
     #
-    blobs = [(1, 1, 1, 1), (2, 5, 2, 5), (3, 2, 3, 2)]
+    blobs = [Point(1, 1), Point(2, 5), Point(3, 2)]
     count = len(blobs)
     
-    x = lambda a: a[0]
-    y = lambda a: a[1]
     a, b, c = blobs[0], blobs[1], blobs[2]
     
-    dab = _sqrt((x(b) - x(a)) ** 2 + (y(b) - y(a)) ** 2)
-    dbc = _sqrt((x(c) - x(b)) ** 2 + (y(c) - y(b)) ** 2)
-    dac = _sqrt((x(c) - x(a)) ** 2 + (y(c) - y(a)) ** 2)
+    dab = _sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2)
+    dbc = _sqrt((c.x - b.x) ** 2 + (c.y - b.y) ** 2)
+    dac = _sqrt((c.x - a.x) ** 2 + (c.y - a.y) ** 2)
     
     ratios = {(0, 1, 2): dac/dab, (1, 0, 2): dbc/dab, (2, 1, 0): dac/dbc}
     
-    tab = _atan2(y(b) - y(a), x(b) - x(a))
-    tba = _atan2(y(a) - y(b), x(a) - x(b))
-    tac = _atan2(y(c) - y(a), x(c) - x(a))
-    tca = _atan2(y(a) - y(c), x(a) - x(c))
-    tbc = _atan2(y(c) - y(b), x(c) - x(b))
-    tcb = _atan2(y(b) - y(c), x(b) - x(c))
+    tab = _atan2(b.y - a.y, b.x - a.x)
+    tba = _atan2(a.y - b.y, a.x - b.x)
+    tac = _atan2(c.y - a.y, c.x - a.x)
+    tca = _atan2(a.y - c.y, a.x - c.x)
+    tbc = _atan2(c.y - b.y, c.x - b.x)
+    tcb = _atan2(b.y - c.y, b.x - c.x)
     
     thetas = {
-        (0, 1, 2): _atan2((x(c) - x(a)) * _sin(-tab) + (y(c) - y(a)) * _cos(-tab),
-                          (x(c) - x(a)) * _cos(-tab) - (y(c) - y(a)) * _sin(-tab)),
+        (0, 1, 2): _atan2((c.x - a.x) * _sin(-tab) + (c.y - a.y) * _cos(-tab),
+                          (c.x - a.x) * _cos(-tab) - (c.y - a.y) * _sin(-tab)),
         
-        (1, 0, 2): _atan2((x(c) - x(b)) * _sin(-tba) + (y(c) - y(b)) * _cos(-tba),
-                          (x(c) - x(b)) * _cos(-tba) - (y(c) - y(b)) * _sin(-tba)),
+        (1, 0, 2): _atan2((c.x - b.x) * _sin(-tba) + (c.y - b.y) * _cos(-tba),
+                          (c.x - b.x) * _cos(-tba) - (c.y - b.y) * _sin(-tba)),
         
-        (0, 2, 1): _atan2((x(b) - x(a)) * _sin(-tac) + (y(b) - y(a)) * _cos(-tac),
-                          (x(b) - x(a)) * _cos(-tac) - (y(b) - y(a)) * _sin(-tac)),
+        (0, 2, 1): _atan2((b.x - a.x) * _sin(-tac) + (b.y - a.y) * _cos(-tac),
+                          (b.x - a.x) * _cos(-tac) - (b.y - a.y) * _sin(-tac)),
         
-        (2, 0, 1): _atan2((x(b) - x(c)) * _sin(-tca) + (y(b) - y(c)) * _cos(-tca),
-                          (x(b) - x(c)) * _cos(-tca) - (y(b) - y(c)) * _sin(-tca)),
+        (2, 0, 1): _atan2((b.x - c.x) * _sin(-tca) + (b.y - c.y) * _cos(-tca),
+                          (b.x - c.x) * _cos(-tca) - (b.y - c.y) * _sin(-tca)),
         
-        (1, 2, 0): _atan2((x(a) - x(b)) * _sin(-tbc) + (y(a) - y(b)) * _cos(-tbc),
-                          (x(a) - x(b)) * _cos(-tbc) - (y(a) - y(b)) * _sin(-tbc)),
+        (1, 2, 0): _atan2((a.x - b.x) * _sin(-tbc) + (a.y - b.y) * _cos(-tbc),
+                          (a.x - b.x) * _cos(-tbc) - (a.y - b.y) * _sin(-tbc)),
         
-        (2, 1, 0): _atan2((x(a) - x(c)) * _sin(-tcb) + (y(a) - y(c)) * _cos(-tcb),
-                          (x(a) - x(c)) * _cos(-tcb) - (y(a) - y(c)) * _sin(-tcb))
+        (2, 1, 0): _atan2((a.x - c.x) * _sin(-tcb) + (a.y - c.y) * _cos(-tcb),
+                          (a.x - c.x) * _cos(-tcb) - (a.y - c.y) * _sin(-tcb))
       }
     
     

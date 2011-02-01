@@ -11,6 +11,22 @@ from numpy import array, fromstring, ubyte, convolve
 from BlobDetector import detect
 from featuremath import feature, blobs2features, stream_pairs
 
+class Blob:
+    """
+    """
+    def __init__(self, xmin, ymin, xmax, ymax):
+        self.xmin = xmin
+        self.ymin = ymin
+        self.xmax = xmax
+        self.ymax = ymax
+        
+        self.x = (xmin + xmax) / 2
+        self.y = (ymin + ymax) / 2
+        self.w = xmax - xmin
+        self.h = ymax - ymin
+        
+        self.bbox = (xmin, ymin, xmax, ymax)
+
 def imgblobs(img):
     """ Extract bboxes of blobs from an image.
     
@@ -43,22 +59,22 @@ def imgblobs(img):
         ymin *= scale
         xmax *= scale
         ymax *= scale
-    
-        w, h = xmax - xmin, ymax - ymin
         
-        if w < mindim or h < mindim:
+        blob = Blob(xmin, ymin, xmax, ymax)
+        
+        if blob.w < mindim or blob.h < mindim:
             # too small
             continue
         
-        if w > maxdim or h > maxdim:
+        if blob.w > maxdim or blob.h > maxdim:
             # too large
             continue
         
-        if max(w, h) / min(w, h) > 2:
+        if max(blob.w, blob.h) / min(blob.w, blob.h) > 2:
             # too weird
             continue
 
-        blobs.append((xmin, ymin, xmax, ymax))
+        blobs.append(blob)
     
     return blobs
 
@@ -116,8 +132,8 @@ if __name__ == '__main__':
     print len(blobs), 'blobs.'
     
     print 'preparing features...'
-    ratio1, theta1 = feature(0.575, 10.425, 0.575, 0.575, 4.25, 0.575)
-    ratio2, theta2 = feature(4.25, 0.575, 7.925, 0.575, 7.925, 10.425)
+    ratio1, theta1 = feature(41.4, 750.6, 41.4, 41.4, 306.0, 41.4)
+    ratio2, theta2 = feature(306.0, 41.4, 570.6, 41.4, 570.6, 750.6)
     
     features1 = blobs2features(blobs, 1000, theta1-.005, theta1+.005, ratio1-.005, ratio1+.005)
     features2 = blobs2features(blobs, 1000, theta2-.005, theta2+.005, ratio2-.005, ratio2+.005)
@@ -141,16 +157,16 @@ if __name__ == '__main__':
     
     for (i, j, k, ratio, theta) in (feat1, feat2):
 
-        ix, iy = (blobs[i][0] + blobs[i][2]) / 2, (blobs[i][1] + blobs[i][3]) / 2
-        jx, jy = (blobs[j][0] + blobs[j][2]) / 2, (blobs[j][1] + blobs[j][3]) / 2
-        kx, ky = (blobs[k][0] + blobs[k][2]) / 2, (blobs[k][1] + blobs[k][3]) / 2
+        ix, iy = blobs[i].x, blobs[i].y
+        jx, jy = blobs[j].x, blobs[j].y
+        kx, ky = blobs[k].x, blobs[k].y
 
         draw.line((ix, iy, jx, jy), fill=(0, 0xCC, 0))
         draw.line((ix, iy, kx, ky), fill=(0xCC, 0, 0xCC))
         draw.line((jx, jy, kx, ky), fill=(0x99, 0, 0x99))
     
-    for bbox in blobs:
-        draw.rectangle(bbox, outline=(0xFF, 0, 0))
+    for blob in blobs:
+        draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
 
     print 'saving...'
     input.save('out.png')
