@@ -42,21 +42,26 @@ def feature(p1, p2, p3):
     
     hs = sorted([h12, h13, h23], reverse=True)
     
+    #
+    # Shuffle the points into correct order.
+    #
     if hs[0] is h12:
         if hs[1] is h13:
-            va, vb = Vector(p1, p2), Vector(p1, p3)
+            p1, p2, p3 = p1, p2, p3
         elif hs[1] is h23:
-            va, vb = Vector(p2, p1), Vector(p2, p3)
+            p1, p2, p3 = p2, p1, p3
     elif hs[0] is h13:
         if hs[1] is h12:
-            va, vb = Vector(p1, p3), Vector(p1, p2)
+            p1, p2, p3 = p1, p3, p2
         elif hs[1] is h23:
-            va, vb = Vector(p3, p1), Vector(p3, p2)
+            p1, p2, p3 = p3, p1, p2
     elif hs[0] is h23:
         if hs[1] is h12:
-            va, vb = Vector(p2, p3), Vector(p2, p1)
+            p1, p2, p3 = p2, p3, p1
         elif hs[1] is h13:
-            va, vb = Vector(p3, p2), Vector(p3, p1)
+            p1, p2, p3 = p3, p2, p1
+    
+    va, vb = Vector(p1, p2), Vector(p1, p3)
     
     theta = _atan2(va.y, va.x)
     
@@ -66,7 +71,7 @@ def feature(p1, p2, p3):
     ratio = hs[1] / hs[0]
     theta = _atan2(y, x)
     
-    return ratio, theta
+    return p1, p2, p3, ratio, theta
 
 def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0, max_ratio=1):
     """ Generate a stream of features conforming to limits.
@@ -231,6 +236,6 @@ if __name__ == '__main__':
                 feature(Point(.575, .575), Point(7.925, 10.425), Point(.575, 10.425)),
                 feature(Point(7.925, 10.425), Point(.575, .575), Point(.575, 10.425))]
     
-    for (ratio, theta) in features:
+    for (p1, p2, p3, ratio, theta) in features:
         assert round(ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (ratio, 0.80146221760756842)
         assert round(theta, 9) == 0.641060105, '%.9f vs. %.9f' % (theta, 0.64106010469117158)
