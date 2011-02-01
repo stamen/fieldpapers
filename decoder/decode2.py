@@ -9,7 +9,7 @@ from PIL.ImageFilter import MinFilter, MaxFilter
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
-from featuremath import Feature, blobs2features, stream_pairs
+from featuremath import Feature, MatchedFeature, blobs2features, stream_pairs
 
 class Blob:
     """
@@ -157,6 +157,73 @@ if __name__ == '__main__':
         print 'yes.'
         
         break
+    
+    #---------------------------------------------------------------------------
+    
+    feat1 = MatchedFeature(f1, *[blobs[i] for i in feat1[:3]])
+    feat2 = MatchedFeature(f2, *[blobs[i] for i in feat2[:3]])
+    
+    print feat1.p1, feat1.p2, feat1.p3, feat1.s1, feat1.s2, feat1.s3
+    print feat2.p1, feat2.p2, feat2.p3, feat2.s1, feat2.s2, feat2.s3
+    
+    seen, points = set(), []
+
+    for feat in (feat1, feat2):
+        for (p, s) in ((feat.p1, feat.s1), (feat.p2, feat.s2), (feat.p3, feat.s3)):
+            if s in seen:
+                continue
+            
+            points.append((p, s))
+            seen.add(s)
+    
+    print [[[p.x, p.y], [s.x, s.y]] for (p, s) in points];
+    
+    avgpx = sum([p.x for (p, s) in points]) / len(points)
+    avgpy = sum([p.y for (p, s) in points]) / len(points)
+    avgsx = sum([s.x for (p, s) in points]) / len(points)
+    avgsy = sum([s.y for (p, s) in points]) / len(points)
+    
+    print (avgpx, avgpy), (avgsx, avgsy)
+    
+    num0 = sum([(p.x - avgpx) * (s.x - avgsx) for (p, s) in points])
+    den0 = sum([(p.x - avgpx) * (p.x - avgpx) for (p, s) in points])
+    
+    num1 = sum([(p.y - avgpy) * (s.x - avgsx) for (p, s) in points])
+    den1 = sum([(p.y - avgpy) * (p.y - avgpy) for (p, s) in points])
+    
+    num2 = sum([(p.x - avgpx) * (s.y - avgsy) for (p, s) in points])
+    den2 = sum([(p.x - avgpx) * (p.x - avgpx) for (p, s) in points])
+    
+    num3 = sum([(p.y - avgpy) * (s.y - avgsy) for (p, s) in points])
+    den3 = sum([(p.y - avgpy) * (p.y - avgpy) for (p, s) in points])
+    
+    print [num0, den0, num2, den2, num1, den1, num3, den3]
+    
+    f = 2 # not sure why this is 2 and not 1
+    
+    m0 = f * num0 / den0
+    b0 = avgsx - (m0 * avgpx)
+
+    m1 = f * num1 / den1;
+    b1 = avgsx - (m1 * avgpy)
+
+    m2 = f * num2 / den2;
+    b2 = avgsy - (m2 * avgpx)
+
+    m3 = f * num3 / den3;
+    b3 = avgsy - (m3 * avgpy)
+    
+    print m0, b0
+    print m1, b1
+    print m2, b2
+    print m3, b3
+    
+    print '-' * 20
+    
+    for (p, s) in points:
+        print (int(p.x), int(p.y)), (int(p.x * m0/f + b0/f + p.y * m1/f + b1/f), int(p.x * m2/f + b2/f + p.y * m3/f + b3/f)), (int(s.x), int(s.y))
+    
+    exit(1)
     
     print 'drawing...'
     draw = ImageDraw(input)
