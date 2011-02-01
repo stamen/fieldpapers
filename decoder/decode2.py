@@ -9,7 +9,7 @@ from PIL.ImageFilter import MinFilter, MaxFilter
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
-from featuremath import Feature, MatchedFeature, blobs2features, stream_pairs
+from featuremath import Feature, MatchedFeature, blobs2features, stream_pairs, regress_transform
 
 class Blob:
     """
@@ -141,17 +141,20 @@ if __name__ == '__main__':
     f1 = Feature(Point(41.4, 750.6), Point(41.4, 41.4), Point(306.0, 41.4))
     f2 = Feature(Point(306.0, 41.4), Point(570.6, 41.4), Point(570.6, 750.6))
     
-    features1 = blobs2features(blobs, 1000, f1.theta-.005, f1.theta+.005, f1.ratio-.005, f1.ratio+.005)
-    features2 = blobs2features(blobs, 1000, f2.theta-.005, f2.theta+.005, f2.ratio-.005, f2.ratio+.005)
+    matches1 = blobs2features(blobs, 1000, f1.theta-.005, f1.theta+.005, f1.ratio-.005, f1.ratio+.005)
+    matches2 = blobs2features(blobs, 1000, f2.theta-.005, f2.theta+.005, f2.ratio-.005, f2.ratio+.005)
     
-    for (feat1, feat2) in stream_pairs(features1, features2):
+    for (match1, match2) in stream_pairs(matches1, matches2):
     
+        match1 = MatchedFeature(f1, *[blobs[i] for i in match1[:3]])
+        match2 = MatchedFeature(f2, *[blobs[i] for i in match2[:3]])
+        
         print '?',
 
-        if feat1[1] != feat2[1]:
+        if match1.s2 != match2.s2:
             continue
         
-        if feat1[0] == feat2[0] or feat1[0] == feat2[2] or feat1[2] == feat2[0] or feat1[2] == feat2[2]:
+        if match1.s1 == match2.s1 or match1.s1 == match2.s3 or match1.s3 == match2.s1 or match1.s3 == match2.s3:
             continue
         
         print 'yes.'
@@ -160,83 +163,25 @@ if __name__ == '__main__':
     
     #---------------------------------------------------------------------------
     
-    feat1 = MatchedFeature(f1, *[blobs[i] for i in feat1[:3]])
-    feat2 = MatchedFeature(f2, *[blobs[i] for i in feat2[:3]])
-    
     seen, points = set(), []
 
-    for feat in (feat1, feat2):
-        for (p, s) in ((feat.p1, feat.s1), (feat.p2, feat.s2), (feat.p3, feat.s3)):
+    for match in (match1, match2):
+        for (p, s) in ((match.p1, match.s1), (match.p2, match.s2), (match.p3, match.s3)):
             if s in seen:
                 continue
             
             points.append((p, s))
             seen.add(s)
     
-    def make_transform(pairs):
-        """ Fit a regression line to a set of point pairs.
-        
-            Return a function that converts first of each point pair to the second.
-        
-            http://en.wikipedia.org/wiki/Simple_linear_regression#Fitting_the_regression_line
-        """
-        #
-        # Averages
-        #
-        avg_lx = sum([l.x for (l, r) in pairs]) / len(pairs)
-        avg_ly = sum([l.y for (l, r) in pairs]) / len(pairs)
-        avg_rx = sum([r.x for (l, r) in pairs]) / len(pairs)
-        avg_ry = sum([r.y for (l, r) in pairs]) / len(pairs)
-        
-        #
-        # Sums of numerators and denominators
-        #
-        num0 = sum([(l.x - avg_lx) * (r.x - avg_rx) for (l, r) in pairs])
-        den0 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
-        
-        num1 = sum([(l.y - avg_ly) * (r.x - avg_rx) for (l, r) in pairs])
-        den1 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
-        
-        num2 = sum([(l.x - avg_lx) * (r.y - avg_ry) for (l, r) in pairs])
-        den2 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
-        
-        num3 = sum([(l.y - avg_ly) * (r.y - avg_ry) for (l, r) in pairs])
-        den3 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
-        
-        #
-        # Coefficients for a linear transformation
-        #
-        f = 2 # not sure why this is 2 and not 1
-        
-        m0 = f * num0 / den0
-        b0 = avg_rx - (m0 * avg_lx)
-    
-        m1 = f * num1 / den1;
-        b1 = avg_rx - (m1 * avg_ly)
-    
-        m2 = f * num2 / den2;
-        b2 = avg_ry - (m2 * avg_lx)
-    
-        m3 = f * num3 / den3;
-        b3 = avg_ry - (m3 * avg_ly)
-        
-        #
-        # Terms of a simple matrix
-        #
-        a, b, c = m0/f, m1/f, b0/f + b1/f
-        d, e, f = m2/f, m3/f, b2/f + b3/f
-        
-        return lambda pt: Point(a * pt.x + b * pt.y + c, d * pt.x + e * pt.y + f)
-    
     print '-' * 20
     
-    p2s = make_transform(points)
+    p2s = regress_transform(points)
     
     for (p, s) in points:
         # mapping from print to scan pixels
         print (int(p.x), int(p.y)), (int(p2s(p).x), int(p2s(p).y)), (int(s.x), int(s.y))
     
-    s2p = make_transform([(s, p) for (p, s) in points])
+    s2p = regress_transform([(s, p) for (p, s) in points])
     
     print '-' * 20
     
@@ -244,20 +189,18 @@ if __name__ == '__main__':
         # mapping from print to scan pixels
         print (int(s.x), int(s.y)), (int(s2p(s).x), int(s2p(s).y)), (int(p.x), int(p.y))
     
-    exit(1)
-    
     print 'drawing...'
     draw = ImageDraw(input)
     
-    for (i, j, k, ratio, theta) in (feat1, feat2):
+    for match in (match1, match2):
 
-        ix, iy = blobs[i].x, blobs[i].y
-        jx, jy = blobs[j].x, blobs[j].y
-        kx, ky = blobs[k].x, blobs[k].y
+        s1 = match.s1
+        s2 = match.s2
+        s3 = match.s3
 
-        draw.line((ix, iy, jx, jy), fill=(0, 0xCC, 0))
-        draw.line((ix, iy, kx, ky), fill=(0xCC, 0, 0xCC))
-        draw.line((jx, jy, kx, ky), fill=(0x99, 0, 0x99))
+        draw.line((s1.x, s1.y, s2.x, s2.y), fill=(0, 0xCC, 0))
+        draw.line((s1.x, s1.y, s3.x, s3.y), fill=(0xCC, 0, 0xCC))
+        draw.line((s2.x, s2.y, s3.x, s3.y), fill=(0x99, 0, 0x99))
     
     for blob in blobs:
         draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))

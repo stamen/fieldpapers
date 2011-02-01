@@ -57,6 +57,26 @@ class MatchedFeature:
         self.s2 = s2
         self.s3 = s3
 
+class Transform:
+    """ Callable linear transformation.
+    
+        | a b c |
+        | d e f |
+    """
+    def __init__(self, a, b, c, d, e, f):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.e = e
+        self.f = f
+
+    def __call__(self, pt):
+        """
+        """
+        return Point(self.a * pt.x + self.b * pt.y + self.c,
+                     self.d * pt.x + self.e * pt.y + self.f)
+
 def _normalize(p1, p2, p3):
     """ Return feature parts for a trio of points - ordered points, ratio, theta.
     """
@@ -165,6 +185,58 @@ def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0,
                 continue
             
             yield (i, j, k, ratio, theta)
+
+def regress_transform(pairs):
+    """ Fit a regression line to a set of point pairs.
+    
+        Return a function that converts first of each point pair to the second.
+    
+        http://en.wikipedia.org/wiki/Simple_linear_regression#Fitting_the_regression_line
+    """
+    #
+    # Averages
+    #
+    avg_lx = sum([l.x for (l, r) in pairs]) / len(pairs)
+    avg_ly = sum([l.y for (l, r) in pairs]) / len(pairs)
+    avg_rx = sum([r.x for (l, r) in pairs]) / len(pairs)
+    avg_ry = sum([r.y for (l, r) in pairs]) / len(pairs)
+    
+    #
+    # Sums of numerators and denominators
+    #
+    num0 = sum([(l.x - avg_lx) * (r.x - avg_rx) for (l, r) in pairs])
+    den0 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
+    
+    num1 = sum([(l.y - avg_ly) * (r.x - avg_rx) for (l, r) in pairs])
+    den1 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
+    
+    num2 = sum([(l.x - avg_lx) * (r.y - avg_ry) for (l, r) in pairs])
+    den2 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
+    
+    num3 = sum([(l.y - avg_ly) * (r.y - avg_ry) for (l, r) in pairs])
+    den3 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
+    
+    #
+    # Coefficients for a linear transformation
+    #
+    f = 2 # not sure why this is 2 and not 1
+    
+    m0 = f * num0 / den0
+    b0 = avg_rx - (m0 * avg_lx)
+
+    m1 = f * num1 / den1;
+    b1 = avg_rx - (m1 * avg_ly)
+
+    m2 = f * num2 / den2;
+    b2 = avg_ry - (m2 * avg_lx)
+
+    m3 = f * num3 / den3;
+    b3 = avg_ry - (m3 * avg_ly)
+    
+    #
+    # Terms of a simple matrix
+    #
+    return Transform(m0/f, m1/f, b0/f+b1/f, m2/f, m3/f, b2/f+b3/f)
 
 def stream_pairs(source1, source2):
     """ Generate a merged stream from two possibly-infinite streams.
