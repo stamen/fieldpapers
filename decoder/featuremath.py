@@ -41,6 +41,22 @@ class Feature:
         """
         self.p1, self.p2, self.p3, self.ratio, self.theta = _normalize(pa, pb, pc)
 
+class MatchedFeature:
+    """ Matched feature, with print coordinates like Feature plus raw scan coordinates.
+    """
+    def __init__(self, feature, s1, s2, s3):
+        """
+        """
+        self.p1 = feature.p1
+        self.p2 = feature.p2
+        self.p3 = feature.p3
+        
+        self.ratio, self.theta = feature.ratio, feature.theta
+        
+        self.s1 = s1
+        self.s2 = s2
+        self.s3 = s3
+
 def _normalize(p1, p2, p3):
     """ Return feature parts for a trio of points - ordered points, ratio, theta.
     """
