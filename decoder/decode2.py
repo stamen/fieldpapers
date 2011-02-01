@@ -163,9 +163,6 @@ if __name__ == '__main__':
     feat1 = MatchedFeature(f1, *[blobs[i] for i in feat1[:3]])
     feat2 = MatchedFeature(f2, *[blobs[i] for i in feat2[:3]])
     
-    print feat1.p1, feat1.p2, feat1.p3, feat1.s1, feat1.s2, feat1.s3
-    print feat2.p1, feat2.p2, feat2.p3, feat2.s1, feat2.s2, feat2.s3
-    
     seen, points = set(), []
 
     for feat in (feat1, feat2):
@@ -176,52 +173,76 @@ if __name__ == '__main__':
             points.append((p, s))
             seen.add(s)
     
-    print [[[p.x, p.y], [s.x, s.y]] for (p, s) in points];
+    def make_transform(pairs):
+        """ Fit a regression line to a set of point pairs.
+        
+            Return a function that converts first of each point pair to the second.
+        
+            http://en.wikipedia.org/wiki/Simple_linear_regression#Fitting_the_regression_line
+        """
+        #
+        # Averages
+        #
+        avg_lx = sum([l.x for (l, r) in pairs]) / len(pairs)
+        avg_ly = sum([l.y for (l, r) in pairs]) / len(pairs)
+        avg_rx = sum([r.x for (l, r) in pairs]) / len(pairs)
+        avg_ry = sum([r.y for (l, r) in pairs]) / len(pairs)
+        
+        #
+        # Sums of numerators and denominators
+        #
+        num0 = sum([(l.x - avg_lx) * (r.x - avg_rx) for (l, r) in pairs])
+        den0 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
+        
+        num1 = sum([(l.y - avg_ly) * (r.x - avg_rx) for (l, r) in pairs])
+        den1 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
+        
+        num2 = sum([(l.x - avg_lx) * (r.y - avg_ry) for (l, r) in pairs])
+        den2 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
+        
+        num3 = sum([(l.y - avg_ly) * (r.y - avg_ry) for (l, r) in pairs])
+        den3 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
+        
+        #
+        # Coefficients for a linear transformation
+        #
+        f = 2 # not sure why this is 2 and not 1
+        
+        m0 = f * num0 / den0
+        b0 = avg_rx - (m0 * avg_lx)
     
-    avgpx = sum([p.x for (p, s) in points]) / len(points)
-    avgpy = sum([p.y for (p, s) in points]) / len(points)
-    avgsx = sum([s.x for (p, s) in points]) / len(points)
-    avgsy = sum([s.y for (p, s) in points]) / len(points)
+        m1 = f * num1 / den1;
+        b1 = avg_rx - (m1 * avg_ly)
     
-    print (avgpx, avgpy), (avgsx, avgsy)
+        m2 = f * num2 / den2;
+        b2 = avg_ry - (m2 * avg_lx)
     
-    num0 = sum([(p.x - avgpx) * (s.x - avgsx) for (p, s) in points])
-    den0 = sum([(p.x - avgpx) * (p.x - avgpx) for (p, s) in points])
+        m3 = f * num3 / den3;
+        b3 = avg_ry - (m3 * avg_ly)
+        
+        #
+        # Terms of a simple matrix
+        #
+        a, b, c = m0/f, m1/f, b0/f + b1/f
+        d, e, f = m2/f, m3/f, b2/f + b3/f
+        
+        return lambda pt: Point(a * pt.x + b * pt.y + c, d * pt.x + e * pt.y + f)
     
-    num1 = sum([(p.y - avgpy) * (s.x - avgsx) for (p, s) in points])
-    den1 = sum([(p.y - avgpy) * (p.y - avgpy) for (p, s) in points])
+    print '-' * 20
     
-    num2 = sum([(p.x - avgpx) * (s.y - avgsy) for (p, s) in points])
-    den2 = sum([(p.x - avgpx) * (p.x - avgpx) for (p, s) in points])
+    p2s = make_transform(points)
     
-    num3 = sum([(p.y - avgpy) * (s.y - avgsy) for (p, s) in points])
-    den3 = sum([(p.y - avgpy) * (p.y - avgpy) for (p, s) in points])
+    for (p, s) in points:
+        # mapping from print to scan pixels
+        print (int(p.x), int(p.y)), (int(p2s(p).x), int(p2s(p).y)), (int(s.x), int(s.y))
     
-    print [num0, den0, num2, den2, num1, den1, num3, den3]
-    
-    f = 2 # not sure why this is 2 and not 1
-    
-    m0 = f * num0 / den0
-    b0 = avgsx - (m0 * avgpx)
-
-    m1 = f * num1 / den1;
-    b1 = avgsx - (m1 * avgpy)
-
-    m2 = f * num2 / den2;
-    b2 = avgsy - (m2 * avgpx)
-
-    m3 = f * num3 / den3;
-    b3 = avgsy - (m3 * avgpy)
-    
-    print m0, b0
-    print m1, b1
-    print m2, b2
-    print m3, b3
+    s2p = make_transform([(s, p) for (p, s) in points])
     
     print '-' * 20
     
     for (p, s) in points:
-        print (int(p.x), int(p.y)), (int(p.x * m0/f + b0/f + p.y * m1/f + b1/f), int(p.x * m2/f + b2/f + p.y * m3/f + b3/f)), (int(s.x), int(s.y))
+        # mapping from print to scan pixels
+        print (int(s.x), int(s.y)), (int(s2p(s).x), int(s2p(s).y)), (int(p.x), int(p.y))
     
     exit(1)
     
