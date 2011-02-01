@@ -13,28 +13,36 @@ class Vector:
     def __init__(self, p1, p2):
         self.x, self.y = p2.x - p1.x, p2.y - p1.y
 
-def feature(p1, p2, p3):
-    """ Return a feature for a trio of points.
-    
+class Feature:
+    """ Unmatched feature, probably in print coordinates.
+        
         A feature is derived from a trio of points/blobs forming two line segments:
         
-          b.
+          2.
           *
-          |   c.
+          |   3.
           |  *
-          | /
-          |/
+        A | /
+          |/ B
           *
-          a.
+          1.
+    
+        A is the longest side of the triangle.
+        B is the second-longest side by convention.
         
-        Ratio is AC/AB and must be <= 1.0.
-        Theta is from AC to AB and can be positive or negative.
+        Ratio is B/A and must be <= 1.0.
+        Theta is from B to A and can be positive or negative.
 
-        AB is the longest side of the triangle.
-        AC is the second-longest side by convention.
-        
         Features are scale and rotation invariant, though this function
         considers the largest ones first to spend less time on image noise.
+    """
+    def __init__(self, pa, pb, pc):
+        """
+        """
+        self.p1, self.p2, self.p3, self.ratio, self.theta = _normalize(pa, pb, pc)
+
+def _normalize(p1, p2, p3):
+    """ Return feature parts for a trio of points - ordered points, ratio, theta.
     """
     h12 = _hypot(p2.x - p1.x, p2.y - p1.y)
     h13 = _hypot(p3.x - p1.x, p3.y - p1.y)
@@ -232,10 +240,10 @@ if __name__ == '__main__':
         assert round(ratios[(i, j, k)], 9) == round(ratio, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (ratio, ratios[(i, j, k)], i, j, k)
         assert round(thetas[(i, j, k)], 9) == round(theta, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (theta, thetas[(i, j, k)], i, j, k)
 
-    features = [feature(Point(.575, .575), Point(.575, 10.425), Point(7.925, 10.425)),
-                feature(Point(.575, .575), Point(7.925, 10.425), Point(.575, 10.425)),
-                feature(Point(7.925, 10.425), Point(.575, .575), Point(.575, 10.425))]
+    features = [Feature(Point(.575, .575), Point(.575, 10.425), Point(7.925, 10.425)),
+                Feature(Point(.575, .575), Point(7.925, 10.425), Point(.575, 10.425)),
+                Feature(Point(7.925, 10.425), Point(.575, .575), Point(.575, 10.425))]
     
-    for (p1, p2, p3, ratio, theta) in features:
-        assert round(ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (ratio, 0.80146221760756842)
-        assert round(theta, 9) == 0.641060105, '%.9f vs. %.9f' % (theta, 0.64106010469117158)
+    for feature in features:
+        assert round(feature.ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (feature.ratio, 0.80146221760756842)
+        assert round(feature.theta, 9) == 0.641060105, '%.9f vs. %.9f' % (feature.theta, 0.64106010469117158)

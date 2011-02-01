@@ -9,7 +9,7 @@ from PIL.ImageFilter import MinFilter, MaxFilter
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
-from featuremath import feature, blobs2features, stream_pairs
+from featuremath import Feature, blobs2features, stream_pairs
 
 class Blob:
     """
@@ -138,11 +138,11 @@ if __name__ == '__main__':
     print len(blobs), 'blobs.'
     
     print 'preparing features...'
-    p, p, p, ratio1, theta1 = feature(Point(41.4, 750.6), Point(41.4, 41.4), Point(306.0, 41.4))
-    p, p, p, ratio2, theta2 = feature(Point(306.0, 41.4), Point(570.6, 41.4), Point(570.6, 750.6))
+    f1 = Feature(Point(41.4, 750.6), Point(41.4, 41.4), Point(306.0, 41.4))
+    f2 = Feature(Point(306.0, 41.4), Point(570.6, 41.4), Point(570.6, 750.6))
     
-    features1 = blobs2features(blobs, 1000, theta1-.005, theta1+.005, ratio1-.005, ratio1+.005)
-    features2 = blobs2features(blobs, 1000, theta2-.005, theta2+.005, ratio2-.005, ratio2+.005)
+    features1 = blobs2features(blobs, 1000, f1.theta-.005, f1.theta+.005, f1.ratio-.005, f1.ratio+.005)
+    features2 = blobs2features(blobs, 1000, f2.theta-.005, f2.theta+.005, f2.ratio-.005, f2.ratio+.005)
     
     for (feat1, feat2) in stream_pairs(features1, features2):
     
