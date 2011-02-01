@@ -9,7 +9,7 @@ from PIL.ImageFilter import MinFilter, MaxFilter
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
-from featuremath import blobs2features
+from featuremath import feature, blobs2features, stream_pairs
 
 def imgblobs(img):
     """ Extract bboxes of blobs from an image.
@@ -116,21 +116,38 @@ if __name__ == '__main__':
     print len(blobs), 'blobs.'
     
     print 'preparing features...'
-    features = blobs2features(blobs, 1000, 0.636, 0.646, 0.796, 0.806)
+    ratio1, theta1 = feature(0.575, 10.425, 0.575, 0.575, 4.25, 0.575)
+    ratio2, theta2 = feature(4.25, 0.575, 7.925, 0.575, 7.925, 10.425)
+    
+    features1 = blobs2features(blobs, 1000, theta1-.005, theta1+.005, ratio1-.005, ratio1+.005)
+    features2 = blobs2features(blobs, 1000, theta2-.005, theta2+.005, ratio2-.005, ratio2+.005)
+    
+    for (feat1, feat2) in stream_pairs(features1, features2):
+    
+        print '?',
+
+        if feat1[1] != feat2[1]:
+            continue
+        
+        if feat1[0] == feat2[0] or feat1[0] == feat2[2] or feat1[2] == feat2[0] or feat1[2] == feat2[2]:
+            continue
+        
+        print 'yes.'
+        
+        break
     
     print 'drawing...'
     draw = ImageDraw(input)
     
-    for (count, (i, j, k, ratio, theta)) in enumerate(features):
-        if count == 5:
-            break
-    
+    for (i, j, k, ratio, theta) in (feat1, feat2):
+
         ix, iy = (blobs[i][0] + blobs[i][2]) / 2, (blobs[i][1] + blobs[i][3]) / 2
         jx, jy = (blobs[j][0] + blobs[j][2]) / 2, (blobs[j][1] + blobs[j][3]) / 2
         kx, ky = (blobs[k][0] + blobs[k][2]) / 2, (blobs[k][1] + blobs[k][3]) / 2
-        
-        draw.line((ix, iy, jx, jy), fill=(0xFF, 0, 0xFF))
-        draw.line((ix, iy, kx, ky), fill=(0, 0xCC, 0))
+
+        draw.line((ix, iy, jx, jy), fill=(0, 0xCC, 0))
+        draw.line((ix, iy, kx, ky), fill=(0xCC, 0, 0xCC))
+        draw.line((jx, jy, kx, ky), fill=(0x99, 0, 0x99))
     
     for bbox in blobs:
         draw.rectangle(bbox, outline=(0xFF, 0, 0))
