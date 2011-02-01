@@ -112,6 +112,12 @@ def highpass(img, radius):
     
     return arr2img(high)
 
+class Point:
+    """
+    """
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
 def arr2img(ar):
     """ Convert Numeric array to PIL Image.
     """
@@ -132,8 +138,8 @@ if __name__ == '__main__':
     print len(blobs), 'blobs.'
     
     print 'preparing features...'
-    ratio1, theta1 = feature(41.4, 750.6, 41.4, 41.4, 306.0, 41.4)
-    ratio2, theta2 = feature(306.0, 41.4, 570.6, 41.4, 570.6, 750.6)
+    ratio1, theta1 = feature(Point(41.4, 750.6), Point(41.4, 41.4), Point(306.0, 41.4))
+    ratio2, theta2 = feature(Point(306.0, 41.4), Point(570.6, 41.4), Point(570.6, 750.6))
     
     features1 = blobs2features(blobs, 1000, theta1-.005, theta1+.005, ratio1-.005, ratio1+.005)
     features2 = blobs2features(blobs, 1000, theta2-.005, theta2+.005, ratio2-.005, ratio2+.005)

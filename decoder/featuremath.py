@@ -2,12 +2,18 @@ from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, h
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
 
 class Point:
-    """
+    """ Simplest point.
     """
     def __init__(self, x, y):
         self.x, self.y = x, y
 
-def feature(x1, y1, x2, y2, x3, y3):
+class Vector:
+    """ Like a point, but built from difference between two points.
+    """
+    def __init__(self, p1, p2):
+        self.x, self.y = p2.x - p1.x, p2.y - p1.y
+
+def feature(p1, p2, p3):
     """ Return a feature for a trio of points.
     
         A feature is derived from a trio of points/blobs forming two line segments:
@@ -30,34 +36,32 @@ def feature(x1, y1, x2, y2, x3, y3):
         Features are scale and rotation invariant, though this function
         considers the largest ones first to spend less time on image noise.
     """
-    p1, p2, p3 = (x1, y1), (x2, y2), (x3, y3)
-    
-    h12 = _hypot(x2 - x1, y2 - y1)
-    h13 = _hypot(x3 - x1, y3 - y1)
-    h23 = _hypot(x3 - x2, y3 - y2)
+    h12 = _hypot(p2.x - p1.x, p2.y - p1.y)
+    h13 = _hypot(p3.x - p1.x, p3.y - p1.y)
+    h23 = _hypot(p3.x - p2.x, p3.y - p2.y)
     
     hs = sorted([h12, h13, h23], reverse=True)
     
     if hs[0] is h12:
         if hs[1] is h13:
-            va, vb = (p2[0] - p1[0], p2[1] - p1[1]), (p3[0] - p1[0], p3[1] - p1[1])
+            va, vb = Vector(p1, p2), Vector(p1, p3)
         elif hs[1] is h23:
-            va, vb = (p1[0] - p2[0], p1[1] - p2[1]), (p3[0] - p2[0], p3[1] - p2[1])
+            va, vb = Vector(p2, p1), Vector(p2, p3)
     elif hs[0] is h13:
         if hs[1] is h12:
-            va, vb = (p3[0] - p1[0], p3[1] - p1[1]), (p2[0] - p1[0], p2[1] - p1[1])
+            va, vb = Vector(p1, p3), Vector(p1, p2)
         elif hs[1] is h23:
-            va, vb = (p1[0] - p3[0], p1[1] - p3[1]), (p2[0] - p3[0], p2[1] - p3[1])
+            va, vb = Vector(p3, p1), Vector(p3, p2)
     elif hs[0] is h23:
         if hs[1] is h12:
-            va, vb = (p3[0] - p2[0], p3[1] - p2[1]), (p1[0] - p2[0], p1[1] - p2[1])
+            va, vb = Vector(p2, p3), Vector(p2, p1)
         elif hs[1] is h13:
-            va, vb = (p2[0] - p3[0], p2[1] - p3[1]), (p1[0] - p3[0], p1[1] - p3[1])
+            va, vb = Vector(p3, p2), Vector(p3, p1)
     
-    theta = _atan2(va[1], va[0])
+    theta = _atan2(va.y, va.x)
     
-    x = vb[0] * _cos(-theta) - vb[1] * _sin(-theta)
-    y = vb[0] * _sin(-theta) + vb[1] * _cos(-theta)
+    x = vb.x * _cos(-theta) - vb.y * _sin(-theta)
+    y = vb.x * _sin(-theta) + vb.y * _cos(-theta)
     
     ratio = hs[1] / hs[0]
     theta = _atan2(y, x)
@@ -223,9 +227,9 @@ if __name__ == '__main__':
         assert round(ratios[(i, j, k)], 9) == round(ratio, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (ratio, ratios[(i, j, k)], i, j, k)
         assert round(thetas[(i, j, k)], 9) == round(theta, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (theta, thetas[(i, j, k)], i, j, k)
 
-    features = [feature(.575, .575, .575, 10.425, 7.925, 10.425),
-                feature(.575, .575, 7.925, 10.425, .575, 10.425),
-                feature(7.925, 10.425, .575, .575, .575, 10.425)]
+    features = [feature(Point(.575, .575), Point(.575, 10.425), Point(7.925, 10.425)),
+                feature(Point(.575, .575), Point(7.925, 10.425), Point(.575, 10.425)),
+                feature(Point(7.925, 10.425), Point(.575, .575), Point(.575, 10.425))]
     
     for (ratio, theta) in features:
         assert round(ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (ratio, 0.80146221760756842)
