@@ -1,10 +1,10 @@
-from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi
+from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, hypot as _hypot
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
 
-def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0, max_ratio=1):
-    """ Generate a stream of features conforming to limits.
+def feature(x1, y1, x2, y2, x3, y3):
+    """ Return a feature for a trio of points.
     
-        A feature is defined as a trio of points/blobs forming two line segments:
+        A feature is derived from a trio of points/blobs forming two line segments:
         
           b.
           *
@@ -16,12 +16,52 @@ def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0,
           a.
         
         Ratio is AC/AB and must be <= 1.0.
+        Theta is from AC to AB and can be positive or negative.
+
         AB is the longest side of the triangle.
         AC is the second-longest side by convention.
-        Theta is from AC to AB and can be positive or negative.
         
         Features are scale and rotation invariant, though this function
         considers the largest ones first to spend less time on image noise.
+    """
+    p1, p2, p3 = (x1, y1), (x2, y2), (x3, y3)
+    
+    h12 = _hypot(x2 - x1, y2 - y1)
+    h13 = _hypot(x3 - x1, y3 - y1)
+    h23 = _hypot(x3 - x2, y3 - y2)
+    
+    hs = sorted([h12, h13, h23], reverse=True)
+    
+    if hs[0] is h12:
+        if hs[1] is h13:
+            va, vb = (p2[0] - p1[0], p2[1] - p1[1]), (p3[0] - p1[0], p3[1] - p1[1])
+        elif hs[1] is h23:
+            va, vb = (p1[0] - p2[0], p1[1] - p2[1]), (p3[0] - p2[0], p3[1] - p2[1])
+    elif hs[0] is h13:
+        if hs[1] is h12:
+            va, vb = (p3[0] - p1[0], p3[1] - p1[1]), (p2[0] - p1[0], p2[1] - p1[1])
+        elif hs[1] is h23:
+            va, vb = (p1[0] - p3[0], p1[1] - p3[1]), (p2[0] - p3[0], p2[1] - p3[1])
+    elif hs[0] is h23:
+        if hs[1] is h12:
+            va, vb = (p3[0] - p2[0], p3[1] - p2[1]), (p1[0] - p2[0], p1[1] - p2[1])
+        elif hs[1] is h13:
+            va, vb = (p2[0] - p3[0], p2[1] - p3[1]), (p1[0] - p3[0], p1[1] - p3[1])
+    
+    theta = _atan2(va[1], va[0])
+    
+    x = vb[0] * _cos(-theta) - vb[1] * _sin(-theta)
+    y = vb[0] * _sin(-theta) + vb[1] * _cos(-theta)
+    
+    ratio = hs[1] / hs[0]
+    theta = _atan2(y, x)
+    
+    return ratio, theta
+
+def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0, max_ratio=1):
+    """ Generate a stream of features conforming to limits.
+    
+        Yields 5-element tuples: indexes for three blobs followed by feature ratio, theta.
     """
     count = len(blobs)
     
@@ -178,3 +218,11 @@ if __name__ == '__main__':
     for (i, j, k, ratio, theta) in blobs2features(blobs, 0, -pi, pi, 0, 1):
         assert round(ratios[(i, j, k)], 9) == round(ratio, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (ratio, ratios[(i, j, k)], i, j, k)
         assert round(thetas[(i, j, k)], 9) == round(theta, 9), '%.9f vs. %.9f in (%d,%d,%d)' % (theta, thetas[(i, j, k)], i, j, k)
+
+    features = [feature(.575, .575, .575, 10.425, 7.925, 10.425),
+                feature(.575, .575, 7.925, 10.425, .575, 10.425),
+                feature(7.925, 10.425, .575, .575, .575, 10.425)]
+    
+    for (ratio, theta) in features:
+        assert round(ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (ratio, 0.80146221760756842)
+        assert round(theta, 9) == 0.641060105, '%.9f vs. %.9f' % (theta, 0.64106010469117158)
