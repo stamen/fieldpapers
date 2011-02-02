@@ -1,11 +1,15 @@
 from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, hypot as _hypot
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
+from numpy import matrix as _matrix, dot as _dot
 
 class Point:
     """ Simplest point.
     """
     def __init__(self, x, y):
         self.x, self.y = x, y
+
+    def __str__(self):
+        return '(%.3f, %.3f)' % (self.x, self.y)
 
 class Vector:
     """ Like a point, but built from difference between two points.
@@ -70,12 +74,38 @@ class Transform:
         self.d = d
         self.e = e
         self.f = f
+        
+        self.values = [a, b, c, d, e, f]
+        self.matrix = reshape(_matrix(self.values + [0, 0, 1], dtype=float), (3, 3))
 
     def __call__(self, pt):
         """
         """
         return Point(self.a * pt.x + self.b * pt.y + self.c,
                      self.d * pt.x + self.e * pt.y + self.f)
+    
+    def __str__(self):
+        return '[%.3f, %.3f, %.3f, %.3f, %.3f, %.3f]' % tuple(self.values)
+
+    def multiply(self, other):
+        """
+        """
+        m = _dot(other.matrix, self.matrix)
+        
+        a, b, c = m[0,0], m[0,1], m[0,2]
+        d, e, f = m[1,0], m[1,1], m[1,2]
+        
+        return Transform(a, b, c, d, e, f)
+
+    def inverse(self):
+        """
+        """
+        m = self.matrix.I
+        
+        a, b, c = m[0,0], m[0,1], m[0,2]
+        d, e, f = m[1,0], m[1,1], m[1,2]
+        
+        return Transform(a, b, c, d, e, f)
 
 def _normalize(p1, p2, p3):
     """ Return feature parts for a trio of points - ordered points, ratio, theta.
