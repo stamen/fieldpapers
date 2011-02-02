@@ -1,15 +1,16 @@
-from sys import argv
+from sys import argv, stderr
 from math import e
 
 from PIL import Image
-from PIL.Image import ANTIALIAS
+from PIL.Image import ANTIALIAS, AFFINE, BICUBIC
 from PIL.ImageOps import autocontrast
 from PIL.ImageDraw import ImageDraw
 from PIL.ImageFilter import MinFilter, MaxFilter
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
-from featuremath import Feature, MatchedFeature, blobs2features, stream_pairs, regress_transform
+from featuremath import Feature, MatchedFeature, blobs2features, stream_pairs
+from featuremath import regress_transform, Transform
 
 class Blob:
     """
@@ -27,7 +28,7 @@ class Blob:
         
         self.bbox = (xmin, ymin, xmax, ymax)
 
-def imgblobs(img):
+def imgblobs(img, highpass_filename=None, preblobs_filename=None):
     """ Extract bboxes of blobs from an image.
     
         Assumes blobs somewhere in the neighborhood of 0.25" or so
@@ -49,8 +50,15 @@ def imgblobs(img):
     
     thumb = autocontrast(thumb)
     thumb = highpass(thumb, 16)
+    
+    if highpass_filename:
+        thumb.save(highpass_filename)
+    
     thumb = thumb.point(lambda p: (p < 120) and 0xFF or 0x00)
     thumb = thumb.filter(MinFilter(5)).filter(MaxFilter(5))
+    
+    if preblobs_filename:
+        thumb.save(preblobs_filename)
     
     blobs = []
     
@@ -134,7 +142,7 @@ if __name__ == '__main__':
     input = Image.open(argv[1])
 
     print 'reading blobs...'
-    blobs = imgblobs(input)
+    blobs = imgblobs(input, 'highpass.jpg', 'preblobs.jpg')
     print len(blobs), 'blobs.'
     
     print 'preparing features...'
@@ -144,12 +152,14 @@ if __name__ == '__main__':
     matches1 = blobs2features(blobs, 1000, f1.theta-.005, f1.theta+.005, f1.ratio-.005, f1.ratio+.005)
     matches2 = blobs2features(blobs, 1000, f2.theta-.005, f2.theta+.005, f2.ratio-.005, f2.ratio+.005)
     
+    found = False
+    
     for (match1, match2) in stream_pairs(matches1, matches2):
     
         match1 = MatchedFeature(f1, *[blobs[i] for i in match1[:3]])
         match2 = MatchedFeature(f2, *[blobs[i] for i in match2[:3]])
         
-        print '?',
+        print >> stderr, '?',
 
         if match1.s2 != match2.s2:
             continue
@@ -157,9 +167,12 @@ if __name__ == '__main__':
         if match1.s1 == match2.s1 or match1.s1 == match2.s3 or match1.s3 == match2.s1 or match1.s3 == match2.s3:
             continue
         
-        print 'yes.'
+        print >> stderr, 'yes.'
         
+        found = True
         break
+    
+    assert found
     
     #---------------------------------------------------------------------------
     
@@ -173,21 +186,18 @@ if __name__ == '__main__':
             points.append((p, s))
             seen.add(s)
     
-    print '-' * 20
-    
+    # matrices from print points to scan pixels and back
     p2s = regress_transform(points)
-    
-    for (p, s) in points:
-        # mapping from print to scan pixels
-        print (int(p.x), int(p.y)), (int(p2s(p).x), int(p2s(p).y)), (int(s.x), int(s.y))
-    
     s2p = regress_transform([(s, p) for (p, s) in points])
     
-    print '-' * 20
+    # matrix for finding the largest QR code at (468pt, 368pt)
+    m = s2p
+    m = m.multiply(Transform(1, 0, -468, 0, 1, -360))
+    m = m.multiply(Transform(4, 0, 0, 0, 4, 0))
+    m = m.multiply(Transform(1, 0, 34, 0, 1, 34))
+    m = m.inverse()
     
-    for (p, s) in points:
-        # mapping from print to scan pixels
-        print (int(s.x), int(s.y)), (int(s2p(s).x), int(s2p(s).y)), (int(p.x), int(p.y))
+    input.transform((500, 500), AFFINE, m.values, BICUBIC).save('qrcode.png')
     
     print 'drawing...'
     draw = ImageDraw(input)
