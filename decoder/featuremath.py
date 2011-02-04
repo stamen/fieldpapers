@@ -66,23 +66,47 @@ class Transform:
     
         | a b c |
         | d e f |
+        
+        or
+        
+        x = ax + by + c
+        y = dx + ey + c
+        
+        or
+        
+        | a b c |
+        | d e f |
+        | 0 0 1 |
+        
+        or
+        
+        | a b c |
+        | d e f |
+        | g h i |
+        
+        Anyway.
     """
-    def __init__(self, a, b, c, d, e, f):
+    def __init__(self, a, b, c, d, e, f, g=0, h=0, i=1):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
         self.e = e
         self.f = f
+        self.g = g
+        self.h = h
+        self.i = i
         
         self.values = [a, b, c, d, e, f]
-        self.matrix = reshape(_matrix(self.values + [0, 0, 1], dtype=float), (3, 3))
+        self.matrix = reshape(_matrix(self.values + [g, h, i], dtype=float), (3, 3))
 
     def __call__(self, pt):
         """
         """
-        return Point(self.a * pt.x + self.b * pt.y + self.c,
-                     self.d * pt.x + self.e * pt.y + self.f)
+        pt = _matrix([[pt.x], [pt.y], [1]])
+        pt = _dot(self.matrix, pt)
+        
+        return Point(pt[0,0]/pt[2,0], pt[1,0]/pt[2,0])
     
     def __str__(self):
         return '[%.3f, %.3f, %.3f, %.3f, %.3f, %.3f]' % tuple(self.values)
@@ -90,22 +114,21 @@ class Transform:
     def multiply(self, other):
         """
         """
-        m = _dot(other.matrix, self.matrix)
-        
-        a, b, c = m[0,0], m[0,1], m[0,2]
-        d, e, f = m[1,0], m[1,1], m[1,2]
-        
-        return Transform(a, b, c, d, e, f)
+        return matrix2transform(_dot(other.matrix, self.matrix))
 
     def inverse(self):
         """
         """
-        m = self.matrix.I
-        
-        a, b, c = m[0,0], m[0,1], m[0,2]
-        d, e, f = m[1,0], m[1,1], m[1,2]
-        
-        return Transform(a, b, c, d, e, f)
+        return matrix2transform(self.matrix.I)
+
+def matrix2transform(m):
+    """
+    """
+    a, b, c = m[0,0], m[0,1], m[0,2]
+    d, e, f = m[1,0], m[1,1], m[1,2]
+    g, h, i = m[2,0], m[2,1], m[2,2]
+    
+    return Transform(a, b, c, d, e, f, g, h, i)
 
 def _normalize(p1, p2, p3):
     """ Return feature parts for a trio of points - ordered points, ratio, theta.
@@ -219,32 +242,34 @@ def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0,
 def regress_transform(pairs):
     """ Fit a regression line to a set of point pairs.
     
-        Return a function that converts first of each point pair to the second.
+        Return a Transform that converts first of each point pair to the second.
     
         http://en.wikipedia.org/wiki/Simple_linear_regression#Fitting_the_regression_line
     """
+    f = float
+    
     #
     # Averages
     #
-    avg_lx = sum([l.x for (l, r) in pairs]) / len(pairs)
-    avg_ly = sum([l.y for (l, r) in pairs]) / len(pairs)
-    avg_rx = sum([r.x for (l, r) in pairs]) / len(pairs)
-    avg_ry = sum([r.y for (l, r) in pairs]) / len(pairs)
+    avg_lx = sum([f(l.x) for (l, r) in pairs]) / len(pairs)
+    avg_ly = sum([f(l.y) for (l, r) in pairs]) / len(pairs)
+    avg_rx = sum([f(r.x) for (l, r) in pairs]) / len(pairs)
+    avg_ry = sum([f(r.y) for (l, r) in pairs]) / len(pairs)
     
     #
     # Sums of numerators and denominators
     #
-    num0 = sum([(l.x - avg_lx) * (r.x - avg_rx) for (l, r) in pairs])
-    den0 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
+    num0 = sum([(f(l.x) - avg_lx) * (f(r.x) - avg_rx) for (l, r) in pairs])
+    den0 = sum([(f(l.x) - avg_lx) * (f(l.x) - avg_lx) for (l, r) in pairs])
     
-    num1 = sum([(l.y - avg_ly) * (r.x - avg_rx) for (l, r) in pairs])
-    den1 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
+    num1 = sum([(f(l.y) - avg_ly) * (f(r.x) - avg_rx) for (l, r) in pairs])
+    den1 = sum([(f(l.y) - avg_ly) * (f(l.y) - avg_ly) for (l, r) in pairs])
     
-    num2 = sum([(l.x - avg_lx) * (r.y - avg_ry) for (l, r) in pairs])
-    den2 = sum([(l.x - avg_lx) * (l.x - avg_lx) for (l, r) in pairs])
+    num2 = sum([(f(l.x) - avg_lx) * (f(r.y) - avg_ry) for (l, r) in pairs])
+    den2 = sum([(f(l.x) - avg_lx) * (f(l.x) - avg_lx) for (l, r) in pairs])
     
-    num3 = sum([(l.y - avg_ly) * (r.y - avg_ry) for (l, r) in pairs])
-    den3 = sum([(l.y - avg_ly) * (l.y - avg_ly) for (l, r) in pairs])
+    num3 = sum([(f(l.y) - avg_ly) * (f(r.y) - avg_ry) for (l, r) in pairs])
+    den3 = sum([(f(l.y) - avg_ly) * (f(l.y) - avg_ly) for (l, r) in pairs])
     
     #
     # Coefficients for a linear transformation
@@ -365,3 +390,27 @@ if __name__ == '__main__':
     for feature in features:
         assert round(feature.ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (feature.ratio, 0.80146221760756842)
         assert round(feature.theta, 9) == 0.641060105, '%.9f vs. %.9f' % (feature.theta, 0.64106010469117158)
+
+    p = Transform(0, 0, 10, 0, 0, 10)(Point(0, 0))
+    assert (p.x, p.y) == (10, 10)
+
+    p = Transform(0, 0, 10, 0, 0, 10)(Point(10, 10))
+    assert (p.x, p.y) == (10, 10)
+
+    p = Transform(1, 0, 0, 0, 1, 0)(Point(0, 0))
+    assert (p.x, p.y) == (0, 0)
+
+    p = Transform(1, 0, 0, 0, 1, 0)(Point(10, 10))
+    assert (p.x, p.y) == (10, 10)
+
+    p = Transform(10, 0, 0, 0, 10, 0)(Point(0, 0))
+    assert (p.x, p.y) == (0, 0)
+
+    p = Transform(10, 0, 0, 0, 10, 0)(Point(10, 10))
+    assert (p.x, p.y) == (100, 100)
+
+    p = Transform(10, 0, 10, 0, 10, 10)(Point(0, 0))
+    assert (p.x, p.y) == (10, 10)
+
+    p = Transform(10, 0, 10, 0, 10, 10)(Point(10, 10))
+    assert (p.x, p.y) == (110, 110)
