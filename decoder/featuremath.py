@@ -1,21 +1,7 @@
 from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, hypot as _hypot
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
-from numpy import matrix as _matrix, dot as _dot
 
-class Point:
-    """ Simplest point.
-    """
-    def __init__(self, x, y):
-        self.x, self.y = x, y
-
-    def __str__(self):
-        return '(%.3f, %.3f)' % (self.x, self.y)
-
-class Vector:
-    """ Like a point, but built from difference between two points.
-    """
-    def __init__(self, p1, p2):
-        self.x, self.y = p2.x - p1.x, p2.y - p1.y
+from matrixmath import Point, Vector, Transform
 
 class Feature:
     """ Unmatched feature, probably in print coordinates.
@@ -60,75 +46,6 @@ class MatchedFeature:
         self.s1 = s1
         self.s2 = s2
         self.s3 = s3
-
-class Transform:
-    """ Callable linear transformation.
-    
-        | a b c |
-        | d e f |
-        
-        or
-        
-        x = ax + by + c
-        y = dx + ey + c
-        
-        or
-        
-        | a b c |
-        | d e f |
-        | 0 0 1 |
-        
-        or
-        
-        | a b c |
-        | d e f |
-        | g h i |
-        
-        Anyway.
-    """
-    def __init__(self, a, b, c, d, e, f, g=0, h=0, i=1):
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
-        self.e = e
-        self.f = f
-        self.g = g
-        self.h = h
-        self.i = i
-        
-        self.values = [a, b, c, d, e, f]
-        self.matrix = reshape(_matrix(self.values + [g, h, i], dtype=float), (3, 3))
-
-    def __call__(self, pt):
-        """
-        """
-        pt = _matrix([[pt.x], [pt.y], [1]])
-        pt = _dot(self.matrix, pt)
-        
-        return Point(pt[0,0]/pt[2,0], pt[1,0]/pt[2,0])
-    
-    def __str__(self):
-        return '[%.3f, %.3f, %.3f, %.3f, %.3f, %.3f]' % tuple(self.values)
-
-    def multiply(self, other):
-        """
-        """
-        return matrix2transform(_dot(other.matrix, self.matrix))
-
-    def inverse(self):
-        """
-        """
-        return matrix2transform(self.matrix.I)
-
-def matrix2transform(m):
-    """
-    """
-    a, b, c = m[0,0], m[0,1], m[0,2]
-    d, e, f = m[1,0], m[1,1], m[1,2]
-    g, h, i = m[2,0], m[2,1], m[2,2]
-    
-    return Transform(a, b, c, d, e, f, g, h, i)
 
 def _normalize(p1, p2, p3):
     """ Return feature parts for a trio of points - ordered points, ratio, theta.
@@ -390,27 +307,3 @@ if __name__ == '__main__':
     for feature in features:
         assert round(feature.ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (feature.ratio, 0.80146221760756842)
         assert round(feature.theta, 9) == 0.641060105, '%.9f vs. %.9f' % (feature.theta, 0.64106010469117158)
-
-    p = Transform(0, 0, 10, 0, 0, 10)(Point(0, 0))
-    assert (p.x, p.y) == (10, 10)
-
-    p = Transform(0, 0, 10, 0, 0, 10)(Point(10, 10))
-    assert (p.x, p.y) == (10, 10)
-
-    p = Transform(1, 0, 0, 0, 1, 0)(Point(0, 0))
-    assert (p.x, p.y) == (0, 0)
-
-    p = Transform(1, 0, 0, 0, 1, 0)(Point(10, 10))
-    assert (p.x, p.y) == (10, 10)
-
-    p = Transform(10, 0, 0, 0, 10, 0)(Point(0, 0))
-    assert (p.x, p.y) == (0, 0)
-
-    p = Transform(10, 0, 0, 0, 10, 0)(Point(10, 10))
-    assert (p.x, p.y) == (100, 100)
-
-    p = Transform(10, 0, 10, 0, 10, 10)(Point(0, 0))
-    assert (p.x, p.y) == (10, 10)
-
-    p = Transform(10, 0, 10, 0, 10, 10)(Point(10, 10))
-    assert (p.x, p.y) == (110, 110)

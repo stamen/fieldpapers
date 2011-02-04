@@ -196,8 +196,9 @@ if __name__ == '__main__':
     m = m.multiply(Transform(4, 0, 0, 0, 4, 0))
     m = m.multiply(Transform(1, 0, 34, 0, 1, 34))
     m = m.inverse()
+    a = m.affine(0, 0, 500, 500)
     
-    input.transform((500, 500), AFFINE, m.values, BICUBIC).save('qrcode.png')
+    input.transform((500, 500), AFFINE, a, BICUBIC).save('qrcode.png')
     
     print 'drawing...'
     draw = ImageDraw(input)
