@@ -117,7 +117,7 @@ def highpass(img, radius):
     #
     # Combine blurred with original, see http://www.gimp.org/tutorials/Sketch_Effect/
     #
-    high = .5 * orig + .5 * (1 - blur)
+    high = .5 * orig + .5 * (0xff - blur)
     
     return arr2img(high)
 
