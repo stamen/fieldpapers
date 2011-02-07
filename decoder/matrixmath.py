@@ -102,7 +102,7 @@ def square2quad(p0, p1, p2, p3):
     
         See line 265 of http://www.java2s.com/Open-Source/Java-Document/6.0-JDK-Modules/Java-Advanced-Imaging/javax/media/jai/PerspectiveTransform.java.htm
         
-        Order of points must be clockwise:
+        Order of points must be clockwise starting from top-left:
           0. top-left (0, 0)
           1. top-right (0, 1)
           2. bottom-right (1, 1)
