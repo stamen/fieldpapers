@@ -146,11 +146,16 @@ if __name__ == '__main__':
     print len(blobs), 'blobs.'
     
     print 'preparing features...'
-    f1 = Feature(Point(41.4, 750.6), Point(41.4, 41.4), Point(306.0, 41.4))
-    f2 = Feature(Point(306.0, 41.4), Point(570.6, 41.4), Point(570.6, 750.6))
+    tl = Point(41.4, 41.4)
+    tr = Point(570.6, 41.4)
+    bl = Point(41.4, 750.6)
+    br = Point(570.6, 750.6)
+
+    f1 = Feature(tl, tr, bl) # bl, tr, tl
+    f2 = Feature(tr, tl, br) # br, tl, tr
     
-    matches1 = blobs2features(blobs, 1000, f1.theta-.005, f1.theta+.005, f1.ratio-.005, f1.ratio+.005)
-    matches2 = blobs2features(blobs, 1000, f2.theta-.005, f2.theta+.005, f2.ratio-.005, f2.ratio+.005)
+    matches1 = blobs2features(blobs, 1000, f1.theta-.016, f1.theta+.016, f1.ratio-.036, f1.ratio+.036)
+    matches2 = blobs2features(blobs, 1000, f2.theta-.016, f2.theta+.016, f2.ratio-.036, f2.ratio+.036)
     
     found = False
     
@@ -160,11 +165,14 @@ if __name__ == '__main__':
         match2 = MatchedFeature(f2, *[blobs[i] for i in match2[:3]])
         
         print >> stderr, '?',
-
-        if match1.s2 != match2.s2:
+        
+        if match1.s1 is match2.s1:
             continue
         
-        if match1.s1 == match2.s1 or match1.s1 == match2.s3 or match1.s3 == match2.s1 or match1.s3 == match2.s3:
+        if match1.s2 is not match2.s3:
+            continue
+        
+        if match1.s3 is not match2.s2:
             continue
         
         print >> stderr, 'yes.'
@@ -208,7 +216,7 @@ if __name__ == '__main__':
         s1 = match.s1
         s2 = match.s2
         s3 = match.s3
-
+        
         draw.line((s1.x, s1.y, s2.x, s2.y), fill=(0, 0xCC, 0))
         draw.line((s1.x, s1.y, s3.x, s3.y), fill=(0xCC, 0, 0xCC))
         draw.line((s2.x, s2.y, s3.x, s3.y), fill=(0x99, 0, 0x99))
