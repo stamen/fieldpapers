@@ -205,20 +205,12 @@ if __name__ == '__main__':
         match2 = MatchedFeature(f2, *[blobs[i] for i in match2[:3]])
         
         print >> stderr, '?',
-        
-        if match1.s1 is match2.s1:
-            continue
-        
-        if match1.s2 is not match2.s3:
-            continue
-        
-        if match1.s3 is not match2.s2:
-            continue
-        
-        print >> stderr, 'yes.'
-        
-        found = True
-        break
+
+        if match1.fits(match2):
+            print >> stderr, 'yes.'
+            
+            found = True
+            break
     
     assert found
     

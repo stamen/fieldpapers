@@ -1,5 +1,6 @@
 from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, hypot as _hypot
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
+from itertools import chain, product
 
 from matrixmath import Point, Vector, Transform
 
@@ -46,6 +47,27 @@ class MatchedFeature:
         self.s1 = s1
         self.s2 = s2
         self.s3 = s3
+    
+    def fits(self, other):
+        """ Return false if this feature conflicts with another.
+        
+            Two features fit if their numbered points match pairwise, with
+            the identity relationship between self.pn and other.pn being equal
+            to that of self.sn and other.sn.
+            
+            Assume that vertices can be simply compared with "is" and "is not".
+        """
+        for (i, j) in product((1, 2, 3), (1, 2, 3)):
+            self_p, other_p = getattr(self, 'p%d' % i), getattr(other, 'p%d' % j)
+            self_s, other_s = getattr(self, 's%d' % i), getattr(other, 's%d' % j)
+            
+            if self_p is other_p and self_s is not other_s:
+                return False
+
+            elif self_p is not other_p and self_s is other_s:
+                return False
+
+        return True
 
 def _normalize(p1, p2, p3):
     """ Return feature parts for a trio of points - ordered points, ratio, theta.
@@ -160,9 +182,13 @@ def stream_pairs(source1, source2):
     """ Generate a merged stream from two possibly-infinite streams.
     
         Imagine an infinite plane, swept diagonally from (0, 0) in alternating directions.
+        
+        Each source stream is repeated up to three times, just to guarantee
+        that most possible pairs are produced at the cost of limited duplication.
     """
     list1, list2 = [], []
-    iterator1, iterator2 = iter(source1), iter(source2)
+    iterator1 = chain(source1, source1, source1)
+    iterator2 = chain(source2, source2, source2)
     northeast, southwest = 1, 2
     direction = northeast
     row, col = 0, 0
