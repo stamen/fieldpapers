@@ -58,46 +58,25 @@ class Transform:
         """
         pt = _matrix([[pt.x], [pt.y], [1]])
         pt = _dot(self.matrix, pt)
+        x, y, w = pt[0,0], pt[1,0], pt[2,0]
         
-        return Point(pt[0,0]/pt[2,0], pt[1,0]/pt[2,0])
+        return Point(x/w, y/w)
     
     def __str__(self):
-        return '[%.3f, %.3f, %.3f, %.3f, %.3f, %.3f]' % tuple(self.values)
+        return '[%.3f, %.3f, %.3f], [%.3f, %.3f, %.3f], [%.3f, %.3f, %.3f]' % tuple(self.matrix.flat)
 
     def affine(self, x, y, w, h):
+        """ Return the six terms of a regular affine transformation
+            that approximates this homogenous transformation within
+            the given source bounds.
         """
-        """
-        #
-        # Solve for x
-        #
-        r1, s1, t1 = float(x),   float(y), self(Point(x,   y)).x
-        r2, s2, t2 = float(x), float(h+y), self(Point(x, h+y)).x
-        r3, s3, t3 = float(x+w), float(y), self(Point(x+w, y)).x
-
-        a = (((t2 - t3) * (s1 - s2)) - ((t1 - t2) * (s2 - s3))) \
-          / (((r2 - r3) * (s1 - s2)) - ((r1 - r2) * (s2 - s3)))
-    
-        b = (((t2 - t3) * (r1 - r2)) - ((t1 - t2) * (r2 - r3))) \
-          / (((s2 - s3) * (r1 - r2)) - ((s1 - s2) * (r2 - r3)))
-    
-        c = t1 - (r1 * a) - (s1 * b)
-
-        #
-        # Solve for y
-        #
-        r1, s1, t1 = float(x),   float(y), self(Point(x,   y)).y
-        r2, s2, t2 = float(x), float(h+y), self(Point(x, h+y)).y
-        r3, s3, t3 = float(x+w), float(y), self(Point(x+w, y)).y
-    
-        d = (((t2 - t3) * (s1 - s2)) - ((t1 - t2) * (s2 - s3))) \
-          / (((r2 - r3) * (s1 - s2)) - ((r1 - r2) * (s2 - s3)))
-    
-        e = (((t2 - t3) * (r1 - r2)) - ((t1 - t2) * (r2 - r3))) \
-          / (((s2 - s3) * (r1 - r2)) - ((s1 - s2) * (r2 - r3)))
-    
-        f = t1 - (r1 * d) - (s1 * e)
+        l0, r0 = Point(x,   y), self(Point(x,   y))
+        l1, r1 = Point(x, h+y), self(Point(x, h+y))
+        l2, r2 = Point(x+w, y), self(Point(x+w, y))
         
-        return a, b, c, d, e, f
+        t = triangle2triangle(l0, r0, l1, r1, l2, r2)
+        
+        return t.a, t.b, t.c, t.d, t.e, t.f
     
     def multiply(self, other):
         """
@@ -180,6 +159,43 @@ def quad2quad(l0, r0, l1, r1, l2, r2, l3, r3):
     l2r = l2s.multiply(s2r)
     
     return l2r
+
+def triangle2triangle(l0, r0, l1, r1, l2, r2):
+    """ Return an affine transformation from points in one triangle to another.
+    
+        Point pairs must match: 0-0, 1-1, and 2-2.
+    """
+    #
+    # Solve for x
+    #
+    i0, j0, k0 = float(l0.x), float(l0.y), float(r0.x)
+    i1, j1, k1 = float(l1.x), float(l1.y), float(r1.x)
+    i2, j2, k2 = float(l2.x), float(l2.y), float(r2.x)
+
+    a = (((k1 - k2) * (j0 - j1)) - ((k0 - k1) * (j1 - j2))) \
+      / (((i1 - i2) * (j0 - j1)) - ((i0 - i1) * (j1 - j2)))
+
+    b = (((k1 - k2) * (i0 - i1)) - ((k0 - k1) * (i1 - i2))) \
+      / (((j1 - j2) * (i0 - i1)) - ((j0 - j1) * (i1 - i2)))
+
+    c = k0 - (i0 * a) - (j0 * b)
+
+    #
+    # Solve for y
+    #
+    i0, j0, k0 = float(l0.x), float(l0.y), float(r0.y)
+    i1, j1, k1 = float(l1.x), float(l1.y), float(r1.y)
+    i2, j2, k2 = float(l2.x), float(l2.y), float(r2.y)
+
+    d = (((k1 - k2) * (j0 - j1)) - ((k0 - k1) * (j1 - j2))) \
+      / (((i1 - i2) * (j0 - j1)) - ((i0 - i1) * (j1 - j2)))
+
+    e = (((k1 - k2) * (i0 - i1)) - ((k0 - k1) * (i1 - i2))) \
+      / (((j1 - j2) * (i0 - i1)) - ((j0 - j1) * (i1 - i2)))
+
+    f = k0 - (i0 * d) - (j0 * e)
+    
+    return Transform(a, b, c, d, e, f)
 
 if __name__ == '__main__':
 
