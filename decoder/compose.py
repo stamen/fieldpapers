@@ -73,7 +73,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         mmap = mm.Map(mmap.provider, mm.Core.Point(width, height), mmap.coordinate, mmap.offset)
         
         out = StringIO()
-        mmap.draw().save(out, format='JPEG')
+        mmap.draw(fatbits_ok=True).save(out, format='JPEG')
         preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
         
         print 'Sent preview.jpg'
@@ -91,7 +91,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         mmap = mm.Map(mmap.provider, mm.Core.Point(width * 2**zdiff, height * 2**zdiff), mmap.coordinate, mmap.offset)
         
         out = StringIO()
-        mmap.draw().save(out, format='JPEG')
+        mmap.draw(fatbits_ok=True).save(out, format='JPEG')
         print_url = append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
         
         print 'Sent print.jpg'
@@ -116,7 +116,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                 sub_name = 'print-%(sub_part)s.jpg' % locals()
         
                 out = StringIO()
-                sub_mmap.draw().save(out, format='JPEG')
+                sub_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
                 append_print_file(print_id, sub_name, out.getvalue(), apibase, password)
                 
                 print 'Sent', sub_name
@@ -127,7 +127,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                 prev_name = 'preview-%(sub_part)s.jpg' % locals()
         
                 out = StringIO()
-                prev_mmap.draw().save(out, format='JPEG')
+                prev_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
                 append_print_file(print_id, prev_name, out.getvalue(), apibase, password)
                 
                 print 'Sent', prev_name
