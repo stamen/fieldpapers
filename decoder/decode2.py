@@ -10,7 +10,8 @@ from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
 from featuremath import Feature, MatchedFeature, blobs2features, stream_pairs
-from featuremath import regress_transform, Transform
+from matrixmath import triangle2triangle, quad2quad
+from featuremath import Transform
 
 class Blob:
     """
@@ -120,6 +121,45 @@ def highpass(img, radius):
     
     return arr2img(high)
 
+def extract_image(scan2print, print_bbox, scan_img, dest_dim, step=50):
+    """ Extract a portion of a scan image by print coordinates.
+    
+        scan2print - transformation from scan pixels to original print.
+    """
+    dest_img = Image.new('RGB', dest_dim)
+    
+    #
+    # Compute transformation from original image bbox to destination image.
+    #
+    print2dest = triangle2triangle(Point(print_bbox[0], print_bbox[1]), Point(0, 0),
+                                   Point(print_bbox[0], print_bbox[3]), Point(0, dest_dim[1]),
+                                   Point(print_bbox[2], print_bbox[1]), Point(dest_dim[0], 0))
+
+    #
+    # Compute transformation from source image to destination image.
+    #
+    scan2dest = scan2print.multiply(print2dest)
+    
+    dest_w, dest_h = dest_dim
+    
+    for y in range(0, dest_h, step):
+        for x in range(0, dest_w, step):
+            # dimensions of current destination cell
+            w = min(step, dest_w - x)
+            h = min(step, dest_h - y)
+
+            # transformation from scan pixels to destination cell
+            m = scan2dest
+            m = m.multiply(Transform(1, 0, -x, 0, 1, -y))
+            m = m.inverse()
+            a = m.affine(0, 0, w, h)
+            
+            p = scan_img.transform((w, h), AFFINE, a, BICUBIC)
+            
+            dest_img.paste(p, (x, y))
+
+    return dest_img
+
 class Point:
     """
     """
@@ -151,8 +191,8 @@ if __name__ == '__main__':
     bl = Point(41.4, 750.6)
     br = Point(570.6, 750.6)
 
-    f1 = Feature(tl, tr, bl) # bl, tr, tl
-    f2 = Feature(tr, tl, br) # br, tl, tr
+    f1 = Feature(tl, tr, bl) # point order: bl, tr, tl
+    f2 = Feature(tr, tl, br) # point order: br, tl, tr
     
     matches1 = blobs2features(blobs, 1000, f1.theta-.016, f1.theta+.016, f1.ratio-.036, f1.ratio+.036)
     matches2 = blobs2features(blobs, 1000, f2.theta-.016, f2.theta+.016, f2.ratio-.036, f2.ratio+.036)
@@ -184,29 +224,11 @@ if __name__ == '__main__':
     
     #---------------------------------------------------------------------------
     
-    seen, points = set(), []
-
-    for match in (match1, match2):
-        for (p, s) in ((match.p1, match.s1), (match.p2, match.s2), (match.p3, match.s3)):
-            if s in seen:
-                continue
-            
-            points.append((p, s))
-            seen.add(s)
+    # transform from scan pixels to print points - TL, TR, BR, BL
+    s2p = quad2quad(match1.s3, match1.p3, match2.s3, match2.p3,
+                    match2.s1, match2.p1, match1.s1, match1.p1)
     
-    # matrices from print points to scan pixels and back
-    p2s = regress_transform(points)
-    s2p = regress_transform([(s, p) for (p, s) in points])
-    
-    # matrix for finding the largest QR code at (468pt, 368pt)
-    m = s2p
-    m = m.multiply(Transform(1, 0, -468, 0, 1, -360))
-    m = m.multiply(Transform(4, 0, 0, 0, 4, 0))
-    m = m.multiply(Transform(1, 0, 34, 0, 1, 34))
-    m = m.inverse()
-    a = m.affine(0, 0, 500, 500)
-    
-    input.transform((500, 500), AFFINE, a, BICUBIC).save('qrcode.png')
+    extract_image(s2p, (468-9, 360-9, 576+9, 468+9), input, (500, 500)).save('qrcode.png')
     
     print 'drawing...'
     draw = ImageDraw(input)
