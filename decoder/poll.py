@@ -144,8 +144,8 @@ if __name__ == '__main__':
                         
                         if 'markers' in msg:
                             kwargs['do_sifting'] = False
-                            markers = [(name, xy) for (name, xy) in msg['markers'].items()]
-                            markers = [(n, decode.Minimarker(**xy)) for (n, xy) in markers]
+                            markers = [(str(name), xy) for (name, xy) in msg['markers'].items()]
+                            markers = [(n, decode.Minimarker(xy['x'], xy['y'])) for (n, xy) in markers]
                             markers = dict(markers)
                         else:
                             kwargs['do_sifting'] = True
