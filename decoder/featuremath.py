@@ -53,7 +53,9 @@ class MatchedFeature:
         
             Two features fit if their numbered points match pairwise, with
             the identity relationship between self.pn and other.pn being equal
-            to that of self.sn and other.sn.
+            to that of self.sn and other.sn. Though not an interesting case,
+            two features fit even if they have no points in common because
+            there is no conflict.
             
             Assume that vertices can be simply compared with "is" and "is not".
         """

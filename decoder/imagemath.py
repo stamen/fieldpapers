@@ -126,7 +126,7 @@ def extract_image(scan2print, print_bbox, scan_img, dest_dim, step=50):
     dest_img = Image.new('RGB', dest_dim)
     
     #
-    # Compute transformation from original image bbox to destination image.
+    # Compute transformation from print image bbox to destination image.
     #
     print2dest = triangle2triangle(Point(print_bbox[0], print_bbox[1]), Point(0, 0),
                                    Point(print_bbox[0], print_bbox[3]), Point(0, dest_dim[1]),
