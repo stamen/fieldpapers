@@ -9,65 +9,22 @@ from glob import glob
 from PIL import Image
 from PIL.ImageDraw import ImageDraw
 
-from featuremath import Feature, MatchedFeature, blobs2features, stream_triples, stream_pairs
-from imagemath import Point, imgblobs, extract_image
+from featuremath import MatchedFeature, blobs2features, stream_triples, stream_pairs
+from imagemath import imgblobs, extract_image
 from matrixmath import Transform, quad2quad
 
-#
-# points, clockwise from top-left
-#
-point_A = Point(-508.37, -720.33)
-point_B = Point(-13.56, -720.37)
-point_C = Point(-13.56, -229.53)
-point_D = Point(-149.12, -13.56)
-
-#
-# fifth point, by paper size and orientation
-#
-point_E_portrait_a3 = Point(-508.37, -126.63)
-point_E_portrait_a4 = Point(-509.72, -199.48)
-point_E_portrait_ltr = Point(-565.82, -271.11)
-point_E_landscape_a3 = Point(-1105.00, -213.19)
-point_E_landscape_a4 = Point(-1146.04, -300.08)
-point_E_landscape_ltr = Point(-1034.82, -155.33)
-
-#
-# primary feature triangles
-#
-feature_acb = Feature(point_A, point_C, point_B)
-feature_adc = Feature(point_A, point_D, point_C)
-feature_dab = Feature(point_D, point_A, point_B)
-
-#
-# secondary feature triangles
-#
-feature_e_portrait_a3 = Feature(point_A, point_C, point_E_portrait_a3)
-feature_e_portrait_a4 = Feature(point_A, point_C, point_E_portrait_a4)
-feature_e_portrait_ltr = Feature(point_A, point_C, point_E_portrait_ltr)
-feature_e_landscape_a3 = Feature(point_A, point_C, point_E_landscape_a3)
-feature_e_landscape_a4 = Feature(point_A, point_C, point_E_landscape_a4)
-feature_e_landscape_ltr = Feature(point_A, point_C, point_E_landscape_ltr)
-
-#
-# feature tolerances and minimum size for featuremath.blobs2features()
-#
-ratio_tol = 0.03
-theta_tol = 0.04 # approx 2 degrees, either direction
-min_size = 800
-
-#
-# Ratios of homogenous print coordinates above to printed point coordinates
-#
-ratio_portrait_a3 = 0.677938
-ratio_portrait_a4 = 1.000007
-ratio_portrait_ltr = 1.0729091
-ratio_landscape_a3 = 0.999974
-ratio_landscape_a4 = 1.506211
-ratio_landscape_ltr = 1.456091
-
-def blob_match(blobs):
+def paper_matches(blobs):
+    """ Generate matches for specific paper sizes.
+    
+        Yield tuples with transformations from scan pixels to print points,
+        paper sizes and orientations. Print points are centered on lower right
+        corner of QR code.
     """
-    """
+    from dimensions import ratio_portrait_a3, ratio_portrait_a4, ratio_portrait_ltr
+    from dimensions import ratio_landscape_a3, ratio_landscape_a4, ratio_landscape_ltr
+    from dimensions import point_E_portrait_a3, point_E_portrait_a4, point_E_portrait_ltr
+    from dimensions import point_E_landscape_a3, point_E_landscape_a4, point_E_landscape_ltr
+    
     for (acb_match, adc_match) in _blob_matches_primary(blobs):
         for (e_match, point_E) in _blob_matches_secondary(blobs, acb_match, adc_match):
             #
@@ -113,11 +70,14 @@ def blob_match(blobs):
             h2p = Transform(scale, 0, 0, 0, scale, 0)
             s2p = s2h.multiply(h2p)
             
-            return s2p, orientation, paper_size
+            yield s2p, paper_size, orientation
 
 def _blob_matches_primary(blobs):
     """ Generate known matches for ACB (top) and ADC (bottom) triangle pairs.
     """
+    from dimensions import feature_acb, feature_adc, feature_dab
+    from dimensions import min_size, theta_tol, ratio_tol
+
     acb_theta, acb_ratio = feature_acb.theta, feature_acb.ratio
     adc_theta, adc_ratio = feature_adc.theta, feature_adc.ratio
     dab_theta, dab_ratio = feature_dab.theta, feature_dab.ratio
@@ -163,6 +123,14 @@ def _blob_matches_primary(blobs):
 def _blob_matches_secondary(blobs, acb_match, adc_match):
     """ Generate known matches for ACB (top), ADC (bottom) and paper-specific triangle groups.
     """
+    from dimensions import feature_e_landscape_ltr, point_E_landscape_ltr
+    from dimensions import feature_e_portrait_ltr, point_E_portrait_ltr
+    from dimensions import feature_e_landscape_a4, point_E_landscape_a4
+    from dimensions import feature_e_portrait_a4, point_E_portrait_a4
+    from dimensions import feature_e_landscape_a3, point_E_landscape_a3
+    from dimensions import feature_e_portrait_a3, point_E_portrait_a3
+    from dimensions import min_size, theta_tol, ratio_tol
+
     features_e = (
         (feature_e_landscape_ltr, point_E_landscape_ltr),
         (feature_e_portrait_ltr,  point_E_portrait_ltr),
@@ -231,24 +199,24 @@ def main(url):
     input = Image.open(StringIO(urlopen(url).read()))
     blobs = imgblobs(input, 'highpass.jpg', 'preblobs.jpg')
 
-    s2p, paper, orientation = blob_match(blobs)
+    for (s2p, paper, orientation) in paper_matches(blobs):
 
-    print paper, orientation, '--', s2p
+        print paper, orientation, '--', s2p
+        
+        qrcode = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
+        qrcode.save('qrcode.png')
+        
+        print read_code(qrcode)
     
-    qrcode = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
-    qrcode.save('qrcode.png')
+        draw = ImageDraw(input)
+        
+        for blob in blobs:
+            draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
     
-    print read_code(qrcode)
-
-    draw = ImageDraw(input)
+        print 'saving...'
+        input.save('out.png')
     
-    for blob in blobs:
-        draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
-
-    print 'saving...'
-    input.save('out.png')
-
-    return 0
+        return 0
 
 if __name__ == '__main__':
 
