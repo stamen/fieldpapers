@@ -1,6 +1,6 @@
 from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, hypot as _hypot
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
-from itertools import chain, product
+from itertools import cycle, product
 
 from matrixmath import Point, Vector, Transform
 
@@ -185,12 +185,13 @@ def stream_pairs(source1, source2):
     
         Imagine an infinite plane, swept diagonally from (0, 0) in alternating directions.
         
-        Each source stream is repeated up to three times, just to guarantee
-        that most possible pairs are produced at the cost of limited duplication.
+        Each source stream is cycled infinitely, just to guarantee that all
+        possible pairs are produced at the cost of duplication. Calling functions
+        are responsible for limiting the stream according to some heuristic.
     """
     list1, list2 = [], []
-    iterator1 = chain(source1, source1, source1)
-    iterator2 = chain(source2, source2, source2)
+    iterator1 = cycle(source1)
+    iterator2 = cycle(source2)
     northeast, southwest = 1, 2
     direction = northeast
     row, col = 0, 0
@@ -281,3 +282,10 @@ if __name__ == '__main__':
     for feature in features:
         assert round(feature.ratio, 9) == 0.801462218, '%.9f vs. %.9f' % (feature.ratio, 0.80146221760756842)
         assert round(feature.theta, 9) == 0.641060105, '%.9f vs. %.9f' % (feature.theta, 0.64106010469117158)
+
+    gen = stream_triples('abc', (1, 2, 3), ('do', 're', 'mi'))
+    triples = [gen.next() for i in range(1000)]
+
+    assert ('a', 1, 'do') in triples
+    assert ('b', 2, 're') in triples
+    assert ('c', 3, 'mi') in triples
