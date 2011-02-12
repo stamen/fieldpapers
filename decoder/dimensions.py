@@ -52,3 +52,23 @@ ratio_portrait_ltr = 1.0729091
 ratio_landscape_a3 = 0.999974
 ratio_landscape_a4 = 1.506211
 ratio_landscape_ltr = 1.456091
+
+#
+# basic conversions between millimeters, points, and inches
+#
+mmppt = 0.352777778
+inppt = 0.013888889
+
+ptpin = 1./inppt
+ptpmm = 1./mmppt
+
+#
+# paper sizes in printed points
+#
+paper_size_landscape_a3 = 420 * ptpmm, 297 * ptpmm
+paper_size_landscape_a4 = 297 * ptpmm, 210 * ptpmm
+paper_size_landscape_ltr = 11 * ptpin, 8.5 * ptpin
+
+paper_size_portrait_a3 = 297 * ptpmm, 420 * ptpmm
+paper_size_portrait_a4 = 210 * ptpmm, 297 * ptpmm
+paper_size_portrait_ltr = 8.5 * ptpin, 11 * ptpin

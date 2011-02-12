@@ -1,16 +1,13 @@
 from sys import argv
 from urllib import urlopen, urlencode
 from os import close, write, unlink
+from optparse import OptionParser
 from tempfile import mkstemp
 
 from cairo import ImageSurface, PDFSurface, Context
 from PIL import Image
 
-mmppt = 0.352777778
-inppt = 0.013888889
-
-ptpin = 1./inppt
-ptpmm = 1./mmppt
+from dimensions import point_A, point_B, point_C, point_D, ptpin
 
 def place_image(context, img, x, y, width, height):
     """ Add an image to a given context, at a position and size given in millimeters.
@@ -70,26 +67,55 @@ def draw_circle(context, x, y, radius):
     context.rel_curve_to(-bezier, 0, -radius, -bezier, -radius, -radius)
     context.rel_curve_to(0, -bezier, bezier, -radius, radius, -radius)
 
-paper_info = {
-    ('A3', 'landscape'): (420*ptpmm, 297*ptpmm, (-1104.997, -213.194)),
-    ('A4', 'landscape'): (297*ptpmm, 210*ptpmm, (-1146.044, -300.08)),
-    ('letter', 'landscape'): (11*ptpin, 8.5*ptpin, (-1034.824, -155.327)),
+def paper_info(paper_size, orientation):
+    """
+    """
+    dim = __import__('dimensions')
+    
+    paper_size = {'letter': 'ltr', 'a4': 'a4', 'a3': 'a3'}[paper_size.lower()]
+    width_pt, height_pt = getattr(dim, 'paper_size_%(orientation)s_%(paper_size)s' % locals())
+    fifth_point = getattr(dim, 'point_E_%(orientation)s_%(paper_size)s' % locals())
+    
+    return width_pt, height_pt, fifth_point
 
-    ('A3', 'portrait'): (297*ptpmm, 420*ptpmm, (-508.37, -126.63)),
-    ('A4', 'portrait'): (210*ptpmm, 297*ptpmm, (-509.722, -199.482)),
-    ('letter', 'portrait'): (8.5*ptpin, 11*ptpin, (-565.823, -271.112))
-  }
+parser = OptionParser()
+
+parser.set_defaults(layout='1,1',
+                    bounds=(37.81310856, -122.26442201, 37.79764683, -122.24897248),
+                    paper='letter', orientation='portrait')
+
+papers = 'a3 a4 letter'.split()
+orientations = 'landscape portrait'.split()
+layouts = '1,1 2,2 4,4'.split()
+
+parser.add_option('-p', '--paper', dest='paper',
+                  help='Choice of papers: %s.' % ', '.join(papers),
+                  choices=papers)
+
+parser.add_option('-o', '--orientation', dest='orientation',
+                  help='Choice of orientations: %s.' % ', '.join(orientations),
+                  choices=orientations)
+
+parser.add_option('-l', '--layout', dest='layout',
+                  help='Choice of layouts: %s.' % ', '.join(layouts),
+                  choices=layouts)
+
+parser.add_option('-b', '--bounds', dest='bounds',
+                  help='Choice of bounds: north, west, south, east.',
+                  type='float', nargs=4)
+
+def main(paper_size, orientation=None, layout=None, provider=None, bounds=None, zoom=None):
+    """
+    """
+    pass
 
 if __name__ == '__main__':
 
-    paper_size, orientation = argv[1:3]
-    
-    assert paper_size in ('A3', 'A4', 'letter')
-    assert orientation in ('landscape', 'portrait')
+    opts, args = parser.parse_args()
     
     filename = 'out.pdf'
     
-    width_pt, height_pt, fifth_point = paper_info[(paper_size, orientation)]
+    width_pt, height_pt, fifth_point = paper_info(opts.paper, opts.orientation)
     
     well_width_pt = width_pt - 1 * ptpin
     well_height_pt = height_pt - 1.5 * ptpin
@@ -119,13 +145,9 @@ if __name__ == '__main__':
     ctx.translate(well_width_pt, well_height_pt)
     ctx.scale(well_height_pt/733.883, well_height_pt/733.883)
     
-    reg_points = [(-508.370, -720.334),
-                  ( -13.557, -720.370),
-                  ( -13.557, -229.533),
-                  (-149.115,  -13.556),
-                  fifth_point]
+    reg_points = [point_A, point_B, point_C, point_D, fifth_point]
     
-    device_points = [ctx.user_to_device(x, y) for (x, y) in reg_points]
+    device_points = [ctx.user_to_device(pt.x, pt.y) for pt in reg_points]
     
     ctx.restore()
     
