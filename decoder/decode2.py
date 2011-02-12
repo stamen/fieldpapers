@@ -1,21 +1,25 @@
 from sys import argv, stderr
 from StringIO import StringIO
+from subprocess import Popen, PIPE
+from os.path import dirname, join as pathjoin
+from xml.etree import ElementTree
 from urllib import urlopen
+from glob import glob
 
 from PIL import Image
 from PIL.ImageDraw import ImageDraw
 
 from featuremath import Feature, MatchedFeature, blobs2features, stream_triples, stream_pairs
 from imagemath import Point, imgblobs, extract_image
-from matrixmath import quad2quad
+from matrixmath import Transform, quad2quad
 
 #
 # points, clockwise from top-left
 #
 point_A = Point(-508.37, -720.33)
-point_B = Point( -13.56, -720.37)
-point_C = Point( -13.56, -229.53)
-point_D = Point(-149.12,  -13.56)
+point_B = Point(-13.56, -720.37)
+point_C = Point(-13.56, -229.53)
+point_D = Point(-149.12, -13.56)
 
 #
 # fifth point, by paper size and orientation
@@ -48,14 +52,48 @@ feature_e_landscape_ltr = Feature(point_A, point_C, point_E_landscape_ltr)
 # feature tolerances and minimum size for featuremath.blobs2features()
 #
 ratio_tol = 0.03
-theta_tol = 0.04
+theta_tol = 0.04 # approx 2 degrees, either direction
 min_size = 800
+
+#
+# Ratios of homogenous print coordinates above to printed point coordinates
+#
+ratio_portrait_a3 = 0.677938
+ratio_portrait_a4 = 1.000007
+ratio_portrait_ltr = 1.0729091
+ratio_landscape_a3 = 0.999974
+ratio_landscape_a4 = 1.506211
+ratio_landscape_ltr = 1.456091
 
 def blob_match(blobs):
     """
     """
     for (acb_match, adc_match) in _blob_matches_primary(blobs):
         for (e_match, point_E) in _blob_matches_secondary(blobs, acb_match, adc_match):
+            #
+            # determing paper size and orientation based on identity of point E.
+            #
+            if point_E is point_E_portrait_a3:
+                orientation, paper_size, scale = 'portrait', 'a3', 1/ratio_portrait_a3
+
+            elif point_E is point_E_portrait_a4:
+                orientation, paper_size, scale = 'portrait', 'a4', 1/ratio_portrait_a4
+
+            elif point_E is point_E_portrait_ltr:
+                orientation, paper_size, scale = 'portrait', 'letter', 1/ratio_portrait_ltr
+
+            elif point_E is point_E_landscape_a3:
+                orientation, paper_size, scale = 'landscape', 'a3', 1/ratio_landscape_a3
+
+            elif point_E is point_E_landscape_a4:
+                orientation, paper_size, scale = 'landscape', 'a4', 1/ratio_landscape_a4
+
+            elif point_E is point_E_landscape_ltr:
+                orientation, paper_size, scale = 'landscape', 'letter', 1/ratio_landscape_ltr
+            
+            else:
+                raise Exception('How did we ever get here?')
+            
             #
             # find the scan location of point E
             #
@@ -64,31 +102,18 @@ def blob_match(blobs):
                           if getattr(e_match, 'p%d' % i) is point_E]
         
             #
-            # transform from scan pixels to print points - A, B, D, E
+            # transform from scan pixels to homogenous print coordinates - A, B, D, E
             #
-            s2p = quad2quad(acb_match.s1, acb_match.p1, acb_match.s3, acb_match.p3,
+            s2h = quad2quad(acb_match.s1, acb_match.p1, acb_match.s3, acb_match.p3,
                             adc_match.s2, adc_match.p2, scan_E, point_E)
             
-            if point_E is point_E_portrait_a3:
-                return s2p, 'portrait', 'a3'
-
-            elif point_E is point_E_portrait_a4:
-                return s2p, 'portrait', 'a4'
-
-            elif point_E is point_E_portrait_ltr:
-                return s2p, 'portrait', 'letter'
-
-            elif point_E is point_E_landscape_a3:
-                return s2p, 'landscape', 'a3'
-
-            elif point_E is point_E_landscape_a4:
-                return s2p, 'landscape', 'a4'
-
-            elif point_E is point_E_landscape_ltr:
-                return s2p, 'landscape', 'letter'
+            #
+            # transform from scan pixels to printed points, with (0, 0) at lower right
+            #
+            h2p = Transform(scale, 0, 0, 0, scale, 0)
+            s2p = s2h.multiply(h2p)
             
-            else:
-                raise Exception('How did we ever get here?')
+            return s2p, orientation, paper_size
 
 def _blob_matches_primary(blobs):
     """ Generate known matches for ACB (top) and ADC (bottom) triangle pairs.
@@ -157,9 +182,48 @@ def _blob_matches_secondary(blobs, acb_match, adc_match):
         
             if e_match.fits(acb_match) and e_match.fits(adc_match):
                 #
-                # Based on the identity of point_E, we now know paper size and orientation.
+                # Based on the identity of point_E, we can find paper size and orientation.
                 #
                 yield e_match, point_E
+
+def read_code(image):
+    """
+    """
+    decode = 'java', '-classpath', ':'.join(glob(pathjoin(dirname(__file__), 'lib/*.jar'))), 'qrdecode'
+    decode = Popen(decode, stdin=PIPE, stdout=PIPE)
+    
+    image.save(decode.stdin, 'PNG')
+    decode.stdin.close()
+    decode.wait()
+    
+    decoded = decode.stdout.read().strip()
+    
+    return decoded
+    
+    if decoded.startswith('http://'):
+    
+        html = ElementTree.parse(urlopen(decoded))
+        
+        print_id, north, west, south, east = None, None, None, None, None
+        
+        for span in html.findall('body/span'):
+            if span.get('id') == 'print-info':
+                for subspan in span.findall('span'):
+                    if subspan.get('class') == 'print':
+                        print_id = subspan.text
+                    elif subspan.get('class') == 'north':
+                        north = float(subspan.text)
+                    elif subspan.get('class') == 'south':
+                        south = float(subspan.text)
+                    elif subspan.get('class') == 'east':
+                        east = float(subspan.text)
+                    elif subspan.get('class') == 'west':
+                        west = float(subspan.text)
+    
+        return print_id, north, west, south, east
+
+    else:
+        raise CodeReadException('Attempt to read QR code failed')
 
 def main(url):
     """
@@ -171,14 +235,12 @@ def main(url):
 
     print paper, orientation, '--', s2p
     
-    extract_image(s2p, (-135.6-9, -135.6-9, 0+9, 0+9), input, (500, 500)).save('qrcode.png')
+    qrcode = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
+    qrcode.save('qrcode.png')
+    
+    print read_code(qrcode)
 
     draw = ImageDraw(input)
-    p2s = s2p.inverse()
-    
-    for (pt1, pt2) in ((point_A, point_B), (point_B, point_C), (point_C, point_A), (point_A, point_D), (point_D, point_C)):
-        pt1, pt2 = p2s(pt1), p2s(pt2)
-        draw.line((pt1.x, pt1.y, pt2.x, pt2.y), fill=(0, 0xCC, 0))
     
     for blob in blobs:
         draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
