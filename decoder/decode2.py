@@ -1,13 +1,76 @@
 from sys import argv, stderr
+from StringIO import StringIO
+from urllib import urlopen
 
 from PIL import Image
 from PIL.ImageDraw import ImageDraw
 
-from featuremath import Feature, MatchedFeature, blobs2features, stream_pairs
+from featuremath import Feature, MatchedFeature, blobs2features, stream_triples, stream_pairs
 from imagemath import Point, imgblobs, extract_image
 from matrixmath import quad2quad
 
+def blob_match(input):
+    """
+    """
+    blobs = imgblobs(input, 'highpass.jpg', 'preblobs.jpg')
+    
+    # points, clockwise from top-left
+    A = Point(-508.37, -720.33)
+    B = Point( -13.56, -720.37)
+    C = Point( -13.56, -229.53)
+    D = Point(-149.12,  -13.56)
+    
+    acb = Feature(A, C, B)
+    adc = Feature(A, D, C)
+    dab = Feature(D, A, B)
+    
+    acb_matches = blobs2features(blobs, 800, acb.theta-.02, acb.theta+.02, acb.ratio-.04, acb.ratio+.04)
+    adc_matches = blobs2features(blobs, 800, adc.theta-.02, adc.theta+.02, adc.ratio-.04, adc.ratio+.04)
+    dab_matches = blobs2features(blobs, 800, dab.theta-.02, dab.theta+.02, dab.ratio-.04, dab.ratio+.04)
+    
+    for dab_match in dab_matches:
+        print dab_match
+    
+    for (acb_tuple, adc_tuple) in stream_pairs(acb_matches, adc_matches):
+        
+        i0, j0, k0, r0, t0 = acb_tuple
+        i1, j1, k1, r1, t1 = adc_tuple
+        
+        acb_match = MatchedFeature(acb, blobs[i0], blobs[j0], blobs[k0])
+        adc_match = MatchedFeature(adc, blobs[i1], blobs[j1], blobs[k1])
+        
+        if acb_match.fits(adc_match):
+            print >> stderr, 'yes:', (i0, j0, k0), (i1, j1, k1)
+            
+            return acb_match, adc_match
+        
+        print >> stderr, 'no',
+    
+    return None
+
+def main(url):
+    """
+    """
+    input = Image.open(StringIO(urlopen(url).read()))
+    acb_match, adc_match = blob_match(input)
+    
+    # transform from scan pixels to print points - TL, TR, BR, BL
+    s2p = quad2quad(acb_match.s1, acb_match.p1, acb_match.s3, acb_match.p3,
+                    adc_match.s3, adc_match.p3, adc_match.s2, adc_match.p2)
+    
+    print s2p
+    
+    extract_image(s2p, (-135.6-9, -135.6-9, 0+9, 0+9), input, (500, 500)).save('qrcode.png')
+
+    return 0
+
 if __name__ == '__main__':
+
+    url = argv[1]
+    
+    exit(main(url))
+
+
     
     print 'opening...'
     input = Image.open(argv[1])
