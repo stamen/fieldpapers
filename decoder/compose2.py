@@ -73,10 +73,11 @@ def paper_info(paper_size, orientation):
     dim = __import__('dimensions')
     
     paper_size = {'letter': 'ltr', 'a4': 'a4', 'a3': 'a3'}[paper_size.lower()]
-    width_pt, height_pt = getattr(dim, 'paper_size_%(orientation)s_%(paper_size)s' % locals())
-    fifth_point = getattr(dim, 'point_E_%(orientation)s_%(paper_size)s' % locals())
+    width, height = getattr(dim, 'paper_size_%(orientation)s_%(paper_size)s' % locals())
+    point_E = getattr(dim, 'point_E_%(orientation)s_%(paper_size)s' % locals())
+    ratio = getattr(dim, 'ratio_%(orientation)s_%(paper_size)s' % locals())
     
-    return width_pt, height_pt, fifth_point
+    return width, height, point_E, ratio
 
 parser = OptionParser()
 
@@ -115,12 +116,12 @@ if __name__ == '__main__':
     
     filename = 'out.pdf'
     
-    width_pt, height_pt, fifth_point = paper_info(opts.paper, opts.orientation)
+    paper_width_pt, paper_height_pt, point_E, hm2pt_ratio = paper_info(opts.paper, opts.orientation)
     
-    well_width_pt = width_pt - 1 * ptpin
-    well_height_pt = height_pt - 1.5 * ptpin
+    well_width_pt = paper_width_pt - 1 * ptpin
+    well_height_pt = paper_height_pt - 1.5 * ptpin
     
-    surf = PDFSurface(filename, width_pt, height_pt)
+    surf = PDFSurface(filename, paper_width_pt, paper_height_pt)
     
     ctx = Context(surf)
     
@@ -143,9 +144,9 @@ if __name__ == '__main__':
     ctx.save()
     
     ctx.translate(well_width_pt, well_height_pt)
-    ctx.scale(well_height_pt/733.883, well_height_pt/733.883)
+    ctx.scale(1/hm2pt_ratio, 1/hm2pt_ratio)
     
-    reg_points = [point_A, point_B, point_C, point_D, fifth_point]
+    reg_points = [point_A, point_B, point_C, point_D, point_E]
     
     device_points = [ctx.user_to_device(pt.x, pt.y) for pt in reg_points]
     
