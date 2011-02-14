@@ -1,10 +1,38 @@
 from array import array
 from urllib import urlencode
-from urlparse import urlparse, urljoin
+from urlparse import urlparse, urlunparse, urljoin
 from os.path import dirname, basename
 from httplib import HTTPConnection
 from xml.etree import ElementTree
 from mimetypes import guess_type
+
+def finish_print(apibase, password, print_id, pdf_url, preview_url, print_data):
+    """
+    """
+    s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    #if urlparse(print_data_url)[1] == 'localhost':
+    #    # just use an absolute path for preview URL if it's on localhost
+    #    parts = urlparse(print_data_url)
+    #    print_data_url = urlunparse((None, None, parts[2], parts[3], parts[4], parts[5]))
+    
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+    query = urlencode({'id': print_id})
+    params = urlencode({'password': password,
+                        'last_step': 6,
+                        'pdf_url': pdf_url,
+                        'preview_url': preview_url,
+                        'print_data': print_data})
+    
+    req = HTTPConnection(host, port)
+    req.request('POST', path + '/print.php?' + query, params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to print.php resulting in status %s instead of 200' % res.status
+
+    return
 
 def append_print_file(print_id, file_path, file_contents, apibase, password):
     """ Upload a file via the API append.php form input provision thingie.

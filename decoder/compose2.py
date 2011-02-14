@@ -2,6 +2,7 @@ from sys import argv
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname
 from os import close, write, unlink, rename
+from json import dumps as json_encode
 from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
@@ -17,7 +18,7 @@ from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, ptpin
-from apiutils import append_print_file
+from apiutils import append_print_file, finish_print
 
 def get_qrcode_image(content):
     """ Render a QR code to an ImageSurface.
@@ -102,7 +103,7 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
     
     try:
         font = create_cairo_font_face_for_file('/tmp/Helvetica-Bold.ttf')
-    except OSError:
+    except:
         # no text for us.
         pass
     else:
@@ -216,11 +217,13 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     print_path = 'print.php?' + urlencode({'id': print_id})
     print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
+    print_data = {'pages': []}
     
     #
-    # Prepare a shorthand for pushing files.
+    # Prepare a shorthand for pushing data.
     #
-    append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
+    _append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
+    _finish_print = lambda pdf, prev, data: print_id and finish_print(apibase, password, print_id, pdf, prev, data) or None
     
     print 'Print:', print_id
     print 'Paper:', paper_size
@@ -247,7 +250,6 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         print 'Provider:', provider
         print 'Size:', get_preview_map_size(orientation, paper_size)
         
-        print_data = {'pages': []}
         print_pages = print_data['pages']
         
         north, west, south, east = bounds
@@ -267,7 +269,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         
         out = StringIO()
         mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-        preview_url = append_file('preview.jpg', out.getvalue())
+        preview_url = _append_file('preview.jpg', out.getvalue())
         
         print 'Sent preview.jpg'
         
@@ -301,14 +303,19 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         
         # rows, cols = map(int, layout.split(','))
         ########################################################################
-        
-        print print_data
     
     print_surface.finish()
     
     yield 60
     
-    append_file('print.pdf', open(print_filename, 'r').read())
+    pdf_name = 'walking-paper-%s.pdf' % print_id
+    pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
+    
+    print json_encode(print_data)
+    
+    yield 10
+    
+    _finish_print(pdf_url, preview_url, json_encode(print_data))
     
     rename(print_filename, 'out.pdf')
     

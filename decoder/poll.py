@@ -9,7 +9,7 @@ import os.path
 import datetime
 import urlparse
 import optparse
-import decode, compose
+import decode, compose2
 
 parser = optparse.OptionParser(usage="""poll.py [options]
 """)
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                         kwargs['zoom'] = msg['zoom']
 
                     print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
-                    progress = compose.main(apibase, password, msg['print_id'], **kwargs)
+                    progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
                 
                 for timeout in progress:
                     updateQueue(apibase, password, message_id, timeout)
@@ -134,7 +134,9 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             raise
 
-        except Exception, e:
+        except Exception:
+            raise
+            
             print >> sys.stderr, 'Something went wrong:', e
 
             poll_failures += 1

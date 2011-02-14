@@ -47,6 +47,26 @@
 
         if($_POST['last_step'] == STEP_FINISHED)
         {
+            $print_data = json_decode($_POST['print_data'], true);
+            $atlas_pages = array();
+            
+            foreach($print_data['pages'] as $page)
+            {
+                if($page['part']) {
+                    $page_url = "{$print_url}/{$page['part']}";
+                    $atlas_pages[] = $page;
+                
+                } else {
+                    $page_url = $print_url;
+                }
+            }
+            
+            $print['pdf_url'] = $_POST['pdf_url'];
+            $print['preview_url'] = $_POST['preview_url'];
+            $print['last_step'] = $_POST['last_step'];
+            $print['atlas_pages'] = json_encode($atlas_pages);
+            
+            /*
             add_log($dbh, "Composing PDF for print {$print['id']}");
             
             $data_req = new HTTP_Request($_POST['print_data_url']);
@@ -69,6 +89,7 @@
             }
 
             $print = compose_map($print, $data_arr['pages']);
+            */
         }
         
         $north = $print['north'];
