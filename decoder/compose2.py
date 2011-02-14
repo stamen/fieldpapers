@@ -1,8 +1,9 @@
 from sys import argv
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname
-from os import close, write, unlink
+from os import close, write, unlink, rename
 from optparse import OptionParser
+from StringIO import StringIO
 from tempfile import mkstemp
 
 from ModestMaps import Map, mapByExtentZoom
@@ -42,7 +43,7 @@ def get_mmap_image(mmap):
     handle, filename = mkstemp(suffix='.png')
 
     close(handle)
-    mmap.draw(verbose=True, fatbits_ok=True).save(filename)
+    mmap.draw(fatbits_ok=True).save(filename)
     
     img = ImageSurface.create_from_png(filename)
     
@@ -83,7 +84,7 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def render_page(surface, mmap, well_bounds_pt, point_E, hm2pt_ratio):
+def add_print_page(surface, mmap, well_bounds_pt, point_E, hm2pt_ratio):
     """
     """
     well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
@@ -211,10 +212,28 @@ parser.add_option('-p', '--provider', dest='provider',
 def main(apibase, password, print_id, paper_size, orientation=None, layout=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
     """
     """
+    #
+    # Prepare a shorthand for pushing files.
+    #
+    append_file = lambda name, body: append_print_file(print_id, name, body, apibase, password)
+    
     #yield 60
     
     print 'Print:', print_id
     print 'Paper:', paper_size
+    
+    handle, print_filename = mkstemp(suffix='.pdf')
+    close(handle)
+    
+    page_width_pt, page_height_pt, point_E, hm2pt_ratio = paper_info(paper_size, orientation)
+    print_surface = PDFSurface(print_filename, page_width_pt, page_height_pt)
+
+    map_xmin_pt = .5 * ptpin
+    map_ymin_pt = 1 * ptpin
+    map_xmax_pt = page_width_pt - .5 * ptpin
+    map_ymax_pt = page_height_pt - .5 * ptpin
+    
+    map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
 
     if orientation and bounds and zoom and provider and layout:
     
@@ -234,24 +253,32 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         northwest = Location(north, west)
         southeast = Location(south, east)
         
+        #
+        # Prepare preview.jpg
+        #
         mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
                                        northwest, southeast, zoom,
                                        width, height)
         
-        # out = StringIO()
-        # mmap.draw().save(out, format='JPEG')
-        # preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
-        # 
-        # print 'Sent preview.jpg'
-        # 
+        out = StringIO()
+        mmap.draw(fatbits_ok=True).save(out, format='JPEG')
+        preview_url = append_file('preview.jpg', out.getvalue())
+        
+        print 'Sent preview.jpg'
+        
         # yield 60
         
+        #
+        # Prepare full-size image
+        #
         zdiff = min(18, zoom + 2) - zoom
         print 'Zoom diff:', zdiff
         
         mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
                                        northwest, southeast, zoom + zdiff,
                                        width * 2**zdiff, height * 2**zdiff)
+        
+        add_print_page(print_surface, mmap, map_bounds_pt, point_E, hm2pt_ratio)
         
         # out = StringIO()
         # mmap.draw().save(out, format='JPEG')
@@ -272,26 +299,11 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         
         print print_data
     
-    filename = 'out.pdf'
+    print_surface.finish()
     
-    paper_width_pt, paper_height_pt, point_E, hm2pt_ratio = paper_info(paper_size, orientation)
+    append_file('print.pdf', open(print_filename, 'r').read())
     
-    well_xmin_pt = .5 * ptpin
-    well_ymin_pt = 1 * ptpin
-    well_xmax_pt = paper_width_pt - .5 * ptpin
-    well_ymax_pt = paper_height_pt - .5 * ptpin
-    
-    well_bounds_pt = well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt
-    
-    surf = PDFSurface(filename, paper_width_pt, paper_height_pt)
-    
-    render_page(surf, mmap, well_bounds_pt, point_E, hm2pt_ratio)
-    
-    surf.finish()
-    
-    append_print_file(print_id, 'composed.pdf', open('out.pdf', 'r').read(), apibase, password)
-    
-    print 'out.pdf'
+    rename(print_filename, 'out.pdf')
 
 if __name__ == '__main__':
 
