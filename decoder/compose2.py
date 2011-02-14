@@ -15,6 +15,7 @@ from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, ptpin
+from httputils import append_print_file
 
 def get_qrcode_image(content):
     """ Render a QR code to an ImageSurface.
@@ -285,6 +286,10 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     surf = PDFSurface(filename, paper_width_pt, paper_height_pt)
     
     render_page(surf, mmap, well_bounds_pt, point_E, hm2pt_ratio)
+    
+    surf.finish()
+    
+    append_print_file(print_id, 'composed.pdf', open('out.pdf', 'r').read(), apibase, password)
     
     print 'out.pdf'
 
