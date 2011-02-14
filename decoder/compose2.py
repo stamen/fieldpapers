@@ -1,5 +1,6 @@
 from sys import argv
 from urllib import urlopen, urlencode
+from os.path import join as pathjoin, dirname
 from os import close, write, unlink
 from optparse import OptionParser
 from tempfile import mkstemp
@@ -12,29 +13,11 @@ from ModestMaps.Core import Point
 from cairo import ImageSurface, PDFSurface, Context
 from PIL import Image
 
+from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, ptpin
 
-def place_image(context, img, x, y, width, height):
-    """ Add an image to a given context, at a position and size.
-    
-        Assume that the scale matrix of the context is already in pt.
-    """
-    context.save()
-    context.translate(x, y)
-    
-    # determine the scale needed to make the image the requested size
-    xscale = width / float(img.get_width())
-    yscale = height / float(img.get_height())
-    context.scale(xscale, yscale)
-
-    # paint the image
-    context.set_source_surface(img, 0, 0)
-    context.paint()
-
-    context.restore()
-
 def get_qrcode_image(content):
-    """
+    """ Render a QR code to an ImageSurface.
     """
     # http://chart.apis.google.com/chart?chs=264x264&cht=qr&chld=Q|0&chl=http://walkingpapers.org/print.php?id=abcdefgh
     
@@ -53,7 +36,7 @@ def get_qrcode_image(content):
     return img
 
 def get_mmap_image(mmap):
-    """
+    """ Render a Map to an ImageSurface.
     """
     handle, filename = mkstemp(suffix='.png')
 
@@ -65,26 +48,6 @@ def get_mmap_image(mmap):
     unlink(filename)
 
     return img
-
-def draw_box(context, x, y, w, h):
-    """
-    """
-    context.move_to(x, y)
-    context.rel_line_to(w, 0)
-    context.rel_line_to(0, h)
-    context.rel_line_to(-w, 0)
-    context.rel_line_to(0, -h)
-
-def draw_circle(context, x, y, radius):
-    """
-    """
-    bezier = radius
-
-    context.move_to(x, y - radius)
-    context.rel_curve_to(bezier, 0, radius, bezier, radius, radius)
-    context.rel_curve_to(0, bezier, -bezier, radius, -radius, radius)
-    context.rel_curve_to(-bezier, 0, -radius, -bezier, -radius, -radius)
-    context.rel_curve_to(0, -bezier, bezier, -radius, radius, -radius)
 
 def paper_info(paper_size, orientation):
     """
@@ -126,6 +89,22 @@ def render_page(surface, mmap, well_bounds_pt, point_E, hm2pt_ratio):
     well_width_pt, well_height_pt = well_xmax_pt - well_xmin_pt, well_ymax_pt - well_ymin_pt
     
     ctx = Context(surface)
+    
+    #
+    # Draw top-left icon
+    #
+    icon = pathjoin(dirname(__file__), '../site/lib/print/icon.png')
+    img = ImageSurface.create_from_png(icon)
+    place_image(ctx, img, 35.99, 42.87, 19.2, 25.6)
+    
+    try:
+        font = create_cairo_font_face_for_file('/tmp/Helvetica-Bold.ttf')
+    except OSError:
+        # no text for us.
+        pass
+    else:
+        # draw some text?
+        pass
     
     #
     # Offset drawing area to top-left of map area
@@ -197,14 +176,15 @@ def render_page(surface, mmap, well_bounds_pt, point_E, hm2pt_ratio):
 parser = OptionParser()
 
 parser.set_defaults(layout='1,1',
-                    bounds=(37.81310856, -122.26442201, 37.79764683, -122.24897248),
-                    paper='letter', orientation='portrait')
+                    bounds=(37.81211263, -122.26755482, 37.80641650, -122.25725514),
+                    zoom=16, paper_size='letter', orientation='landscape',
+                    provider='http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')
 
 papers = 'a3 a4 letter'.split()
 orientations = 'landscape portrait'.split()
 layouts = '1,1 2,2 4,4'.split()
 
-parser.add_option('-p', '--paper', dest='paper',
+parser.add_option('-s', '--paper-size', dest='paper_size',
                   help='Choice of papers: %s.' % ', '.join(papers),
                   choices=papers)
 
@@ -220,6 +200,13 @@ parser.add_option('-b', '--bounds', dest='bounds',
                   help='Choice of bounds: north, west, south, east.',
                   type='float', nargs=4)
 
+parser.add_option('-z', '--zoom', dest='zoom',
+                  help='Map zoom level.',
+                  type='int')
+
+parser.add_option('-p', '--provider', dest='provider',
+                  help='Map provider in URL template form.')
+
 def main(apibase, password, print_id, paper_size, orientation=None, layout=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
     """
     """
@@ -232,6 +219,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
         print 'Orientation:', orientation
         print 'Bounds:', bounds
+        print 'Zoom:', zoom
         print 'Layout:', layout
         print 'Provider:', provider
         print 'Size:', get_preview_map_size(orientation, paper_size)
@@ -304,4 +292,5 @@ if __name__ == '__main__':
 
     opts, args = parser.parse_args()
     
-    main(opts.paper, opts.orientation, opts.layout, 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', opts.bounds)
+    main(None, None, None, opts.paper_size, opts.orientation, opts.layout, opts.provider, opts.bounds, opts.zoom)
+
