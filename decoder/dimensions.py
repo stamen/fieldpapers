@@ -72,3 +72,14 @@ paper_size_landscape_ltr = 11 * ptpin, 8.5 * ptpin
 paper_size_portrait_a3 = 297 * ptpmm, 420 * ptpmm
 paper_size_portrait_a4 = 210 * ptpmm, 297 * ptpmm
 paper_size_portrait_ltr = 8.5 * ptpin, 11 * ptpin
+
+#
+# preview map sizes
+#
+preview_size_landscape_a3 = 480, 314.932
+preview_size_landscape_a4 = 480, 303.800
+preview_size_landscape_ltr = 480, 360 - 24
+
+preview_size_portrait_a3 = 360, 506.200
+preview_size_portrait_a4 = 360, 504.897
+preview_size_portrait_ltr = 360, 480 - 24
