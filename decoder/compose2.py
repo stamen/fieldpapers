@@ -15,7 +15,7 @@ from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, ptpin
-from httputils import append_print_file
+from apiutils import append_print_file
 
 def get_qrcode_image(content):
     """ Render a QR code to an ImageSurface.
