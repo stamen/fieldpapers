@@ -5,6 +5,7 @@ from os import close, write, unlink, rename
 from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
+from urlparse import urljoin
 
 from ModestMaps import Map, mapByExtentZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
@@ -84,7 +85,7 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def add_print_page(surface, mmap, well_bounds_pt, point_E, hm2pt_ratio):
+def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
     """
     """
     well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
@@ -148,8 +149,7 @@ def add_print_page(surface, mmap, well_bounds_pt, point_E, hm2pt_ratio):
     ctx.set_source_rgb(1, 1, 1)
     ctx.fill()
     
-    img = get_qrcode_image('http://walkingpapers.org/print.php?id=abcdefgh')
-    place_image(ctx, img, -83, -83, 83, 83)
+    place_image(ctx, get_qrcode_image(href), -83, -83, 83, 83)
     
     ctx.restore()
     
@@ -212,12 +212,15 @@ parser.add_option('-p', '--provider', dest='provider',
 def main(apibase, password, print_id, paper_size, orientation=None, layout=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
     """
     """
+    yield 5
+    
+    print_path = 'print.php?' + urlencode({'id': print_id})
+    print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
+    
     #
     # Prepare a shorthand for pushing files.
     #
-    append_file = lambda name, body: append_print_file(print_id, name, body, apibase, password)
-    
-    #yield 60
+    append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
     
     print 'Print:', print_id
     print 'Paper:', paper_size
@@ -260,13 +263,13 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                                        northwest, southeast, zoom,
                                        width, height)
         
+        yield 30
+        
         out = StringIO()
         mmap.draw(fatbits_ok=True).save(out, format='JPEG')
         preview_url = append_file('preview.jpg', out.getvalue())
         
         print 'Sent preview.jpg'
-        
-        # yield 60
         
         #
         # Prepare full-size image
@@ -278,7 +281,9 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                                        northwest, southeast, zoom + zdiff,
                                        width * 2**zdiff, height * 2**zdiff)
         
-        add_print_page(print_surface, mmap, map_bounds_pt, point_E, hm2pt_ratio)
+        yield 60
+        
+        add_print_page(print_surface, mmap, print_href, map_bounds_pt, point_E, hm2pt_ratio)
         
         # out = StringIO()
         # mmap.draw().save(out, format='JPEG')
@@ -301,13 +306,17 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     print_surface.finish()
     
+    yield 60
+    
     append_file('print.pdf', open(print_filename, 'r').read())
     
     rename(print_filename, 'out.pdf')
+    
+    yield 5
 
 if __name__ == '__main__':
 
     opts, args = parser.parse_args()
     
-    main(None, None, None, opts.paper_size, opts.orientation, opts.layout, opts.provider, opts.bounds, opts.zoom)
-
+    for d in main(None, None, None, opts.paper_size, opts.orientation, opts.layout, opts.provider, opts.bounds, opts.zoom):
+        pass
