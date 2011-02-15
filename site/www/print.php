@@ -51,15 +51,8 @@
             $atlas_pages = array();
             
             foreach($print_data['pages'] as $page)
-            {
-                if($page['part']) {
-                    $page_url = "{$print_url}/{$page['part']}";
+                if($page['part'])
                     $atlas_pages[] = $page;
-                
-                } else {
-                    $page_url = $print_url;
-                }
-            }
             
             $print['pdf_url'] = $_POST['pdf_url'];
             $print['preview_url'] = $_POST['preview_url'];
