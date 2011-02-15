@@ -129,7 +129,11 @@ if __name__ == '__main__':
                     progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
                 
                 for timeout in progress:
+                    # push back the message in time
                     updateQueue(apibase, password, message_id, timeout)
+
+                # clean out the queue message
+                updateQueue(apibase, password, message_id, False)
 
         except KeyboardInterrupt:
             raise
