@@ -1,4 +1,6 @@
 from sys import argv
+from math import log
+from itertools import product
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname
 from os import close, write, unlink, rename
@@ -8,7 +10,7 @@ from StringIO import StringIO
 from tempfile import mkstemp
 from urlparse import urljoin
 
-from ModestMaps import Map, mapByExtentZoom
+from ModestMaps import Map, mapByExtentZoom, mapByCenterZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
 from ModestMaps.Geo import Location
 from ModestMaps.Core import Point
@@ -53,6 +55,28 @@ def get_mmap_image(mmap):
 
     return img
 
+def get_mmap_page(mmap, row, col, rows, cols):
+    """ Get a mmap instance for a sub-page in an atlas layout.
+    """
+    dim = mmap.dimensions
+    
+    # aim for ~5% overlap, vary dep. on total rows/cols
+    overlap = 0.1 / rows
+    overlap *= (dim.x + dim.y) / 2
+    
+    # inner width and height of sub-page
+    _w = (dim.x - (cols + 1) * overlap) / cols
+    _h = (dim.y - (rows + 1) * overlap) / rows
+    
+    # pixel offset of page center
+    x = (col * _w) + (_w / 2) + (col * overlap) + overlap
+    y = (row * _h) + (_h / 2) + (row * overlap) + overlap
+    
+    location = mmap.pointLocation(Point(x, y))
+    zoom = mmap.coordinate.zoom + (log(rows) / log(2))
+    
+    return mapByCenterZoom(mmap.provider, location, zoom, mmap.dimensions)
+
 def paper_info(paper_size, orientation):
     """
     """
@@ -89,6 +113,8 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
 def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
     """
     """
+    print 'Adding print page:', href
+    
     well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
     well_width_pt, well_height_pt = well_xmax_pt - well_xmin_pt, well_ymax_pt - well_ymin_pt
     
@@ -301,8 +327,43 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
         print_pages.append(page_data)
         
-        # rows, cols = map(int, layout.split(','))
-        ########################################################################
+        rows, cols = map(int, layout.split(','))
+        
+        if rows > 1 and cols > 1:
+            for (row, col) in product(range(rows), range(cols)):
+                
+                sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
+                sub_part = '%(row)d,%(col)d' % locals()
+                sub_name = 'print-%(sub_part)s.jpg' % locals()
+                sub_href = print_href + '/' + sub_part
+                
+                yield 60
+                
+                add_print_page(print_surface, sub_mmap, sub_href, map_bounds_pt, point_E, hm2pt_ratio)
+        
+                #
+                # Prepare preview image
+                #
+                prev_cen = sub_mmap.pointLocation(Point(sub_mmap.dimensions.x / 2, sub_mmap.dimensions.y / 2))
+                prev_dim = Point(sub_mmap.dimensions.x / 2**zdiff, sub_mmap.dimensions.y / 2**zdiff)
+                prev_mmap = mapByCenterZoom(sub_mmap.provider, prev_cen, sub_mmap.coordinate.zoom - zdiff, prev_dim)
+                prev_name = 'preview-%(sub_part)s.jpg' % locals()
+        
+                out = StringIO()
+                prev_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
+                prev_href = _append_file(prev_name, out.getvalue())
+                
+                #
+                # Populate page data
+                #
+                page_nw = sub_mmap.pointLocation(Point(0, 0))
+                page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
+                
+                page_data = {'part': sub_part, 'preview_href': prev_href, 'bounds': {}}
+                page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
+                page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
+
+                print_pages.append(page_data)
     
     print_surface.finish()
     
@@ -312,7 +373,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
     
     print json_encode(print_data)
-    
+
     yield 10
     
     _finish_print(pdf_url, preview_url, json_encode(print_data))
