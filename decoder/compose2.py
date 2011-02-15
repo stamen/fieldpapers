@@ -121,24 +121,9 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
     ctx = Context(surface)
     
     #
-    # Draw top-left icon
-    #
-    icon = pathjoin(dirname(__file__), '../site/lib/print/icon.png')
-    img = ImageSurface.create_from_png(icon)
-    place_image(ctx, img, 35.99, 42.87, 19.2, 25.6)
-    
-    try:
-        font = create_cairo_font_face_for_file('/tmp/Helvetica-Bold.ttf')
-    except:
-        # no text for us.
-        pass
-    else:
-        # draw some text?
-        pass
-    
-    #
     # Offset drawing area to top-left of map area
     #
+    ctx.save()
     ctx.translate(well_xmin_pt, well_ymin_pt)
     
     #
@@ -199,6 +184,27 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
         draw_circle(ctx, x, y, .06 * ptpin)
         ctx.set_source_rgb(0, 0, 0)
         ctx.fill()
+    
+    ctx.restore()
+    
+    #
+    # Draw top-left icon
+    #
+    icon = pathjoin(dirname(__file__), '../site/lib/print/icon.png')
+    img = ImageSurface.create_from_png(icon)
+    place_image(ctx, img, 35.99, 42.87, 19.2, 25.6)
+    
+    try:
+        font = create_cairo_font_face_for_file('fonts/Helvetica-Bold.ttf')
+    except:
+        # no text for us.
+        pass
+    else:
+        # draw some text.
+        ctx.set_font_face(font)
+        ctx.set_font_size(24)
+        ctx.move_to(35.99 + 19.2 + 8, 42.87 + 25.6 - 1)
+        ctx.show_text('Walking Papers')
     
     ctx.show_page()
 
