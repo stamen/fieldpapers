@@ -1,4 +1,4 @@
-from sys import argv
+﻿from sys import argv
 from math import log
 from itertools import product
 from urllib import urlopen, urlencode
@@ -123,7 +123,6 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
     #
     # Offset drawing area to top-left of map area
     #
-    ctx.save()
     ctx.translate(well_xmin_pt, well_ymin_pt)
     
     #
@@ -185,14 +184,12 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
         ctx.set_source_rgb(0, 0, 0)
         ctx.fill()
     
-    ctx.restore()
-    
     #
     # Draw top-left icon
     #
     icon = pathjoin(dirname(__file__), '../site/lib/print/icon.png')
     img = ImageSurface.create_from_png(icon)
-    place_image(ctx, img, 35.99, 42.87, 19.2, 25.6)
+    place_image(ctx, img, 0, -29.13, 19.2, 25.6)
     
     try:
         font = create_cairo_font_face_for_file('fonts/Helvetica-Bold.ttf')
@@ -203,8 +200,32 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
         # draw some text.
         ctx.set_font_face(font)
         ctx.set_font_size(24)
-        ctx.move_to(35.99 + 19.2 + 8, 42.87 + 25.6 - 1)
+        ctx.move_to(0 + 19.2 + 8, -29.13 + 25.6 - 1)
         ctx.show_text('Walking Papers')
+    
+    try:
+        font = create_cairo_font_face_for_file('fonts/Helvetica.ttf')
+    except:
+        # no text for us.
+        pass
+    else:
+        ctx.set_font_face(font)
+        ctx.set_font_size(8)
+        
+        lines = ['OSM data ©2011 CC-BY-SA Openstreetmap.org contributors.',
+                 'Help improve OpenStreetMap by drawing on this map, then visit',
+                 href]
+        
+        text_width = max([ctx.text_extents(line)[2] for line in lines])
+        
+        ctx.move_to(well_width_pt - text_width, -25)
+        ctx.show_text(lines[0])
+
+        ctx.move_to(well_width_pt - text_width, -15)
+        ctx.show_text(lines[1])
+
+        ctx.move_to(well_width_pt - text_width, -5)
+        ctx.show_text(lines[2])
     
     ctx.show_page()
 
