@@ -1199,4 +1199,63 @@
         return md5(join(' ', array($dirname, $expiration, $api_password)));
     }
     
+    function latlon_placeinfo($lat, $lon, $zoom)
+    {
+        $req = new HTTP_Request('http://api.flickr.com/services/rest/');
+        $req->addQueryString('method', 'flickr.places.findByLatLon');
+        $req->addQueryString('lat', $lat);
+        $req->addQueryString('lon', $lon);
+        $req->addQueryString('accuracy', $zoom);
+        $req->addQueryString('format', 'php_serial');
+        $req->addQueryString('api_key', FLICKR_KEY);
+
+        $res = $req->sendRequest();
+        
+        if(PEAR::isError($res))
+            return '';
+
+        if($req->getResponseCode() == 200)
+        {
+            $rsp = unserialize($req->getResponseBody());
+            
+            if(is_array($rsp['places']) && is_array($rsp['places']['place']))
+            {
+                $places = $rsp['places']['place'];
+                
+                if(is_array($places[0]) && $places[0]['name'])
+                {
+                    list($place_name, $place_woeid) = array($places[0]['name'], $places[0]['woeid']);
+                    
+                    $req = new HTTP_Request('http://api.flickr.com/services/rest/');
+                    $req->addQueryString('method', 'flickr.places.getInfo');
+                    $req->addQueryString('woe_id', $place_woeid);
+                    $req->addQueryString('format', 'php_serial');
+                    $req->addQueryString('api_key', FLICKR_KEY);
+            
+                    $res = $req->sendRequest();
+                    
+                    if(PEAR::isError($res))
+                        return array(null, null, null, null, null, null);
+            
+                    $rsp = unserialize($req->getResponseBody());
+                    
+                    if(is_array($rsp) && is_array($rsp['place']))
+                    {
+                        list($country, $region) = array($rsp['place']['country'], $rsp['place']['region']);
+                        
+                        if(is_array($country))
+                            list($country_name, $country_woeid) = array($country['_content'], $country['woeid']);
+                        
+                        if(is_array($region))
+                            list($region_name, $region_woeid) = array($region['_content'], $region['woeid']);
+                    }
+                    
+                    return array($country_name, $country_woeid, $region_name, $region_woeid, $place_name, $place_woeid);
+                }
+            }
+        }
+        
+        return array(null, null, null, null, null, null);
+    }
+    
 ?>

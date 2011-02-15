@@ -12,9 +12,6 @@
     require_once 'init.php';
     require_once 'data.php';
 
-    if($_SERVER['REQUEST_METHOD'] == 'POST')
-        require_once 'composition.php';
-    
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -58,31 +55,6 @@
             $print['preview_url'] = $_POST['preview_url'];
             $print['last_step'] = $_POST['last_step'];
             $print['atlas_pages'] = json_encode($atlas_pages);
-            
-            /*
-            add_log($dbh, "Composing PDF for print {$print['id']}");
-            
-            $data_req = new HTTP_Request($_POST['print_data_url']);
-            $data_req->sendRequest();
-            $data_arr = json_decode($data_req->getResponseBody(), true);
-
-            $data_url = new Net_URL($_POST['print_data_url']);
-            $data_dir = $data_url->protocol.'://'.$data_url->host.($data_url->port == 80 ? '' : ':'.$data_url->port).dirname($data_url->path);
-            
-            foreach($data_arr['pages'] as $p => $page)
-            {
-                $print_url = "{$data_dir}/{$page['print']}";
-                $data_arr['pages'][$p]['print_href'] = $print_url;
-
-                $preview_url = "{$data_dir}/{$page['preview']}";
-                $data_arr['pages'][$p]['preview_href'] = $preview_url;
-                
-                if($p == 0)
-                    $print['preview_url'] = $preview_url;
-            }
-
-            $print = compose_map($print, $data_arr['pages']);
-            */
         }
         
         $north = $print['north'];
