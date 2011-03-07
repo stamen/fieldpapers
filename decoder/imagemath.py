@@ -52,7 +52,7 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None):
     if highpass_filename:
         thumb.save(highpass_filename)
     
-    thumb = thumb.point(lambda p: (p < 120) and 0xFF or 0x00)
+    thumb = thumb.point(lambda p: (p < 116) and 0xFF or 0x00)
     thumb = thumb.filter(MinFilter(5)).filter(MaxFilter(5))
     
     if preblobs_filename:
