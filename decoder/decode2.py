@@ -6,6 +6,7 @@ from os import close, write, unlink, rename
 from xml.etree import ElementTree
 from tempfile import mkstemp
 from urllib import urlopen
+from math import hypot
 from glob import glob
 
 from PIL import Image
@@ -209,6 +210,10 @@ def do_geo_stuff(image, s2p, paper, orientation, north, west, south, east):
     """ Placeholder for now.
     """
     from dimensions import ptpin
+    
+    from ModestMaps.Core import Point
+    from ModestMaps.Geo import Location
+    from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
 
     # s2p is from scan to print
     # we need s2m - scan to mercator
@@ -222,21 +227,17 @@ def do_geo_stuff(image, s2p, paper, orientation, north, west, south, east):
 
     paper_width_pt, paper_height_pt = paper_size_pt
     
-    print paper_width_pt, paper_height_pt
-    
-    from ModestMaps.Core import Point
-    from ModestMaps.Geo import Location
-    from ModestMaps.OpenStreetMap import Provider
-    
-    osm = Provider()
-    
     #
     # Coordinates of three print corners
     #
     
-    ul = osm.locationCoordinate(Location(north, west)).zoomTo(14)
-    ur = osm.locationCoordinate(Location(north, east)).zoomTo(14)
-    lr = osm.locationCoordinate(Location(south, east)).zoomTo(14)
+    osm = OpenStreetMapProvider()
+    
+    zoom = 14
+
+    ul = osm.locationCoordinate(Location(north, west)).zoomTo(zoom)
+    ur = osm.locationCoordinate(Location(north, east)).zoomTo(zoom)
+    lr = osm.locationCoordinate(Location(south, east)).zoomTo(zoom)
     
     #
     # Matching points in print and coordinate spaces
@@ -256,12 +257,13 @@ def do_geo_stuff(image, s2p, paper, orientation, north, west, south, east):
     p2m = triangle2triangle(ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co)
     s2m = s2p.multiply(p2m)
     
-    print p2m
-    print s2m
+    do_more_geo_stuff(image, s2m, zoom)
     
-    print (0, 0), '--', s2m(Point(0, 0))
-    print image.size, '--', s2m(Point(*image.size))
-    
+def do_more_geo_stuff(image, s2m, zoom):
+    """ Placeholder for now.
+    """
+    from ModestMaps.Core import Point
+
     #
     # Coordinates of outside corners of print
     #
@@ -271,14 +273,24 @@ def do_geo_stuff(image, s2p, paper, orientation, north, west, south, east):
     lr = s2m(Point(*image.size))
     ll = s2m(Point(0, image.size[1]))
     
-    for row in range(int(min(ul.y, ur.y, lr.y, ll.y)), int(max(ul.y, ur.y, lr.y, ll.y)) + 1):
-        for col in range(int(min(ul.x, ur.x, lr.x, ll.x)), int(max(ul.x, ur.x, lr.x, ll.x)) + 1):
+    print '...', image.size
+    print 'scan hypotenuse:', hypot(image.size[0], image.size[1])
+    print '...', (lr.x - ul.x) * 256, (lr.y - ul.y) * 256
+    print 'tile pixel hypotenuse:', hypot((lr.x - ul.x) * 256, (lr.y - ul.y) * 256)
+    
+    minrow = min(ul.y, ur.y, lr.y, ll.y)
+    maxrow = max(ul.y, ur.y, lr.y, ll.y)
+    mincol = min(ul.x, ur.x, lr.x, ll.x)
+    maxcol = max(ul.x, ur.x, lr.x, ll.x)
+    
+    for row in range(int(minrow), int(maxrow) + 1):
+        for col in range(int(mincol), int(maxcol) + 1):
             
             merc_bbox = col, row, col + 1, row + 1
             tile_img = extract_image(s2m, merc_bbox, image, (256, 256), 256/8)
             
-            print '%d-%d-%d.jpg' % (14, col, row)
-            tile_img.save('%d-%d-%d.jpg' % (14, col, row))
+            print '%d-%d-%d.jpg' % (zoom, col, row)
+            tile_img.save('%d-%d-%d.jpg' % (zoom, col, row))
     
     raise Exception('did geo stuff')
 
