@@ -9,7 +9,7 @@ import os.path
 import datetime
 import urlparse
 import optparse
-import decode, compose2
+import decode, compose2, decode2
 
 parser = optparse.OptionParser(usage="""poll.py [options]
 """)
@@ -100,7 +100,7 @@ if __name__ == '__main__':
                     msg = json.loads(content)
                     
                 except ValueError:
-                    # JSON parse failed so it's likely we've got a scan to do.
+                    # JSON parse failed so it's likely we've got an old scan to do.
 
                     if content.startswith('http://'):
                         url = content.strip()
@@ -112,21 +112,29 @@ if __name__ == '__main__':
                         raise Exception('Not sure what to do with this message: ' + content)
 
                 else:
-                    # JSON parse successed so we'll assume there's a print here.
+                    # JSON parse successed so we'll determine if there's a print or scan here.
+                    action = msg.get('action', 'compose')
 
-                    kwargs = {'paper_size': msg['paper_size']}
+                    if action == 'decode':
+                        url = msg['url']
+
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
+                        progress = decode2.main(apibase, password, msg['scan_id'], url)
                     
-                    try:
-                        kwargs['geotiff_url'] = msg['geotiff_url']
-                    except KeyError:
-                        kwargs['provider'] = msg['provider']
-                        kwargs['orientation'] = msg['orientation']
-                        kwargs['layout'] = msg['layout']
-                        kwargs['bounds'] = msg['bounds']
-                        kwargs['zoom'] = msg['zoom']
-
-                    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
-                    progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
+                    elif action == 'compose':
+                        kwargs = {'paper_size': msg['paper_size']}
+                        
+                        try:
+                            kwargs['geotiff_url'] = msg['geotiff_url']
+                        except KeyError:
+                            kwargs['provider'] = msg['provider']
+                            kwargs['orientation'] = msg['orientation']
+                            kwargs['layout'] = msg['layout']
+                            kwargs['bounds'] = msg['bounds']
+                            kwargs['zoom'] = msg['zoom']
+    
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
+                        progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
                 
                 for timeout in progress:
                     # push back the message in time

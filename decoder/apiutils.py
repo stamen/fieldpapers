@@ -87,6 +87,56 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
         
     raise Exception('Did not find a form with a file input, why is that?')
 
+def append_scan_file(scan_id, file_path, file_contents, apibase, password):
+    """ Upload a file via the API append.php form input provision thingie.
+    """
+
+    s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    query = urlencode({'scan': scan_id, 'password': password,
+                       'dirname': dirname(file_path),
+                       'mimetype': (guess_type(file_path)[0] or '')})
+    
+    req = HTTPConnection(host, port)
+    req.request('GET', path + '/append.php?' + query)
+    res = req.getresponse()
+    
+    html = ElementTree.parse(res)
+    
+    for form in html.findall('*/form'):
+        form_action = form.attrib['action']
+        
+        inputs = form.findall('.//input')
+        
+        file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
+        
+        fields = [(input.attrib['name'], input.attrib['value'])
+                  for input in inputs
+                  if input.attrib['type'] != 'file' and 'name' in input.attrib]
+        
+        files = [(input.attrib['name'], basename(file_path), file_contents)
+                 for input in inputs
+                 if input.attrib['type'] == 'file']
+
+        if len(files) == 1:
+            post_type, post_body = encode_multipart_formdata(fields, files)
+            
+            s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
+            host, port = (':' in host) and host.split(':') or (host, 80)
+            
+            req = HTTPConnection(host, port)
+            req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
+            res = req.getresponse()
+            
+            # res.read().startswith("Sorry, encountered error #1 ")
+            
+            assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
+
+            return True
+        
+    raise Exception('Did not find a form with a file input, why is that?')
+
 def encode_multipart_formdata(fields, files):
     """ fields is a sequence of (name, value) elements for regular form fields.
         files is a sequence of (name, filename, value) elements for data to be uploaded as files

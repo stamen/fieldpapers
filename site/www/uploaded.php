@@ -55,7 +55,13 @@
         $added = add_step($dbh, $scan['id'], 1);
         
         if($added)
-            add_message($dbh, $url);
+        {
+            $message = array('action' => 'decode',
+                             'scan_id' => $scan['id'],
+                             'url' => $url);
+            
+            add_message($dbh, json_encode($message));
+        }
         
         $scan = get_scan($dbh, $scan['id']);
         $parsed_url = parse_url($url);

@@ -2,7 +2,9 @@ from sys import argv, stderr
 from StringIO import StringIO
 from subprocess import Popen, PIPE
 from os.path import dirname, join as pathjoin
+from os import close, write, unlink, rename
 from xml.etree import ElementTree
+from tempfile import mkstemp
 from urllib import urlopen
 from glob import glob
 
@@ -12,6 +14,7 @@ from PIL.ImageDraw import ImageDraw
 from featuremath import MatchedFeature, blobs2features, stream_triples, stream_pairs
 from imagemath import imgblobs, extract_image
 from matrixmath import Transform, quad2quad
+from apiutils import append_scan_file
 
 def paper_matches(blobs):
     """ Generate matches for specific paper sizes.
@@ -193,19 +196,52 @@ def read_code(image):
     else:
         raise CodeReadException('Attempt to read QR code failed')
 
-def main(url):
+def main(apibase, password, scan_id, url):
     """
     """
+    yield 30
+    
+    #
+    # Prepare a shorthand for pushing data.
+    #
+    _append_file = lambda name, body: scan_id and append_scan_file(scan_id, name, body, apibase, password) or None
+    
+    handle, highpass_filename = mkstemp(prefix='highpass-', suffix='.jpg')
+    close(handle)
+    
+    handle, preblobs_filename = mkstemp(prefix='preblobs-', suffix='.jpg')
+    close(handle)
+    
     input = Image.open(StringIO(urlopen(url).read()))
-    blobs = imgblobs(input, 'highpass.jpg', 'preblobs.jpg')
+    blobs = imgblobs(input, highpass_filename, preblobs_filename)
+    
+    yield 10
+    
+    print highpass_filename, preblobs_filename
+    
+    _append_file('highpass.jpg', open(highpass_filename, 'r').read())
+    _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
+
+    rename(highpass_filename, 'highpass.jpg')
+    rename(preblobs_filename, 'preblobs.jpg')
 
     for (s2p, paper, orientation) in paper_matches(blobs):
+
+        yield 10
 
         print paper, orientation, '--', s2p
         
         qrcode = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
-        qrcode.save('qrcode.png')
         
+        handle, qrcode_filename = mkstemp(prefix='qrcode-', suffix='.png')
+        close(handle)
+
+        qrcode.save(qrcode_filename)
+        _append_file('qrcode.png', open(qrcode_filename, 'r').read())
+        rename(highpass_filename, 'qrcode.png')
+        
+        yield 10
+
         print read_code(qrcode)
     
         draw = ImageDraw(input)
@@ -213,13 +249,16 @@ def main(url):
         for blob in blobs:
             draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
     
+        yield 5
+
         print 'saving...'
         input.save('out.png')
-    
-        return 0
+        
+        raise Exception('DONE')
 
 if __name__ == '__main__':
 
     url = argv[1]
     
-    exit(main(url))
+    for d in main(None, None, None, url):
+        pass
