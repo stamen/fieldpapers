@@ -214,7 +214,7 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
         
         lines = ['OSM data ©2011 CC-BY-SA Openstreetmap.org contributors.',
                  'Help improve OpenStreetMap by drawing on this map, then visit',
-                 href]
+                 href or '']
         
         text_width = max([ctx.text_extents(line)[2] for line in lines])
         
