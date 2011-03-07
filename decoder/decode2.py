@@ -11,7 +11,7 @@ from glob import glob
 from PIL import Image
 from PIL.ImageDraw import ImageDraw
 
-from featuremath import MatchedFeature, blobs2features, stream_triples, stream_pairs
+from featuremath import MatchedFeature, blobs2features, stream_pairs
 from imagemath import imgblobs, extract_image
 from matrixmath import Transform, quad2quad
 from apiutils import append_scan_file
@@ -87,41 +87,52 @@ def _blob_matches_primary(blobs):
     
     acb_matches = blobs2features(blobs, min_size, acb_theta-theta_tol, acb_theta+theta_tol, acb_ratio-ratio_tol, acb_ratio+ratio_tol)
     adc_matches = blobs2features(blobs, min_size, adc_theta-theta_tol, adc_theta+theta_tol, adc_ratio-ratio_tol, adc_ratio+ratio_tol)
-    dab_matches = blobs2features(blobs, min_size, dab_theta-theta_tol, dab_theta+theta_tol, dab_ratio-ratio_tol, dab_ratio+ratio_tol)
     
     seen_groups, max_skipped, skipped_groups = set(), 100, 0
     
-    for (acb_tuple, adc_tuple, dab_tuple) in stream_triples(acb_matches, adc_matches, dab_matches):
+    for (acb_tuple, adc_tuple) in stream_pairs(acb_matches, adc_matches):
         
         i0, j0, k0 = acb_tuple[0:3]
         i1, j1, k1 = adc_tuple[0:3]
-        i2, j2, k2 = dab_tuple[0:3]
         
-        group = (i0, j0, k0, i1, j1, k1, i2, j2, k2)
+        group = (i0, j0, k0, i1, j1, k1)
         
         if skipped_groups > max_skipped:
             return
 
-        elif group in seen_groups:
+        if group in seen_groups:
             skipped_groups += 1
             #print >> stderr, 'skip:', group
             continue
         
+        seen_groups.add(group)
+        skipped_groups = 0
+
+        acb_match = MatchedFeature(feature_acb, blobs[i0], blobs[j0], blobs[k0])
+        adc_match = MatchedFeature(feature_adc, blobs[i1], blobs[j1], blobs[k1])
+        
+        if not acb_match.fits(adc_match):
+            #print >> stderr, 'no:', group
+            continue
         else:
-            seen_groups.add(group)
-            skipped_groups = 0
-    
-            acb_match = MatchedFeature(feature_acb, blobs[i0], blobs[j0], blobs[k0])
-            adc_match = MatchedFeature(feature_adc, blobs[i1], blobs[j1], blobs[k1])
-            dab_match = MatchedFeature(feature_dab, blobs[i2], blobs[j2], blobs[k2])
+            #print >> stderr, 'maybe:', group
+            pass
+        
+        #
+        # We now know we have a two-triangle match; try a third to verify.
+        # Use the very small set of blobs from the current ACB / ACD matches.
+        #
+        
+        _blobs = [blobs[n] for n in set(group)]
+        dab_matches = blobs2features(_blobs, min_size, dab_theta-theta_tol, dab_theta+theta_tol, dab_ratio-ratio_tol, dab_ratio+ratio_tol)
+        
+        for dab_tuple in dab_matches:
+            i2, j2, k2 = dab_tuple[0:3]
+            dab_match = MatchedFeature(feature_dab, _blobs[i2], _blobs[j2], _blobs[k2])
             
-            if acb_match.fits(adc_match) and adc_match.fits(dab_match):
+            if acb_match.fits(dab_match) and adc_match.fits(dab_match):
                 #print >> stderr, 'yes:', group
                 yield acb_match, adc_match
-            
-            else:
-                #print >> stderr, 'no:', group
-                pass
 
 def _blob_matches_secondary(blobs, acb_match, adc_match):
     """ Generate known matches for ACB (top), ADC (bottom) and paper-specific triangle groups.
@@ -224,6 +235,8 @@ def main(apibase, password, scan_id, url):
 
     rename(highpass_filename, 'highpass.jpg')
     rename(preblobs_filename, 'preblobs.jpg')
+    
+    print len(blobs), 'Blobs'
 
     for (s2p, paper, orientation) in paper_matches(blobs):
 
@@ -238,7 +251,7 @@ def main(apibase, password, scan_id, url):
 
         qrcode.save(qrcode_filename)
         _append_file('qrcode.png', open(qrcode_filename, 'r').read())
-        rename(highpass_filename, 'qrcode.png')
+        rename(qrcode_filename, 'qrcode.png')
         
         yield 10
 
@@ -251,10 +264,16 @@ def main(apibase, password, scan_id, url):
     
         yield 5
 
-        print 'saving...'
-        input.save('out.png')
+        handle, out_filename = mkstemp(prefix='out-', suffix='.png')
+        close(handle)
+
+        input.save(out_filename)
+        _append_file('out.png', open(out_filename, 'r').read())
+        rename(out_filename, 'out.png')
         
-        raise Exception('DONE')
+        raise Exception('DONE WELL')
+    
+    raise Exception('DONE')
 
 if __name__ == '__main__':
 
