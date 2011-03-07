@@ -12,8 +12,8 @@ from PIL import Image
 from PIL.ImageDraw import ImageDraw
 
 from featuremath import MatchedFeature, blobs2features, stream_pairs
+from matrixmath import Transform, quad2quad, triangle2triangle
 from imagemath import imgblobs, extract_image
-from matrixmath import Transform, quad2quad
 from apiutils import append_scan_file
 
 def paper_matches(blobs):
@@ -172,15 +172,13 @@ def read_code(image):
     """
     """
     decode = 'java', '-classpath', ':'.join(glob(pathjoin(dirname(__file__), 'lib/*.jar'))), 'qrdecode'
-    decode = Popen(decode, stdin=PIPE, stdout=PIPE)
+    decode = Popen(decode, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     
     image.save(decode.stdin, 'PNG')
     decode.stdin.close()
     decode.wait()
     
     decoded = decode.stdout.read().strip()
-    
-    return decoded
     
     if decoded.startswith('http://'):
     
@@ -206,6 +204,83 @@ def read_code(image):
 
     else:
         raise CodeReadException('Attempt to read QR code failed')
+
+def do_geo_stuff(image, s2p, paper, orientation, north, west, south, east):
+    """ Placeholder for now.
+    """
+    from dimensions import ptpin
+
+    # s2p is from scan to print
+    # we need s2m - scan to mercator
+    # start with p2m - print to mercator
+    
+    if (paper, orientation) == ('letter', 'landscape'):
+        from dimensions import paper_size_landscape_ltr as paper_size_pt
+    
+    else:
+        raise Exception('not yet')
+
+    paper_width_pt, paper_height_pt = paper_size_pt
+    
+    print paper_width_pt, paper_height_pt
+    
+    from ModestMaps.Core import Point
+    from ModestMaps.Geo import Location
+    from ModestMaps.OpenStreetMap import Provider
+    
+    osm = Provider()
+    
+    #
+    # Coordinates of three print corners
+    #
+    
+    ul = osm.locationCoordinate(Location(north, west)).zoomTo(14)
+    ur = osm.locationCoordinate(Location(north, east)).zoomTo(14)
+    lr = osm.locationCoordinate(Location(south, east)).zoomTo(14)
+    
+    #
+    # Matching points in print and coordinate spaces
+    #
+    
+    ul_pt = Point(1 * ptpin - paper_width_pt, 1.5 * ptpin - paper_height_pt)
+    ul_co = Point(ul.column, ul.row)
+
+    ur_pt = Point(0, 1.5 * ptpin - paper_height_pt)
+    ur_co = Point(ur.column, ur.row)
+
+    lr_pt = Point(0, 0)
+    lr_co = Point(lr.column, lr.row)
+    
+    print ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co
+
+    p2m = triangle2triangle(ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co)
+    s2m = s2p.multiply(p2m)
+    
+    print p2m
+    print s2m
+    
+    print (0, 0), '--', s2m(Point(0, 0))
+    print image.size, '--', s2m(Point(*image.size))
+    
+    #
+    # Coordinates of outside corners of print
+    #
+    
+    ul = s2m(Point(0, 0))
+    ur = s2m(Point(image.size[0], 0))
+    lr = s2m(Point(*image.size))
+    ll = s2m(Point(0, image.size[1]))
+    
+    for row in range(int(min(ul.y, ur.y, lr.y, ll.y)), int(max(ul.y, ur.y, lr.y, ll.y)) + 1):
+        for col in range(int(min(ul.x, ur.x, lr.x, ll.x)), int(max(ul.x, ur.x, lr.x, ll.x)) + 1):
+            
+            merc_bbox = col, row, col + 1, row + 1
+            tile_img = extract_image(s2m, merc_bbox, image, (256, 256), 256/8)
+            
+            print '%d-%d-%d.jpg' % (14, col, row)
+            tile_img.save('%d-%d-%d.jpg' % (14, col, row))
+    
+    raise Exception('did geo stuff')
 
 def main(apibase, password, scan_id, url):
     """
@@ -255,8 +330,10 @@ def main(apibase, password, scan_id, url):
         
         yield 10
 
-        print read_code(qrcode)
-    
+        print_id, north, west, south, east = read_code(qrcode)
+        
+        do_geo_stuff(input, s2p, paper, orientation, north, west, south, east)
+        
         draw = ImageDraw(input)
         
         for blob in blobs:
