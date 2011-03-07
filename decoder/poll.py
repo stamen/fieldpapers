@@ -112,7 +112,7 @@ if __name__ == '__main__':
                         raise Exception('Not sure what to do with this message: ' + content)
 
                 else:
-                    # JSON parse successed so we'll determine if there's a print or scan here.
+                    # JSON parse succeeded so we'll determine if there's a print or scan here.
                     action = msg.get('action', 'compose')
 
                     if action == 'decode':
