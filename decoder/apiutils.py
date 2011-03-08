@@ -34,6 +34,51 @@ def finish_print(apibase, password, print_id, pdf_url, preview_url, print_data):
 
     return
 
+def update_step(apibase, password, scan_id, step_number):
+    """
+    """
+    s, host, path, p, q, f = urlparse(apibase)
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+    params = urlencode({'scan': scan_id, 'step': step_number, 'password': password})
+    
+    req = HTTPConnection(host, 80)
+    req.request('POST', path + '/step.php', params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to step.php %s/%d resulting in status %s instead of 200' % (scan_id, step_number, res.status)
+    
+    if res.read().strip() == 'Too many errors':
+        raise UpdateScanException('Server says bugger off')
+    
+    return
+
+def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord):
+    """
+    """
+    s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+    query = urlencode({'id': scan_id})
+    params = urlencode({'print_id': print_id,
+                        'password': password,
+                        'uploaded_file': uploaded_file,
+                        'has_geotiff': 'no',
+                        'has_stickers': 'no',
+                        'min_row': min_coord.row, 'max_row': max_coord.row,
+                        'min_column': min_coord.column, 'max_column': max_coord.column,
+                        'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom})
+    
+    req = HTTPConnection(host, port)
+    req.request('POST', path + '/scan.php?' + query, params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to scan.php resulting in status %s instead of 200' % res.status
+
+    return
+
 def append_print_file(print_id, file_path, file_contents, apibase, password):
     """ Upload a file via the API append.php form input provision thingie.
     """

@@ -1,9 +1,10 @@
 from sys import argv, stderr
 from StringIO import StringIO
 from subprocess import Popen, PIPE
-from os.path import dirname, join as pathjoin
+from os.path import basename, dirname, join as pathjoin
 from os import close, write, unlink, rename
 from xml.etree import ElementTree
+from urlparse import urlparse
 from tempfile import mkstemp
 from urllib import urlopen
 from math import hypot
@@ -12,10 +13,15 @@ from glob import glob
 from PIL import Image
 from PIL.ImageDraw import ImageDraw
 
+from ModestMaps.Geo import Location
+from ModestMaps.Core import Point, Coordinate
+from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
+
+from apiutils import append_scan_file, update_scan, update_step
 from featuremath import MatchedFeature, blobs2features, stream_pairs
 from matrixmath import Transform, quad2quad, triangle2triangle
 from imagemath import imgblobs, extract_image
-from apiutils import append_scan_file
+from dimensions import ptpin
 
 def paper_matches(blobs):
     """ Generate matches for specific paper sizes.
@@ -206,77 +212,72 @@ def read_code(image):
     else:
         raise CodeReadException('Attempt to read QR code failed')
 
-def do_geo_stuff(image, s2p, paper, orientation, north, west, south, east):
+def generate_tiles(image, s2p, paper, orientation, north, west, south, east):
     """ Placeholder for now.
     """
-    from dimensions import ptpin
-    
-    from ModestMaps.Core import Point
-    from ModestMaps.Geo import Location
-    from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
-
-    # s2p is from scan to print
-    # we need s2m - scan to mercator
-    # start with p2m - print to mercator
+    osm = OpenStreetMapProvider()
     
     if (paper, orientation) == ('letter', 'landscape'):
         from dimensions import paper_size_landscape_ltr as paper_size_pt
+    
+    elif (paper, orientation) == ('letter', 'portrait'):
+        from dimensions import paper_size_portrait_ltr as paper_size_pt
     
     else:
         raise Exception('not yet')
 
     paper_width_pt, paper_height_pt = paper_size_pt
     
-    #
-    # Coordinates of three print corners
-    #
+    for zoom in range(20):
+        #
+        # Coordinates of three print corners
+        #
+        
+        ul = osm.locationCoordinate(Location(north, west)).zoomTo(zoom)
+        ur = osm.locationCoordinate(Location(north, east)).zoomTo(zoom)
+        lr = osm.locationCoordinate(Location(south, east)).zoomTo(zoom)
+        
+        #
+        # Matching points in print and coordinate spaces
+        #
+        
+        ul_pt = Point(1 * ptpin - paper_width_pt, 1.5 * ptpin - paper_height_pt)
+        ul_co = Point(ul.column, ul.row)
     
-    osm = OpenStreetMapProvider()
+        ur_pt = Point(0, 1.5 * ptpin - paper_height_pt)
+        ur_co = Point(ur.column, ur.row)
     
-    zoom = 14
+        lr_pt = Point(0, 0)
+        lr_co = Point(lr.column, lr.row)
+        
+        scan_dim = hypot(image.size[0], image.size[1])
+        zoom_dim = hypot((lr_co.x - ul_co.x) * 256, (lr_co.y - ul_co.y) * 256)
+        
+        if zoom_dim/scan_dim < 0.1:
+            # too zoomed-out
+            continue
+        
+        if zoom_dim/scan_dim > 1.5:
+            # too zoomed-in
+            break
+        
+        #
+        # scan2coord by way of scan2print and print2coord
+        #
 
-    ul = osm.locationCoordinate(Location(north, west)).zoomTo(zoom)
-    ur = osm.locationCoordinate(Location(north, east)).zoomTo(zoom)
-    lr = osm.locationCoordinate(Location(south, east)).zoomTo(zoom)
+        p2c = triangle2triangle(ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co)
+        s2c = s2p.multiply(p2c)
+        
+        for (coord, tile_img) in generate_tiles_for_zoom(image, s2c, zoom):
+            yield (coord, tile_img)
     
-    #
-    # Matching points in print and coordinate spaces
-    #
-    
-    ul_pt = Point(1 * ptpin - paper_width_pt, 1.5 * ptpin - paper_height_pt)
-    ul_co = Point(ul.column, ul.row)
-
-    ur_pt = Point(0, 1.5 * ptpin - paper_height_pt)
-    ur_co = Point(ur.column, ur.row)
-
-    lr_pt = Point(0, 0)
-    lr_co = Point(lr.column, lr.row)
-    
-    print ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co
-
-    p2m = triangle2triangle(ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co)
-    s2m = s2p.multiply(p2m)
-    
-    do_more_geo_stuff(image, s2m, zoom)
-    
-def do_more_geo_stuff(image, s2m, zoom):
-    """ Placeholder for now.
+def generate_tiles_for_zoom(image, scan2coord, zoom):
+    """ Yield a stream of coordinates and tile images for a given zoom level.
     """
-    from ModestMaps.Core import Point
-
-    #
-    # Coordinates of outside corners of print
-    #
-    
-    ul = s2m(Point(0, 0))
-    ur = s2m(Point(image.size[0], 0))
-    lr = s2m(Point(*image.size))
-    ll = s2m(Point(0, image.size[1]))
-    
-    print '...', image.size
-    print 'scan hypotenuse:', hypot(image.size[0], image.size[1])
-    print '...', (lr.x - ul.x) * 256, (lr.y - ul.y) * 256
-    print 'tile pixel hypotenuse:', hypot((lr.x - ul.x) * 256, (lr.y - ul.y) * 256)
+    ul = scan2coord(Point(0, 0))
+    ur = scan2coord(Point(image.size[0], 0))
+    lr = scan2coord(Point(*image.size))
+    ll = scan2coord(Point(0, image.size[1]))
     
     minrow = min(ul.y, ur.y, lr.y, ll.y)
     maxrow = max(ul.y, ur.y, lr.y, ll.y)
@@ -286,13 +287,11 @@ def do_more_geo_stuff(image, s2m, zoom):
     for row in range(int(minrow), int(maxrow) + 1):
         for col in range(int(mincol), int(maxcol) + 1):
             
-            merc_bbox = col, row, col + 1, row + 1
-            tile_img = extract_image(s2m, merc_bbox, image, (256, 256), 256/8)
+            coord = Coordinate(row, col, zoom)
+            coord_bbox = col, row, col + 1, row + 1
+            tile_img = extract_image(scan2coord, coord_bbox, image, (256, 256), 256/8)
             
-            print '%d-%d-%d.jpg' % (zoom, col, row)
-            tile_img.save('%d-%d-%d.jpg' % (zoom, col, row))
-    
-    raise Exception('did geo stuff')
+            yield (coord, tile_img)
 
 def main(apibase, password, scan_id, url):
     """
@@ -303,6 +302,7 @@ def main(apibase, password, scan_id, url):
     # Prepare a shorthand for pushing data.
     #
     _append_file = lambda name, body: scan_id and append_scan_file(scan_id, name, body, apibase, password) or None
+    _update_step = lambda step_number: scan_id and update_step(apibase, password, scan_id, step_number) or None
     
     handle, highpass_filename = mkstemp(prefix='highpass-', suffix='.jpg')
     close(handle)
@@ -310,8 +310,13 @@ def main(apibase, password, scan_id, url):
     handle, preblobs_filename = mkstemp(prefix='preblobs-', suffix='.jpg')
     close(handle)
     
+    _update_step(2)
+
     input = Image.open(StringIO(urlopen(url).read()))
     blobs = imgblobs(input, highpass_filename, preblobs_filename)
+    
+    s, h, path, p, q, f = urlparse(url)
+    uploaded_file = basename(path)
     
     yield 10
     
@@ -324,6 +329,8 @@ def main(apibase, password, scan_id, url):
     rename(preblobs_filename, 'preblobs.jpg')
     
     print len(blobs), 'Blobs'
+
+    _update_step(3)
 
     for (s2p, paper, orientation) in paper_matches(blobs):
 
@@ -342,9 +349,40 @@ def main(apibase, password, scan_id, url):
         
         yield 10
 
+        _update_step(4)
+
         print_id, north, west, south, east = read_code(qrcode)
         
-        do_geo_stuff(input, s2p, paper, orientation, north, west, south, east)
+        _update_step(5)
+
+        print >> stderr, 'tiles...',
+        
+        minrow, mincol, minzoom = 2**20, 2**20, 20
+        maxrow, maxcol, maxzoom = 0, 0, 0
+
+        for (coord, tile_img) in generate_tiles(input, s2p, paper, orientation, north, west, south, east):
+            buffer = StringIO()
+            tile_img.save(buffer, 'JPEG')
+            filename = '%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__
+            _append_file(filename, buffer.getvalue())
+            
+            print >> stderr, coord.zoom,
+            
+            minrow = min(minrow, coord.row)
+            mincol = min(mincol, coord.column)
+            minzoom = min(minzoom, coord.zoom)
+            
+            maxrow = max(maxrow, coord.row)
+            maxcol = max(maxcol, coord.column)
+            maxzoom = max(minzoom, coord.zoom)
+        
+        print >> stderr, '...tiles.'
+        
+        min_coord = Coordinate(minrow, mincol, minzoom)
+        max_coord = Coordinate(maxrow, maxcol, maxzoom)
+        
+        update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord)
+        _update_step(6)
         
         draw = ImageDraw(input)
         
@@ -360,9 +398,7 @@ def main(apibase, password, scan_id, url):
         _append_file('out.png', open(out_filename, 'r').read())
         rename(out_filename, 'out.png')
         
-        raise Exception('DONE WELL')
-    
-    raise Exception('DONE')
+        return
 
 if __name__ == '__main__':
 
