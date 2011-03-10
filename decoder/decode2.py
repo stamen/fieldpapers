@@ -304,6 +304,14 @@ def main(apibase, password, scan_id, url):
     _append_file = lambda name, body: scan_id and append_scan_file(scan_id, name, body, apibase, password) or None
     _update_step = lambda step_number: scan_id and update_step(apibase, password, scan_id, step_number) or None
     
+    def _append_image(filename, image):
+        """ Append specifically an image.
+        """
+        buffer = StringIO()
+        format = filename.lower().endswith('.jpg') and 'JPEG' or 'PNG'
+        image.save(buffer, format)
+        _append_file(filename, buffer.getvalue())
+    
     handle, highpass_filename = mkstemp(prefix='highpass-', suffix='.jpg')
     close(handle)
     
@@ -320,38 +328,29 @@ def main(apibase, password, scan_id, url):
     
     yield 10
     
-    print highpass_filename, preblobs_filename
-    
     _append_file('highpass.jpg', open(highpass_filename, 'r').read())
     _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
 
     rename(highpass_filename, 'highpass.jpg')
     rename(preblobs_filename, 'preblobs.jpg')
     
-    print len(blobs), 'Blobs'
-
     _update_step(3)
 
     for (s2p, paper, orientation) in paper_matches(blobs):
 
         yield 10
 
-        print paper, orientation, '--', s2p
+        print >> stderr, paper, orientation, '--', s2p
         
-        qrcode = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
-        
-        handle, qrcode_filename = mkstemp(prefix='qrcode-', suffix='.png')
-        close(handle)
-
-        qrcode.save(qrcode_filename)
-        _append_file('qrcode.png', open(qrcode_filename, 'r').read())
-        rename(qrcode_filename, 'qrcode.png')
+        qrcode_img = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
+        _append_image('qrcode.png', qrcode_img)
+        qrcode_img.save('qrcode.png')
         
         yield 10
 
         _update_step(4)
 
-        print_id, north, west, south, east = read_code(qrcode)
+        print_id, north, west, south, east = read_code(qrcode_img)
         
         _update_step(5)
 
@@ -361,11 +360,8 @@ def main(apibase, password, scan_id, url):
         maxrow, maxcol, maxzoom = 0, 0, 0
 
         for (coord, tile_img) in generate_tiles(input, s2p, paper, orientation, north, west, south, east):
-            buffer = StringIO()
-            tile_img.save(buffer, 'JPEG')
-            filename = '%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__
-            _append_file(filename, buffer.getvalue())
-            
+
+            _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)
             print >> stderr, coord.zoom,
             
             minrow = min(minrow, coord.row)
@@ -378,10 +374,19 @@ def main(apibase, password, scan_id, url):
         
         print >> stderr, '...tiles.'
         
+        preview_img = input.copy()
+        preview_img.thumbnail((409, 280), Image.ANTIALIAS)
+        _append_image('preview.jpg', preview_img)
+        
+        large_img = input.copy()
+        large_img.thumbnail((900, 900), Image.ANTIALIAS)
+        _append_image('large.jpg', large_img)
+        
         min_coord = Coordinate(minrow, mincol, minzoom)
         max_coord = Coordinate(maxrow, maxcol, maxzoom)
         
         update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord)
+
         _update_step(6)
         
         draw = ImageDraw(input)
@@ -390,13 +395,9 @@ def main(apibase, password, scan_id, url):
             draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
     
         yield 5
-
-        handle, out_filename = mkstemp(prefix='out-', suffix='.png')
-        close(handle)
-
-        input.save(out_filename)
-        _append_file('out.png', open(out_filename, 'r').read())
-        rename(out_filename, 'out.png')
+        
+        _append_image('out.png', input)
+        input.save('out.png')
         
         return
 
