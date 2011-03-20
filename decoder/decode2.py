@@ -22,10 +22,13 @@ from ModestMaps.Core import Point, Coordinate
 from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
 
 from apiutils import append_scan_file, update_scan, update_step
-from featuremath import MatchedFeature, blobs2features, theta_ratio_bounds, stream_pairs
+from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from matrixmath import Transform, quad2quad, triangle2triangle
 from imagemath import imgblobs, extract_image
 from dimensions import ptpin
+
+class CodeReadException(Exception):
+    pass
 
 def paper_matches(blobs):
     """ Generate matches for specific paper sizes.
@@ -98,73 +101,68 @@ def _blob_matches_primary(blobs):
     eac_theta, eac_ratio = feature_eac.theta, feature_eac.ratio
     
     dbc_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(dbc_theta, theta_tol, dbc_ratio, ratio_tol))
-    dab_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(dab_theta, theta_tol, dab_ratio, ratio_tol))
     
     seen_groups, max_skipped, skipped_groups = set(), 100, 0
     
-    for (dbc_tuple, dab_tuple) in stream_pairs(dbc_matches, dab_matches):
-        
+    for dbc_tuple in dbc_matches:
         i0, j0, k0 = dbc_tuple[0:3]
-        i1, j1, k1 = dab_tuple[0:3]
-        
-        group = (i0, j0, k0, i1, j1, k1)
-        
-        if skipped_groups > max_skipped:
-            return
-
-        if group in seen_groups:
-            skipped_groups += 1
-            continue
-        
-        seen_groups.add(group)
-        skipped_groups = 0
-
         dbc_match = MatchedFeature(feature_dbc, blobs[i0], blobs[j0], blobs[k0])
-        dab_match = MatchedFeature(feature_dab, blobs[i1], blobs[j1], blobs[k1])
+    
+        #print >> stderr, 'Found a match for DBC -', (i0, j0, k0)
         
-        if not dbc_match.fits(dab_match):
-            continue
+        dab_matches = blobs2feats_limited([blobs[i0]], blobs, [blobs[j0]], *theta_ratio_bounds(dab_theta, theta_tol, dab_ratio, ratio_tol))
         
-        print >> stderr, 'Found a match for DBC and DAB'
-        
-        #
-        # We think we have a match for points A-D, now check for point E.
-        #
-        aed_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(aed_theta, theta_tol, aed_ratio, ratio_tol))
-        
-        for aed_tuple in aed_matches:
-            i2, j2, k2 = aed_tuple[0:3]
-            aed_match = MatchedFeature(feature_aed, blobs[i2], blobs[j2], blobs[k2])
+        for dab_tuple in dab_matches:
+            i1, j1, k1 = i0, dab_tuple[1], j0
+            dab_match = MatchedFeature(feature_dab, blobs[i1], blobs[j1], blobs[k1])
             
-            if not dbc_match.fits(aed_match):
+            if not dab_match.fits(dbc_match):
                 continue
             
-            if not dab_match.fits(aed_match):
-                continue
-            
-            print >> stderr, 'Found a match for AED'
+            #print >> stderr, ' Found a match for DAB -', (i1, j1, k1)
             
             #
-            # We now know we have a three-triangle match; try a fourth to verify.
-            # Use the very small set of blobs from the current set of matches.
+            # We think we have a match for points A-D, now check for point E.
             #
             
-            _blobs = [blobs[n] for n in set(group + (i2, j2, k2))]
-            eac_matches = blobs2features(_blobs, min_size, *theta_ratio_bounds(eac_theta, theta_tol, eac_ratio, ratio_tol))
+            aed_matches = blobs2feats_limited([blobs[j1]], blobs, [blobs[i1]], *theta_ratio_bounds(aed_theta, theta_tol, aed_ratio, ratio_tol))
             
-            for eac_tuple in eac_matches:
-                i3, j3, k3 = eac_tuple[0:3]
-                eac_match = MatchedFeature(feature_eac, _blobs[i3], _blobs[j3], _blobs[k3])
+            for aed_tuple in aed_matches:
+                i2, j2, k2 = j1, aed_tuple[1], i1
+                aed_match = MatchedFeature(feature_aed, blobs[i2], blobs[j2], blobs[k2])
                 
-                if not dbc_match.fits(eac_match):
+                if not aed_match.fits(dbc_match):
                     continue
                 
-                if not dab_match.fits(eac_match):
+                if not aed_match.fits(dab_match):
                     continue
                 
-                print >> stderr, 'Confirmed match with EAC'
+                #print >> stderr, '  Found a match for AED -', (i2, j2, k2)
                 
-                yield dbc_match, aed_match
+                #
+                # We now know we have a three-triangle match; try a fourth to verify.
+                # Use the very small set of blobs from the current set of matches.
+                #
+                
+                _blobs = [blobs[n] for n in set((i0, j0, k0) + (i1, j1, k1) + (i2, j2, k2))]
+                eac_matches = blobs2features(_blobs, min_size, *theta_ratio_bounds(eac_theta, theta_tol, eac_ratio, ratio_tol))
+                
+                for eac_tuple in eac_matches:
+                    i3, j3, k3 = eac_tuple[0:3]
+                    eac_match = MatchedFeature(feature_eac, _blobs[i3], _blobs[j3], _blobs[k3])
+                    
+                    if not eac_match.fits(dbc_match):
+                        continue
+                    
+                    if not eac_match.fits(dab_match):
+                        continue
+                    
+                    if not eac_match.fits(aed_match):
+                        continue
+                    
+                    #print >> stderr, '   Confirmed match with EAC -', (i3, j3, k3)
+                    
+                    yield dbc_match, aed_match
 
 def _blob_matches_secondary(blobs, aed_match):
     """ Generate known matches for AED (bottom) and paper-specific triangle groups.
@@ -191,14 +189,29 @@ def _blob_matches_secondary(blobs, aed_match):
         g_theta, g_ratio = feature_g.theta, feature_g.ratio
         g_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(g_theta, theta_tol, g_ratio, ratio_tol))
         
+        g_bounds = theta_ratio_bounds(g_theta, theta_tol, g_ratio, ratio_tol)
+        
+        g_matches = blobs2feats_fitted(aed_match.s1, aed_match.s2, blobs, *g_bounds)
+        
         for g_tuple in g_matches:
             i0, j0, k0 = g_tuple[0:3]
             g_match = MatchedFeature(feature_g, blobs[i0], blobs[j0], blobs[k0])
-        
+            
             if not g_match.fits(aed_match):
                 continue
             
-            print >> stderr, 'Found a match for point G'
+            aed_blobs = (aed_match.s1, aed_match.s2)
+            
+            if g_match.s1 in aed_blobs and g_match.s2 in aed_blobs:
+                blob_G = g_match.s3
+            elif g_match.s1 in aed_blobs and g_match.s3 in aed_blobs:
+                blob_G = g_match.s2
+            elif g_match.s2 in aed_blobs and g_match.s3 in aed_blobs:
+                blob_G = g_match.s1
+            else:
+                raise Exception('what?')
+            
+            #print >> stderr, '    Found a match for point G -', (i0, j0, k0)
 
             #
             # We think we have a match for point G, now check for point F.
@@ -207,6 +220,9 @@ def _blob_matches_secondary(blobs, aed_match):
             f_theta, f_ratio = feature_f.theta, feature_f.ratio
             f_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(f_theta, theta_tol, f_ratio, ratio_tol))
             
+            f_bounds = theta_ratio_bounds(f_theta, theta_tol, f_ratio, ratio_tol)
+            f_matches = blobs2feats_fitted(blob_G, aed_match.s2, blobs, *f_bounds)
+            
             for f_tuple in f_matches:
                 i1, j1, k1 = f_tuple[0:3]
                 f_match = MatchedFeature(feature_f, blobs[i1], blobs[j1], blobs[k1])
@@ -214,7 +230,7 @@ def _blob_matches_secondary(blobs, aed_match):
                 if not f_match.fits(g_match):
                     continue
 
-                print >> stderr, 'Found a match for point F'
+                #print >> stderr, '     Found a match for point F -', (i1, j1, k1)
                 
                 #
                 # Based on the identity of point_F, we can find paper size and orientation.
@@ -401,7 +417,10 @@ def main(apibase, password, scan_id, url):
 
         _update_step(4)
 
-        print_id, north, west, south, east = read_code(qrcode_img)
+        try:
+            print_id, north, west, south, east = read_code(qrcode_img)
+        except CodeReadException:
+            continue
         
         _update_step(5)
 

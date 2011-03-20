@@ -1,6 +1,6 @@
 from math import sqrt as _sqrt, atan2 as _atan2, sin as _sin, cos as _cos, pi, hypot as _hypot
 from numpy import array as _array, repeat, reshape, nonzero, transpose, arctan2, sqrt as nsqrt
-from itertools import cycle, product
+from itertools import product, chain, izip, repeat as _repeat
 
 from matrixmath import Point, Vector, Transform
 
@@ -72,7 +72,7 @@ class MatchedFeature:
         return True
 
 def _normalize(p1, p2, p3):
-    """ Return feature parts for a trio of points - ordered points, ratio, theta.
+    """ Return feature parts for a trio of points - re-ordered points, ratio, theta.
     """
     h12 = _hypot(p2.x - p1.x, p2.y - p1.y)
     h13 = _hypot(p3.x - p1.x, p3.y - p1.y)
@@ -99,6 +99,14 @@ def _normalize(p1, p2, p3):
         elif hs[1] is h13:
             p1, p2, p3 = p3, p2, p1
     
+    h, ratio, theta = _measure(p1, p2, p3)
+    
+    return p1, p2, p3, ratio, theta
+
+def _measure(p1, p2, p3):
+    """ Return hypotenuse, ratio and theta for a trio of ordered points.
+    """
+    ha, hb = _hypot(p3.x - p1.x, p3.y - p1.y), _hypot(p2.x - p1.x, p2.y - p1.y)
     va, vb = Vector(p1, p2), Vector(p1, p3)
     
     theta = _atan2(va.y, va.x)
@@ -106,10 +114,10 @@ def _normalize(p1, p2, p3):
     x = vb.x * _cos(-theta) - vb.y * _sin(-theta)
     y = vb.x * _sin(-theta) + vb.y * _cos(-theta)
     
-    ratio = hs[1] / hs[0]
+    ratio = ha / hb
     theta = _atan2(y, x)
     
-    return p1, p2, p3, ratio, theta
+    return hb, ratio, theta
 
 def theta_ratio_bounds(theta, theta_tol, ratio, ratio_tol):
     """ Prepare last four arguments to blobs2features.
@@ -135,6 +143,81 @@ def theta_ratio_bounds(theta, theta_tol, ratio, ratio_tol):
         min_ratio, max_ratio = 1.0, 1.0
     
     return min_theta, max_theta, min_ratio, max_ratio
+
+def blobs2feats_fitted(blobA, blobB, blobs, tmin, tmax, rmin, rmax):
+    """ Generate a stream of features corresponding to limits.
+    
+        Yields 5-element tuples: indexes for three blobs followed by feature ratio, theta.
+        
+        Used when two blobs are known to be part of the target feature,
+        but it's not clear which specific points in the feature they will
+        correspond to. Performs a simple walk over all six possibilities
+        using blobs2feats_limited().
+    """
+    lim = tmin, tmax, rmin, rmax
+    ABL, BAL, ALB, BLA, LAB, LBA = 0, 1, 2, 3, 4, 5
+    
+    matches = chain(izip(_repeat(ABL), blobs2feats_limited([blobA], [blobB], blobs, *lim)),
+                    izip(_repeat(BAL), blobs2feats_limited([blobB], [blobA], blobs, *lim)),
+                    izip(_repeat(ALB), blobs2feats_limited([blobA], blobs, [blobB], *lim)),
+                    izip(_repeat(BLA), blobs2feats_limited([blobB], blobs, [blobA], *lim)),
+                    izip(_repeat(LAB), blobs2feats_limited(blobs, [blobA], [blobB], *lim)),
+                    izip(_repeat(LBA), blobs2feats_limited(blobs, [blobB], [blobA], *lim)))
+    
+    for (arrangement, match_tuple) in matches:
+        if arrangement == ABL:
+            i, j, k = blobs.index(blobA), blobs.index(blobB), match_tuple[2]
+        elif arrangement == BAL:
+            i, j, k = blobs.index(blobB), blobs.index(blobA), match_tuple[2]
+        elif arrangement == ALB:
+            i, j, k = blobs.index(blobA), match_tuple[1], blobs.index(blobB)
+        elif arrangement == BLA:
+            i, j, k = blobs.index(blobB), match_tuple[1], blobs.index(blobA)
+        elif arrangement == LAB:
+            i, j, k = match_tuple[0], blobs.index(blobA), blobs.index(blobB)
+        elif arrangement == LBA:
+            i, j, k = match_tuple[0], blobs.index(blobB), blobs.index(blobA)
+
+        ratio, theta = match_tuple[3:5]
+        
+        yield i, j, k, ratio, theta
+
+def blobs2feats_limited(blobs1, blobs2, blobs3, min_theta=-pi, max_theta=pi, min_ratio=0, max_ratio=1):
+    """ Generate a stream of features corresponding to limits.
+    
+        Yields 5-element tuples: indexes for three blobs followed by feature ratio, theta.
+        
+        Makes the somewhat-dangerous assumption that the possible blob
+        combinations are limited enough to calculate them all and return
+        a stream sorted from largest feature to smallest, based on length
+        of hypotenuse.
+    """
+    matches = []
+    
+    for (blob1, blob2, blob3) in product(blobs1, blobs2, blobs3):
+        
+        if blob1 is blob2 or blob2 is blob3 or blob3 is blob1:
+            continue
+        
+        hypot, ratio, theta = _measure(blob1, blob2, blob3)
+    
+        if theta < min_theta or max_theta < theta:
+            continue
+
+        if ratio < min_ratio or max_ratio < ratio:
+            continue
+        
+        matches.append((hypot, ratio, theta, blob1, blob2, blob3))
+    
+    # go from the longest to the shortest hypotenuse
+    matches.sort(reverse=True)
+    
+    for (h, ratio, theta, blob1, blob2, blob3) in matches:
+        i = blobs1.index(blob1)
+        j = blobs2.index(blob2)
+        k = blobs3.index(blob3)
+        
+        yield (i, j, k, ratio, theta)
 
 def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0, max_ratio=1):
     """ Generate a stream of features conforming to limits.
@@ -205,53 +288,6 @@ def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0,
             
             yield (i, j, k, ratio, theta)
 
-def stream_pairs(source1, source2):
-    """ Generate a merged stream from two possibly-infinite streams.
-    
-        Imagine an infinite plane, swept diagonally from (0, 0) in alternating directions.
-        
-        Each source stream is cycled infinitely, just to guarantee that all
-        possible pairs are produced at the cost of duplication. Calling functions
-        are responsible for limiting the stream according to some heuristic.
-    """
-    list1, list2 = [], []
-    iterator1 = cycle(source1)
-    iterator2 = cycle(source2)
-    northeast, southwest = 1, 2
-    direction = northeast
-    row, col = 0, 0
-    
-    while True:
-        while len(list1) <= row:
-            list1.append(iterator1.next())
-
-        while len(list2) <= col:
-            list2.append(iterator2.next())
-        
-        yield list1[row], list2[col]
-    
-        if direction == northeast:
-            if row == 0:
-                direction = southwest
-            else:
-                row -= 1
-            col += 1
-            
-        elif direction == southwest:
-            if col == 0:
-                direction = northeast
-            else:
-                col -= 1
-            row += 1
-
-def stream_triples(src1, src2, src3):
-    """ Generate a merged stream from three possibly-infinite streams.
-    
-        Items in the first stream will tend to be covered before the other two.
-    """
-    for (item1, (item2, item3)) in stream_pairs(src1, stream_pairs(src2, src3)):
-        yield item1, item2, item3
-            
 if __name__ == '__main__':
 
     #
