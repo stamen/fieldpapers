@@ -76,10 +76,10 @@ def paper_matches(blobs):
                           if getattr(f_match, 'p%d' % i) is point_F]
         
             #
-            # transform from scan pixels to homogenous print coordinates - A, C, D, F
+            # transform from scan pixels to homogenous print coordinates - A, C, E, F
             #
-            s2h = quad2quad(aed_match.s1, aed_match.p1, dbc_match.s2, dbc_match.p2,
-                            aed_match.s3, aed_match.p3, scan_F, point_F)
+            s2h = quad2quad(aed_match.s1, aed_match.p1, dbc_match.s3, dbc_match.p3,
+                            aed_match.s2, aed_match.p2, scan_F, point_F)
             
             #
             # transform from scan pixels to printed points, with (0, 0) at lower right
@@ -309,7 +309,7 @@ def generate_tiles(image, s2p, paper, orientation, north, west, south, east):
     
     paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
     
-    for zoom in range(20):
+    for zoom in range(19):
         #
         # Coordinates of three print corners
         #
@@ -334,11 +334,11 @@ def generate_tiles(image, s2p, paper, orientation, north, west, south, east):
         scan_dim = hypot(image.size[0], image.size[1])
         zoom_dim = hypot((lr_co.x - ul_co.x) * 256, (lr_co.y - ul_co.y) * 256)
         
-        if zoom_dim/scan_dim < 0.1:
+        if zoom_dim/scan_dim < .1:
             # too zoomed-out
             continue
         
-        if zoom_dim/scan_dim > 1.5:
+        if zoom_dim/scan_dim > 3.:
             # too zoomed-in
             break
         
