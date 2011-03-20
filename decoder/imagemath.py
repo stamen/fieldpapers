@@ -58,6 +58,7 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_file
     mindim = 10
     
     thumb = autocontrast(thumb)
+    thumb = lowpass(thumb, 4)
     thumb = highpass(thumb, 16)
     
     if highpass_filename:
@@ -74,7 +75,14 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_file
     
     blobs = []
     
-    for (xmin, ymin, xmax, ymax) in detect(thumb):
+    for (xmin, ymin, xmax, ymax, pixels) in detect(thumb):
+    
+        coverage = pixels / float((1 + xmax - xmin) * (1 + ymax - ymin))
+        
+        if coverage < 0.7:
+            # too spidery
+            continue
+        
         xmin *= scale
         ymin *= scale
         xmax *= scale
@@ -91,7 +99,7 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_file
             continue
         
         if max(blob.w, blob.h) / min(blob.w, blob.h) > 2:
-            # too weird
+            # too stretched
             continue
         
         draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
@@ -104,15 +112,11 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_file
     
     return blobs
 
-def highpass(img, radius):
-    """ Perform a high-pass with a given radius on the image, return a new image.
-    """
-    #
-    # Convert image to arrays
-    #
-    orig = img2arr(img)
-    blur = orig.copy()
+def gaussian(data, radius):
+    """ Perform a gaussian blur on a data array representing an image.
     
+        Manipulate the data array directly.
+    """
     #
     # Build a convolution kernel based on
     # http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
@@ -125,11 +129,32 @@ def highpass(img, radius):
     #
     # Convolve in two dimensions.
     #
-    for row in range(blur.shape[0]):
-        blur[row,:] = convolve(blur[row,:], kernel, 'same')
+    for row in range(data.shape[0]):
+        data[row,:] = convolve(data[row,:], kernel, 'same')
     
-    for col in range(blur.shape[1]):
-        blur[:,col] = convolve(blur[:,col], kernel, 'same')
+    for col in range(data.shape[1]):
+        data[:,col] = convolve(data[:,col], kernel, 'same')
+
+def lowpass(img, radius):
+    """ Perform a low-pass with a given radius on the image, return a new image.
+    """
+    #
+    # Convert image to array
+    #
+    blur = img2arr(img)
+    gaussian(blur, radius)
+    
+    return arr2img(blur)
+
+def highpass(img, radius):
+    """ Perform a high-pass with a given radius on the image, return a new image.
+    """
+    #
+    # Convert image to arrays
+    #
+    orig = img2arr(img)
+    blur = orig.copy()
+    gaussian(blur, radius)
     
     #
     # Combine blurred with original, see http://www.gimp.org/tutorials/Sketch_Effect/
