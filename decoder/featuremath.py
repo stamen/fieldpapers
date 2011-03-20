@@ -111,6 +111,31 @@ def _normalize(p1, p2, p3):
     
     return p1, p2, p3, ratio, theta
 
+def theta_ratio_bounds(theta, theta_tol, ratio, ratio_tol):
+    """ Prepare last four arguments to blobs2features.
+    
+        Check bounds on theta so that zero is not crossed and on ration
+        so that one is not crossed, either of which would indicate a feature
+        flipped around its primary axis.
+    """
+    if theta > 0.0:
+        min_theta, max_theta = max(0.0, theta - theta_tol), theta + theta_tol
+    elif theta < 0.0:
+        min_theta, max_theta = theta - theta_tol, min(0.0, theta + theta_tol)
+    else:
+        # zero? weird.
+        min_theta, max_theta = 0.0, 0.0
+    
+    if ratio > 1.0:
+        min_ratio, max_ratio = max(1.0, ratio - ratio_tol), ratio + ratio_tol
+    elif ratio < 1.0:
+        min_ratio, max_ratio = ratio - ratio_tol, min(1.0, ratio + ratio_tol)
+    else:
+        # one? weird.
+        min_ratio, max_ratio = 1.0, 1.0
+    
+    return min_theta, max_theta, min_ratio, max_ratio
+
 def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0, max_ratio=1):
     """ Generate a stream of features conforming to limits.
     
