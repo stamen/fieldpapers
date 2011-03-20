@@ -19,13 +19,16 @@ from cairo import ImageSurface, PDFSurface, Context
 from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
-from dimensions import point_A, point_B, point_C, point_D, ptpin
+from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print
 
 def get_qrcode_image(content):
     """ Render a QR code to an ImageSurface.
     """
     # http://chart.apis.google.com/chart?chs=264x264&cht=qr&chld=Q|0&chl=http://walkingpapers.org/print.php?id=abcdefgh
+    
+    if content is None:
+        content = 'http://example.com'
     
     q = {'chs': '528x528', 'cht': 'qr', 'chld': 'Q|0', 'chl': content}
     u = 'http://chart.apis.google.com/chart?' + urlencode(q)
@@ -84,10 +87,11 @@ def paper_info(paper_size, orientation):
     
     paper_size = {'letter': 'ltr', 'a4': 'a4', 'a3': 'a3'}[paper_size.lower()]
     width, height = getattr(dim, 'paper_size_%(orientation)s_%(paper_size)s' % locals())
-    point_E = getattr(dim, 'point_E_%(orientation)s_%(paper_size)s' % locals())
+    point_F = getattr(dim, 'point_F_%(orientation)s_%(paper_size)s' % locals())
+    point_G = getattr(dim, 'point_G_%(orientation)s_%(paper_size)s' % locals())
     ratio = getattr(dim, 'ratio_%(orientation)s_%(paper_size)s' % locals())
     
-    return width, height, point_E, ratio
+    return width, height, (point_F, point_G), ratio
 
 def get_preview_map_size(orientation, paper_size):
     """
@@ -110,7 +114,7 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
+def add_print_page(surface, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     """
     """
     print 'Adding print page:', href
@@ -143,7 +147,7 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
     ctx.translate(well_width_pt, well_height_pt)
     ctx.scale(1/hm2pt_ratio, 1/hm2pt_ratio)
     
-    reg_points = [point_A, point_B, point_C, point_D, point_E]
+    reg_points = (point_A, point_B, point_C, point_D, point_E) + points_FG
     
     device_points = [ctx.user_to_device(pt.x, pt.y) for pt in reg_points]
     
@@ -171,15 +175,21 @@ def add_print_page(surface, mmap, href, well_bounds_pt, point_E, hm2pt_ratio):
         x, y = ctx.device_to_user(x, y)
     
         draw_circle(ctx, x, y, .12 * ptpin)
-        ctx.set_source_rgb(1, 1, 1)
-        ctx.fill()
-
-        draw_circle(ctx, x, y, .12 * ptpin)
         ctx.set_source_rgb(0, 0, 0)
-        ctx.set_line_width(.25)
+        ctx.set_line_width(.5)
         ctx.set_dash([1.5, 3])
         ctx.stroke()
 
+    for (x, y) in device_points:
+        x, y = ctx.device_to_user(x, y)
+    
+        draw_circle(ctx, x, y, .12 * ptpin)
+        ctx.set_source_rgb(1, 1, 1)
+        ctx.fill()
+
+    for (x, y) in device_points:
+        x, y = ctx.device_to_user(x, y)
+    
         draw_circle(ctx, x, y, .06 * ptpin)
         ctx.set_source_rgb(0, 0, 0)
         ctx.fill()
@@ -284,7 +294,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     handle, print_filename = mkstemp(suffix='.pdf')
     close(handle)
     
-    page_width_pt, page_height_pt, point_E, hm2pt_ratio = paper_info(paper_size, orientation)
+    page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_surface = PDFSurface(print_filename, page_width_pt, page_height_pt)
 
     map_xmin_pt = .5 * ptpin
@@ -338,7 +348,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
         
         yield 60
         
-        add_print_page(print_surface, mmap, print_href, map_bounds_pt, point_E, hm2pt_ratio)
+        add_print_page(print_surface, mmap, print_href, map_bounds_pt, points_FG, hm2pt_ratio)
         
         # out = StringIO()
         # mmap.draw().save(out, format='JPEG')
