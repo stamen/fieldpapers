@@ -56,6 +56,8 @@
             <span class="east">{$print.east|escape}</span>
             <span class="west">{$print.west|escape}</span>
         {/if}
+        <span class="paper-size">{$print.paper_size|escape}</span>
+        <span class="orientation">{$print.orientation|escape}</span>
     </span>
 
     {include file="navigation.htmlf.tpl"}
