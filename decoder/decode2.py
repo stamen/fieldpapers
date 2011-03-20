@@ -187,10 +187,7 @@ def _blob_matches_secondary(blobs, aed_match):
 
     for (feature_g, point_G, feature_f, point_F) in features_fg:
         g_theta, g_ratio = feature_g.theta, feature_g.ratio
-        g_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(g_theta, theta_tol, g_ratio, ratio_tol))
-        
         g_bounds = theta_ratio_bounds(g_theta, theta_tol, g_ratio, ratio_tol)
-        
         g_matches = blobs2feats_fitted(aed_match.s1, aed_match.s2, blobs, *g_bounds)
         
         for g_tuple in g_matches:
@@ -218,8 +215,6 @@ def _blob_matches_secondary(blobs, aed_match):
             #
             
             f_theta, f_ratio = feature_f.theta, feature_f.ratio
-            f_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(f_theta, theta_tol, f_ratio, ratio_tol))
-            
             f_bounds = theta_ratio_bounds(f_theta, theta_tol, f_ratio, ratio_tol)
             f_matches = blobs2feats_fitted(blob_G, aed_match.s2, blobs, *f_bounds)
             
@@ -230,7 +225,7 @@ def _blob_matches_secondary(blobs, aed_match):
                 if not f_match.fits(g_match):
                     continue
 
-                #print >> stderr, '     Found a match for point F -', (i1, j1, k1)
+                #print >> stderr, '     Found a match for point F -', (i1, j1, k1), point_F
                 
                 #
                 # Based on the identity of point_F, we can find paper size and orientation.
@@ -253,7 +248,8 @@ def read_code(image):
     
         html = ElementTree.parse(urlopen(decoded))
         
-        print_id, north, west, south, east = None, None, None, None, None
+        print_id, paper, orientation = None, None, None
+        north, west, south, east = None, None, None, None
         
         for span in html.findall('body/span'):
             if span.get('id') == 'print-info':
@@ -268,27 +264,50 @@ def read_code(image):
                         east = float(subspan.text)
                     elif subspan.get('class') == 'west':
                         west = float(subspan.text)
+                    elif subspan.get('class') == 'paper-size':
+                        paper = subspan.text
+                    elif subspan.get('class') == 'orientation':
+                        orientation = subspan.text
     
-        return print_id, north, west, south, east
+        return print_id, north, west, south, east, paper, orientation
 
     else:
         raise CodeReadException('Attempt to read QR code failed')
 
-def generate_tiles(image, s2p, paper, orientation, north, west, south, east):
-    """ Placeholder for now.
+def get_paper_size(paper, orientation):
     """
-    osm = OpenStreetMapProvider()
-    
+    """
     if (paper, orientation) == ('letter', 'landscape'):
         from dimensions import paper_size_landscape_ltr as paper_size_pt
     
     elif (paper, orientation) == ('letter', 'portrait'):
         from dimensions import paper_size_portrait_ltr as paper_size_pt
     
+    elif (paper, orientation) == ('a4', 'landscape'):
+        from dimensions import paper_size_landscape_a4 as paper_size_pt
+    
+    elif (paper, orientation) == ('a4', 'portrait'):
+        from dimensions import paper_size_portrait_a4 as paper_size_pt
+    
+    elif (paper, orientation) == ('a3', 'landscape'):
+        from dimensions import paper_size_landscape_a3 as paper_size_pt
+    
+    elif (paper, orientation) == ('a3', 'portrait'):
+        from dimensions import paper_size_portrait_a3 as paper_size_pt
+    
     else:
         raise Exception('not yet')
 
     paper_width_pt, paper_height_pt = paper_size_pt
+    
+    return paper_width_pt, paper_height_pt
+
+def generate_tiles(image, s2p, paper, orientation, north, west, south, east):
+    """ Placeholder for now.
+    """
+    osm = OpenStreetMapProvider()
+    
+    paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
     
     for zoom in range(20):
         #
@@ -418,8 +437,11 @@ def main(apibase, password, scan_id, url):
         _update_step(4)
 
         try:
-            print_id, north, west, south, east = read_code(qrcode_img)
+            print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
         except CodeReadException:
+            continue
+
+        if (_paper, _orientation) != (paper, orientation):
             continue
         
         _update_step(5)

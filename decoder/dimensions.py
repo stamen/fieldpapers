@@ -13,18 +13,18 @@ point_E = Point(-149.12, -13.56, 'E')
 #
 # sixth and seventh point, by paper size and orientation
 #
-point_F_portrait_a3 = Point(-508.37, -126.63)
-point_G_portrait_a3 = Point(-508.37, -148.33)
-point_F_portrait_a4 = Point(-509.72, -199.48)
-point_G_portrait_a4 = Point(-509.72, -221.17)
-point_F_portrait_ltr = Point(-565.82, -271.11)
-point_G_portrait_ltr = Point(-565.82, -292.80)
-point_F_landscape_a3 = Point(-1105.00, -213.19)
-point_G_landscape_a3 = Point(-1105.00, -234.88)
-point_F_landscape_a4 = Point(-1146.04, -300.08)
-point_G_landscape_a4 = Point(-1146.04, -321.77)
-point_F_landscape_ltr = Point(-1034.82, -155.33)
-point_G_landscape_ltr = Point(-1034.82, -177.02)
+point_F_portrait_a3 = Point(-508.37, -126.63, 'F portrait a3')
+point_G_portrait_a3 = Point(-508.37, -148.33, 'G portrait a3')
+point_F_portrait_a4 = Point(-509.72, -199.48, 'F portrait a4')
+point_G_portrait_a4 = Point(-509.72, -221.17, 'G portrait a4')
+point_F_portrait_ltr = Point(-565.82, -271.11, 'F portrait ltr')
+point_G_portrait_ltr = Point(-565.82, -292.80, 'G portrait ltr')
+point_F_landscape_a3 = Point(-1105.00, -213.19, 'F landscape a3')
+point_G_landscape_a3 = Point(-1105.00, -234.88, 'G landscape a3')
+point_F_landscape_a4 = Point(-1146.04, -300.08, 'F landscape a4')
+point_G_landscape_a4 = Point(-1146.04, -321.77, 'G landscape a4')
+point_F_landscape_ltr = Point(-1034.82, -155.33, 'F landscape ltr')
+point_G_landscape_ltr = Point(-1034.82, -177.02, 'G landscape ltr')
 
 #
 # primary feature triangles
