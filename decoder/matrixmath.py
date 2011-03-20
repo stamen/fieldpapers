@@ -3,11 +3,12 @@ from numpy import matrix as _matrix, dot as _dot
 class Point:
     """ Simplest point.
     """
-    def __init__(self, x, y):
-        self.x, self.y = x, y
+    def __init__(self, x, y, name=None):
+        self.x, self.y, self.name = x, y, name
 
     def __str__(self):
-        return '(%.3f, %.3f)' % (self.x, self.y)
+        f = self.name and '(%(name)s: %(x).3f, %(y).3f)' or '(%(x).3f, %(y).3f)'
+        return f % self.__dict__
 
 class Vector:
     """ Like a point, but built from difference between two points.
