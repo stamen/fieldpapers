@@ -10,15 +10,19 @@ from urllib import urlopen
 from math import hypot
 from glob import glob
 
-from PIL import Image
-from PIL.ImageDraw import ImageDraw
+try:
+    import PIL
+except ImportError:
+    import Image
+else:
+    from PIL import Image
 
 from ModestMaps.Geo import Location
 from ModestMaps.Core import Point, Coordinate
 from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
 
 from apiutils import append_scan_file, update_scan, update_step
-from featuremath import MatchedFeature, blobs2features, stream_pairs
+from featuremath import MatchedFeature, blobs2features, theta_ratio_bounds, stream_pairs
 from matrixmath import Transform, quad2quad, triangle2triangle
 from imagemath import imgblobs, extract_image
 from dimensions import ptpin
@@ -32,47 +36,47 @@ def paper_matches(blobs):
     """
     from dimensions import ratio_portrait_a3, ratio_portrait_a4, ratio_portrait_ltr
     from dimensions import ratio_landscape_a3, ratio_landscape_a4, ratio_landscape_ltr
-    from dimensions import point_E_portrait_a3, point_E_portrait_a4, point_E_portrait_ltr
-    from dimensions import point_E_landscape_a3, point_E_landscape_a4, point_E_landscape_ltr
+    from dimensions import point_F_portrait_a3, point_F_portrait_a4, point_F_portrait_ltr
+    from dimensions import point_F_landscape_a3, point_F_landscape_a4, point_F_landscape_ltr
     
-    for (acb_match, adc_match) in _blob_matches_primary(blobs):
-        for (e_match, point_E) in _blob_matches_secondary(blobs, acb_match, adc_match):
+    for (dbc_match, aed_match) in _blob_matches_primary(blobs):
+        for (f_match, point_F) in _blob_matches_secondary(blobs, aed_match):
             #
             # determing paper size and orientation based on identity of point E.
             #
-            if point_E is point_E_portrait_a3:
+            if point_F is point_F_portrait_a3:
                 orientation, paper_size, scale = 'portrait', 'a3', 1/ratio_portrait_a3
 
-            elif point_E is point_E_portrait_a4:
+            elif point_F is point_F_portrait_a4:
                 orientation, paper_size, scale = 'portrait', 'a4', 1/ratio_portrait_a4
 
-            elif point_E is point_E_portrait_ltr:
+            elif point_F is point_F_portrait_ltr:
                 orientation, paper_size, scale = 'portrait', 'letter', 1/ratio_portrait_ltr
 
-            elif point_E is point_E_landscape_a3:
+            elif point_F is point_F_landscape_a3:
                 orientation, paper_size, scale = 'landscape', 'a3', 1/ratio_landscape_a3
 
-            elif point_E is point_E_landscape_a4:
+            elif point_F is point_F_landscape_a4:
                 orientation, paper_size, scale = 'landscape', 'a4', 1/ratio_landscape_a4
 
-            elif point_E is point_E_landscape_ltr:
+            elif point_F is point_F_landscape_ltr:
                 orientation, paper_size, scale = 'landscape', 'letter', 1/ratio_landscape_ltr
             
             else:
                 raise Exception('How did we ever get here?')
             
             #
-            # find the scan location of point E
+            # find the scan location of point F
             #
-            (scan_E, ) = [getattr(e_match, 's%d' % i)
+            (scan_F, ) = [getattr(f_match, 's%d' % i)
                           for i in (1, 2, 3)
-                          if getattr(e_match, 'p%d' % i) is point_E]
+                          if getattr(f_match, 'p%d' % i) is point_F]
         
             #
-            # transform from scan pixels to homogenous print coordinates - A, B, D, E
+            # transform from scan pixels to homogenous print coordinates - A, C, D, F
             #
-            s2h = quad2quad(acb_match.s1, acb_match.p1, acb_match.s3, acb_match.p3,
-                            adc_match.s2, adc_match.p2, scan_E, point_E)
+            s2h = quad2quad(aed_match.s1, aed_match.p1, dbc_match.s2, dbc_match.p2,
+                            aed_match.s3, aed_match.p3, scan_F, point_F)
             
             #
             # transform from scan pixels to printed points, with (0, 0) at lower right
@@ -83,24 +87,25 @@ def paper_matches(blobs):
             yield s2p, paper_size, orientation
 
 def _blob_matches_primary(blobs):
-    """ Generate known matches for ACB (top) and ADC (bottom) triangle pairs.
+    """ Generate known matches for DBC (top) and AED (bottom) triangle pairs.
     """
-    from dimensions import feature_acb, feature_adc, feature_dab
+    from dimensions import feature_dbc, feature_dab, feature_aed, feature_eac
     from dimensions import min_size, theta_tol, ratio_tol
 
-    acb_theta, acb_ratio = feature_acb.theta, feature_acb.ratio
-    adc_theta, adc_ratio = feature_adc.theta, feature_adc.ratio
+    dbc_theta, dbc_ratio = feature_dbc.theta, feature_dbc.ratio
     dab_theta, dab_ratio = feature_dab.theta, feature_dab.ratio
+    aed_theta, aed_ratio = feature_aed.theta, feature_aed.ratio
+    eac_theta, eac_ratio = feature_eac.theta, feature_eac.ratio
     
-    acb_matches = blobs2features(blobs, min_size, acb_theta-theta_tol, acb_theta+theta_tol, acb_ratio-ratio_tol, acb_ratio+ratio_tol)
-    adc_matches = blobs2features(blobs, min_size, adc_theta-theta_tol, adc_theta+theta_tol, adc_ratio-ratio_tol, adc_ratio+ratio_tol)
+    dbc_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(dbc_theta, theta_tol, dbc_ratio, ratio_tol))
+    dab_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(dab_theta, theta_tol, dab_ratio, ratio_tol))
     
     seen_groups, max_skipped, skipped_groups = set(), 100, 0
     
-    for (acb_tuple, adc_tuple) in stream_pairs(acb_matches, adc_matches):
+    for (dbc_tuple, dab_tuple) in stream_pairs(dbc_matches, dab_matches):
         
-        i0, j0, k0 = acb_tuple[0:3]
-        i1, j1, k1 = adc_tuple[0:3]
+        i0, j0, k0 = dbc_tuple[0:3]
+        i1, j1, k1 = dab_tuple[0:3]
         
         group = (i0, j0, k0, i1, j1, k1)
         
@@ -109,71 +114,112 @@ def _blob_matches_primary(blobs):
 
         if group in seen_groups:
             skipped_groups += 1
-            #print >> stderr, 'skip:', group
             continue
         
         seen_groups.add(group)
         skipped_groups = 0
 
-        acb_match = MatchedFeature(feature_acb, blobs[i0], blobs[j0], blobs[k0])
-        adc_match = MatchedFeature(feature_adc, blobs[i1], blobs[j1], blobs[k1])
+        dbc_match = MatchedFeature(feature_dbc, blobs[i0], blobs[j0], blobs[k0])
+        dab_match = MatchedFeature(feature_dab, blobs[i1], blobs[j1], blobs[k1])
         
-        if not acb_match.fits(adc_match):
-            #print >> stderr, 'no:', group
+        if not dbc_match.fits(dab_match):
             continue
-        else:
-            #print >> stderr, 'maybe:', group
-            pass
+        
+        print >> stderr, 'Found a match for DBC and DAB'
         
         #
-        # We now know we have a two-triangle match; try a third to verify.
-        # Use the very small set of blobs from the current ACB / ACD matches.
+        # We think we have a match for points A-D, now check for point E.
         #
+        aed_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(aed_theta, theta_tol, aed_ratio, ratio_tol))
         
-        _blobs = [blobs[n] for n in set(group)]
-        dab_matches = blobs2features(_blobs, min_size, dab_theta-theta_tol, dab_theta+theta_tol, dab_ratio-ratio_tol, dab_ratio+ratio_tol)
-        
-        for dab_tuple in dab_matches:
-            i2, j2, k2 = dab_tuple[0:3]
-            dab_match = MatchedFeature(feature_dab, _blobs[i2], _blobs[j2], _blobs[k2])
+        for aed_tuple in aed_matches:
+            i2, j2, k2 = aed_tuple[0:3]
+            aed_match = MatchedFeature(feature_aed, blobs[i2], blobs[j2], blobs[k2])
             
-            if acb_match.fits(dab_match) and adc_match.fits(dab_match):
-                #print >> stderr, 'yes:', group
-                yield acb_match, adc_match
+            if not dbc_match.fits(aed_match):
+                continue
+            
+            if not dab_match.fits(aed_match):
+                continue
+            
+            print >> stderr, 'Found a match for AED'
+            
+            #
+            # We now know we have a three-triangle match; try a fourth to verify.
+            # Use the very small set of blobs from the current set of matches.
+            #
+            
+            _blobs = [blobs[n] for n in set(group + (i2, j2, k2))]
+            eac_matches = blobs2features(_blobs, min_size, *theta_ratio_bounds(eac_theta, theta_tol, eac_ratio, ratio_tol))
+            
+            for eac_tuple in eac_matches:
+                i3, j3, k3 = eac_tuple[0:3]
+                eac_match = MatchedFeature(feature_eac, _blobs[i3], _blobs[j3], _blobs[k3])
+                
+                if not dbc_match.fits(eac_match):
+                    continue
+                
+                if not dab_match.fits(eac_match):
+                    continue
+                
+                print >> stderr, 'Confirmed match with EAC'
+                
+                yield dbc_match, aed_match
 
-def _blob_matches_secondary(blobs, acb_match, adc_match):
-    """ Generate known matches for ACB (top), ADC (bottom) and paper-specific triangle groups.
+def _blob_matches_secondary(blobs, aed_match):
+    """ Generate known matches for AED (bottom) and paper-specific triangle groups.
     """
-    from dimensions import feature_e_landscape_ltr, point_E_landscape_ltr
-    from dimensions import feature_e_portrait_ltr, point_E_portrait_ltr
-    from dimensions import feature_e_landscape_a4, point_E_landscape_a4
-    from dimensions import feature_e_portrait_a4, point_E_portrait_a4
-    from dimensions import feature_e_landscape_a3, point_E_landscape_a3
-    from dimensions import feature_e_portrait_a3, point_E_portrait_a3
+    from dimensions import feature_g_landscape_ltr, point_G_landscape_ltr, feature_f_landscape_ltr, point_F_landscape_ltr
+    from dimensions import feature_g_portrait_ltr, point_G_portrait_ltr, feature_f_portrait_ltr, point_F_portrait_ltr
+    from dimensions import feature_g_landscape_a4, point_G_landscape_a4, feature_f_landscape_a4, point_F_landscape_a4
+    from dimensions import feature_g_portrait_a4, point_G_portrait_a4, feature_f_portrait_a4, point_F_portrait_a4
+    from dimensions import feature_g_landscape_a3, point_G_landscape_a3, feature_f_landscape_a3, point_F_landscape_a3
+    from dimensions import feature_g_portrait_a3, point_G_portrait_a3, feature_f_portrait_a3, point_F_portrait_a3
+
     from dimensions import min_size, theta_tol, ratio_tol
 
-    features_e = (
-        (feature_e_landscape_ltr, point_E_landscape_ltr),
-        (feature_e_portrait_ltr,  point_E_portrait_ltr),
-        (feature_e_landscape_a4,  point_E_landscape_a4),
-        (feature_e_portrait_a4,   point_E_portrait_a4),
-        (feature_e_landscape_a3,  point_E_landscape_a3),
-        (feature_e_portrait_a3,   point_E_portrait_a3)
+    features_fg = (
+        (feature_g_landscape_ltr, point_G_landscape_ltr, feature_f_landscape_ltr, point_F_landscape_ltr),
+        (feature_g_portrait_ltr,  point_G_portrait_ltr,  feature_f_portrait_ltr,  point_F_portrait_ltr),
+        (feature_g_landscape_a4,  point_G_landscape_a4,  feature_f_landscape_a4,  point_F_landscape_a4),
+        (feature_g_portrait_a4,   point_G_portrait_a4,   feature_f_portrait_a4,   point_F_portrait_a4),
+        (feature_g_landscape_a3,  point_G_landscape_a3,  feature_f_landscape_a3,  point_F_landscape_a3),
+        (feature_g_portrait_a3,   point_G_portrait_a3,   feature_f_portrait_a3,   point_F_portrait_a3)
       )
 
-    for (feature_e, point_E) in features_e:
-        e_theta, e_ratio = feature_e.theta, feature_e.ratio
-        e_matches = blobs2features(blobs, min_size, e_theta-theta_tol, e_theta+theta_tol, e_ratio-ratio_tol, e_ratio+ratio_tol)
+    for (feature_g, point_G, feature_f, point_F) in features_fg:
+        g_theta, g_ratio = feature_g.theta, feature_g.ratio
+        g_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(g_theta, theta_tol, g_ratio, ratio_tol))
         
-        for e_tuple in e_matches:
-            i, j, k = e_tuple[0:3]
-            e_match = MatchedFeature(feature_e, blobs[i], blobs[j], blobs[k])
+        for g_tuple in g_matches:
+            i0, j0, k0 = g_tuple[0:3]
+            g_match = MatchedFeature(feature_g, blobs[i0], blobs[j0], blobs[k0])
         
-            if e_match.fits(acb_match) and e_match.fits(adc_match):
+            if not g_match.fits(aed_match):
+                continue
+            
+            print >> stderr, 'Found a match for point G'
+
+            #
+            # We think we have a match for point G, now check for point F.
+            #
+            
+            f_theta, f_ratio = feature_f.theta, feature_f.ratio
+            f_matches = blobs2features(blobs, min_size, *theta_ratio_bounds(f_theta, theta_tol, f_ratio, ratio_tol))
+            
+            for f_tuple in f_matches:
+                i1, j1, k1 = f_tuple[0:3]
+                f_match = MatchedFeature(feature_f, blobs[i1], blobs[j1], blobs[k1])
+                
+                if not f_match.fits(g_match):
+                    continue
+
+                print >> stderr, 'Found a match for point F'
+                
                 #
-                # Based on the identity of point_E, we can find paper size and orientation.
+                # Based on the identity of point_F, we can find paper size and orientation.
                 #
-                yield e_match, point_E
+                yield f_match, point_F
 
 def read_code(image):
     """
@@ -318,10 +364,13 @@ def main(apibase, password, scan_id, url):
     handle, preblobs_filename = mkstemp(prefix='preblobs-', suffix='.jpg')
     close(handle)
     
+    handle, postblob_filename = mkstemp(prefix='postblob-', suffix='.jpg')
+    close(handle)
+    
     _update_step(2)
 
     input = Image.open(StringIO(urlopen(url).read()))
-    blobs = imgblobs(input, highpass_filename, preblobs_filename)
+    blobs = imgblobs(input, highpass_filename, preblobs_filename, postblob_filename)
     
     s, h, path, p, q, f = urlparse(url)
     uploaded_file = basename(path)
@@ -330,9 +379,11 @@ def main(apibase, password, scan_id, url):
     
     _append_file('highpass.jpg', open(highpass_filename, 'r').read())
     _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
+    _append_file('postblob.jpg', open(postblob_filename, 'r').read())
 
     rename(highpass_filename, 'highpass.jpg')
     rename(preblobs_filename, 'preblobs.jpg')
+    rename(postblob_filename, 'postblob.jpg')
     
     _update_step(3)
 
@@ -389,15 +440,7 @@ def main(apibase, password, scan_id, url):
 
         _update_step(6)
         
-        draw = ImageDraw(input)
-        
-        for blob in blobs:
-            draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
-    
         yield 5
-        
-        _append_image('out.png', input)
-        input.save('out.png')
         
         return
 
