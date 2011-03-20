@@ -1,9 +1,20 @@
 from math import e
 
-from PIL import Image
-from PIL.Image import ANTIALIAS, AFFINE, BICUBIC
-from PIL.ImageOps import autocontrast
-from PIL.ImageFilter import MinFilter, MaxFilter
+try:
+    import PIL
+except ImportError:
+    import Image
+    from ImageDraw import ImageDraw
+    from Image import ANTIALIAS, AFFINE, BICUBIC
+    from ImageOps import autocontrast
+    from ImageFilter import MinFilter, MaxFilter
+else:
+    from PIL import Image
+    from PIL.ImageDraw import ImageDraw
+    from PIL.Image import ANTIALIAS, AFFINE, BICUBIC
+    from PIL.ImageOps import autocontrast
+    from PIL.ImageFilter import MinFilter, MaxFilter
+
 from numpy import array, fromstring, ubyte, convolve
 
 from BlobDetector import detect
@@ -26,7 +37,7 @@ class Blob:
         
         self.bbox = (xmin, ymin, xmax, ymax)
 
-def imgblobs(img, highpass_filename=None, preblobs_filename=None):
+def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_filename=None):
     """ Extract bboxes of blobs from an image.
     
         Assumes blobs somewhere in the neighborhood of 0.25" or so
@@ -58,6 +69,9 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None):
     if preblobs_filename:
         thumb.save(preblobs_filename)
     
+    ident = img.copy().convert('L').convert('RGB')
+    draw = ImageDraw(ident)
+    
     blobs = []
     
     for (xmin, ymin, xmax, ymax) in detect(thumb):
@@ -79,8 +93,14 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None):
         if max(blob.w, blob.h) / min(blob.w, blob.h) > 2:
             # too weird
             continue
+        
+        draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
+        draw.text(blob.bbox[2:4], str(len(blobs)), fill=(0xFF, 0, 0))
 
         blobs.append(blob)
+    
+    if postblobs_filename:
+        ident.save(postblobs_filename)
     
     return blobs
 
