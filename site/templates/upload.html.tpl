@@ -86,6 +86,20 @@
         </form>
     {/if}
     
+    <h3>Examples</h3>
+    
+    <p>
+        <img src="{$base_dir}/img/sample-input-best.jpg" />
+    </p>
+
+    <p>
+        <img src="{$base_dir}/img/sample-input-bad.jpg" />
+    </p>
+
+    <p>
+        <img src="{$base_dir}/img/sample-input-worst.jpg" />
+    </p>
+    
     {include file="footer.htmlf.tpl"}
     
 </body>
