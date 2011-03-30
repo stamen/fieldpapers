@@ -14,8 +14,10 @@ try:
     import PIL
 except ImportError:
     import Image
+    from ImageDraw import ImageDraw
 else:
     from PIL import Image
+    from PIL.ImageDraw import ImageDraw
 
 from ModestMaps.Geo import Location
 from ModestMaps.Core import Point, Coordinate
@@ -87,7 +89,10 @@ def paper_matches(blobs):
             h2p = Transform(scale, 0, 0, 0, scale, 0)
             s2p = s2h.multiply(h2p)
             
-            yield s2p, paper_size, orientation
+            # useful for drawing post-blobs image
+            blobs_abcde = aed_match.s1, dbc_match.s2, dbc_match.s3, dbc_match.s1, aed_match.s2
+            
+            yield s2p, paper_size, orientation, blobs_abcde
 
 def _blob_matches_primary(blobs):
     """ Generate known matches for DBC (top) and AED (bottom) triangle pairs.
@@ -374,6 +379,21 @@ def generate_tiles_for_zoom(image, scan2coord, zoom):
             
             yield (coord, tile_img)
 
+def draw_postblobs(postblob_img, blobs_abcde):
+    """ Connect the dots on the post-blob image for the five common dots.
+    """
+    blob_A, blob_B, blob_C, blob_D, blob_E = blobs_abcde
+    
+    draw = ImageDraw(postblob_img)
+    
+    draw.line((blob_B.x, blob_B.y, blob_C.x, blob_C.y), fill=(0x99, 0x00, 0x00))
+    draw.line((blob_D.x, blob_D.y, blob_C.x, blob_C.y), fill=(0x99, 0x00, 0x00))
+    draw.line((blob_D.x, blob_D.y, blob_B.x, blob_B.y), fill=(0x99, 0x00, 0x00))
+    
+    draw.line((blob_A.x, blob_A.y, blob_D.x, blob_D.y), fill=(0x99, 0x00, 0x00))
+    draw.line((blob_D.x, blob_D.y, blob_E.x, blob_E.y), fill=(0x99, 0x00, 0x00))
+    draw.line((blob_E.x, blob_E.y, blob_A.x, blob_A.y), fill=(0x99, 0x00, 0x00))
+
 def main(apibase, password, scan_id, url):
     """
     """
@@ -399,7 +419,7 @@ def main(apibase, password, scan_id, url):
     handle, preblobs_filename = mkstemp(prefix='preblobs-', suffix='.jpg')
     close(handle)
     
-    handle, postblob_filename = mkstemp(prefix='postblob-', suffix='.jpg')
+    handle, postblob_filename = mkstemp(prefix='postblob-', suffix='.png')
     close(handle)
     
     _update_step(2)
@@ -414,19 +434,23 @@ def main(apibase, password, scan_id, url):
     
     _append_file('highpass.jpg', open(highpass_filename, 'r').read())
     _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
-    _append_file('postblob.jpg', open(postblob_filename, 'r').read())
+    postblob_img = Image.open(postblob_filename)
 
     rename(highpass_filename, 'highpass.jpg')
     rename(preblobs_filename, 'preblobs.jpg')
-    rename(postblob_filename, 'postblob.jpg')
+    unlink(postblob_filename)
     
     _update_step(3)
 
-    for (s2p, paper, orientation) in paper_matches(blobs):
+    for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
 
         yield 10
 
         print >> stderr, paper, orientation, '--', s2p
+        
+        draw_postblobs(postblob_img, blobs_abcde)
+        _append_image('postblob.jpg', postblob_img)
+        postblob_img.save('postblob.jpg')
         
         qrcode_img = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
         _append_image('qrcode.png', qrcode_img)
