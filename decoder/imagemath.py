@@ -55,10 +55,10 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_file
     maxdim = min(*img.size) * 0.25 / 8.0
     
     # smallest likely blob size, wild-ass-guessed.
-    mindim = 10
+    mindim = 8
     
     thumb = autocontrast(thumb)
-    thumb = lowpass(thumb, 4)
+    thumb = lowpass(thumb, 1)
     thumb = highpass(thumb, 16)
     
     if highpass_filename:
@@ -103,7 +103,7 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_file
             continue
         
         draw.rectangle(blob.bbox, outline=(0xFF, 0, 0))
-        draw.text(blob.bbox[2:4], str(len(blobs)), fill=(0xFF, 0, 0))
+        draw.text(blob.bbox[2:4], str(len(blobs)), fill=(0x99, 0, 0))
 
         blobs.append(blob)
     
