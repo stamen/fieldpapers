@@ -70,6 +70,11 @@ class MatchedFeature:
                 return False
 
         return True
+    
+    def actuals(self):
+        """ Return actual ratio and theta for scan blobs.
+        """
+        return _normalize(self.s1, self.s2, self.s3)[3:5]
 
 def _normalize(p1, p2, p3):
     """ Return feature parts for a trio of points - re-ordered points, ratio, theta.
@@ -126,6 +131,10 @@ def theta_ratio_bounds(theta, theta_tol, ratio, ratio_tol):
         so that one is not crossed, either of which would indicate a feature
         flipped around its primary axis.
     """
+    # adjust tolerances down with small angles
+    ratio_tol *= _sin(abs(theta))
+    theta_tol *= _sin(abs(theta))
+    
     if theta > 0.0:
         min_theta, max_theta = max(0.0, theta - theta_tol), theta + theta_tol
     elif theta < 0.0:

@@ -54,8 +54,8 @@ feature_f_landscape_ltr = Feature(point_E, point_F_landscape_ltr, point_G_landsc
 #
 # feature tolerances and minimum size for featuremath.blobs2features()
 #
-ratio_tol = 0.03
-theta_tol = 0.04 # approx 2 degrees, either direction
+ratio_tol = 0.10
+theta_tol = 0.09 # approx 5 degrees
 min_size = 800
 
 #
