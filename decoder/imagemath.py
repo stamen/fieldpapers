@@ -24,11 +24,12 @@ from featuremath import Transform
 class Blob:
     """
     """
-    def __init__(self, xmin, ymin, xmax, ymax):
+    def __init__(self, xmin, ymin, xmax, ymax, size):
         self.xmin = xmin
         self.ymin = ymin
         self.xmax = xmax
         self.ymax = ymax
+        self.size = size
         
         self.x = (xmin + xmax) / 2
         self.y = (ymin + ymax) / 2
@@ -88,7 +89,7 @@ def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_file
         xmax *= scale
         ymax *= scale
         
-        blob = Blob(xmin, ymin, xmax, ymax)
+        blob = Blob(xmin, ymin, xmax, ymax, pixels)
         
         if blob.w < mindim or blob.h < mindim:
             # too small

@@ -216,12 +216,12 @@ def blobs2feats_limited(blobs1, blobs2, blobs3, min_theta=-pi, max_theta=pi, min
         if ratio < min_ratio or max_ratio < ratio:
             continue
         
-        matches.append((hypot, ratio, theta, blob1, blob2, blob3))
+        sort_by = blob1.size + blob2.size + blob3.size
+        matches.append((sort_by, ratio, theta, blob1, blob2, blob3))
     
-    # go from the longest to the shortest hypotenuse
     matches.sort(reverse=True)
     
-    for (h, ratio, theta, blob1, blob2, blob3) in matches:
+    for (sort, ratio, theta, blob1, blob2, blob3) in matches:
         i = blobs1.index(blob1)
         j = blobs2.index(blob2)
         k = blobs3.index(blob3)
@@ -254,19 +254,25 @@ def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0,
     distances = nsqrt(dxs ** 2 + dys ** 2)
     
     #
-    # make a list of eligible hypotenuses, sorted largest-to-smallest
+    # Make a list of eligible eligible blob pairs
     #
     hypoteni = distances.copy()
     hypoteni[distances < min_hypot] = 0
     
     hypot_nonzero = nonzero(hypoteni)
-    hypot_sorted = [(distances[i,j], i, j) for (i, j) in zip(*hypot_nonzero)]
-    hypot_sorted.sort(reverse=True)
+
+    ## Prepend separation distance, longest-to-shortest
+    #blobs_sorted = [(distances[i,j], i, j) for (i, j) in zip(*hypot_nonzero)]
+    
+    # Prepend combined pixel size, largest-to-smallest
+    blobs_sorted = [(blobs[i].size + blobs[j].size, i, j) for (i, j) in zip(*hypot_nonzero)]
+
+    blobs_sorted.sort(reverse=True)
     
     #
     # check each hypotenuse for an eligible third point
     #
-    for (row, (distance, i, j)) in enumerate(hypot_sorted):
+    for (row, (sort_value, i, j)) in enumerate(blobs_sorted):
         #
         # vector theta for hypotenuse (i, j)
         #
@@ -279,11 +285,14 @@ def blobs2features(blobs, min_hypot=0, min_theta=-pi, max_theta=pi, min_ratio=0,
         ik_ys = dxs[i,:] * _sin(-ij_theta) + dys[i,:] * _cos(-ij_theta)
         
         ik_thetas = arctan2(ik_ys, ik_xs)
+
+        ik_thetas = [(blobs[k].size, k, theta) for (k, theta) in enumerate(ik_thetas)]
+        ik_thetas.sort(reverse=True)
         
         #
         # check each blob[k] for correct distance ratio
         #
-        for (k, theta) in enumerate(ik_thetas):
+        for (size, k, theta) in ik_thetas:
             ratio = distances[i,k] / distances[i,j]
             
             if theta < min_theta or max_theta < theta:
