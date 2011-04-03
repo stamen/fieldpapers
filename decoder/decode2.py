@@ -448,10 +448,6 @@ def main(apibase, password, scan_id, url):
 
         print >> stderr, paper, orientation, '--', s2p
         
-        draw_postblobs(postblob_img, blobs_abcde)
-        _append_image('postblob.jpg', postblob_img)
-        postblob_img.save('postblob.jpg')
-        
         qrcode_img = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
         _append_image('qrcode.png', qrcode_img)
         qrcode_img.save('qrcode.png')
@@ -463,6 +459,7 @@ def main(apibase, password, scan_id, url):
         try:
             print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
         except CodeReadException:
+            print >> stderr, 'could not read the code'
             continue
 
         if (_paper, _orientation) != (paper, orientation):
@@ -470,6 +467,10 @@ def main(apibase, password, scan_id, url):
         
         _update_step(5)
 
+        draw_postblobs(postblob_img, blobs_abcde)
+        _append_image('postblob.jpg', postblob_img)
+        postblob_img.save('postblob.jpg')
+        
         print >> stderr, 'tiles...',
         
         minrow, mincol, minzoom = 2**20, 2**20, 20
