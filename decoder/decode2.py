@@ -7,6 +7,7 @@ from xml.etree import ElementTree
 from urlparse import urlparse
 from tempfile import mkstemp
 from urllib import urlopen
+from random import random
 from math import hypot
 from glob import glob
 
@@ -240,44 +241,54 @@ def _blob_matches_secondary(blobs, aed_match):
 def read_code(image):
     """
     """
-    decode = 'java', '-classpath', ':'.join(glob(pathjoin(dirname(__file__), 'lib/*.jar'))), 'qrdecode'
-    decode = Popen(decode, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    jit = lambda: .2 * (random() - .5)
+    original = image
     
-    image.save(decode.stdin, 'PNG')
-    decode.stdin.close()
-    decode.wait()
-    
-    decoded = decode.stdout.read().strip()
-    
-    if decoded.startswith('http://'):
-    
-        html = ElementTree.parse(urlopen(decoded))
+    for attempt in range(10):
+        decode = 'java', '-classpath', ':'.join(glob(pathjoin(dirname(__file__), 'lib/*.jar'))), 'qrdecode'
+        decode = Popen(decode, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         
-        print_id, paper, orientation = None, None, None
-        north, west, south, east = None, None, None, None
+        image.save(decode.stdin, 'PNG')
+        decode.stdin.close()
+        decode.wait()
         
-        for span in html.findall('body/span'):
-            if span.get('id') == 'print-info':
-                for subspan in span.findall('span'):
-                    if subspan.get('class') == 'print':
-                        print_id = subspan.text
-                    elif subspan.get('class') == 'north':
-                        north = float(subspan.text)
-                    elif subspan.get('class') == 'south':
-                        south = float(subspan.text)
-                    elif subspan.get('class') == 'east':
-                        east = float(subspan.text)
-                    elif subspan.get('class') == 'west':
-                        west = float(subspan.text)
-                    elif subspan.get('class') == 'paper-size':
-                        paper = subspan.text
-                    elif subspan.get('class') == 'orientation':
-                        orientation = subspan.text
+        decoded = decode.stdout.read().strip()
+        
+        if decoded.startswith('http://'):
+            break
+        
+        matrix = (1 + jit(), jit(), jit(), jit(), 1 + jit(), jit())
+        image = original.transform(image.size, Image.AFFINE, matrix, Image.BICUBIC)
+        
+        print >> stderr, 'jittering QR code image by %.2f, %.2f, %.2f, %.2f, %.2f, %.2f' % matrix
     
-        return print_id, north, west, south, east, paper, orientation
-
-    else:
+    if not decoded.startswith('http://'):
         raise CodeReadException('Attempt to read QR code failed')
+    
+    html = ElementTree.parse(urlopen(decoded))
+    
+    print_id, paper, orientation = None, None, None
+    north, west, south, east = None, None, None, None
+    
+    for span in html.findall('body/span'):
+        if span.get('id') == 'print-info':
+            for subspan in span.findall('span'):
+                if subspan.get('class') == 'print':
+                    print_id = subspan.text
+                elif subspan.get('class') == 'north':
+                    north = float(subspan.text)
+                elif subspan.get('class') == 'south':
+                    south = float(subspan.text)
+                elif subspan.get('class') == 'east':
+                    east = float(subspan.text)
+                elif subspan.get('class') == 'west':
+                    west = float(subspan.text)
+                elif subspan.get('class') == 'paper-size':
+                    paper = subspan.text
+                elif subspan.get('class') == 'orientation':
+                    orientation = subspan.text
+
+    return print_id, north, west, south, east, paper, orientation
 
 def get_paper_size(paper, orientation):
     """
@@ -459,7 +470,7 @@ def main(apibase, password, scan_id, url):
         try:
             print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
         except CodeReadException:
-            print >> stderr, 'could not read the code'
+            print >> stderr, 'could not read the QR code.'
             continue
 
         if (_paper, _orientation) != (paper, orientation):
