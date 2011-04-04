@@ -376,7 +376,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                 
                 yield 60
                 
-                add_print_page(print_surface, sub_mmap, sub_href, map_bounds_pt, point_E, hm2pt_ratio)
+                add_print_page(print_surface, sub_mmap, sub_href, map_bounds_pt, points_FG, hm2pt_ratio)
         
                 #
                 # Prepare preview image
