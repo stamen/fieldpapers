@@ -18,6 +18,7 @@
     
     $scan_id = $_POST['scan'] ? $_POST['scan'] : null;
     $step_number = is_numeric($_POST['step']) ? $_POST['step'] : null;
+    $_extras = $_POST['extras'] ? $_POST['extras'] : null;
 
     /**** ... ****/
     
@@ -40,8 +41,37 @@
             echo "Too many errors\n"; // this is magic text! TODO: remove this responsibility from decode.py
 
         } else {
-            add_log($dbh, "Adding step {$step_number} to scan {$scan_id}");
-            add_step($dbh, $scan_id, $step_number);
+            if($step_number == STEP_BAD_QRCODE)
+            {
+                $step_number = STEP_FATAL_QRCODE_ERROR;
+            
+                add_log($dbh, "Adding step {$step_number} to scan {$scan_id}");
+                add_step($dbh, $scan_id, $step_number);
+                
+                add_log($dbh, "Adding decoding extras to scan {$scan_id}");
+
+                $extras = json_decode($_extras, true);
+            
+                if(is_null($extras) || PEAR::isError($extras))
+                {
+                    add_log($dbh, "Failed to parse extras for scan {$scan_id}: {$_extras}");
+                    die_with_code(400, "Failed to parse extras as JSON\n");
+                }
+                
+                $scan = array('id' => $scan_id, 'decoding_json' => $_extras);
+                $scan = set_scan($dbh, $scan);
+                
+                if(!$scan)
+                {
+                    add_log($dbh, "Failed to add extras to scan {$scan_id}");
+                    die_with_code(400, "Failed to add extras\n");
+                }
+
+            } else {
+                add_log($dbh, "Adding step {$step_number} to scan {$scan_id}");
+                add_step($dbh, $scan_id, $step_number);
+            }
+            
             echo "OK\n";
         }
         

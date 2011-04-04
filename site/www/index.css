@@ -33,3 +33,119 @@
     top: 24px;
     left: 24px;
 }
+    
+    #atlas-pages .divider
+    {
+        position: absolute;
+        background-color: white;
+        display: none;
+    }
+    
+    /* 100% */
+    
+    .sheet #atlas-pages .divider { width: 360px; height: 456px; }
+    
+    .sheet.a4 #atlas-pages .divider { height: 505px; }
+    .sheet.a3 #atlas-pages .divider { height: 506px; }
+    
+    .sheet.landscape #atlas-pages .divider { width: 480px; }
+    .sheet.landscape #atlas-pages .divider { height: 336px; }
+    
+    .sheet.landscape.a4 #atlas-pages .divider { height: 304px; }
+    .sheet.landscape.a3 #atlas-pages .divider { height: 315px; }
+    
+    /* 2x2 */
+    
+    .sheet #atlas-pages.four-up .divider.row-1
+    {
+        height: 8px;
+        margin-top: -4px;
+        top: 228px;
+        display: block;
+    }
+    
+    .sheet #atlas-pages.four-up .divider.col-1
+    {
+        width: 8px;
+        margin-left: -4px;
+        left: 180px;
+        display: block;
+    }
+    
+    /* adjust for different paper sizes */
+    
+    .sheet.a4 #atlas-pages.four-up .divider.row-1 { top: 252px; }
+    .sheet.a3 #atlas-pages.four-up .divider.row-1 { top: 253px; }
+    
+    .sheet.a4 #atlas-pages.four-up .divider.col-1 { height: 505px; }
+    .sheet.a3 #atlas-pages.four-up .divider.col-1 { height: 506px; }
+    
+    /* switch orientation */
+    
+    .sheet.landscape #atlas-pages.four-up .divider.row-1 { top: 168px; }
+    .sheet.landscape #atlas-pages.four-up .divider.col-1 { left: 240px; }
+    
+    /* adjust for different paper sizes */
+    
+    .sheet.landscape.a4 #atlas-pages.four-up .divider.row-1 { top: 152px; }
+    .sheet.landscape.a3 #atlas-pages.four-up .divider.row-1 { top: 158px; }
+    
+    /* 4x4 */
+    
+    .sheet #atlas-pages.sixteen-up .divider.row-1,
+    .sheet #atlas-pages.sixteen-up .divider.row-2,
+    .sheet #atlas-pages.sixteen-up .divider.row-3
+    {
+        height: 4px;
+        margin-top: -2px;
+        display: block;
+    }
+    
+    .sheet #atlas-pages.sixteen-up .divider.col-1,
+    .sheet #atlas-pages.sixteen-up .divider.col-2,
+    .sheet #atlas-pages.sixteen-up .divider.col-3
+    {
+        width: 4px;
+        margin-left: -2px;
+        display: block;
+    }
+    
+    /* position dividers */
+    
+    .sheet #atlas-pages.sixteen-up .divider.row-1 { top: 114px; }
+    .sheet #atlas-pages.sixteen-up .divider.row-2 { top: 228px; }
+    .sheet #atlas-pages.sixteen-up .divider.row-3 { top: 342px; }
+    
+    .sheet #atlas-pages.sixteen-up .divider.col-1 { left:  90px; }
+    .sheet #atlas-pages.sixteen-up .divider.col-2 { left: 180px; }
+    .sheet #atlas-pages.sixteen-up .divider.col-3 { left: 270px; }
+
+    /* adjust for different paper sizes */
+    
+    .sheet.a4 #atlas-pages.sixteen-up .divider.row-1 { top: 126px; }
+    .sheet.a4 #atlas-pages.sixteen-up .divider.row-2 { top: 252px; }
+    .sheet.a4 #atlas-pages.sixteen-up .divider.row-3 { top: 379px; }
+
+    .sheet.a3 #atlas-pages.sixteen-up .divider.row-1 { top: 126px; }
+    .sheet.a3 #atlas-pages.sixteen-up .divider.row-2 { top: 253px; }
+    .sheet.a3 #atlas-pages.sixteen-up .divider.row-3 { top: 380px; }
+    
+    /* switch orientation */
+    
+    .sheet.landscape #atlas-pages.sixteen-up .divider.row-1 { top:  84px; }
+    .sheet.landscape #atlas-pages.sixteen-up .divider.row-2 { top: 168px; }
+    .sheet.landscape #atlas-pages.sixteen-up .divider.row-3 { top: 252px; }
+    
+    .sheet.landscape #atlas-pages.sixteen-up .divider.col-1 { left: 120px; }
+    .sheet.landscape #atlas-pages.sixteen-up .divider.col-2 { left: 240px; }
+    .sheet.landscape #atlas-pages.sixteen-up .divider.col-3 { left: 360px; }
+    
+    /* adjust for different paper sizes */
+    
+    .sheet.landscape.a4 #atlas-pages.sixteen-up .divider.row-1 { top:  76px; }
+    .sheet.landscape.a4 #atlas-pages.sixteen-up .divider.row-2 { top: 152px; }
+    .sheet.landscape.a4 #atlas-pages.sixteen-up .divider.row-3 { top: 228px; }
+    
+    .sheet.landscape.a3 #atlas-pages.sixteen-up .divider.row-1 { top:  79px; }
+    .sheet.landscape.a3 #atlas-pages.sixteen-up .divider.row-2 { top: 158px; }
+    .sheet.landscape.a3 #atlas-pages.sixteen-up .divider.row-3 { top: 237px; }

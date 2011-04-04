@@ -100,13 +100,14 @@ if __name__ == '__main__':
                     msg = json.loads(content)
                     
                 except ValueError:
-                    # JSON parse failed so it's likely we've got an old scan to do.
+                    # JSON parse failed so it's likely we've got a scan to do.
+                    # This is legacy behavior - all messages are now JSON.
 
                     if content.startswith('http://'):
                         url = content.strip()
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                        progress = decode.main(url, getMarkers(), apibase, password)
+                        progress = decode.main(None, url, getMarkers(), apibase, password, None, True)
 
                     else:
                         raise Exception('Not sure what to do with this message: ' + content)
@@ -135,6 +136,28 @@ if __name__ == '__main__':
     
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
                         progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
+
+                    elif False:
+                        #
+                        # Decode a scan -- use old decode.main(),
+                        # TODO: make this reachable.
+                        #
+                        scan_id = msg['scan_id']
+                        image_url = msg['image_url']
+                        
+                        kwargs = {'qrcode_contents': msg.get('qrcode_contents', None)}
+                        
+                        if 'markers' in msg:
+                            kwargs['do_sifting'] = False
+                            markers = [(str(name), xy) for (name, xy) in msg['markers'].items()]
+                            markers = [(n, decode.Minimarker(xy['x'], xy['y'])) for (n, xy) in markers]
+                            markers = dict(markers)
+                        else:
+                            kwargs['do_sifting'] = True
+                            markers = getMarkers()
+                        
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', scan_id
+                        progress = decode.main(scan_id, image_url, markers, apibase, password, **kwargs)
                 
                 for timeout in progress:
                     # push back the message in time

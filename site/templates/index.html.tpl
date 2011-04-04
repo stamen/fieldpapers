@@ -148,7 +148,14 @@
             <area shape="rect" alt="up" coords="14,0,28,13" href="javascript:map.panUp()">
             <area shape="rect" alt="left" coords="0,21,13,35" href="javascript:map.panLeft()">
         </map>
-        <img id="atlas-pages" src="{$base_dir}/img/portrait-letter-1,1.png"/>
+        <div id="atlas-pages">
+            <div class="row-1 divider"></div>
+            <div class="row-2 divider"></div>
+            <div class="row-3 divider"></div>
+            <div class="col-1 divider"></div>
+            <div class="col-2 divider"></div>
+            <div class="col-3 divider"></div>
+        </div>
         <div class="dog-ear"> </div>
         <div id="zoom-warning" style="display: none;">
             {if $language == "de"}
@@ -164,11 +171,11 @@
             {elseif $language == "ja"}
                 ズームレベル<b>14以上</b>が、街路レベルのマッピングには推奨されます。
             {elseif $language == "tr"}
-				Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
+				    Sokak seviyesinde haritalamak için <b>en az 14</b> zum düzey tavsiye edilmiştir.
             {elseif $language == "ru"}
-				Для картирования на уровне улиц рекомендуется масштабный уровень <b>14 или крупнее</b>.
+				    Для картирования на уровне улиц рекомендуется масштабный уровень <b>14 или крупнее</b>.
             {elseif $language == "sv"}
-				En zoom-nivå på <b>14 eller mer</b> är rekommenderat för kartläggning på gatunivå.
+				    En zoom-nivå på <b>14 eller mer</b> är rekommenderat för kartläggning på gatunivå.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -268,15 +275,21 @@
             map.parent.style.width = parseInt(map.dimensions.x) + 'px';
             map.parent.style.height = parseInt(map.dimensions.y) + 'px';
             map.draw();
-            
-            var atlas_pages = document.getElementById('atlas-pages');
-            atlas_pages.src = atlas_pages.src.replace(/\b(portrait|landscape)-(letter|a4|a3)\b/, paper);
         }
         
         function setLayout(layout)
         {
             var atlas_pages = document.getElementById('atlas-pages');
-            atlas_pages.src = atlas_pages.src.replace(/\b\d+,\d+\b/, layout);
+
+            if(layout == '4,4') {
+                atlas_pages.className = 'sixteen-up';
+            
+            } else if(layout == '2,2') {
+                atlas_pages.className = 'four-up';
+            
+            } else {
+                atlas_pages.className = 'one-up';
+            }
         }
         
         // {/literal}
@@ -453,8 +466,13 @@
         <p>
             {* TRANSLATION NEEDED *}
             Layout:
-            {assign var="label_single" value="page"}
-            {assign var="label_plural" value="pages"}
+            {if $language == "de"}
+                {assign var="label_single" value="Seite"}
+                {assign var="label_plural" value="Seiten"}
+            {else}
+                {assign var="label_single" value="page"}
+                {assign var="label_plural" value="pages"}
+            {/if}
             
             <label><input name="layout" type="radio" value="1,1" onchange="setLayout(this.value);" checked="checked" /> 1 {$label_single}</label>
             <label><input name="layout" type="radio" value="2,2" onchange="setLayout(this.value);" /> 4 {$label_plural} (2×2)</label>
