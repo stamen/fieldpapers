@@ -39,10 +39,10 @@
             
                             <script type="text/javascript" language="javascript1.2" defer="defer">
                             // <![CDATA[
-                            
-                                var onPlaces_{$scan.id|escape} = new Function('res', "appendPlacename(res, document.getElementById('scan-{$scan.id|escape}'))");
-                                getPlacename({$scan.print_latitude|escape}, {$scan.print_longitude|escape}, '{$constants.FLICKR_KEY|escape}', 'onPlaces_{$scan.id|escape}');
-                        
+                                {if $scan.print.latitude && $scan.print.longitude}
+                                    var onPlaces_{$scan.id|escape} = new Function('res', "appendPlacename(res, document.getElementById('scan-{$scan.id|escape}'))");
+                                    getPlacename({$scan.print_latitude|escape}, {$scan.print_longitude|escape}, '{$constants.FLICKR_KEY|escape}', 'onPlaces_{$scan.id|escape}');
+                                {/if}
                             // ]]>
                             </script>
                         {/if}
