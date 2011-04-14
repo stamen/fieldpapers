@@ -51,7 +51,6 @@
     
     if($scan)
     {
-        $step = get_step($dbh, $scan['id']);
         $print = get_print($dbh, $scan['print_id']);
     }
 

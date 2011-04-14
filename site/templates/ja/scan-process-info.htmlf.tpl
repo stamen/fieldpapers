@@ -1,6 +1,6 @@
-{if $step.number == $constants.STEP_FATAL_ERROR || $step.number == $constants.STEP_FATAL_QRCODE_ERROR}
+{if $scan.last_step == $constants.STEP_FATAL_ERROR || $scan.last_step == $constants.STEP_FATAL_QRCODE_ERROR}
     <p>
-        {$step.number|step_description|escape}, giving up.
+        {$scan.last_step|step_description|escape}, giving up.
     </p>
     <p>
         あなたは、スキャナーしなおしてアップロードしようとすると思います。
@@ -11,7 +11,7 @@
         <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">私たちにお知らせください</a>.
     </p>
     
-    {if $step.number == $constants.STEP_FATAL_QRCODE_ERROR}
+    {if $scan.last_step == $constants.STEP_FATAL_QRCODE_ERROR}
         <p>
             Here’s the part of your scan where we tried to find a code:
         </p>
@@ -29,22 +29,22 @@
     </p>
 
     <ol class="steps">
-        <li class="{if $step.number == 0}on{/if}">{0|step_description|escape}</li>
-        <li class="{if $step.number == 1}on{/if}">{1|step_description|escape}</li>
-        <li class="{if $step.number == 2}on{/if}">{2|step_description|escape}</li>
-        <li class="{if $step.number == 3}on{/if}">{3|step_description|escape}</li>
-        <li class="{if $step.number == 4}on{/if}">{4|step_description|escape}</li>
-        <li class="{if $step.number == 5}on{/if}">{5|step_description|escape}</li>
-        <li class="{if $step.number == 6}on{/if}">{6|step_description|escape}</li>
+        <li class="{if $scan.last_step == 0}on{/if}">{0|step_description|escape}</li>
+        <li class="{if $scan.last_step == 1}on{/if}">{1|step_description|escape}</li>
+        <li class="{if $scan.last_step == 2}on{/if}">{2|step_description|escape}</li>
+        <li class="{if $scan.last_step == 3}on{/if}">{3|step_description|escape}</li>
+        <li class="{if $scan.last_step == 4}on{/if}">{4|step_description|escape}</li>
+        <li class="{if $scan.last_step == 5}on{/if}">{5|step_description|escape}</li>
+        <li class="{if $scan.last_step == 6}on{/if}">{6|step_description|escape}</li>
     </ol>
 
-    {if $step.number >= 7}
+    {if $scan.last_step >= 7}
         <p>
-            {$step.number|step_description|escape}, please stand by.
+            {$scan.last_step|step_description|escape}, please stand by.
             We will try to process your scan again shortly.
         </p>
         
-        {if $step.number == $constants.STEP_BAD_QRCODE}
+        {if $scan.last_step == $constants.STEP_BAD_QRCODE}
             <p>
                 Here’s the part of your scan where we tried to find a code:
             </p>
