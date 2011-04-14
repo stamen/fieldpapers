@@ -418,7 +418,7 @@ def draw_postblobs(postblob_img, blobs_abcde):
     draw.line((blob_D.x, blob_D.y, blob_E.x, blob_E.y), fill=(0x99, 0x00, 0x00))
     draw.line((blob_E.x, blob_E.y, blob_A.x, blob_A.y), fill=(0x99, 0x00, 0x00))
 
-def main(apibase, password, scan_id, url):
+def main(apibase, password, scan_id, url, old_decode_markers):
     """
     """
     yield 30
@@ -537,7 +537,16 @@ def main(apibase, password, scan_id, url):
     #
     # If we got this far, it means nothing was detected in the image.
     #
-    _update_step(STEP_FATAL_ERROR)
+    print >> stderr, '--old--' * 12
+    
+    from decode import main as old_decode_main
+    secondary_progress = old_decode_main(scan_id, url, old_decode_markers, apibase, password, None, True)
+    
+    try:
+        for timeout in secondary_progress:
+            yield timeout
+    except Exception, e:
+        print 'except', e
 
 if __name__ == '__main__':
 

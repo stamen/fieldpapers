@@ -120,7 +120,7 @@ if __name__ == '__main__':
                         url = msg['url']
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
-                        progress = decode2.main(apibase, password, msg['scan_id'], url)
+                        progress = decode2.main(apibase, password, msg['scan_id'], url, getMarkers())
                     
                     elif action == 'compose':
                         kwargs = {'paper_size': msg['paper_size']}
@@ -163,8 +163,8 @@ if __name__ == '__main__':
                     # push back the message in time
                     updateQueue(apibase, password, message_id, timeout)
 
-                # clean out the queue message
-                updateQueue(apibase, password, message_id, False)
+                ## clean out the queue message
+                #updateQueue(apibase, password, message_id, False)
 
         except KeyboardInterrupt:
             raise
