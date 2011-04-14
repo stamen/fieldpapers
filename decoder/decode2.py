@@ -30,6 +30,19 @@ from matrixmath import Transform, quad2quad, triangle2triangle
 from imagemath import imgblobs, extract_image
 from dimensions import ptpin
 
+# these must match site/lib/data.php
+STEP_UPLOADING = 0
+STEP_QUEUED = 1
+STEP_SIFTING = 2
+STEP_FINDING_NEEDLES = 3
+STEP_READING_QR_CODE = 4
+STEP_TILING_UPLOADING = 5
+STEP_FINISHED = 6
+STEP_BAD_QRCODE = 98
+STEP_ERROR = 99
+STEP_FATAL_ERROR = 100
+STEP_FATAL_QRCODE_ERROR = 101
+
 class CodeReadException(Exception):
     pass
 
@@ -433,7 +446,7 @@ def main(apibase, password, scan_id, url):
     handle, postblob_filename = mkstemp(prefix='postblob-', suffix='.png')
     close(handle)
     
-    _update_step(2)
+    _update_step(STEP_SIFTING)
 
     input = Image.open(StringIO(urlopen(url).read()))
     blobs = imgblobs(input, highpass_filename, preblobs_filename, postblob_filename)
@@ -451,7 +464,7 @@ def main(apibase, password, scan_id, url):
     rename(preblobs_filename, 'preblobs.jpg')
     unlink(postblob_filename)
     
-    _update_step(3)
+    _update_step(STEP_FINDING_NEEDLES)
 
     for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
 
@@ -465,7 +478,7 @@ def main(apibase, password, scan_id, url):
         
         yield 10
 
-        _update_step(4)
+        _update_step(STEP_READING_QR_CODE)
 
         try:
             print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
@@ -476,7 +489,7 @@ def main(apibase, password, scan_id, url):
         if (_paper, _orientation) != (paper, orientation):
             continue
         
-        _update_step(5)
+        _update_step(STEP_TILING_UPLOADING)
 
         draw_postblobs(postblob_img, blobs_abcde)
         _append_image('postblob.jpg', postblob_img)
@@ -515,11 +528,16 @@ def main(apibase, password, scan_id, url):
         
         update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord)
 
-        _update_step(6)
+        _update_step(STEP_FINISHED)
         
         yield 5
         
         return
+    
+    #
+    # If we got this far, it means nothing was detected in the image.
+    #
+    _update_step(STEP_FATAL_ERROR)
 
 if __name__ == '__main__':
 
