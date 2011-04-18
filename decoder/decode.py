@@ -24,7 +24,6 @@ import matchup
 
 from apiutils import ALL_FINISHED
 
-sys.path.append('ModestMaps')
 import ModestMaps
 
 # these must match site/lib/data.php
