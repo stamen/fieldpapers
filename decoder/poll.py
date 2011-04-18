@@ -9,7 +9,11 @@ import os.path
 import datetime
 import urlparse
 import optparse
-import decode, compose2, decode2
+
+import compose2, decode2
+from apiutils import ALL_FINISHED
+
+from decode import Marker
 
 parser = optparse.OptionParser(usage="""poll.py [options]
 """)
@@ -29,9 +33,9 @@ def getMarkers():
     basepath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'corners')
 
     for basename in ('Header', 'Hand', 'CCBYSA'):
-        markers[basename] = decode.Marker(os.path.join(basepath, basename))
+        markers[basename] = Marker(os.path.join(basepath, basename))
 
-    markers['Sticker'] = decode.Marker(os.path.join(basepath, 'mrs-star'))
+    markers['Sticker'] = Marker(os.path.join(basepath, 'mrs-star'))
     
     return markers
 
@@ -43,7 +47,7 @@ def updateQueue(apibase, password, message_id, timeout):
 
     params = {'id': message_id, 'password': password}
 
-    if timeout is False:
+    if timeout == ALL_FINISHED:
         params['delete'] = 'yes'
     else:
         params['timeout'] = timeout
@@ -100,17 +104,8 @@ if __name__ == '__main__':
                     msg = json.loads(content)
                     
                 except ValueError:
-                    # JSON parse failed so it's likely we've got a scan to do.
-                    # This is legacy behavior - all messages are now JSON.
-
-                    if content.startswith('http://'):
-                        url = content.strip()
-
-                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '-', url
-                        progress = decode.main(None, url, getMarkers(), apibase, password, None, True)
-
-                    else:
-                        raise Exception('Not sure what to do with this message: ' + content)
+                    # who knows
+                    raise Exception('Not sure what to do with this message: ' + content)
 
                 else:
                     # JSON parse succeeded so we'll determine if there's a print or scan here.
@@ -136,28 +131,6 @@ if __name__ == '__main__':
     
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
                         progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
-
-                    elif False:
-                        #
-                        # Decode a scan -- use old decode.main(),
-                        # TODO: make this reachable.
-                        #
-                        scan_id = msg['scan_id']
-                        image_url = msg['image_url']
-                        
-                        kwargs = {'qrcode_contents': msg.get('qrcode_contents', None)}
-                        
-                        if 'markers' in msg:
-                            kwargs['do_sifting'] = False
-                            markers = [(str(name), xy) for (name, xy) in msg['markers'].items()]
-                            markers = [(n, decode.Minimarker(xy['x'], xy['y'])) for (n, xy) in markers]
-                            markers = dict(markers)
-                        else:
-                            kwargs['do_sifting'] = True
-                            markers = getMarkers()
-                        
-                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', scan_id
-                        progress = decode.main(scan_id, image_url, markers, apibase, password, **kwargs)
                 
                 for timeout in progress:
                     # push back the message in time

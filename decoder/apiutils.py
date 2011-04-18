@@ -6,6 +6,9 @@ from httplib import HTTPConnection
 from xml.etree import ElementTree
 from mimetypes import guess_type
 
+# yield this value from decode and compose main() in lieu of a timeout
+ALL_FINISHED = -1
+
 def finish_print(apibase, password, print_id, pdf_url, preview_url, print_data):
     """
     """
@@ -47,9 +50,6 @@ def update_step(apibase, password, scan_id, step_number):
     res = req.getresponse()
     
     assert res.status == 200, 'POST to step.php %s/%d resulting in status %s instead of 200' % (scan_id, step_number, res.status)
-    
-    if res.read().strip() == 'Too many errors':
-        raise UpdateScanException('Server says bugger off')
     
     return
 

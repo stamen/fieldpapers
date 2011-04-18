@@ -22,6 +22,8 @@ import PIL.Image
 import PIL.ImageFilter
 import matchup
 
+from apiutils import ALL_FINISHED
+
 sys.path.append('ModestMaps')
 import ModestMaps
 
@@ -243,7 +245,7 @@ def main(scan_id, url, markers, apibase, password, qrcode_contents, do_sifting):
         updateScan(apibase, password, scan_id, uploaded_file, print_id, bool(stickers), topleft.zoomTo(min_zoom), bottomright.zoomTo(max_zoom))
         updateStepLocal(STEP_FINISHED, None)
 
-        yield False
+        yield ALL_FINISHED
 
     except CodeReadException:
         print 'Failed QR code, maybe will try again?'
@@ -253,14 +255,11 @@ def main(scan_id, url, markers, apibase, password, qrcode_contents, do_sifting):
         extras = {'image_url': url, 'markers': dict(extras)}
         updateStepLocal(STEP_BAD_QRCODE, json.dumps(extras))
         
-        # False, so that the current queue message can be appropriately deleted.
-        # It will get replaced with another future message with hand-entered
-        # QR code contents.
-        yield False
+        yield ALL_FINISHED
     
     except UpdateScanException:
         print 'Giving up after many scan update attempts'
-        yield False
+        yield ALL_FINISHED
     
     except KeyboardInterrupt, e:
         yield 1

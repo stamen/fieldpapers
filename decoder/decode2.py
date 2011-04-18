@@ -24,7 +24,7 @@ from ModestMaps.Geo import Location
 from ModestMaps.Core import Point, Coordinate
 from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
 
-from apiutils import append_scan_file, update_scan, update_step
+from apiutils import append_scan_file, update_scan, update_step, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from matrixmath import Transform, quad2quad, triangle2triangle
 from imagemath import imgblobs, extract_image
@@ -530,7 +530,7 @@ def main(apibase, password, scan_id, url, old_decode_markers):
 
         _update_step(STEP_FINISHED)
         
-        yield 5
+        yield ALL_FINISHED
         
         return
     

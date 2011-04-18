@@ -19,6 +19,7 @@ import osgeo.gdal as gdal
 import PIL.Image as Image
 import PIL.ImageStat as ImageStat
 
+from apiutils import ALL_FINISHED
 import ModestMaps as mm
 
 srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
@@ -168,7 +169,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
 
     else:
         print 'Missing orientation, bounds, zoom, provider, layout and geotiff_url'
-        yield False
+        yield ALL_FINISHED
         return
     
     yield 10
@@ -180,7 +181,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     print '-' * 80
     
-    yield False
+    yield ALL_FINISHED
 
 def get_mmap_page(mmap, row, col, rows, cols):
     """ Get a mmap instance for a sub-page in an atlas layout.

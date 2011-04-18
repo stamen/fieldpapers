@@ -20,7 +20,7 @@ from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
-from apiutils import append_print_file, finish_print
+from apiutils import append_print_file, finish_print, ALL_FINISHED
 
 def get_qrcode_image(content):
     """ Render a QR code to an ImageSurface.
@@ -417,7 +417,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     rename(print_filename, 'out.pdf')
     
-    yield 5
+    yield ALL_FINISHED
 
 if __name__ == '__main__':
 
