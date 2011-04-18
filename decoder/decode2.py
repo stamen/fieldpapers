@@ -546,7 +546,10 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         for timeout in secondary_progress:
             yield timeout
     except Exception, e:
-        print 'except', e
+        print 'Exception in decode.main, giving up:', e
+
+        _update_step(STEP_FATAL_ERROR)
+        yield ALL_FINISHED
 
 if __name__ == '__main__':
 
