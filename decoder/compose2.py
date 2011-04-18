@@ -3,12 +3,12 @@ from math import log
 from itertools import product
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname
+from urlparse import urljoin, urlparse, parse_qs
 from os import close, write, unlink, rename
 from json import dumps as json_encode
 from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
-from urlparse import urljoin
 
 from ModestMaps import Map, mapByExtentZoom, mapByCenterZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
@@ -22,16 +22,16 @@ from svgutils import create_cairo_font_face_for_file, place_image, draw_box, dra
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print, ALL_FINISHED
 
-def get_qrcode_image(content):
+def get_qrcode_image(print_href):
     """ Render a QR code to an ImageSurface.
     """
-    # http://chart.apis.google.com/chart?chs=264x264&cht=qr&chld=Q|0&chl=http://walkingpapers.org/print.php?id=abcdefgh
+    scheme, host, path, p, query, f = urlparse(print_href)
+
+    print_path = scheme + '://' + host + path
+    print_id = parse_qs(query).get('id', [''])[0]
     
-    if content is None:
-        content = 'http://example.com'
-    
-    q = {'chs': '528x528', 'cht': 'qr', 'chld': 'Q|0', 'chl': content}
-    u = 'http://chart.apis.google.com/chart?' + urlencode(q)
+    q = {'print': print_id}
+    u = urljoin(print_path, 'code.php') + '?' + urlencode(q)
     
     handle, filename = mkstemp(suffix='.png')
 
