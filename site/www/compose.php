@@ -36,7 +36,7 @@
     {
         case 'utm':
         case 'mgrs':
-            $provider .= sprintf(",http://osm.stamen.com/gridtile/tilecache.cgi/1.0/%s/{Z}/{X}/{Y}.png", strtolower($_POST['grid']));
+            $provider .= sprintf(",http://tiles.teczno.com/%s/{Z}/{X}/{Y}.png", strtolower($_POST['grid']));
     }
     
     $dbh =& get_db_connection();
