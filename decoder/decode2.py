@@ -24,6 +24,7 @@ from ModestMaps.Geo import Location
 from ModestMaps.Core import Point, Coordinate
 from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
 
+from geoutils import generate_geotiff
 from apiutils import append_scan_file, update_scan, update_step, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from matrixmath import Transform, quad2quad, triangle2triangle
@@ -495,6 +496,15 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         _append_image('postblob.jpg', postblob_img)
         postblob_img.save('postblob.jpg')
         
+        print >> stderr, 'geotiff...',
+        
+        paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
+        geotiff_args = paper_width_pt, paper_height_pt, north, west, south, east
+        geotiff_bytes = generate_geotiff(input, s2p.inverse(), *geotiff_args)
+        
+        _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
+        
+        print >> stderr, 'done.'
         print >> stderr, 'tiles...',
         
         minrow, mincol, minzoom = 2**20, 2**20, 20
@@ -513,8 +523,8 @@ def main(apibase, password, scan_id, url, old_decode_markers):
             maxcol = max(maxcol, coord.column)
             maxzoom = max(minzoom, coord.zoom)
         
-        print >> stderr, '...tiles.'
-        
+        print >> stderr, '...done.'
+
         preview_img = input.copy()
         preview_img.thumbnail((409, 280), Image.ANTIALIAS)
         _append_image('preview.jpg', preview_img)
