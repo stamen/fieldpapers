@@ -8,7 +8,6 @@ from urlparse import urlparse
 from tempfile import mkstemp
 from urllib import urlopen
 from random import random
-from math import hypot
 from glob import glob
 
 try:
@@ -20,15 +19,13 @@ else:
     from PIL import Image
     from PIL.ImageDraw import ImageDraw
 
-from ModestMaps.Geo import Location
 from ModestMaps.Core import Point, Coordinate
-from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
 
-from geoutils import generate_geotiff
+from geoutils import create_geotiff, generate_tiles
 from apiutils import append_scan_file, update_scan, update_step, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
-from matrixmath import Transform, quad2quad, triangle2triangle
 from imagemath import imgblobs, extract_image
+from matrixmath import Transform, quad2quad
 from dimensions import ptpin
 
 # these must match site/lib/data.php
@@ -332,78 +329,6 @@ def get_paper_size(paper, orientation):
     
     return paper_width_pt, paper_height_pt
 
-def generate_tiles(image, s2p, paper, orientation, north, west, south, east):
-    """ Placeholder for now.
-    """
-    osm = OpenStreetMapProvider()
-    
-    paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
-    
-    for zoom in range(19):
-        #
-        # Coordinates of three print corners
-        #
-        
-        ul = osm.locationCoordinate(Location(north, west)).zoomTo(zoom)
-        ur = osm.locationCoordinate(Location(north, east)).zoomTo(zoom)
-        lr = osm.locationCoordinate(Location(south, east)).zoomTo(zoom)
-        
-        #
-        # Matching points in print and coordinate spaces
-        #
-        
-        ul_pt = Point(1 * ptpin - paper_width_pt, 1.5 * ptpin - paper_height_pt)
-        ul_co = Point(ul.column, ul.row)
-    
-        ur_pt = Point(0, 1.5 * ptpin - paper_height_pt)
-        ur_co = Point(ur.column, ur.row)
-    
-        lr_pt = Point(0, 0)
-        lr_co = Point(lr.column, lr.row)
-        
-        scan_dim = hypot(image.size[0], image.size[1])
-        zoom_dim = hypot((lr_co.x - ul_co.x) * 256, (lr_co.y - ul_co.y) * 256)
-        
-        if zoom_dim/scan_dim < .1:
-            # too zoomed-out
-            continue
-        
-        if zoom_dim/scan_dim > 3.:
-            # too zoomed-in
-            break
-        
-        #
-        # scan2coord by way of scan2print and print2coord
-        #
-
-        p2c = triangle2triangle(ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co)
-        s2c = s2p.multiply(p2c)
-        
-        for (coord, tile_img) in generate_tiles_for_zoom(image, s2c, zoom):
-            yield (coord, tile_img)
-    
-def generate_tiles_for_zoom(image, scan2coord, zoom):
-    """ Yield a stream of coordinates and tile images for a given zoom level.
-    """
-    ul = scan2coord(Point(0, 0))
-    ur = scan2coord(Point(image.size[0], 0))
-    lr = scan2coord(Point(*image.size))
-    ll = scan2coord(Point(0, image.size[1]))
-    
-    minrow = min(ul.y, ur.y, lr.y, ll.y)
-    maxrow = max(ul.y, ur.y, lr.y, ll.y)
-    mincol = min(ul.x, ur.x, lr.x, ll.x)
-    maxcol = max(ul.x, ur.x, lr.x, ll.x)
-    
-    for row in range(int(minrow), int(maxrow) + 1):
-        for col in range(int(mincol), int(maxcol) + 1):
-            
-            coord = Coordinate(row, col, zoom)
-            coord_bbox = col, row, col + 1, row + 1
-            tile_img = extract_image(scan2coord, coord_bbox, image, (256, 256), 256/8)
-            
-            yield (coord, tile_img)
-
 def draw_postblobs(postblob_img, blobs_abcde):
     """ Connect the dots on the post-blob image for the five common dots.
     """
@@ -499,8 +424,9 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         print >> stderr, 'geotiff...',
         
         paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
-        geotiff_args = paper_width_pt, paper_height_pt, north, west, south, east
-        geotiff_bytes = generate_geotiff(input, s2p.inverse(), *geotiff_args)
+        geo_args = paper_width_pt, paper_height_pt, north, west, south, east
+
+        geotiff_bytes = create_geotiff(input, s2p.inverse(), *geo_args)
         
         _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
         
@@ -510,7 +436,7 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         minrow, mincol, minzoom = 2**20, 2**20, 20
         maxrow, maxcol, maxzoom = 0, 0, 0
 
-        for (coord, tile_img) in generate_tiles(input, s2p, paper, orientation, north, west, south, east):
+        for (coord, tile_img) in generate_tiles(input, s2p, *geo_args):
 
             _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)
             print >> stderr, coord.zoom,
