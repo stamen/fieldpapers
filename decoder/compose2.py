@@ -21,6 +21,7 @@ from PIL import Image
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print, ALL_FINISHED
+from cairoutils import FakeContext
 
 def get_qrcode_image(print_href):
     """ Render a QR code to an ImageSurface.
@@ -114,15 +115,13 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def add_print_page(surface, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     """
     """
     print 'Adding print page:', href
     
     well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
     well_width_pt, well_height_pt = well_xmax_pt - well_xmin_pt, well_ymax_pt - well_ymin_pt
-    
-    ctx = Context(surface)
     
     #
     # Offset drawing area to top-left of map area
@@ -296,6 +295,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_surface = PDFSurface(print_filename, page_width_pt, page_height_pt)
+    print_context = FakeContext(print_surface) # Context(print_surface)
 
     map_xmin_pt = .5 * ptpin
     map_ymin_pt = 1 * ptpin
@@ -347,8 +347,9 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                                        width * 2**zdiff, height * 2**zdiff)
         
         yield 60
+        yield 10 # remove me
         
-        add_print_page(print_surface, mmap, print_href, map_bounds_pt, points_FG, hm2pt_ratio)
+        add_print_page(print_context, mmap, print_href, map_bounds_pt, points_FG, hm2pt_ratio)
         
         # out = StringIO()
         # mmap.draw().save(out, format='JPEG')
@@ -376,7 +377,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                 
                 yield 60
                 
-                add_print_page(print_surface, sub_mmap, sub_href, map_bounds_pt, points_FG, hm2pt_ratio)
+                add_print_page(print_context, sub_mmap, sub_href, map_bounds_pt, points_FG, hm2pt_ratio)
         
                 #
                 # Prepare preview image
@@ -413,9 +414,11 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
 
     yield 10
     
-    _finish_print(pdf_url, preview_url, json_encode(print_data))
-    
     rename(print_filename, 'out.pdf')
+    
+    return
+    
+    _finish_print(pdf_url, preview_url, json_encode(print_data))
     
     yield ALL_FINISHED
 
