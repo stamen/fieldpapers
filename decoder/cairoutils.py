@@ -28,21 +28,22 @@ class Affine (Transform):
 
 class FakeContext:
 
-    def __init__(self, surface):
+    def __init__(self, surface, height):
         self.surface = surface
-        self.stack = [(1, 0, 0, 0, 1, 0)]
+        self.stack = [(1, 0, 0, 0, -1, height)]
         self.affine = Affine(*self.stack[0])
         self.point = Point(0, 0)
+        print 'pdf: 1 0 0 -1 0 %.3f cm' % height
     
     def translate(self, x, y):
         self.affine = self.affine.translate(x, y)
-        print 'pdf: 1 0 0 1 %.3f %.3f cm' % (x, y)
         self.point = Point(self.point.x + x, self.point.y + y)
+        print 'pdf: 1 0 0 1 %.3f %.3f cm' % (x, y)
 
     def scale(self, x, y):
         self.affine = self.affine.scale(x, y)
-        print 'pdf: %.3f 0 0 %.3f 0 0 cm' % (x, y)
         self.point = Point(self.point.x * x, self.point.y * y)
+        print 'pdf: %.6f 0 0 %.6f 0 0 cm' % (x, y)
 
     def save(self):
         self.stack.append(self.affine.terms())
@@ -97,8 +98,8 @@ class FakeContext:
         p1 = Point(a, b).add(self.point)
         p2 = Point(c, d).add(self.point)
         p3 = Point(e, f).add(self.point)
-        print 'pdf: %.3f %.3f %.3f %.3f %.3f %.3f c' % (p1.x, p1.y, p2.x, p2.y, p3.x, p3.y)
         self.point = p3
+        print 'pdf: %.3f %.3f %.3f %.3f %.3f %.3f c' % (p1.x, p1.y, p2.x, p2.y, p3.x, p3.y)
 
     def set_font_face(self, font):
         print 'fake context set_font_face:', repr(font)

@@ -295,7 +295,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_surface = PDFSurface(print_filename, page_width_pt, page_height_pt)
-    print_context = FakeContext(print_surface) # Context(print_surface)
+    print_context = FakeContext(print_surface, page_height_pt) # Context(print_surface)
 
     map_xmin_pt = .5 * ptpin
     map_ymin_pt = 1 * ptpin
