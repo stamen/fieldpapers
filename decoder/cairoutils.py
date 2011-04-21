@@ -36,19 +36,21 @@ class FakeContext:
     
     def translate(self, x, y):
         self.affine = self.affine.translate(x, y)
-        print 'postscript: %.3f %.3f translate' % (x, y)
+        print 'pdf: 1 0 0 1 %.3f %.3f cm' % (x, y)
+        self.point = Point(self.point.x + x, self.point.y + y)
 
     def scale(self, x, y):
         self.affine = self.affine.scale(x, y)
-        print 'postscript: %.3f %.3f scale' % (x, y)
+        print 'pdf: %.3f 0 0 %.3f 0 0 cm' % (x, y)
+        self.point = Point(self.point.x * x, self.point.y * y)
 
     def save(self):
         self.stack.append(self.affine.terms())
-        print 'postscript: gsave'
+        print 'pdf: q'
 
     def restore(self):
         self.affine = Affine(*self.stack.pop())
-        print 'postscript: grestore'
+        print 'pdf: Q'
 
     def user_to_device(self, x, y):
         user = Point(x, y)
@@ -62,14 +64,12 @@ class FakeContext:
 
     def move_to(self, x, y):
         self.point = Point(x, y)
-        x, y = self.user_to_device(x, y)
         print 'pdf: %.3f %.3f m' % (x, y)
 
     def rel_line_to(self, x, y):
         end = Point(x, y).add(self.point)
-        x, y = self.user_to_device(end.x, end.y)
-        print 'pdf: %.3f %.3f l' % (x, y)
         self.point = end
+        print 'pdf: %.3f %.3f l' % (end.x, end.y)
 
     def set_source_rgb(self, r, g, b):
         print 'pdf: %.3f %.3f %.3f rg' % (r, g, b)
@@ -88,7 +88,7 @@ class FakeContext:
 
     def set_dash(self, a):
         a = ' '.join(['%.3f' % v for v in a])
-        print 'postscript: [%s] 0 setdash' % a
+        print 'pdf: [%s] 0 d' % a
 
     def stroke(self):
         print 'pdf: S'
@@ -97,10 +97,7 @@ class FakeContext:
         p1 = Point(a, b).add(self.point)
         p2 = Point(c, d).add(self.point)
         p3 = Point(e, f).add(self.point)
-        x1, y1 = self.user_to_device(p1.x, p1.y)
-        x2, y2 = self.user_to_device(p2.x, p2.y)
-        x3, y3 = self.user_to_device(p3.x, p3.y)
-        print 'pdf: %.3f %.3f %.3f %.3f %.3f %.3f c' % (x1, y1, x2, y2, x3, y3)
+        print 'pdf: %.3f %.3f %.3f %.3f %.3f %.3f c' % (p1.x, p1.y, p2.x, p2.y, p3.x, p3.y)
         self.point = p3
 
     def set_font_face(self, font):
