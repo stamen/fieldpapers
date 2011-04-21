@@ -51,7 +51,11 @@ class FakeContext:
         self.commands.append(text)
 
     def finish(self):
-        print json.dumps([('_out', [cmd]) for cmd in self.commands])
+        print json.dumps([('raw', [cmd]) for cmd in self.commands])
+        
+        out = open('lossy/commands.json', 'w')
+        json.dump([('raw', [cmd]) for cmd in self.commands], out)
+        out.close()
         
         for filename in self.garbage:
             print 'unlink', filename
@@ -113,16 +117,16 @@ class FakeContext:
         img.save(jpg_buf, 'JPEG', quality=75)
         
         if len(jpg_buf.getvalue()) < len(png_buf.getvalue()):
-            handle, filename = mkstemp(prefix='cairoutils-', suffix='.jpg')
-            write(handle, jpg_buf.getvalue())
-            close(handle)
+            buffer, suffix = jpg_buf, '.jpg'
         
         else:
-            handle, filename = mkstemp(prefix='cairoutils-', suffix='.png')
-            write(handle, png_buf.getvalue())
-            close(handle)
+            buffer, suffix = png_buf, '.png'
         
+        handle, filename = mkstemp(prefix='cairoutils-', suffix=suffix)
         self.garbage.append(filename)
+
+        write(handle, buffer.getvalue())
+        close(handle)
         
         print '...or %.1fK PNG / %.1fK JPEG - %s' \
             % (len(png_buf.getvalue()) / 1024., len(jpg_buf.getvalue()) / 1024., filename)
