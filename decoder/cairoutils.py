@@ -47,17 +47,21 @@ class FakeContext:
 
         self.command('1 0 0 -1 0 %.3f cm' % height)
     
-    def command(self, text):
-        self.commands.append(text)
+    def command(self, text, *args):
+        if args:
+            self.commands.append((text, args))
+        else:
+            self.commands.append(('raw', [text]))
 
     def finish(self):
-        print json.dumps([('raw', [cmd]) for cmd in self.commands])
+        print json.dumps(self.commands)
         
         out = open('lossy/commands.json', 'w')
-        json.dump([('raw', [cmd]) for cmd in self.commands], out)
+        json.dump(self.commands, out)
         out.close()
         
         for filename in self.garbage:
+            continue
             print 'unlink', filename
             unlink(filename)
     
@@ -108,7 +112,8 @@ class FakeContext:
         print 'fake context set_source_surface: %dx%d %.1fMB at (%d, %d)' \
             % (surf.get_width(), surf.get_height(), len(surf.get_data()) / 1048576., x, y)
         
-        img = Image.fromstring('RGBA', (surf.get_width(), surf.get_height()), surf.get_data())
+        dim = surf.get_width(), surf.get_height()
+        img = Image.fromstring('RGBA', dim, surf.get_data()).convert('RGB')
 
         png_buf = StringIO()
         img.save(png_buf, 'PNG')
@@ -117,12 +122,13 @@ class FakeContext:
         img.save(jpg_buf, 'JPEG', quality=75)
         
         if len(jpg_buf.getvalue()) < len(png_buf.getvalue()):
-            buffer, suffix = jpg_buf, '.jpg'
+            method, buffer, suffix = 'raw_jpeg', jpg_buf, '.jpg'
         
         else:
-            buffer, suffix = png_buf, '.png'
+            method, buffer, suffix = 'raw_png', png_buf, '.png'
         
         handle, filename = mkstemp(prefix='cairoutils-', suffix=suffix)
+        self.command(method, filename)
         self.garbage.append(filename)
 
         write(handle, buffer.getvalue())
