@@ -15,13 +15,13 @@ from ModestMaps.Providers import TemplatedMercatorProvider
 from ModestMaps.Geo import Location
 from ModestMaps.Core import Point
 
-from cairo import ImageSurface, PDFSurface, Context
+from cairo import ImageSurface
 from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print, ALL_FINISHED
-from cairoutils import FakeContext
+from cairoutils import get_drawing_context
 
 def get_qrcode_image(print_href):
     """ Render a QR code to an ImageSurface.
@@ -294,8 +294,8 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     close(handle)
     
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
-    print_surface = PDFSurface(print_filename, page_width_pt, page_height_pt)
-    print_context = FakeContext(print_surface, page_height_pt) # Context(print_surface)
+    print_context, finish_drawing = get_drawing_context(print_filename, page_width_pt, page_height_pt)
+    print finish_drawing
 
     map_xmin_pt = .5 * ptpin
     map_ymin_pt = 1 * ptpin
@@ -403,7 +403,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
 
                 print_pages.append(page_data)
     
-    print_surface.finish()
+    finish_drawing()
     
     yield 60
     
