@@ -36,7 +36,8 @@ class Affine (Transform):
         return Affine(x, 0, 0, 0, y, 0).multiply(self)
 
 class FakeContext:
-
+    """
+    """
     def __init__(self, filename, width, height):
         """
         """
@@ -64,6 +65,7 @@ class FakeContext:
             self.page.append(('raw', [text]))
 
     def show_page(self):
+        # vertically flip everything because FPDF.
         self.commands.append(('AddPage', []))
         self.commands.append(('raw', ['1 0 0 -1 0 %.3f cm' % self.size[1]]))
 
@@ -85,7 +87,6 @@ class FakeContext:
         page.wait()
         
         for filename in self.garbage:
-            print 'unlink', filename
             unlink(filename)
     
     def translate(self, x, y):
@@ -193,6 +194,8 @@ class FakeContext:
     def show_text(self, text):
         x, y = self.point.x, self.point.y
         text = text.decode('utf8')
+        
+        # invert the vertical flip in self.show_page() before showing text.
         self.command('q 1 0 0 -1 0 0 cm BT %.3f %.3f Td (%s) Tj ET Q' % (x, -y, text))
 
     def text_extents(self, text):

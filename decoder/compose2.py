@@ -295,7 +295,6 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_context, finish_drawing = get_drawing_context(print_filename, page_width_pt, page_height_pt)
-    print finish_drawing
 
     map_xmin_pt = .5 * ptpin
     map_ymin_pt = 1 * ptpin
@@ -347,7 +346,6 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
                                        width * 2**zdiff, height * 2**zdiff)
         
         yield 60
-        yield 10 # remove me
         
         add_print_page(print_context, mmap, print_href, map_bounds_pt, points_FG, hm2pt_ratio)
         
@@ -415,8 +413,6 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     yield 10
     
     rename(print_filename, 'out.pdf')
-    
-    return
     
     _finish_print(pdf_url, preview_url, json_encode(print_data))
     
