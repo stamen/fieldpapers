@@ -31,17 +31,18 @@
     }
     
     $json = file_get_contents('php://stdin');
-    $calls = json_decode($json, true);
+    $info = json_decode($json, true);
     
-    $pdf = new Raw_PDF('L', 'pt', 'letter');
+    // always "P" because info[size] is ordered.
+    $pdf = new Raw_PDF('P', 'pt', $info['size']);
     
-    foreach($calls as $call)
+    foreach($info['commands'] as $cmd)
     {
-        list($method, $args) = $call;
-        echo "$method: ".json_encode($args)."\n";
+        list($method, $args) = $cmd;
+        //echo "$method: ".json_encode($args)."\n";
         call_user_func_array(array(&$pdf, $method), $args);
     }
 
-    $pdf->output('out.pdf');
+    $pdf->output($info['filename']);
     
 ?>

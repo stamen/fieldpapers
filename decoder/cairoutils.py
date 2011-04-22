@@ -1,6 +1,7 @@
 import json
 from StringIO import StringIO
 from os import close, write, unlink
+from subprocess import Popen, PIPE
 from tempfile import mkstemp
 
 from cairo import PDFSurface, Context
@@ -36,17 +37,25 @@ class Affine (Transform):
 
 class FakeContext:
 
-    def __init__(self, context, height):
+    def __init__(self, filename, width, height):
+        """
+        """
+        self.filename = filename
+        self.size = width, height
+
+        handle, dummy_file = mkstemp(prefix='cairoutils-', suffix='.pdf')
+        close(handle)
+
+        surface = PDFSurface(dummy_file, width, height)
+        self.context = Context(surface)
+
         self.commands = []
-        self.context = context
-        self.garbage = []
+        self.garbage = [dummy_file]
         self.page = []
 
         self.point = Point(0, 0)
         self.stack = [(1, 0, 0, 0, -1, height)]
         self.affine = Affine(*self.stack[0])
-
-        self.command('1 0 0 -1 0 %.3f cm' % height)
     
     def command(self, text, *args):
         if args:
@@ -55,19 +64,27 @@ class FakeContext:
             self.page.append(('raw', [text]))
 
     def show_page(self):
-        self.commands += [('AddPage', [])]
+        self.commands.append(('AddPage', []))
+        self.commands.append(('raw', ['1 0 0 -1 0 %.3f cm' % self.size[1]]))
+
         self.commands += self.page
         self.page = []
 
     def finish(self):
-        print json.dumps(self.commands)
+        """
+        """
+        info = {
+            'size': self.size,
+            'commands': self.commands,
+            'filename': self.filename
+          }
         
-        out = open('lossy/commands.json', 'w')
-        json.dump(self.commands, out)
-        out.close()
+        page = Popen(['php', 'lossy/page.php'], stdin=PIPE)
+        json.dump(info, page.stdin)
+        page.stdin.close()
+        page.wait()
         
         for filename in self.garbage:
-            continue
             print 'unlink', filename
             unlink(filename)
     
@@ -115,11 +132,14 @@ class FakeContext:
         self.command('f')
 
     def set_source_surface(self, surf, x, y):
-        print 'fake context set_source_surface: %dx%d %.1fMB at (%d, %d)' \
-            % (surf.get_width(), surf.get_height(), len(surf.get_data()) / 1048576., x, y)
-        
+        """
+        """
         dim = surf.get_width(), surf.get_height()
-        img = Image.fromstring('RGBA', dim, surf.get_data()).convert('RGB')
+        img = Image.fromstring('RGBA', dim, surf.get_data())
+        
+        # weird channel order
+        blue, green, red, alpha = img.split()
+        img = Image.merge('RGB', (red, green, blue))
 
         png_buf = StringIO()
         img.save(png_buf, 'PNG')
@@ -139,9 +159,6 @@ class FakeContext:
 
         write(handle, buffer.getvalue())
         close(handle)
-        
-        print '...or %.1fK PNG / %.1fK JPEG - %s' \
-            % (len(png_buf.getvalue()) / 1024., len(jpg_buf.getvalue()) / 1024., filename)
 
     def paint(self):
         pass
@@ -180,7 +197,6 @@ class FakeContext:
 def get_drawing_context(print_filename, page_width_pt, page_height_pt):
     """
     """
-    surface = PDFSurface(print_filename, page_width_pt, page_height_pt)
-    context = FakeContext(Context(surface), page_height_pt)
+    context = FakeContext(print_filename, page_width_pt, page_height_pt)
     
     return context, context.finish
