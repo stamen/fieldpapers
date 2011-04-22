@@ -34,7 +34,6 @@
     $calls = json_decode($json, true);
     
     $pdf = new Raw_PDF('L', 'pt', 'letter');
-    $pdf->addpage();
     
     foreach($calls as $call)
     {

@@ -40,6 +40,7 @@ class FakeContext:
         self.commands = []
         self.context = context
         self.garbage = []
+        self.page = []
 
         self.point = Point(0, 0)
         self.stack = [(1, 0, 0, 0, -1, height)]
@@ -49,9 +50,14 @@ class FakeContext:
     
     def command(self, text, *args):
         if args:
-            self.commands.append((text, args))
+            self.page.append((text, args))
         else:
-            self.commands.append(('raw', [text]))
+            self.page.append(('raw', [text]))
+
+    def show_page(self):
+        self.commands += [('AddPage', [])]
+        self.commands += self.page
+        self.page = []
 
     def finish(self):
         print json.dumps(self.commands)
@@ -170,9 +176,6 @@ class FakeContext:
 
     def text_extents(self, text):
         return self.context.text_extents(text)
-
-    def show_page(self):
-        print 'fake context show_page.'
 
 def get_drawing_context(print_filename, page_width_pt, page_height_pt):
     """
