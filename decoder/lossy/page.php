@@ -6,6 +6,10 @@
     {
         function raw($command)
         {
+            // "Tj" is for showing text, which needs to be latin-1 for display.
+            if(preg_match('/\bTj\b/', $command))
+                $command = mb_convert_encoding($command, 'ISO-8859-1', 'UTF-8');
+
             $this->_out($command);
         }
         

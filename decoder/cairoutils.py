@@ -181,15 +181,19 @@ class FakeContext:
         self.command('%.3f %.3f %.3f %.3f %.3f %.3f c' % (p1.x, p1.y, p2.x, p2.y, p3.x, p3.y))
 
     def set_font_face(self, font):
-        print 'fake context set_font_face:', repr(font)
-        return self.context.set_font_face(font)
+        self.context.set_font_face(font)
 
     def set_font_size(self, size):
-        print 'fake context set_font_size:', repr(size)
-        return self.context.set_font_size(size)
+        self.context.set_font_size(size)
+        
+        # SetFont here because only the size gives a clue to the correct weight
+        self.command('SetFont', 'Helvetica', (size > 14) and 'B' or '')
+        self.command('SetFontSize', size)
 
     def show_text(self, text):
-        print 'fake context show_text:', repr(text)
+        x, y = self.point.x, self.point.y
+        text = text.decode('utf8')
+        self.command('q 1 0 0 -1 0 0 cm BT %.3f %.3f Td (%s) Tj ET Q' % (x, -y, text))
 
     def text_extents(self, text):
         return self.context.text_extents(text)
