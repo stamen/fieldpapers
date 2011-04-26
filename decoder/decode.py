@@ -513,29 +513,31 @@ def siftImage(url):
     handle, pgm_filename = tempfile.mkstemp(prefix='decode-', suffix='.pgm')
     os.close(handle)
     
-    # fit to 1000x1000
-    scale = min(1., 1000. / max(image.size))
+    try:
+        # fit to 1000x1000
+        scale = min(1., 1000. / max(image.size))
+        
+        # write the PGM
+        pgm_size = int(image.size[0] * scale), int(image.size[1] * scale)
+        image.convert('L').resize(pgm_size, PIL.Image.ANTIALIAS).save(pgm_filename)
+        
+        print >> sys.stderr, 'sift...', pgm_size,
+        
+        basedir = os.path.dirname(os.path.realpath(__file__)).replace(' ', '\ ')
+        status, output = commands.getstatusoutput("%(basedir)s/bin/sift --peak-thresh=8 -o '%(sift_filename)s' '%(pgm_filename)s'" % locals())
+        data = open(sift_filename, 'r')
+        
+        assert status == 0, 'Sift execution returned %s instead of 0' % status
+        
+        features = [matchup.row2feature(row) for row in data]
     
-    # write the PGM
-    pgm_size = int(image.size[0] * scale), int(image.size[1] * scale)
-    image.convert('L').resize(pgm_size, PIL.Image.ANTIALIAS).save(pgm_filename)
+        print >> sys.stderr, len(features), 'features'
+        
+        return image, features, scale
     
-    print >> sys.stderr, 'sift...', pgm_size,
-    
-    basedir = os.path.dirname(os.path.realpath(__file__)).replace(' ', '\ ')
-    status, output = commands.getstatusoutput("%(basedir)s/bin/sift --peak-thresh=8 -o '%(sift_filename)s' '%(pgm_filename)s'" % locals())
-    data = open(sift_filename, 'r')
-    
-    assert status == 0, 'Sift execution returned %s instead of 0' % status
-    
-    features = [matchup.row2feature(row) for row in data]
-
-    print >> sys.stderr, len(features), 'features'
-    
-    os.unlink(sift_filename)
-    os.unlink(pgm_filename)
-    
-    return image, features, scale
+    finally:
+        os.unlink(sift_filename)
+        os.unlink(pgm_filename)
 
 def linearSolution(r1, s1, t1, r2, s2, t2, r3, s3, t3):
     """ Solves a system of linear equations.
