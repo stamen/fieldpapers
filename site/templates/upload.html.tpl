@@ -89,15 +89,15 @@
     <h3>Examples</h3>
     
     <p>
-        <img src="{$base_dir}/img/sample-input-best.jpg" />
+        <img style="position: relative; left: -20px;" src="{$base_dir}/img/sample-input-best.jpg" width="400" height="305" />
     </p>
 
     <p>
-        <img src="{$base_dir}/img/sample-input-bad.jpg" />
+        <img src="{$base_dir}/img/sample-input-bad.jpg" width="380" height="285" />
     </p>
 
     <p>
-        <img src="{$base_dir}/img/sample-input-worst.jpg" />
+        <img src="{$base_dir}/img/sample-input-worst.jpg" width="380" height="285" />
     </p>
     
     {include file="footer.htmlf.tpl"}
