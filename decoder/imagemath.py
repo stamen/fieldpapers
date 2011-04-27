@@ -1,4 +1,11 @@
 from math import e
+from StringIO import StringIO
+from urllib import urlopen
+from subprocess import Popen
+from tempfile import mkstemp
+from urlparse import urlparse
+from os.path import splitext
+from os import write, close, unlink
 
 try:
     import PIL
@@ -37,6 +44,42 @@ class Blob:
         self.h = ymax - ymin
         
         self.bbox = (xmin, ymin, xmax, ymax)
+
+def open(url):
+    """
+    """
+    bytes = StringIO(urlopen(url).read())
+    image = Image.open(bytes)
+    
+    try:
+        image.load()
+    except IOError:
+        pass
+    else:
+        return image
+
+    s, h, path, p, q, f = urlparse(url)
+    head, tail = splitext(path)
+    
+    handle, input_filename = mkstemp(prefix='imagemath-', suffix=tail)
+    write(handle, bytes.getvalue())
+    close(handle)
+    
+    handle, output_filename = mkstemp(prefix='imagemath-', suffix='.jpg')
+    close(handle)
+    
+    try:
+        convert = Popen(('convert', input_filename, output_filename))
+        convert.wait()
+        
+        if convert.returncode != 0:
+            raise IOError("Couldn't read %(url)s even with convert" % locals())
+        
+        return Image.open(output_filename)
+    
+    finally:
+        unlink(input_filename)
+        unlink(output_filename)
 
 def imgblobs(img, highpass_filename=None, preblobs_filename=None, postblobs_filename=None):
     """ Extract bboxes of blobs from an image.

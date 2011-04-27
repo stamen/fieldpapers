@@ -23,6 +23,7 @@ import PIL.ImageFilter
 import matchup
 
 from apiutils import ALL_FINISHED
+from imagemath import open as loadImage
 
 import ModestMaps
 
@@ -489,18 +490,6 @@ def extractTile(image, coord, coordinatePixel, renders):
     tile_img = tile_img.resize((256, 256), PIL.Image.ANTIALIAS)
     
     return tile_img
-
-def loadImage(url):
-    """
-    """
-    print >> sys.stderr, 'download...',
-    
-    bytes = StringIO.StringIO(urllib.urlopen(url).read())
-    image = PIL.Image.open(bytes).convert('RGBA')
-    
-    print >> sys.stderr, image.size
-    
-    return image
 
 def siftImage(url):
     """
