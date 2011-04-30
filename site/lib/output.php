@@ -176,6 +176,23 @@
         return $scan;
     }
     
+    function modify_scan_for_geojson($scan, $print)
+    {
+        $type = 'Feature';
+        $properties = $scan;
+        $id = $properties['id'];
+        
+        $n = floatval($print['north']);
+        $s = floatval($print['south']);
+        $w = floatval($print['west']);
+        $e = floatval($print['east']);
+
+        $perimeter = array(array($w, $n), array($e, $n), array($e, $s), array($w, $s), array($w, $n));
+        $geometry = array('type' => 'Polygon', 'coordinates' => array($perimeter));
+
+        return compact('type', 'id', 'geometry', 'properties');
+    }
+    
     function enforce_master_on_off_switch($language)
     {
         if(defined('MASTER_ON_OFF_SWITCH') and MASTER_ON_OFF_SWITCH)

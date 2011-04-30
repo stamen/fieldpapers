@@ -25,6 +25,17 @@
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
     $scans = get_scans($dbh, $pagination, false);
+    $prints = array();
+    
+    foreach($scans as $i => $scan)
+    {
+        if(is_null($scan['print_latitude'])) {
+            $prints[$i] = false;
+        
+        } else {
+            $prints[$i] = get_print($dbh, $scan['print_id']);
+        }
+    }
 
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type, array('text/html', 'application/json'));
@@ -45,13 +56,32 @@
         print $sm->fetch("scans.html.tpl");
     
     } elseif($type == 'application/json') { 
+       /*
+        * Convert to GeoJSON using prints information.
+        */
+        $scans_prints = array_map(null, $scans, $prints);
+
+        $features = array();
+        $leftover = array();
+        
+        foreach($scans_prints as $i => $scan_print)
+        {
+            list($scan, $print) = $scan_print;
+            
+            if($print) {
+                $features[] = modify_scan_for_geojson($scan, $print);
+
+            } else {
+                $leftover[] = modify_scan_for_json($scan);
+            }
+        }
+        
+        $type = 'FeatureCollection';
+        $response = compact('type', 'features', 'leftover');
+
         header("Content-Type: application/json; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
-        
-        foreach($scans as $i => $scan)
-            $scans[$i] = modify_scan_for_json($scan);
-        
-        echo json_encode($scans)."\n";
+        echo json_encode($response)."\n";
     
     } else {
         header('HTTP/1.1 406');
