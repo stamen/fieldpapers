@@ -113,9 +113,6 @@
         print $sm->fetch("scan.xml.tpl");
     
     } elseif($type == 'application/json') { 
-        header("Content-Type: application/json; charset=UTF-8");
-        header("Access-Control-Allow-Origin: *");
-        
         $scan = modify_scan_for_json($scan);
         
         unset($print['last_step']);
@@ -132,6 +129,8 @@
         
         $scan['print'] = $print;
         
+        header("Content-Type: application/json; charset=UTF-8");
+        header("Access-Control-Allow-Origin: *");
         echo json_encode($scan)."\n";
     
     } else {
