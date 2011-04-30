@@ -40,17 +40,29 @@
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type, array('text/html', 'application/json'));
     
-    if($type == 'text/html') {
-        list($count, $offset, $perpage, $page) = get_pagination($pagination);
+    list($count, $offset, $perpage, $page) = get_pagination($pagination);
+
+    $link_next = get_base_dir().sprintf('/scans.php?perpage=%d&page=%d', $perpage, $page + 1);
+    $link_prev = ($page <= 1) ? null : get_base_dir().sprintf('/scans.php?perpage=%d&page=%d', $perpage, $page - 1);
+    $link_start = get_base_dir().sprintf('/scans.php?perpage=%d', $perpage);
     
+    if($_GET['type'])
+    {
+        $link_next .= '&type='.urlencode($_GET['type']);
+        $link_start .= '&type='.urlencode($_GET['type']);
+        
+        if($link_prev)
+            $link_prev .= '&type='.urlencode($_GET['type']);
+    }
+
+    if($type == 'text/html') {
         $sm = get_smarty_instance();
         $sm->assign('scans', $scans);
         $sm->assign('language', $language);
     
-        $sm->assign('count', $count);
-        $sm->assign('offset', $offset);
-        $sm->assign('perpage', $perpage);
-        $sm->assign('page', $page);
+        $sm->assign('link_next', $link_next);
+        $sm->assign('link_prev', $link_prev);
+        $sm->assign('link_start', $link_start);
         
         header("Content-Type: text/html; charset=UTF-8");
         print $sm->fetch("scans.html.tpl");
@@ -76,8 +88,14 @@
             }
         }
         
+        $links = array(
+            'next' => $link_next,
+            'prev' => $link_prev,
+            'start' => $link_start
+          );
+        
         $type = 'FeatureCollection';
-        $response = compact('type', 'features', 'leftover');
+        $response = compact('type', 'features', 'leftover', 'links');
 
         header("Content-Type: application/json; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");

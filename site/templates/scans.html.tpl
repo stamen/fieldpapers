@@ -30,6 +30,11 @@
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <link rel="stylesheet" href="{$base_dir}/scans.css" type="text/css" />
     <link rel="data" type="application/json" href="{$base_dir}{$base_href}?type=json" />
+    {if $link_prev}
+        <link rel="Prev" href="{$link_prev|escape}" />
+        <link rel="Start" href="{$link_start|escape}" />
+    {/if}
+    <link rel="Next" href="{$link_next|escape}" />
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
 <body>
@@ -62,10 +67,10 @@
     
     {assign var="scans_count" value=$scans|@count}
     
-    {if $page > 1 and $scans_count > 0}
+    {if $link_prev and $link_next}
         <p class="pagination">
-            <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
-            <span class="older"><a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
+            <span class="newer">← <a href="{$link_prev|escape}">Newer</a></span>
+            <span class="older"><a href="{$link_next|escape}">Older</a> →</span>
         </p>
     {/if}
     
@@ -73,12 +78,12 @@
     
     <p class="pagination">
         {if $scans_count > 0}
-            {if $page > 1}
-                <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
+            {if $link_prev}
+                <span class="newer">← <a href="{$link_prev|escape}">Newer</a></span>
             {/if}
-            <span class="older"><a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
+            <span class="older"><a href="{$link_next|escape}">Older</a> →</span>
         {else}
-            <span class="newer">← <a href="{$base_dir}/scans.php?perpage={$perpage|escape}&amp;page=1">Newest</a></span>
+            <span class="newer">← <a href="{$link_start|escape}">Newest</a></span>
         {/if}
     </p>
     
