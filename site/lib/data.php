@@ -86,10 +86,14 @@
     * If the single argument is one of "html" or "xml", just return
     * what's appropriate without pretending it's a full header.
     */
-    function get_preferred_type($accept_type_header)
+    function get_preferred_type($accept_type_header, $acceptable_types)
     {
+        $acceptable_types = is_array($acceptable_types)
+            ? $acceptable_types
+            : array('application/paperwalking+xml', 'application/json', 'text/html');
+        
         if($accept_type_header == 'xml')
-            return 'application/xml';
+            return 'application/paperwalking+xml';
         
         if($accept_type_header == 'html')
             return 'text/html';
@@ -98,7 +102,7 @@
             return 'application/json';
         
         // break up string into pieces (types and q factors)
-        preg_match_all('#([\*a-z]+/([\*a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);
+        preg_match_all('#([\*a-z]+/([\*\+a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);
 
         $types = array();
         
@@ -111,19 +115,23 @@
             foreach($types as $l => $val)
                 $types[$l] = ($val === '') ? 1 : $val;
             
-            // sort list based on value	
-            arsort($types, SORT_NUMERIC);
+            // sort list based on weight then by given order
+            $weighted_order = array_values($types);
+            $given_order = range(1, count($types));
+            
+            array_multisort($weighted_order, SORT_DESC, SORT_NUMERIC,
+                            $given_order, SORT_ASC, SORT_NUMERIC,
+                            $types);
 
         } else {
             $types = array();
 
         }
-        
+
         foreach(array_keys($types) as $type)
         {
-            // XML generally?
-            if(preg_match('#^(text|application)/xml$#', $type))
-                return 'application/xml';
+            if(in_array($type, $acceptable_types))
+                return $type;
         }
         
         // HTML is the default
