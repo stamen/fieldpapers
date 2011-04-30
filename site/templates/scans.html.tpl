@@ -29,6 +29,7 @@
     {/strip} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <link rel="stylesheet" href="{$base_dir}/scans.css" type="text/css" />
+    <link rel="data" type="application/json" href="{$base_dir}{$base_href}?type=json" />
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
 <body>
