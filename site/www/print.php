@@ -95,8 +95,8 @@
         print $sm->fetch("print.xml.tpl");
     
     } else {
-        header('HTTP/1.1 400');
-        die("Unknown type.\n");
+        header('HTTP/1.1 406');
+        die("Unknown content-type.\n");
     }
 
 ?>

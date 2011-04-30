@@ -116,19 +116,7 @@
         header("Content-Type: application/json; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
         
-        unset($scan['last_step']);
-        unset($scan['age']);
-
-        $scan['min_row'] = floatval($scan['min_row']);
-        $scan['min_column'] = floatval($scan['min_column']);
-        $scan['min_zoom'] = intval($scan['min_zoom']);
-        $scan['max_row'] = floatval($scan['max_row']);
-        $scan['max_column'] = floatval($scan['max_column']);
-        $scan['max_zoom'] = intval($scan['max_zoom']);
-        $scan['created'] = intval($scan['created']);
-        $scan['large_url'] = $scan['base_url'].'/large.jpg';
-        $scan['qrcode_url'] = $scan['base_url'].'/qrcode.jpg';
-        $scan['preview_url'] = $scan['base_url'].'/preview.jpg';
+        $scan = modify_scan_for_json($scan);
         
         unset($print['last_step']);
         unset($print['age']);

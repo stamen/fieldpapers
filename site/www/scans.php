@@ -25,18 +25,37 @@
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
     $scans = get_scans($dbh, $pagination, false);
-    list($count, $offset, $perpage, $page) = get_pagination($pagination);
 
-    $sm = get_smarty_instance();
-    $sm->assign('scans', $scans);
-    $sm->assign('language', $language);
-
-    $sm->assign('count', $count);
-    $sm->assign('offset', $offset);
-    $sm->assign('perpage', $perpage);
-    $sm->assign('page', $page);
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = get_preferred_type($type, array('text/html', 'application/json'));
     
-    header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("scans.html.tpl");
+    if($type == 'text/html') {
+        list($count, $offset, $perpage, $page) = get_pagination($pagination);
+    
+        $sm = get_smarty_instance();
+        $sm->assign('scans', $scans);
+        $sm->assign('language', $language);
+    
+        $sm->assign('count', $count);
+        $sm->assign('offset', $offset);
+        $sm->assign('perpage', $perpage);
+        $sm->assign('page', $page);
+        
+        header("Content-Type: text/html; charset=UTF-8");
+        print $sm->fetch("scans.html.tpl");
+    
+    } elseif($type == 'application/json') { 
+        header("Content-Type: application/json; charset=UTF-8");
+        header("Access-Control-Allow-Origin: *");
+        
+        foreach($scans as $i => $scan)
+            $scans[$i] = modify_scan_for_json($scan);
+        
+        echo json_encode($scans)."\n";
+    
+    } else {
+        header('HTTP/1.1 406');
+        die("Unknown content-type.\n");
+    }
 
 ?>
