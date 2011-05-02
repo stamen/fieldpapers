@@ -40,11 +40,16 @@
         <script type="text/javascript" src="{$base_dir}/scan-large.js"></script>
 
         <script type="text/javascript">
-        // <![CDATA[{literal}
+        // <![CDATA[
+        
+            var bounds = '{$scan.geojpeg_bounds|escape:"javascript"}'.split(',').map(parseFloat);
+        
+            {literal}
         
             window.onload = function()
             {
-                YUI().use('dd-constrain', setup_dragboxes);
+                
+                YUI().use('dd-constrain', function(Y) { setup_dragboxes(Y, bounds) });
             };
         
         // {/literal}]]>
