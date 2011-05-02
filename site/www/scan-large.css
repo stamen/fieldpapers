@@ -3,6 +3,38 @@
     position: relative;
 }
 
+table#scan-note-rows
+{
+    margin: 1em auto;
+}
+
+table#scan-note-rows tr th,
+table#scan-note-rows tr td
+{
+    text-align: right;
+}
+
+table#scan-note-rows tbody tr
+{
+    border-top: 1px solid silver;
+}
+
+table#scan-note-rows tr th.note,
+table#scan-note-rows tr td.note
+{
+    text-align: left;
+}
+
+table#scan-note-rows tr td
+{
+    vertical-align: top;
+}
+
+table#scan-note-rows tr td.note
+{
+    white-space: pre-line;
+}
+
 .drag-box .area
 {
     background: none;

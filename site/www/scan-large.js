@@ -164,14 +164,50 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     _drag.after('drag', updateArea);
     _drag.on('start', onSelected);
 
+    live_note.after('blur', onNoteChanged);
     live_note.after('change', onNoteChanged);
     
     return box;
 }
 
+function boxrow(Y, rows)
+{
+    var _row = new Y.Node(document.createElement('tr')),
+        cell_note = new Y.Node(document.createElement('td')),
+        cell_north = new Y.Node(document.createElement('td')),
+        cell_south = new Y.Node(document.createElement('td')),
+        cell_west = new Y.Node(document.createElement('td')),
+        cell_east = new Y.Node(document.createElement('td'));
+    
+    var row = {};
+    
+    rows.append(_row);
+    
+    cell_note.addClass('note');
+    
+    _row.append(cell_note);
+    _row.append(cell_north);
+    _row.append(cell_west);
+    _row.append(cell_south);
+    _row.append(cell_east);
+    
+    row.describeBox = function(note, bounds)
+    {
+        cell_note.set('text', note);
+
+        cell_north.set('text', bounds[0].toFixed(6));
+        cell_south.set('text', bounds[2].toFixed(6));
+        cell_west.set('text', bounds[1].toFixed(6));
+        cell_east.set('text', bounds[3].toFixed(6));
+    }
+    
+    return row;
+}
+
 function setup_dragboxes(Y, bounds)
 {
     var bbox = Y.one('#scan-notes'),
+        table = Y.one('#scan-note-rows'),
         scan = bbox.one('img'),
         button = Y.one('#add-box'),
         blather = Y.one('#blather');
@@ -220,11 +256,21 @@ function setup_dragboxes(Y, bounds)
     function add_box()
     {
         hide_boxes();
+        
+        var row = boxrow(Y, Y.one('#scan-note-rows tbody'));
+        
+        function onBoxChanged(box)
+        {
+            row.describeBox(box.noteText(), boxBounds(box));
+        }
+        
         dragbox(Y, bbox, onBoxChanged, foregroundBox);
     }
     
     bbox.setStyle('width', img_width + 'px');
     bbox.setStyle('height', img_height + 'px');
+    
+    table.setStyle('width', img_width + 'px');
     
     scan.on('click', hide_boxes);
     
