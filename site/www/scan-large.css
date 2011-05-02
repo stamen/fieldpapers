@@ -30,16 +30,32 @@
 .drag-box .note
 {
     position: absolute;
-    background-color: white;
+    text-align: left;
     font: 11px/12px "Lucida Sans", Helvetica, Arial, sans-serif;
     width: 200px;
     height: 48px;
+}
+
+.drag-box div.note
+{
+    overflow: hidden;
+    white-space: pre-line;
+}
+
+.drag-box textarea.note
+{
+    background-color: white;
     border: 1px solid black;
 }
 
-.drag-box.inactive .note
+.drag-box.inactive textarea.note
 {
     display: none;
+}
+
+.drag-box.inactive .thumb
+{
+    background-color: rgba(255, 255, 255, .35);
 }
 
 .drag-box.inactive .edge

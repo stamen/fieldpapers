@@ -12,7 +12,8 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         area = new Y.Node(document.createElement('div')),
         thumb1 = new Y.Node(document.createElement('div')),
         thumb2 = new Y.Node(document.createElement('div')),
-        note = new Y.Node(document.createElement('textarea'));
+        dead_note = new Y.Node(document.createElement('div')),
+        live_note = new Y.Node(document.createElement('textarea'));
     
     node.addClass('drag-box');
     
@@ -32,14 +33,16 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     thumb2.setStyle('width', thumb_size + 'px');
     thumb2.setStyle('height', thumb_size + 'px');
     
-    note.addClass('note');
+    dead_note.addClass('note');
+    live_note.addClass('note');
 
     bbox.append(node);
     node.append(edge);
     node.append(area);
     node.append(thumb1);
     node.append(thumb2);
-    node.append(note);
+    node.append(dead_note);
+    node.append(live_note);
 
     box.getBounds = function()
     {
@@ -53,7 +56,7 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     
     box.noteText = function()
     {
-        return note.get('value');
+        return live_note.get('value');
     }
     
     function onMoved()
@@ -66,8 +69,11 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         edge.setStyle('width', (b.xmax - b.xmin) + 2 + 'px');
         edge.setStyle('height', (b.ymax - b.ymin) + 2 + 'px');
         
-        note.setX(bbox.getX() + b.xmin);
-        note.setY(bbox.getY() + b.ymax + thumb_size);
+        dead_note.setX(bbox.getX() + b.xmin);
+        dead_note.setY(bbox.getY() + b.ymax + thumb_size);
+        
+        live_note.setX(bbox.getX() + b.xmin);
+        live_note.setY(bbox.getY() + b.ymax + thumb_size);
         
         if(onChangedCallback)
         {
@@ -77,6 +83,8 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     
     function onNoteChanged()
     {
+        dead_note.set('text', live_note.get('value'));
+    
         if(onChangedCallback)
         {
             onChangedCallback(box);
@@ -126,7 +134,7 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         
         node.siblings().replaceClass('active', 'inactive');
         node.replaceClass('inactive', 'active');
-        note.focus();
+        live_note.focus();
     }
     
    /*
@@ -156,7 +164,7 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     _drag.after('drag', updateArea);
     _drag.on('start', onSelected);
 
-    note.after('change', onNoteChanged);
+    live_note.after('change', onNoteChanged);
     
     return box;
 }
