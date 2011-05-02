@@ -145,14 +145,16 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
         e.stopImmediatePropagation();
     }
     
-    function deselectBox()
+    function deselectBox(e)
     {
         onNoteChanged();
         
         node.replaceClass('active', 'inactive');
+        
+        e.stopImmediatePropagation();
     }
     
-    function deleteBox()
+    function deleteBox(e)
     {
         if(confirm('Really delete?'))
         {
@@ -163,6 +165,8 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
                 onDeletedCallback(box);
             }
         }
+        
+        e.stopImmediatePropagation();
     }
     
    /*
@@ -173,7 +177,7 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
    /*
     * Connect drag behaviors.
     */
-    area.on('click', onSelected);
+    node.on('click', onSelected);
     dead_note_inner.on('click', onSelected);
     
     ok_button.on('click', deselectBox);
