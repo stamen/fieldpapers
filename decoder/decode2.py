@@ -431,8 +431,6 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
         _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
         
-        print >> stderr, 'do something with the bounds:', img_bounds,
-        
         print >> stderr, 'done.'
         print >> stderr, 'tiles...',
         
@@ -465,7 +463,7 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         min_coord = Coordinate(minrow, mincol, minzoom)
         max_coord = Coordinate(maxrow, maxcol, maxzoom)
         
-        update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord)
+        update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
 
         _update_step(STEP_FINISHED)
         

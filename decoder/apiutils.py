@@ -53,7 +53,7 @@ def update_step(apibase, password, scan_id, step_number):
     
     return
 
-def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord):
+def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -66,10 +66,12 @@ def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, 
                         'password': password,
                         'uploaded_file': uploaded_file,
                         'has_geotiff': 'yes',
+                        'has_geojpeg': 'yes',
                         'has_stickers': 'no',
                         'min_row': min_coord.row, 'max_row': max_coord.row,
                         'min_column': min_coord.column, 'max_column': max_coord.column,
-                        'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom})
+                        'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom,
+                        'geojpeg_bounds': '%.8f,%.8f,%.8f,%.8f' % geojpeg_bounds})
     
     req = HTTPConnection(host, port)
     req.request('POST', path + '/scan.php?' + query, params, headers)

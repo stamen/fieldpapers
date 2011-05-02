@@ -145,6 +145,18 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     geojpeg_img = Image.merge('RGB', channels)
     
     #
+    # Project image bounds to geographic coordinates
+    #
+    latlon = osr.SpatialReference()
+    latlon.ImportFromEPSG(4326)
+    
+    proj = osr.CoordinateTransformation(merc, latlon)
+    
+    x1, y1, x2, y2 = img_bounds
+    (lon1, lat1, z1), (lon2, lat2, z2) = proj.TransformPoints([(x1, y1), (x2, y2)])
+    img_bounds = min(lat1, lat2), min(lon1, lon2), max(lat1, lat2), max(lon1, lon2)
+    
+    #
     # Close out and return.
     #
     unlink(geotiff_filename)
