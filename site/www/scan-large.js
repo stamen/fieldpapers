@@ -177,7 +177,8 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
    /*
     * Connect drag behaviors.
     */
-    node.on('click', onSelected);
+    area.on('click', onSelected);
+    live_note.on('click', onSelected);
     dead_note_inner.on('click', onSelected);
     
     ok_button.on('click', deselectBox);
