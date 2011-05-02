@@ -131,7 +131,7 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
         onMoved();
     }
     
-    function onSelected()
+    function onSelected(e)
     {
         if(onSelectedCallback)
         {
@@ -141,6 +141,8 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
         node.siblings().replaceClass('active', 'inactive');
         node.replaceClass('inactive', 'active');
         live_note.focus();
+        
+        e.stopImmediatePropagation();
     }
     
     function deselectBox()
@@ -357,5 +359,6 @@ function setup_data_boxes(Y, bounds)
     }
     
     scan_img.on('click', hideBoxes);
+    notes_area.on('click', hideBoxes);
     add_button.after('click', addBox);
 }
