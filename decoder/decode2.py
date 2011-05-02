@@ -426,9 +426,12 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
         geo_args = paper_width_pt, paper_height_pt, north, west, south, east
 
-        geotiff_bytes = create_geotiff(input, s2p.inverse(), *geo_args)
+        geotiff_bytes, geojpeg_img, img_bounds = create_geotiff(input, s2p.inverse(), *geo_args)
         
         _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
+        _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
+        
+        print >> stderr, 'do something with the bounds:', img_bounds,
         
         print >> stderr, 'done.'
         print >> stderr, 'tiles...',

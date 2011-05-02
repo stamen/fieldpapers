@@ -4,6 +4,11 @@ from math import hypot
 
 from osgeo import gdal, osr
 
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+
 from ModestMaps.Geo import Location
 from ModestMaps.Core import Coordinate
 from ModestMaps.OpenStreetMap import Provider as OpenStreetMapProvider
@@ -46,6 +51,42 @@ def calculate_gcps(p2s, paper_width_pt, paper_height_pt, north, west, south, eas
     
     return ul_gcp, ur_gcp, lr_gcp, ll_gcp
 
+def calculate_geotransform(gcps, full_width, fuller_width, buffer):
+    """ Return a geotransform tuple that puts the GCPs into a chosen image size.
+    """
+    xs, ys = [gcp.GCPX for gcp in gcps], [gcp.GCPY for gcp in gcps]
+    xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
+
+    xspan = xmax - xmin
+    yspan = ymin - ymax # reversed because north points up
+    
+    # calculate the width and height in map units
+    
+    aspect = xspan / yspan
+    
+    if aspect > 1.2:
+        full_width = fuller_width
+    
+    width = full_width - buffer * 2
+    height = abs(width / aspect)
+    
+    # calculate the offset and stride in map units - that's the geotransform
+    
+    xstride = xspan / width
+    ystride = yspan / height
+    
+    xoff = xmin - xstride * buffer
+    yoff = ymax - ystride * buffer # ymax because north points up
+    
+    xform = (xoff, xstride, 0, yoff, 0, ystride)
+    
+    # finalize the image size in image pixels and image bounds in map units
+    
+    full_height = int(height + buffer * 2)
+    bounds = (xoff, yoff, xoff + full_width * xstride, yoff + full_height * ystride)
+    
+    return xform, bounds, (full_width, full_height)
+
 def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, south, east):
     """ Return raw bytes of a GCP-based GeoTIFF for this decoded scan.
     """
@@ -61,9 +102,9 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     #
     driver = gdal.GetDriverByName('GTiff')
     
-    handle, filename = mkstemp(prefix='geotiff-', suffix='.tif')
-    dataset = driver.Create(filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80'])
-    dataset.SetGCPs(gcps, str(merc))
+    handle, geotiff_filename = mkstemp(prefix='geotiff-', suffix='.tif')
+    geotiff_ds = driver.Create(geotiff_filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80'])
+    geotiff_ds.SetGCPs(gcps, str(merc))
     
     close(handle)
     
@@ -71,17 +112,45 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     # Copy over the pixel data for each channel.
     #
     for (i, chan) in enumerate(image.convert('RGB').split()):
-        band = dataset.GetRasterBand(i + 1)
+        band = geotiff_ds.GetRasterBand(i + 1)
         band.WriteRaster(0, 0, image.size[0], image.size[1], chan.tostring())
+    
+    #
+    # Read the raw bytes of the GeoTIFF for return.
+    #
+    geotiff_ds.FlushCache()
+    geotiff_bytes = open(geotiff_filename, 'r').read()
+    
+    #
+    # Do another one, smaller this time for the projected JPEG.
+    #
+    xform, img_bounds, img_size = calculate_geotransform(gcps, 760, 960, 100)
+    
+    handle, geojpeg_filename = mkstemp(prefix='geojpeg-', suffix='.tif')
+    geojpeg_ds = driver.Create(geojpeg_filename, img_size[0], img_size[1], 3)
+    close(handle)
+
+    geojpeg_ds.SetProjection(merc.ExportToWkt())
+    geojpeg_ds.SetGeoTransform(xform)
+    
+    gdal.ReprojectImage(geotiff_ds, geojpeg_ds, None, None, gdal.GRA_Cubic)
+    
+    channels = []
+    
+    for b in (1, 2, 3):
+        band = geojpeg_ds.GetRasterBand(b)
+        chan = Image.fromstring('L', img_size, band.ReadRaster(0, 0, *img_size))
+        channels.append(chan)
+    
+    geojpeg_img = Image.merge('RGB', channels)
     
     #
     # Close out and return.
     #
-    dataset.FlushCache()
-    bytes = open(filename, 'r').read()
-    
-    unlink(filename)
-    return bytes
+    unlink(geotiff_filename)
+    unlink(geojpeg_filename)
+
+    return geotiff_bytes, geojpeg_img, img_bounds
 
 def generate_tiles(image, s2p, paper_width_pt, paper_height_pt, north, west, south, east):
     """ Yield a stream of coordinates and tile images for a full set of zoom levels.
