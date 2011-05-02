@@ -43,8 +43,8 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
 
     box.getBounds = function()
     {
-        var xmin = area.getX(),
-            ymin = area.getY(),
+        var xmin = area.getX() - bbox.getX(),
+            ymin = area.getY() - bbox.getY(),
             xmax = xmin + parseInt(area.getStyle('width')),
             ymax = ymin + parseInt(area.getStyle('height'));
         
@@ -53,21 +53,21 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     
     box.noteText = function()
     {
-        return note.get('text');
+        return note.get('value');
     }
     
     function onMoved()
     {
         var b = box.getBounds();
-
-        edge.setX(b.xmin - 4);
-        edge.setY(b.ymin - 4);
+        
+        edge.setX(bbox.getX() + b.xmin - 4);
+        edge.setY(bbox.getY() + b.ymin - 4);
         
         edge.setStyle('width', (b.xmax - b.xmin) + 2 + 'px');
         edge.setStyle('height', (b.ymax - b.ymin) + 2 + 'px');
         
-        note.setX(b.xmin);
-        note.setY(b.ymax + thumb_size);
+        note.setX(bbox.getX() + b.xmin);
+        note.setY(bbox.getY() + b.ymax + thumb_size);
         
         if(onChangedCallback)
         {
@@ -88,12 +88,13 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         var b = box.getBounds();
         
         if(flipped) {
-            thumb1.setXY([b.xmin, b.ymax - thumb_size]);
-            thumb2.setXY([b.xmax - thumb_size, b.ymin]);
+            thumb1.setXY([bbox.getX() + b.xmin, bbox.getY() + b.ymax - thumb_size]);
+            thumb2.setXY([bbox.getX() + b.xmax - thumb_size, bbox.getY() + b.ymin]);
         
         } else {
-            thumb1.setXY([b.xmin, b.ymin]);
-            thumb2.setXY([b.xmax - thumb_size, b.ymax - thumb_size]);
+            thumb1.setXY([bbox.getX() + b.xmin, bbox.getY() + b.ymin]);
+            thumb2.setXY([bbox.getX() + b.xmax - thumb_size,
+                          bbox.getY() + b.ymax - thumb_size]);
         }
         
         onMoved();
@@ -163,8 +164,23 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
 function setup_dragboxes(Y, bounds)
 {
     var bbox = Y.one('#scan-notes'),
-        scan = bbox.one('img');
+        scan = bbox.one('img'),
+        button = Y.one('#add-box'),
+        blather = Y.one('#blather');
 
+    var img_width = scan.get('width'),
+        img_height = scan.get('height');
+    
+    var minlat = Math.min(bounds[0], bounds[2]),
+        minlon = Math.min(bounds[1], bounds[3]),
+        maxlat = Math.max(bounds[0], bounds[2]),
+        maxlon = Math.max(bounds[1], bounds[3]),
+        latspan = minlat - maxlat,
+        lonspan = maxlon - minlon;
+
+    console.log(bounds);
+    console.log([maxlat, latspan, minlon, lonspan]);
+    
     function foregroundBox(node)
     {
         var boxes = bbox.all('.drag-box');
@@ -180,17 +196,32 @@ function setup_dragboxes(Y, bounds)
     {
         bbox.get('children').replaceClass('active', 'inactive');
     }
+    
+    function boxBounds(box)
+    {
+        var b = box.getBounds();
+        
+        return [maxlat + latspan * (b.ymin / img_height),
+                minlon + lonspan * (b.xmin / img_width),
+                maxlat + latspan * (b.ymax / img_height),
+                minlon + lonspan * (b.xmax / img_width)];
+    }
+    
+    function onBoxChanged(box)
+    {
+        blather.set('text', 'box: ' + box.noteText() + ' at ' + boxBounds(box).toString());
+    }
 
     function add_box()
     {
         hide_boxes();
-        dragbox(Y, bbox, undefined, foregroundBox);
+        dragbox(Y, bbox, onBoxChanged, foregroundBox);
     }
     
-    bbox.setStyle('width', scan.get('width') + 'px');
-    bbox.setStyle('height', scan.get('height') + 'px');
+    bbox.setStyle('width', img_width + 'px');
+    bbox.setStyle('height', img_height + 'px');
     
     scan.on('click', hide_boxes);
     
-    Y.one('#add-box').after('click', add_box);
+    button.after('click', add_box);
 }
