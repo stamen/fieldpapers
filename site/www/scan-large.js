@@ -12,7 +12,8 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         area = new Y.Node(document.createElement('div')),
         thumb1 = new Y.Node(document.createElement('div')),
         thumb2 = new Y.Node(document.createElement('div')),
-        dead_note = new Y.Node(document.createElement('div')),
+        dead_note_outer = new Y.Node(document.createElement('div')),
+        dead_note_inner = new Y.Node(document.createElement('span')),
         live_note = new Y.Node(document.createElement('textarea'));
     
     node.addClass('drag-box');
@@ -33,7 +34,7 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     thumb2.setStyle('width', thumb_size + 'px');
     thumb2.setStyle('height', thumb_size + 'px');
     
-    dead_note.addClass('note');
+    dead_note_outer.addClass('note');
     live_note.addClass('note');
 
     bbox.append(node);
@@ -41,7 +42,8 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     node.append(area);
     node.append(thumb1);
     node.append(thumb2);
-    node.append(dead_note);
+    node.append(dead_note_outer);
+    dead_note_outer.append(dead_note_inner);
     node.append(live_note);
 
     box.getBounds = function()
@@ -69,8 +71,8 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         edge.setStyle('width', (b.xmax - b.xmin) + 2 + 'px');
         edge.setStyle('height', (b.ymax - b.ymin) + 2 + 'px');
         
-        dead_note.setX(bbox.getX() + b.xmin);
-        dead_note.setY(bbox.getY() + b.ymax + thumb_size);
+        dead_note_outer.setX(bbox.getX() + b.xmin);
+        dead_note_outer.setY(bbox.getY() + b.ymax + thumb_size);
         
         live_note.setX(bbox.getX() + b.xmin);
         live_note.setY(bbox.getY() + b.ymax + thumb_size);
@@ -83,7 +85,7 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     
     function onNoteChanged()
     {
-        dead_note.set('text', live_note.get('value'));
+        dead_note_inner.set('text', live_note.get('value'));
     
         if(onChangedCallback)
         {
@@ -145,7 +147,8 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
    /*
     * Connect drag behaviors.
     */
-    node.on('click', onSelected);
+    area.on('click', onSelected);
+    dead_note_inner.on('click', onSelected);
     
     var _drag;
     

@@ -76,7 +76,7 @@ table#scan-note-rows tr td.note
 
 .drag-box textarea.note
 {
-    background-color: white;
+    background-color: rgba(255, 255, 255, .9);
     border: 1px solid black;
 }
 
@@ -85,9 +85,14 @@ table#scan-note-rows tr td.note
     display: none;
 }
 
+.drag-box div.note span
+{
+    background-color: rgba(255, 255, 255, .5);
+}
+
 .drag-box.inactive .thumb
 {
-    background-color: rgba(255, 255, 255, .35);
+    background-color: rgba(255, 255, 255, .5);
 }
 
 .drag-box.inactive .edge
