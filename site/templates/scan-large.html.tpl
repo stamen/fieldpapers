@@ -49,7 +49,7 @@
             window.onload = function()
             {
                 
-                YUI().use('dd-constrain', function(Y) { setup_dragboxes(Y, bounds) });
+                YUI().use('dd-constrain', function(Y) { setup_data_boxes(Y, bounds) });
             };
         
         // {/literal}]]>

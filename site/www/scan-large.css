@@ -1,6 +1,11 @@
-#scan-notes
+#scan-notes-image
 {
     position: relative;
+}
+
+#scan-notes-image *
+{
+    text-align: left;
 }
 
 table#scan-note-rows
@@ -12,6 +17,7 @@ table#scan-note-rows tr th,
 table#scan-note-rows tr td
 {
     text-align: right;
+    padding-left: .5em;
 }
 
 table#scan-note-rows tbody tr
@@ -19,15 +25,26 @@ table#scan-note-rows tbody tr
     border-top: 1px solid silver;
 }
 
+table#scan-note-rows tr td.delete,
 table#scan-note-rows tr th.note,
 table#scan-note-rows tr td.note
 {
     text-align: left;
+    padding-right: .5em;
+}
+
+table#scan-note-rows tbody tr td
+{
+    border-top: 1px solid pink;
+    margin: 0;
+    padding-top: .5em;
+    padding-bottom: .5em;
 }
 
 table#scan-note-rows tr td
 {
     vertical-align: top;
+    white-space: nowrap;
 }
 
 table#scan-note-rows tr td.note
@@ -62,7 +79,6 @@ table#scan-note-rows tr td.note
 .drag-box .note
 {
     position: absolute;
-    text-align: left;
     font: 11px/12px "Lucida Sans", Helvetica, Arial, sans-serif;
     width: 200px;
     height: 48px;
@@ -82,6 +98,7 @@ table#scan-note-rows tr td.note
 
 .drag-box .buttons
 {
+    width: 120px;
     position: absolute;
 }
 

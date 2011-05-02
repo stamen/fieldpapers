@@ -4,12 +4,13 @@
         <br/>
         <span id="blather"></span>
     </p>
-    <p class="wide" id="scan-notes">
+    <p class="wide" id="scan-notes-image">
         <img border="1" src="{$scan.base_url}/walking-paper-{$scan.id}.jpg" />
     </p>
     <table class="wide" id="scan-note-rows">
         <thead>
             <tr>
+                <th> </th>
                 <th class="note">Note</th>
                 <th>North</th>
                 <th>West</th>
