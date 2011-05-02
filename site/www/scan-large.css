@@ -80,14 +80,20 @@ table#scan-note-rows tr td.note
     border: 1px solid black;
 }
 
-.drag-box.inactive textarea.note
+.drag-box .buttons
 {
-    display: none;
+    position: absolute;
 }
 
 .drag-box div.note span
 {
     background-color: rgba(255, 255, 255, .5);
+}
+
+.drag-box.inactive textarea.note,
+.drag-box.inactive .buttons
+{
+    display: none;
 }
 
 .drag-box.inactive .thumb

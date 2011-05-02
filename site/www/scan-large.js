@@ -1,4 +1,4 @@
-function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
+function dragbox(Y, bbox, onChangedCallback, onSelectedCallback, onDeletedCallback)
 {
     var box = {},
         thumb_size = 8,
@@ -17,6 +17,10 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
             '<span></span>',
           '</div>',
           '<textarea class="note"></textarea>',
+          '<div class="buttons">',
+            '<button class="okay">OK</button>',
+            '<button class="delete">Delete</button>',
+          '</div>',
         '</div>'
       ].join(''));
     
@@ -27,8 +31,11 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         thumb1 = node.all('.thumb').item(0),
         thumb2 = node.all('.thumb').item(1),
         dead_note_outer = node.one('div.note'),
-        dead_note_inner = node.one('div.note span'),
-        live_note = node.one('textarea.note');
+        dead_note_inner = dead_note_outer.one('span'),
+        live_note = node.one('textarea.note'),
+        buttons = node.one('.buttons'),
+        ok_button = buttons.one('button.okay'),
+        del_button = buttons.one('button.delete');
         
     box.getBounds = function()
     {
@@ -61,9 +68,12 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         live_note.setX(bbox.getX() + b.xmin);
         live_note.setY(bbox.getY() + b.ymax + thumb_size);
         
+        buttons.setX(bbox.getX() + b.xmin);
+        buttons.setY(bbox.getY() + b.ymax + 2 * thumb_size + parseInt(live_note.getStyle('height')));
+        
         if(onChangedCallback)
         {
-            onChangedCallback(box);
+            onChangedCallback(box.noteText(), box.getBounds());
         }
     }
     
@@ -73,7 +83,7 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     
         if(onChangedCallback)
         {
-            onChangedCallback(box);
+            onChangedCallback(box.noteText(), box.getBounds());
         }
     }
     
@@ -123,6 +133,16 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
         live_note.focus();
     }
     
+    function onDelete()
+    {
+        node.remove();
+        
+        if(onDeletedCallback)
+        {
+            onDeletedCallback(box);
+        }
+    }
+    
    /*
     * Initial position.
     */
@@ -133,6 +153,9 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
     */
     area.on('click', onSelected);
     dead_note_inner.on('click', onSelected);
+    
+    ok_button.on('click', function() { console.log(['click', box.noteText()]) });
+    del_button.on('click', onDelete);
     
     var _drag;
     
@@ -159,7 +182,7 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
 
 function boxrow(Y, rows)
 {
-    var _row = Y.Node.create([
+    var node = Y.Node.create([
         '<tr>',
         '<td class="note"></td>',
         '<td class="n"></td>',
@@ -169,14 +192,14 @@ function boxrow(Y, rows)
         '</tr>'
       ].join(''));
     
-    rows.append(_row);
+    rows.append(node);
     
     var row = {},
-        cell_note = _row.one('.note'),
-        cell_north = _row.one('.n'),
-        cell_south = _row.one('.s'),
-        cell_west = _row.one('.w'),
-        cell_east = _row.one('.e');
+        cell_note = node.one('.note'),
+        cell_north = node.one('.n'),
+        cell_south = node.one('.s'),
+        cell_west = node.one('.w'),
+        cell_east = node.one('.e');
     
     row.describeBox = function(note, bounds)
     {
@@ -188,6 +211,11 @@ function boxrow(Y, rows)
         cell_east.set('text', bounds[3].toFixed(6));
     }
     
+    row.deleteRow = function()
+    {
+        node.remove();
+    }
+    
     return row;
 }
 
@@ -196,8 +224,8 @@ function setup_dragboxes(Y, bounds)
     var bbox = Y.one('#scan-notes'),
         table = Y.one('#scan-note-rows'),
         scan = bbox.one('img'),
-        button = Y.one('#add-box'),
-        blather = Y.one('#blather');
+        add_button = Y.one('#add-box'),
+        box_rows = {};
 
     var img_width = scan.get('width'),
         img_height = scan.get('height');
@@ -220,38 +248,38 @@ function setup_dragboxes(Y, bounds)
         }
     }
     
-    function hide_boxes()
+    function hideBoxes()
     {
         bbox.get('children').replaceClass('active', 'inactive');
     }
     
-    function boxBounds(box)
+    function boxBounds(bounds)
     {
-        var b = box.getBounds();
-        
-        return [maxlat + latspan * (b.ymin / img_height),
-                minlon + lonspan * (b.xmin / img_width),
-                maxlat + latspan * (b.ymax / img_height),
-                minlon + lonspan * (b.xmax / img_width)];
+        return [maxlat + latspan * (bounds.ymin / img_height),
+                minlon + lonspan * (bounds.xmin / img_width),
+                maxlat + latspan * (bounds.ymax / img_height),
+                minlon + lonspan * (bounds.xmax / img_width)];
     }
     
-    function onBoxChanged(box)
+    function addBox()
     {
-        blather.set('text', 'box: ' + box.noteText() + ' at ' + boxBounds(box).toString());
-    }
-
-    function add_box()
-    {
-        hide_boxes();
+        hideBoxes();
         
         var row = boxrow(Y, Y.one('#scan-note-rows tbody'));
         
-        function onBoxChanged(box)
+        function onBoxChanged(note_text, box_bounds)
         {
-            row.describeBox(box.noteText(), boxBounds(box));
+            row.describeBox(note_text, boxBounds(box_bounds));
         }
         
-        dragbox(Y, bbox, onBoxChanged, foregroundBox);
+        var box = dragbox(Y, bbox, onBoxChanged, foregroundBox, deleteBox);
+        
+        box_rows[box] = row;
+    }
+    
+    function deleteBox(box)
+    {
+        box_rows[box].deleteRow();
     }
     
     bbox.setStyle('width', img_width + 'px');
@@ -259,7 +287,7 @@ function setup_dragboxes(Y, bounds)
     
     table.setStyle('width', img_width + 'px');
     
-    scan.on('click', hide_boxes);
+    scan.on('click', hideBoxes);
     
-    button.after('click', add_box);
+    add_button.after('click', addBox);
 }
