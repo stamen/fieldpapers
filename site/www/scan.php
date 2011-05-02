@@ -74,6 +74,8 @@
                               'is_private' => $_POST['is_private'],
                               'will_edit' => $_POST['will_edit'],
                               'has_geotiff' => $_POST['has_geotiff'],
+                              'has_geojpeg' => $_POST['has_geojpeg'],
+                              'geojpeg_bounds' => $_POST['geojpeg_bounds'],
                               'has_stickers' => $_POST['has_stickers']);
                 
                 add_log($dbh, "Posting additional details to scan {$print['id']}");
