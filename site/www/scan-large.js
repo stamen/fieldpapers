@@ -1,4 +1,4 @@
-function data_box(Y, scan_notes_image, onChangedCallback, onSelectedCallback, onDeletedCallback)
+function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDeletedCallback)
 {
     var box = {},
         thumb_size = 8,
@@ -24,7 +24,7 @@ function data_box(Y, scan_notes_image, onChangedCallback, onSelectedCallback, on
         '</div>'
       ].join(''));
     
-    scan_notes_image.append(node);
+    notes_area.append(node);
     
     var area = node.one('.area'),
         edge = node.one('.edge'),
@@ -39,8 +39,8 @@ function data_box(Y, scan_notes_image, onChangedCallback, onSelectedCallback, on
         
     box.getBounds = function()
     {
-        var xmin = area.getX() - scan_notes_image.getX(),
-            ymin = area.getY() - scan_notes_image.getY(),
+        var xmin = area.getX() - notes_area.getX(),
+            ymin = area.getY() - notes_area.getY(),
             xmax = xmin + parseInt(area.getStyle('width')),
             ymax = ymin + parseInt(area.getStyle('height'));
         
@@ -61,20 +61,20 @@ function data_box(Y, scan_notes_image, onChangedCallback, onSelectedCallback, on
     {
         var b = box.getBounds();
         
-        edge.setX(scan_notes_image.getX() + b.xmin - 4);
-        edge.setY(scan_notes_image.getY() + b.ymin - 4);
+        edge.setX(notes_area.getX() + b.xmin - 4);
+        edge.setY(notes_area.getY() + b.ymin - 4);
         
         edge.setStyle('width', (b.xmax - b.xmin) + 2 + 'px');
         edge.setStyle('height', (b.ymax - b.ymin) + 2 + 'px');
         
-        dead_note_outer.setX(scan_notes_image.getX() + b.xmin);
-        dead_note_outer.setY(scan_notes_image.getY() + b.ymax + thumb_size);
+        dead_note_outer.setX(notes_area.getX() + b.xmin);
+        dead_note_outer.setY(notes_area.getY() + b.ymax + thumb_size);
         
-        live_note.setX(scan_notes_image.getX() + b.xmin);
-        live_note.setY(scan_notes_image.getY() + b.ymax + thumb_size);
+        live_note.setX(notes_area.getX() + b.xmin);
+        live_note.setY(notes_area.getY() + b.ymax + thumb_size);
         
-        buttons.setX(scan_notes_image.getX() + b.xmin);
-        buttons.setY(scan_notes_image.getY() + b.ymax + 2 * thumb_size + parseInt(live_note.getStyle('height')));
+        buttons.setX(notes_area.getX() + b.xmin);
+        buttons.setY(notes_area.getY() + b.ymax + 2 * thumb_size + parseInt(live_note.getStyle('height')));
         
         if(onChangedCallback)
         {
@@ -97,18 +97,18 @@ function data_box(Y, scan_notes_image, onChangedCallback, onSelectedCallback, on
         var b = box.getBounds();
         
         if(flipped) {
-            thumb1.setXY([scan_notes_image.getX() + b.xmin,
-                          scan_notes_image.getY() + b.ymax - thumb_size]);
+            thumb1.setXY([notes_area.getX() + b.xmin,
+                          notes_area.getY() + b.ymax - thumb_size]);
 
-            thumb2.setXY([scan_notes_image.getX() + b.xmax - thumb_size,
-                          scan_notes_image.getY() + b.ymin]);
+            thumb2.setXY([notes_area.getX() + b.xmax - thumb_size,
+                          notes_area.getY() + b.ymin]);
         
         } else {
-            thumb1.setXY([scan_notes_image.getX() + b.xmin,
-                          scan_notes_image.getY() + b.ymin]);
+            thumb1.setXY([notes_area.getX() + b.xmin,
+                          notes_area.getY() + b.ymin]);
 
-            thumb2.setXY([scan_notes_image.getX() + b.xmax - thumb_size,
-                          scan_notes_image.getY() + b.ymax - thumb_size]);
+            thumb2.setXY([notes_area.getX() + b.xmax - thumb_size,
+                          notes_area.getY() + b.ymax - thumb_size]);
         }
         
         onMoved();
@@ -180,17 +180,17 @@ function data_box(Y, scan_notes_image, onChangedCallback, onSelectedCallback, on
     var _drag;
     
     _drag = new Y.DD.Drag({ node: area });
-    _drag = _drag.plug(Y.Plugin.DDConstrained, { constrain2node: scan_notes_image });
+    _drag = _drag.plug(Y.Plugin.DDConstrained, { constrain2node: notes_area });
     _drag.after('drag', updateThumbs);
     _drag.on('start', onSelected);
 
     _drag = new Y.DD.Drag({ node: thumb1 });
-    _drag = _drag.plug(Y.Plugin.DDConstrained, { constrain2node: scan_notes_image });
+    _drag = _drag.plug(Y.Plugin.DDConstrained, { constrain2node: notes_area });
     _drag.after('drag', updateArea);
     _drag.on('start', onSelected);
 
     _drag = new Y.DD.Drag({ node: thumb2 });
-    _drag = _drag.plug(Y.Plugin.DDConstrained, { constrain2node: scan_notes_image });
+    _drag = _drag.plug(Y.Plugin.DDConstrained, { constrain2node: notes_area });
     _drag.after('drag', updateArea);
     _drag.on('start', onSelected);
 
@@ -200,7 +200,7 @@ function data_box(Y, scan_notes_image, onChangedCallback, onSelectedCallback, on
     return box;
 }
 
-function data_row(Y, scan_note_rows_tbody, onDeletedCallback)
+function data_row(Y, notes_rows_tbody, onDeletedCallback)
 {
     var node = Y.Node.create([
         '<tr>',
@@ -213,7 +213,7 @@ function data_row(Y, scan_note_rows_tbody, onDeletedCallback)
         '</tr>'
       ].join(''));
     
-    scan_note_rows_tbody.append(node);
+    notes_rows_tbody.append(node);
     
     var row = {},
         del_button = node.one('.delete button'),
@@ -260,14 +260,29 @@ function setup_data_boxes(Y, bounds)
 {
     var box_rows = [];
 
-    var scan_notes_image = Y.one('#scan-notes-image'),
-        scan_note_rows = Y.one('#scan-note-rows'),
-        scan_note_rows_tbody = scan_note_rows.one('tbody'),
-        scan_img = scan_notes_image.one('img'),
+    var notes_image = Y.one('#notes-image'),
+        notes_area = Y.Node.create('<div class="notes-area"></div>'),
+        notes_rows = Y.one('#notes-rows'),
+        notes_rows_tbody = notes_rows.one('tbody'),
+        scan_img = notes_image.one('img'),
         add_button = Y.one('#add-box');
-
+    
     var img_width = scan_img.get('width'),
         img_height = scan_img.get('height');
+    
+   /*
+    * Prepare sizes of each DOM node based on loaded image size.
+    */
+    notes_image.setStyle('width', img_width + 'px');
+    notes_image.setStyle('height', img_height + 'px');
+
+    notes_image.append(notes_area);
+    notes_area.setX(notes_image.getX() + 90);
+    notes_area.setY(notes_image.getY() + 90);
+    notes_area.setStyle('width', (img_width - 180) + 'px');
+    notes_area.setStyle('height', (img_height - 180) + 'px');
+
+    notes_rows.setStyle('width', img_width + 'px');
     
     var minlat = Math.min(bounds[0], bounds[2]),
         minlon = Math.min(bounds[1], bounds[3]),
@@ -278,18 +293,18 @@ function setup_data_boxes(Y, bounds)
 
     function foregroundBox(node)
     {
-        var boxes = scan_notes_image.all('.drag-box');
+        var boxes = notes_area.all('.drag-box');
         
         if(boxes.indexOf(node) < boxes.size() - 1)
         {
             // move it to the front if it's not there already.
-            scan_notes_image.append(node);
+            notes_area.append(node);
         }
     }
     
     function hideBoxes()
     {
-        scan_notes_image.get('children').replaceClass('active', 'inactive');
+        notes_area.get('children').replaceClass('active', 'inactive');
     }
     
     function boxBounds(bounds)
@@ -309,8 +324,8 @@ function setup_data_boxes(Y, bounds)
             row.describeBox(note_text, boxBounds(box_bounds));
         }
         
-        var row = data_row(Y, scan_note_rows_tbody, deleteRow),
-            box = data_box(Y, scan_notes_image, onBoxChanged, foregroundBox, deleteBox);
+        var row = data_row(Y, notes_rows_tbody, deleteRow),
+            box = data_box(Y, notes_area, onBoxChanged, foregroundBox, deleteBox);
         
         box_rows.push({box: box, row: row});
     }
@@ -341,11 +356,6 @@ function setup_data_boxes(Y, bounds)
         }
     }
     
-    scan_notes_image.setStyle('width', img_width + 'px');
-    scan_notes_image.setStyle('height', img_height + 'px');
-    scan_note_rows.setStyle('width', img_width + 'px');
-    
     scan_img.on('click', hideBoxes);
-    
     add_button.after('click', addBox);
 }

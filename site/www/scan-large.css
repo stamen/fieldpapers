@@ -1,39 +1,44 @@
-#scan-notes-image
+#notes-image
 {
     position: relative;
 }
 
-#scan-notes-image *
+#notes-image .notes-area
+{
+    position: absolute;
+}
+
+#notes-image *
 {
     text-align: left;
 }
 
-table#scan-note-rows
+table#notes-rows
 {
     margin: 1em auto;
 }
 
-table#scan-note-rows tr th,
-table#scan-note-rows tr td
+table#notes-rows tr th,
+table#notes-rows tr td
 {
     text-align: right;
     padding-left: .5em;
 }
 
-table#scan-note-rows tbody tr
+table#notes-rows tbody tr
 {
     border-top: 1px solid silver;
 }
 
-table#scan-note-rows tr td.delete,
-table#scan-note-rows tr th.note,
-table#scan-note-rows tr td.note
+table#notes-rows tr td.delete,
+table#notes-rows tr th.note,
+table#notes-rows tr td.note
 {
     text-align: left;
     padding-right: .5em;
 }
 
-table#scan-note-rows tbody tr td
+table#notes-rows tbody tr td
 {
     border-top: 1px solid pink;
     margin: 0;
@@ -41,13 +46,13 @@ table#scan-note-rows tbody tr td
     padding-bottom: .5em;
 }
 
-table#scan-note-rows tr td
+table#notes-rows tr td
 {
     vertical-align: top;
     white-space: nowrap;
 }
 
-table#scan-note-rows tr td.note
+table#notes-rows tr td.note
 {
     white-space: pre-line;
 }
