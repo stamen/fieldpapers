@@ -25,11 +25,6 @@ table#notes-rows tr td
     padding-left: .5em;
 }
 
-table#notes-rows tbody tr
-{
-    border-top: 1px solid silver;
-}
-
 table#notes-rows tr td.delete,
 table#notes-rows tr th.note,
 table#notes-rows tr td.note
@@ -40,7 +35,6 @@ table#notes-rows tr td.note
 
 table#notes-rows tbody tr td
 {
-    border-top: 1px solid pink;
     margin: 0;
     padding-top: .5em;
     padding-bottom: .5em;
