@@ -7,45 +7,29 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
    /*
     * Prepare DOM.
     */
-    var node = new Y.Node(document.createElement('div')),
-        edge = new Y.Node(document.createElement('div')),
-        area = new Y.Node(document.createElement('div')),
-        thumb1 = new Y.Node(document.createElement('div')),
-        thumb2 = new Y.Node(document.createElement('div')),
-        dead_note_outer = new Y.Node(document.createElement('div')),
-        dead_note_inner = new Y.Node(document.createElement('span')),
-        live_note = new Y.Node(document.createElement('textarea'));
+    var node = Y.Node.create([
+        '<div class="drag-box">',
+          '<div class="edge"></div>',
+          '<div class="area" style="left: 10px; top: 10px; width: 50px; height: 50px;"></div>',
+          '<div class="thumb" style="width: '+thumb_size+'px; height: '+thumb_size+'px;"></div>',
+          '<div class="thumb" style="width: '+thumb_size+'px; height: '+thumb_size+'px;"></div>',
+          '<div class="note">',
+            '<span></span>',
+          '</div>',
+          '<textarea class="note"></textarea>',
+        '</div>'
+      ].join(''));
     
-    node.addClass('drag-box');
-    
-    edge.addClass('edge');
-
-    area.addClass('area');
-    area.setStyle('left', '10px');
-    area.setStyle('top', '10px');
-    area.setStyle('width', '50px');
-    area.setStyle('height', '50px');
-
-    thumb1.addClass('thumb');
-    thumb1.setStyle('width', thumb_size + 'px');
-    thumb1.setStyle('height', thumb_size + 'px');
-    
-    thumb2.addClass('thumb');
-    thumb2.setStyle('width', thumb_size + 'px');
-    thumb2.setStyle('height', thumb_size + 'px');
-    
-    dead_note_outer.addClass('note');
-    live_note.addClass('note');
-
     bbox.append(node);
-    node.append(edge);
-    node.append(area);
-    node.append(thumb1);
-    node.append(thumb2);
-    node.append(dead_note_outer);
-    dead_note_outer.append(dead_note_inner);
-    node.append(live_note);
-
+    
+    var area = node.one('.area'),
+        edge = node.one('.edge'),
+        thumb1 = node.all('.thumb').item(0),
+        thumb2 = node.all('.thumb').item(1),
+        dead_note_outer = node.one('div.note'),
+        dead_note_inner = node.one('div.note span'),
+        live_note = node.one('textarea.note');
+        
     box.getBounds = function()
     {
         var xmin = area.getX() - bbox.getX(),
@@ -175,24 +159,24 @@ function dragbox(Y, bbox, onChangedCallback, onSelectedCallback)
 
 function boxrow(Y, rows)
 {
-    var _row = new Y.Node(document.createElement('tr')),
-        cell_note = new Y.Node(document.createElement('td')),
-        cell_north = new Y.Node(document.createElement('td')),
-        cell_south = new Y.Node(document.createElement('td')),
-        cell_west = new Y.Node(document.createElement('td')),
-        cell_east = new Y.Node(document.createElement('td'));
-    
-    var row = {};
+    var _row = Y.Node.create([
+        '<tr>',
+        '<td class="note"></td>',
+        '<td class="n"></td>',
+        '<td class="w"></td>',
+        '<td class="s"></td>',
+        '<td class="e"></td>',
+        '</tr>'
+      ].join(''));
     
     rows.append(_row);
     
-    cell_note.addClass('note');
-    
-    _row.append(cell_note);
-    _row.append(cell_north);
-    _row.append(cell_west);
-    _row.append(cell_south);
-    _row.append(cell_east);
+    var row = {},
+        cell_note = _row.one('.note'),
+        cell_north = _row.one('.n'),
+        cell_south = _row.one('.s'),
+        cell_west = _row.one('.w'),
+        cell_east = _row.one('.e');
     
     row.describeBox = function(note, bounds)
     {
