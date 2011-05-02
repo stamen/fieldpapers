@@ -31,6 +31,25 @@
     <link rel="stylesheet" href="{$base_dir}/scan.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
     <script type="text/javascript" src="{$base_dir}/scan.js"></script>
+    
+    {if $scan.has_geojpeg == 'yes'}
+        {* See templates/scan-large-notes.htmlf.tpl *}
+
+        <link rel="stylesheet" href="{$base_dir}/scan-large.css" type="text/css" />
+        <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.3.0/build/yui/yui-min.js&3.3.0/build/oop/oop-min.js&3.3.0/build/dom/dom-base-min.js&3.3.0/build/dom/selector-native-min.js&3.3.0/build/dom/selector-css2-min.js&3.3.0/build/event-custom/event-custom-min.js&3.3.0/build/event/event-base-min.js&3.3.0/build/pluginhost/pluginhost-min.js&3.3.0/build/dom/dom-style-min.js&3.3.0/build/dom/dom-style-ie-min.js&3.3.0/build/dom/dom-screen-min.js&3.3.0/build/node/node-min.js&3.3.0/build/event/event-base-ie-min.js&3.3.0/build/event/event-delegate-min.js&3.3.0/build/attribute/attribute-base-min.js&3.3.0/build/base/base-min.js&3.3.0/build/classnamemanager/classnamemanager-min.js&3.3.0/build/dd/dd-ddm-base-min.js&3.3.0/build/dd/dd-drag-min.js&3.3.0/build/dd/dd-gestures-min.js&3.3.0/build/dd/dd-constrain-min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/scan-large.js"></script>
+
+        <script type="text/javascript">
+        // <![CDATA[{literal}
+        
+            window.onload = function()
+            {
+                YUI().use('dd-constrain', setup_dragboxes);
+            };
+        
+        // {/literal}]]>
+        </script>
+    {/if}
 </head>
 <body>
 

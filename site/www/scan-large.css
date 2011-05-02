@@ -1,0 +1,48 @@
+#scan-notes
+{
+    position: relative;
+}
+
+.drag-box .area
+{
+    background: none;
+    border: 1px dashed black;
+    position: absolute;
+}
+
+.drag-box .edge
+{
+    background: none;
+    position: absolute;
+    border: 4px solid rgba(255, 255, 255, .35);
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+}
+
+.drag-box .thumb
+{
+    background: white;
+    border: 1px solid black;
+    position: absolute;
+}
+
+.drag-box .note
+{
+    position: absolute;
+    background-color: white;
+    font: 11px/12px "Lucida Sans", Helvetica, Arial, sans-serif;
+    width: 200px;
+    height: 48px;
+    border: 1px solid black;
+}
+
+.drag-box.inactive .note
+{
+    display: none;
+}
+
+.drag-box.inactive .edge
+{
+    border-color: rgba(255, 255, 255, .15);
+}
