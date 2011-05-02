@@ -38,10 +38,7 @@
     </script>
 {/if}
 
-<p class="wide">
-    <a href="{$scan.base_url}/{$scan.uploaded_file}">
-        <img border="1" src="{$scan.base_url}/large.jpg" /></a>
-</p>
+{include file="scan-large-notes.htmlf.tpl" scan=$scan}
 
 <p>
     Scarica <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">una mappa recente di quest'area partendo dalla stampa #{$scan.print_id|escape}</a>.

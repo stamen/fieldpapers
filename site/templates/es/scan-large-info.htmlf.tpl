@@ -38,10 +38,7 @@
     </script>
 {/if}
 
-<p class="wide">
-    <a href="{$scan.base_url}/{$scan.uploaded_file}">
-        <img border="1" src="{$scan.base_url}/large.jpg" /></a>
-</p>
+{include file="scan-large-notes.htmlf.tpl" scan=$scan}
 
 <p>
     Descarga un
