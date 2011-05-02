@@ -178,9 +178,6 @@ function setup_dragboxes(Y, bounds)
         latspan = minlat - maxlat,
         lonspan = maxlon - minlon;
 
-    console.log(bounds);
-    console.log([maxlat, latspan, minlon, lonspan]);
-    
     function foregroundBox(node)
     {
         var boxes = bbox.all('.drag-box');
