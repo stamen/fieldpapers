@@ -1,11 +1,13 @@
-{if $scan.has_geojpeg == 'yes'}
+{if $scan.has_geotiff == 'yes'}
     <p>
-        <button id="add-box">Add BBox</button>
-        <br/>
-        <span id="blather"></span>
+        GeoTIFF: <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">walking-paper-{$scan.id|escape}.tif</a>.
     </p>
+{/if}
+
+{if $scan.has_geojpeg == 'yes'}
     <p class="wide" id="notes-image">
         <img border="1" src="{$scan.base_url}/walking-paper-{$scan.id}.jpg" />
+        <button id="add-box">Add BBox</button>
     </p>
     <table class="wide" id="notes-rows">
         <thead>

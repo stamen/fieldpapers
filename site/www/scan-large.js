@@ -10,7 +10,7 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
     var node = Y.Node.create([
         '<div class="drag-box">',
           '<div class="edge"></div>',
-          '<div class="area" style="left: 10px; top: 10px; width: 50px; height: 50px;"></div>',
+          '<div class="area" style="left: 10px; bottom: 10px; width: 50px; height: 50px;"></div>',
           '<div class="thumb" style="width: '+thumb_size+'px; height: '+thumb_size+'px;"></div>',
           '<div class="thumb" style="width: '+thumb_size+'px; height: '+thumb_size+'px;"></div>',
           '<div class="note">',
@@ -114,7 +114,7 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
         onMoved();
     }
     
-    function updateArea()
+    function updateArea(e)
     {
         var xmin = Math.min(thumb1.getX(), thumb2.getX()),
             ymin = Math.min(thumb1.getY(), thumb2.getY()),
@@ -129,6 +129,8 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
                 || (thumb1.getX() > thumb2.getX() && thumb1.getY() < thumb2.getY()));
         
         onMoved();
+        
+        e.stopImmediatePropagation();
     }
     
     function onSelected(e)
@@ -178,6 +180,8 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
     * Connect drag behaviors.
     */
     area.on('click', onSelected);
+    thumb1.on('click', onSelected);
+    thumb2.on('click', onSelected);
     live_note.on('click', onSelected);
     dead_note_inner.on('click', onSelected);
     
@@ -282,7 +286,7 @@ function setup_data_boxes(Y, bounds)
     */
     notes_image.setStyle('width', img_width + 'px');
     notes_image.setStyle('height', img_height + 'px');
-
+    
     notes_image.append(notes_area);
     notes_area.setX(notes_image.getX() + 90);
     notes_area.setY(notes_image.getY() + 90);

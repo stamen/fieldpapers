@@ -79,15 +79,6 @@
 
             {include file="$language/scan-info.htmlf.tpl"}
             
-            <ul>
-                {if $scan.has_geotiff == "yes"}
-                    <li>GeoTIFF: <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">walking-paper-{$scan.id|escape}.tif</a></li>
-                {/if}
-                {if $scan.has_stickers == "yes"}
-                    <li>Stickers: <a href="{$scan.base_url|escape}/stickers.csv">stickers.csv</a></li>
-                {/if}
-            </ul>
-            
             {include file="$language/scan-editor-info.htmlf.tpl"}
             
             <div id="editor">

@@ -13,6 +13,13 @@
     text-align: left;
 }
 
+#notes-image #add-box
+{
+    position: absolute;
+    bottom: 1em;
+    left: 1em;
+}
+
 table#notes-rows
 {
     margin: 1em auto;
