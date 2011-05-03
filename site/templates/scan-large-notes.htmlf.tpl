@@ -23,6 +23,7 @@
         <tbody>
         </tbody>
     </table>
+    <pre>{$notes|@print_r:1|escape}</pre>
 {else}
     <p class="wide">
         <a href="{$scan.base_url}/{$scan.uploaded_file}">

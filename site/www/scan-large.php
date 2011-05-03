@@ -52,12 +52,14 @@
     if($scan)
     {
         $print = get_print($dbh, $scan['print_id']);
+        $notes = get_scan_notes($dbh, array('page' => 1, 'perpage' => 242), $scan['id']);
     }
 
     $sm = get_smarty_instance();
     $sm->assign('scan', $scan);
     $sm->assign('step', $step);
     $sm->assign('print', $print);
+    $sm->assign('notes', $notes);
     $sm->assign('language', $language);
     
     scan_headers($scan);
