@@ -401,6 +401,10 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
 
                 print_pages.append(page_data)
     
+    else:
+        yield ALL_FINISHED
+        return
+    
     finish_drawing()
     
     yield 60

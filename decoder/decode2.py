@@ -376,8 +376,15 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     
     print >> stderr, 'Downloading', url
     
-    input = imageopen(url)
-    blobs = imgblobs(input, highpass_filename, preblobs_filename, postblob_filename)
+    try:
+        input = imageopen(url)
+    except IOError, e:
+        print >> stderr, 'Failed:', e
+
+        yield ALL_FINISHED
+        return
+    else:
+        blobs = imgblobs(input, highpass_filename, preblobs_filename, postblob_filename)
     
     s, h, path, p, q, f = urlparse(url)
     uploaded_file = basename(path)

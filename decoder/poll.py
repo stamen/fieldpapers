@@ -100,6 +100,8 @@ if __name__ == '__main__':
                 # probably no queue message
                 pass
             else:
+                print >> sys.stderr, '_' * 80
+    
                 try:
                     msg = json.loads(content)
                     
@@ -112,6 +114,13 @@ if __name__ == '__main__':
                     action = msg.get('action', 'compose')
 
                     if action == 'decode':
+                        if 'url' not in msg:
+                            # we're no longer set up to handle these.
+                            print >> sys.stderr, datetime.datetime.now(), 'No URL in message id', message_id, "so we'll just pretend it never happened."
+
+                            updateQueue(apibase, password, message_id, ALL_FINISHED)
+                            continue
+                        
                         url = msg['url']
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
