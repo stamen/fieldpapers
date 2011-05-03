@@ -99,6 +99,29 @@ ALTER TABLE scans ADD COLUMN geojpeg_bounds TEXT AFTER uploaded_file;
 
 
 
+DROP TABLE IF EXISTS scan_notes;
+
+CREATE TABLE scan_notes (
+
+    scan_id     VARCHAR(8) NOT NULL,
+    number      INT NOT NULL,
+    
+    note        TEXT,
+
+    north       DOUBLE,
+    south       DOUBLE,
+    east        DOUBLE,
+    west        DOUBLE,
+
+    user_id     VARCHAR(8) NOT NULL,
+    created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (scan_id, number)
+
+) ENGINE=InnoDB, CHARACTER SET utf8;
+
+
+
 DROP TABLE IF EXISTS steps;
 
 CREATE TABLE steps (

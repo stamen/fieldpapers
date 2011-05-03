@@ -267,16 +267,17 @@ function data_row(Y, notes_rows_tbody, onDeletedCallback)
     return row;
 }
 
-function setup_data_boxes(Y, bounds)
+function setup_data_boxes(Y, scan_id, bounds)
 {
-    var box_rows = [];
+    var notes = [];
 
     var notes_image = Y.one('#notes-image'),
         notes_area = Y.Node.create('<div class="notes-area"></div>'),
         notes_rows = Y.one('#notes-rows'),
         notes_rows_tbody = notes_rows.one('tbody'),
         scan_img = notes_image.one('img'),
-        add_button = Y.one('#add-box');
+        add_button = Y.one('#add-note'),
+        save_timeout = undefined;
     
     var img_width = scan_img.get('width'),
         img_height = scan_img.get('height');
@@ -330,25 +331,40 @@ function setup_data_boxes(Y, bounds)
     {
         hideBoxes();
         
+        var data = {note: null, north: null, west: null, south: null, east: null};
+        
         function onBoxChanged(note_text, box_bounds)
         {
-            row.describeBox(note_text, boxBounds(box_bounds));
+            var geo_bounds = boxBounds(box_bounds);
+            row.describeBox(note_text, geo_bounds);
+            
+            data.note = note_text;
+            data.north = geo_bounds[0];
+            data.south = geo_bounds[2];
+            data.west = geo_bounds[1];
+            data.east = geo_bounds[3];
+            
+            saveNotes();
         }
         
         var row = data_row(Y, notes_rows_tbody, deleteRow),
             box = data_box(Y, notes_area, onBoxChanged, foregroundBox, deleteBox);
         
-        box_rows.push({box: box, row: row});
+        notes.push({box: box, row: row, data: data});
+        
+        saveNotes();
     }
     
     function deleteBox(box)
     {
-        for(var i = 0; i < box_rows.length; i++)
+        for(var i = 0; i < notes.length; i++)
         {
-            if(box_rows[i].box == box)
+            if(notes[i].box == box)
             {
-                box_rows[i].row.deleteRow();
-                box_rows.splice(i, 1);
+                notes[i].row.deleteRow();
+                notes.splice(i, 1);
+                
+                saveNotes();
                 return;
             }
         }
@@ -356,15 +372,57 @@ function setup_data_boxes(Y, bounds)
     
     function deleteRow(row)
     {
-        for(var i = 0; i < box_rows.length; i++)
+        for(var i = 0; i < notes.length; i++)
         {
-            if(box_rows[i].row == row)
+            if(notes[i].row == row)
             {
-                box_rows[i].box.deleteBox();
-                box_rows.splice(i, 1);
+                notes[i].box.deleteBox();
+                notes.splice(i, 1);
+                
+                saveNotes();
                 return;
             }
         }
+    }
+    
+    function saveNotes()
+    {
+        if(save_timeout)
+        {
+            clearTimeout(save_timeout);
+        }
+        
+        save_timeout = setTimeout(reallySaveNotes, 1000);
+    }
+    
+    function reallySaveNotes()
+    {
+        var post = [];
+        
+        for(var i = 0; i < notes.length; i++)
+        {
+            var data = notes[i].data,
+                note = [
+                    'notes[' + i + '][note]=' + escape(data.note),
+                    'notes[' + i + '][north]=' + data.north.toFixed(8),
+                    'notes[' + i + '][south]=' + data.south.toFixed(8),
+                    'notes[' + i + '][west]=' + data.west.toFixed(8),
+                    'notes[' + i + '][east]=' + data.east.toFixed(8)
+                  ];
+        
+            post = post.concat(note);
+        }
+        
+        var config = {
+            method: 'POST',
+            data: post.join('&'),
+            headers: 'Content-Type: application/form-url-encoded',
+            on: {
+                failure: function() { alert('Failed to save notes, try again?') }
+              }
+          };
+        
+        Y.io('scan-notes.php?id=' + escape(scan_id), config);
     }
     
     scan_img.on('click', hideBoxes);

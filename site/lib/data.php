@@ -862,6 +862,47 @@
         return get_scan($dbh, $scan['id']);
     }
     
+    function set_scan_notes(&$dbh, $user_id, $scan_id, $notes)
+    {
+        foreach($notes as $number => $note)
+        {
+            $q = sprintf('REPLACE INTO scan_notes
+                          SET user_id = %s,
+                              scan_id = %s,
+                              note = %s,
+                              north = %.8f,
+                              south = %.8f,
+                              west = %.8f,
+                              east = %.8f,
+                              number = %d',
+
+                         $dbh->quoteSmart($user_id),
+                         $dbh->quoteSmart($scan_id),
+                         $dbh->quoteSmart($note['note']),
+                         $note['north'],
+                         $note['south'],
+                         $note['west'],
+                         $note['east'],
+                         $number);
+    
+            error_log(preg_replace('/\s+/', ' ', $q));
+    
+            $res = $dbh->query($q);
+            
+            if(PEAR::isError($res)) 
+                die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+        
+        $q = sprintf('DELETE FROM scan_notes WHERE number > %d', $number);
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+    }
+    
     function delete_scan(&$dbh, $scan_id)
     {
         $q = sprintf('DELETE FROM scans

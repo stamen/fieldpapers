@@ -36,20 +36,20 @@
         {* See templates/scan-large-notes.htmlf.tpl *}
 
         <link rel="stylesheet" href="{$base_dir}/scan-large.css" type="text/css" />
-        <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.3.0/build/yui/yui-min.js&3.3.0/build/oop/oop-min.js&3.3.0/build/dom/dom-base-min.js&3.3.0/build/dom/selector-native-min.js&3.3.0/build/dom/selector-css2-min.js&3.3.0/build/event-custom/event-custom-min.js&3.3.0/build/event/event-base-min.js&3.3.0/build/pluginhost/pluginhost-min.js&3.3.0/build/dom/dom-style-min.js&3.3.0/build/dom/dom-style-ie-min.js&3.3.0/build/dom/dom-screen-min.js&3.3.0/build/node/node-min.js&3.3.0/build/event/event-base-ie-min.js&3.3.0/build/event/event-delegate-min.js&3.3.0/build/attribute/attribute-base-min.js&3.3.0/build/base/base-min.js&3.3.0/build/classnamemanager/classnamemanager-min.js&3.3.0/build/dd/dd-ddm-base-min.js&3.3.0/build/dd/dd-drag-min.js&3.3.0/build/dd/dd-gestures-min.js&3.3.0/build/dd/dd-constrain-min.js"></script>
+        <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.3.0/build/yui/yui-min.js&3.3.0/build/oop/oop-min.js&3.3.0/build/querystring/querystring-stringify-simple-min.js&3.3.0/build/dom/dom-base-min.js&3.3.0/build/dom/selector-native-min.js&3.3.0/build/dom/selector-css2-min.js&3.3.0/build/event-custom/event-custom-min.js&3.3.0/build/event/event-base-min.js&3.3.0/build/dom/dom-style-min.js&3.3.0/build/dom/dom-style-ie-min.js&3.3.0/build/queue-promote/queue-promote-min.js&3.3.0/build/datatype/datatype-xml-min.js&3.3.0/build/pluginhost/pluginhost-min.js&3.3.0/build/dom/dom-screen-min.js&3.3.0/build/node/node-min.js&3.3.0/build/event/event-base-ie-min.js&3.3.0/build/io/io-min.js&3.3.0/build/event/event-delegate-min.js&3.3.0/build/attribute/attribute-base-min.js&3.3.0/build/base/base-min.js&3.3.0/build/classnamemanager/classnamemanager-min.js&3.3.0/build/event/event-synthetic-min.js&3.3.0/build/event/event-resize-min.js&3.3.0/build/event/event-mouseenter-min.js&3.3.0/build/dd/dd-min.js&3.3.0/build/dd/dd-gestures-min.js&3.3.0/build/dd/dd-drop-plugin-min.js"></script>
         <script type="text/javascript" src="{$base_dir}/scan-large.js"></script>
 
         <script type="text/javascript">
         // <![CDATA[
         
+            var scanid = '{$scan.id|escape:"javascript"}';
             var bounds = '{$scan.geojpeg_bounds|escape:"javascript"}'.split(',').map(parseFloat);
         
             {literal}
         
             window.onload = function()
             {
-                
-                YUI().use('dd-constrain', function(Y) { setup_data_boxes(Y, bounds) });
+                YUI().use('dd-constrain', 'io', function(Y) { setup_data_boxes(Y, scanid, bounds) });
             };
         
         // {/literal}]]>
