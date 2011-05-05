@@ -103,7 +103,7 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     driver = gdal.GetDriverByName('GTiff')
     
     handle, geotiff_filename = mkstemp(prefix='geotiff-', suffix='.tif')
-    geotiff_ds = driver.Create(geotiff_filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80'])
+    geotiff_ds = driver.Create(geotiff_filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80', 'BLOCKYSIZE=8'])
     geotiff_ds.SetGCPs(gcps, str(merc))
     
     close(handle)
