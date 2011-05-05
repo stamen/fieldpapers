@@ -15,15 +15,19 @@
     
     $dbh =& get_db_connection();
     
+    $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
     $scan = get_scan($dbh, $scan_id);
     
     if($scan && $notes)
     {
         $dbh->query('START TRANSACTION');
 
-        set_scan_notes($dbh, $user_id, $scan_id, $notes);
+        set_scan_notes($dbh, $user['id'], $scan['id'], $notes);
         
         $dbh->query('COMMIT');
     }
+    
+    if($user['id'])
+        setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
 
 ?>

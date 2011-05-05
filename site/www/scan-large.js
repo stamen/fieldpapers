@@ -437,7 +437,7 @@ function setup_data_boxes(Y, scan_id, bounds)
             data: post.join('&'),
             headers: 'Content-Type: application/form-url-encoded',
             on: {
-                failure: function() { alert('Failed to save notes, try again?') }
+                failure: function() { alert('Failed to save notes, maybe try again.') }
               }
           };
         
