@@ -346,7 +346,7 @@ function setup_data_boxes(Y, scan_id, bounds)
                 img_height * (south - maxlat) / latspan];
     }
     
-    function addBox(init)
+    function addBox(event, init)
     {
         hideBoxes();
         
@@ -466,7 +466,7 @@ function setup_data_boxes(Y, scan_id, bounds)
         while(inits.length)
         {
             var init = inits.shift();
-            addBox(init);
+            addBox(undefined, init);
         }
         
         hideBoxes();
