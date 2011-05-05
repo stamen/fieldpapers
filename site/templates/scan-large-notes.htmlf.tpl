@@ -21,9 +21,18 @@
             </tr>
         </thead>
         <tbody>
+            {foreach from=$notes item="note"}
+                <tr>
+                    <td> </td>
+                    <td class="t">{$note.note|escape}</td>
+                    <td class="n">{$note.north|escape}</td>
+                    <td class="w">{$note.west|escape}</td>
+                    <td class="s">{$note.south|escape}</td>
+                    <td class="e">{$note.east|escape}</td>
+                </tr>
+            {/foreach}
         </tbody>
     </table>
-    <pre>{$notes|@print_r:1|escape}</pre>
 {else}
     <p class="wide">
         <a href="{$scan.base_url}/{$scan.uploaded_file}">

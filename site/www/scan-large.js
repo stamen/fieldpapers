@@ -1,4 +1,4 @@
-function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDeletedCallback)
+function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDeletedCallback, init)
 {
     var box = {},
         thumb_size = 8,
@@ -37,6 +37,17 @@ function data_box(Y, notes_area, onChangedCallback, onSelectedCallback, onDelete
         ok_button = buttons.one('button.okay'),
         del_button = buttons.one('button.delete');
         
+    if(init != undefined)
+    {
+        area.setX(notes_area.getX() + init.x);
+        area.setY(notes_area.getY() + init.y);
+        area.setStyle('width', init.w + 'px');
+        area.setStyle('height', init.h + 'px');
+        
+        live_note.set('value', init.text);
+        dead_note_inner.set('text', init.text);
+    }
+    
     box.getBounds = function()
     {
         var xmin = area.getX() - notes_area.getX(),
@@ -319,7 +330,7 @@ function setup_data_boxes(Y, scan_id, bounds)
         notes_area.get('children').replaceClass('active', 'inactive');
     }
     
-    function boxBounds(bounds)
+    function pointLocationBounds(bounds)
     {
         return [maxlat + latspan * (bounds.ymin / img_height),
                 minlon + lonspan * (bounds.xmin / img_width),
@@ -327,15 +338,23 @@ function setup_data_boxes(Y, scan_id, bounds)
                 minlon + lonspan * (bounds.xmax / img_width)];
     }
     
-    function addBox()
+    function locationPointBounds(north, west, south, east)
+    {
+        return [img_width * (west - minlon) / lonspan,
+                img_height * (north - maxlat) / latspan,
+                img_width * (east - minlon) / lonspan,
+                img_height * (south - maxlat) / latspan];
+    }
+    
+    function addBox(init)
     {
         hideBoxes();
         
         var data = {note: null, north: null, west: null, south: null, east: null};
-        
+
         function onBoxChanged(note_text, box_bounds)
         {
-            var geo_bounds = boxBounds(box_bounds);
+            var geo_bounds = pointLocationBounds(box_bounds);
             row.describeBox(note_text, geo_bounds);
             
             data.note = note_text;
@@ -346,9 +365,9 @@ function setup_data_boxes(Y, scan_id, bounds)
             
             saveNotes();
         }
-        
+
         var row = data_row(Y, notes_rows_tbody, deleteRow),
-            box = data_box(Y, notes_area, onBoxChanged, foregroundBox, deleteBox);
+            box = data_box(Y, notes_area, onBoxChanged, foregroundBox, deleteBox, init);
         
         notes.push({box: box, row: row, data: data});
         
@@ -424,6 +443,36 @@ function setup_data_boxes(Y, scan_id, bounds)
         
         Y.io('scan-notes.php?id=' + escape(scan_id), config);
     }
+    
+    function importInitialNotes()
+    {
+        var cells = notes_rows_tbody.all('tr'),
+            inits = [];
+        
+        while(cells.size())
+        {
+            var cell = cells.shift(),
+                text = cell.one('td.t').get('text'),
+                north = parseFloat(cell.one('td.n').get('text')),
+                south = parseFloat(cell.one('td.s').get('text')),
+                east = parseFloat(cell.one('td.e').get('text')),
+                west = parseFloat(cell.one('td.w').get('text'));
+
+            var bounds = locationPointBounds(north, west, south, east);
+            inits.push({text: text, x: bounds[0], y: bounds[1], w: bounds[2] - bounds[0], h: bounds[3] - bounds[1]});
+            cell.remove();
+        }
+        
+        while(inits.length)
+        {
+            var init = inits.shift();
+            addBox(init);
+        }
+        
+        hideBoxes();
+    }
+    
+    importInitialNotes();
     
     scan_img.on('click', hideBoxes);
     notes_area.on('click', hideBoxes);
