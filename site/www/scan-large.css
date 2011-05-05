@@ -1,0 +1,130 @@
+#notes-image
+{
+    position: relative;
+}
+
+#notes-image .notes-area
+{
+    position: absolute;
+}
+
+#notes-image *
+{
+    text-align: left;
+}
+
+#notes-image #add-note
+{
+    position: absolute;
+    bottom: 1em;
+    left: 1em;
+}
+
+table#notes-rows
+{
+    margin: 1em auto;
+}
+
+table#notes-rows tr th,
+table#notes-rows tr td
+{
+    text-align: right;
+    padding-left: .5em;
+}
+
+table#notes-rows tr td.delete,
+table#notes-rows tr th.note,
+table#notes-rows tr td.note
+{
+    text-align: left;
+    padding-right: .5em;
+}
+
+table#notes-rows tbody tr td
+{
+    margin: 0;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+table#notes-rows tr td
+{
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+table#notes-rows tr td.note
+{
+    white-space: pre-line;
+}
+
+.drag-box .area
+{
+    background: none;
+    border: 1px dashed black;
+    position: absolute;
+}
+
+.drag-box .edge
+{
+    background: none;
+    position: absolute;
+    border: 4px solid rgba(255, 255, 255, .35);
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+}
+
+.drag-box .thumb
+{
+    background: white;
+    border: 1px solid black;
+    position: absolute;
+}
+
+.drag-box .note
+{
+    position: absolute;
+    font: 11px/12px "Lucida Sans", Helvetica, Arial, sans-serif;
+    width: 200px;
+    height: 48px;
+}
+
+.drag-box div.note
+{
+    overflow: hidden;
+    white-space: pre-line;
+}
+
+.drag-box textarea.note
+{
+    background-color: rgba(255, 255, 255, .9);
+    border: 1px solid black;
+}
+
+.drag-box .buttons
+{
+    width: 120px;
+    position: absolute;
+}
+
+.drag-box div.note span
+{
+    background-color: rgba(255, 255, 255, .5);
+}
+
+.drag-box.inactive textarea.note,
+.drag-box.inactive .buttons
+{
+    display: none;
+}
+
+.drag-box.inactive .thumb
+{
+    background-color: rgba(255, 255, 255, .5);
+}
+
+.drag-box.inactive .edge
+{
+    border-color: rgba(255, 255, 255, .15);
+}

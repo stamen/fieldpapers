@@ -74,6 +74,8 @@
                               'is_private' => $_POST['is_private'],
                               'will_edit' => $_POST['will_edit'],
                               'has_geotiff' => $_POST['has_geotiff'],
+                              'has_geojpeg' => $_POST['has_geojpeg'],
+                              'geojpeg_bounds' => $_POST['geojpeg_bounds'],
                               'has_stickers' => $_POST['has_stickers']);
                 
                 add_log($dbh, "Posting additional details to scan {$print['id']}");
@@ -99,36 +101,21 @@
     scan_headers($scan);
     print_headers($print);
     
-    $type = $_GET['type'] ? $_GET['type'] : 'html'; //$_SERVER['HTTP_ACCEPT'];
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
     
     if($type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
         print $sm->fetch("scan.html.tpl");
     
-    } elseif($type == 'application/xml') { 
-        header("Content-Type: application/xml; charset=UTF-8");
+    } elseif($type == 'application/paperwalking+xml') { 
+        header("Content-Type: application/paperwalking+xml; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
         print $sm->fetch("scan.xml.tpl");
     
     } elseif($type == 'application/json') { 
-        header("Content-Type: application/json; charset=UTF-8");
-        header("Access-Control-Allow-Origin: *");
-        
-        unset($scan['last_step']);
-        unset($scan['age']);
-
-        $scan['min_row'] = floatval($scan['min_row']);
-        $scan['min_column'] = floatval($scan['min_column']);
-        $scan['min_zoom'] = intval($scan['min_zoom']);
-        $scan['max_row'] = floatval($scan['max_row']);
-        $scan['max_column'] = floatval($scan['max_column']);
-        $scan['max_zoom'] = intval($scan['max_zoom']);
-        $scan['created'] = intval($scan['created']);
-        $scan['large_url'] = $scan['base_url'].'/large.jpg';
-        $scan['qrcode_url'] = $scan['base_url'].'/qrcode.jpg';
-        $scan['preview_url'] = $scan['base_url'].'/preview.jpg';
+        $scan = modify_scan_for_json($scan);
         
         unset($print['last_step']);
         unset($print['age']);
@@ -144,6 +131,8 @@
         
         $scan['print'] = $print;
         
+        header("Content-Type: application/json; charset=UTF-8");
+        header("Access-Control-Allow-Origin: *");
         echo json_encode($scan)."\n";
     
     } else {

@@ -46,3 +46,10 @@
 <p>
     Scarica <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">una mappa recente di quest'area partendo dalla stampa #{$scan.print_id|escape}</a>.
 </p>
+
+{if $scan.has_geotiff == "yes" || $scan.has_geojpeg == "yes"}
+    {* TODO: translate me *}
+    <p>
+        <a href="{$base_dir}/scan-large.php?id={$scan.id|escape}">Geodata for this scan</a>.
+    </p>
+{/if}

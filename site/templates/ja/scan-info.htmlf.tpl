@@ -46,3 +46,10 @@
 <p>
     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">印刷された地図 #{$scan.print_id|escape} からこのエリアの最新地図</a>をダウンロードする
 </p>
+
+{if $scan.has_geotiff == "yes" || $scan.has_geojpeg == "yes"}
+    {* TODO: translate me *}
+    <p>
+        <a href="{$base_dir}/scan-large.php?id={$scan.id|escape}">Geodata for this scan</a>.
+    </p>
+{/if}

@@ -82,21 +82,21 @@
     
     print_headers($print);
 
-    $type = $_GET['type'] ? $_GET['type'] : 'html'; //$_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type);
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = get_preferred_type($type, array('text/html', 'application/paperwalking+xml'));
     
     if($type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
         print $sm->fetch("print.html.tpl");
     
-    } elseif($type == 'application/xml') { 
-        header("Content-Type: application/xml; charset=UTF-8");
+    } elseif($type == 'application/paperwalking+xml') { 
+        header("Content-Type: application/paperwalking+xml; charset=UTF-8");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
         print $sm->fetch("print.xml.tpl");
     
     } else {
-        header('HTTP/1.1 400');
-        die("Unknown type.\n");
+        header('HTTP/1.1 406');
+        die("Unknown content-type.\n");
     }
 
 ?>

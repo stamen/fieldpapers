@@ -157,6 +157,42 @@
         header(sprintf('X-Scan-Large-URL: %s/large.jpg', $scan['base_url']));
     }
     
+    function modify_scan_for_json($scan)
+    {
+        unset($scan['last_step']);
+        unset($scan['age']);
+
+        $scan['min_row'] = floatval($scan['min_row']);
+        $scan['min_column'] = floatval($scan['min_column']);
+        $scan['min_zoom'] = intval($scan['min_zoom']);
+        $scan['max_row'] = floatval($scan['max_row']);
+        $scan['max_column'] = floatval($scan['max_column']);
+        $scan['max_zoom'] = intval($scan['max_zoom']);
+        $scan['created'] = intval($scan['created']);
+        $scan['large_url'] = $scan['base_url'].'/large.jpg';
+        $scan['qrcode_url'] = $scan['base_url'].'/qrcode.jpg';
+        $scan['preview_url'] = $scan['base_url'].'/preview.jpg';
+        
+        return $scan;
+    }
+    
+    function modify_scan_for_geojson($scan, $print)
+    {
+        $type = 'Feature';
+        $properties = $scan;
+        $id = $properties['id'];
+        
+        $n = floatval($print['north']);
+        $s = floatval($print['south']);
+        $w = floatval($print['west']);
+        $e = floatval($print['east']);
+
+        $perimeter = array(array($w, $n), array($e, $n), array($e, $s), array($w, $s), array($w, $n));
+        $geometry = array('type' => 'Polygon', 'coordinates' => array($perimeter));
+
+        return compact('type', 'id', 'geometry', 'properties');
+    }
+    
     function enforce_master_on_off_switch($language)
     {
         if(defined('MASTER_ON_OFF_SWITCH') and MASTER_ON_OFF_SWITCH)

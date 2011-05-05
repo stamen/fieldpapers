@@ -64,7 +64,7 @@ CREATE TABLE scans (
 
     id              VARCHAR(8) NOT NULL,
 
-    print_id        VARCHAR(8) NOT NULL,
+    print_id        VARCHAR(16) NOT NULL,
     last_step       INT NULL,
     
     min_row         FLOAT,
@@ -82,6 +82,7 @@ CREATE TABLE scans (
     
     base_url        VARCHAR(255),
     uploaded_file   VARCHAR(255),
+    decoding_json   TEXT,
 
     user_id         VARCHAR(8) NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -93,8 +94,31 @@ CREATE TABLE scans (
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
-ALTER TABLE scans CHANGE COLUMN print_id print_id VARCHAR(16) NOT NULL;
-ALTER TABLE scans ADD COLUMN decoding_json TEXT AFTER uploaded_file;
+ALTER TABLE scans ADD COLUMN has_geojpeg ENUM('yes', 'no') DEFAULT 'no' AFTER has_geotiff;
+ALTER TABLE scans ADD COLUMN geojpeg_bounds TEXT AFTER uploaded_file;
+
+
+
+DROP TABLE IF EXISTS scan_notes;
+
+CREATE TABLE scan_notes (
+
+    scan_id     VARCHAR(8) NOT NULL,
+    number      INT NOT NULL,
+    
+    note        TEXT,
+
+    north       DOUBLE,
+    south       DOUBLE,
+    east        DOUBLE,
+    west        DOUBLE,
+
+    user_id     VARCHAR(8) NOT NULL,
+    created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (scan_id, number)
+
+) ENGINE=InnoDB, CHARACTER SET utf8;
 
 
 

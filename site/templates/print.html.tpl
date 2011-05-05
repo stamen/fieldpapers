@@ -29,9 +29,9 @@
     {/strip} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     {if $print.atlas_page}
-        <link rel="data" type="application/xml" href="{$base_dir}{$base_href}?id={$print.id|escape}/{$print.atlas_page.part|escape}&amp;type=xml" />
+        <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$print.id|escape}/{$print.atlas_page.part|escape}&amp;type=xml" />
     {else}
-        <link rel="data" type="application/xml" href="{$base_dir}{$base_href}?id={$print.id|escape}&amp;type=xml" />
+        <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$print.id|escape}&amp;type=xml" />
     {/if}
     {if $print && $print.last_step != STEP_FINISHED && $print.last_step != $constants.STEP_FATAL_ERROR}
         <meta http-equiv="refresh" content="5" />

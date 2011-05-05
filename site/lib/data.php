@@ -86,10 +86,14 @@
     * If the single argument is one of "html" or "xml", just return
     * what's appropriate without pretending it's a full header.
     */
-    function get_preferred_type($accept_type_header)
+    function get_preferred_type($accept_type_header, $acceptable_types)
     {
+        $acceptable_types = is_array($acceptable_types)
+            ? $acceptable_types
+            : array('application/paperwalking+xml', 'application/json', 'text/html');
+        
         if($accept_type_header == 'xml')
-            return 'application/xml';
+            return 'application/paperwalking+xml';
         
         if($accept_type_header == 'html')
             return 'text/html';
@@ -98,7 +102,7 @@
             return 'application/json';
         
         // break up string into pieces (types and q factors)
-        preg_match_all('#([\*a-z]+/([\*a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);
+        preg_match_all('#([\*a-z]+/([\*\+a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);
 
         $types = array();
         
@@ -111,19 +115,23 @@
             foreach($types as $l => $val)
                 $types[$l] = ($val === '') ? 1 : $val;
             
-            // sort list based on value	
-            arsort($types, SORT_NUMERIC);
+            // sort list based on weight then by given order
+            $weighted_order = array_values($types);
+            $given_order = range(1, count($types));
+            
+            array_multisort($weighted_order, SORT_DESC, SORT_NUMERIC,
+                            $given_order, SORT_ASC, SORT_NUMERIC,
+                            $types);
 
         } else {
             $types = array();
 
         }
-        
+
         foreach(array_keys($types) as $type)
         {
-            // XML generally?
-            if(preg_match('#^(text|application)/xml$#', $type))
-                return 'application/xml';
+            if(in_array($type, $acceptable_types))
+                return $type;
         }
         
         // HTML is the default
@@ -549,6 +557,14 @@
             ? 's.has_geotiff,'
             : '';
         
+        $has_geojpeg = in_array('has_geojpeg', $column_names)
+            ? 's.has_geojpeg,'
+            : '';
+        
+        $geojpeg_bounds = in_array('geojpeg_bounds', $column_names)
+            ? 's.geojpeg_bounds,'
+            : '';
+        
         $has_stickers = in_array('has_stickers', $column_names)
             ? 's.has_stickers,'
             : '';
@@ -564,6 +580,7 @@
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
                              {$base_url} {$uploaded_file}
                              {$has_geotiff} {$has_stickers}
+                             {$has_geojpeg} {$geojpeg_bounds}
                              s.user_id
                       FROM scans AS s
                       LEFT JOIN prints AS p
@@ -605,6 +622,7 @@
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              base_url, uploaded_file,
                              has_geotiff, has_stickers,
+                             has_geojpeg, geojpeg_bounds,
                              decoding_json, user_id
                       FROM scans
                       WHERE id = %s",
@@ -818,7 +836,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_stickers') as $field)
+        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers') as $field)
             if(in_array($field, $column_names) && !is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
@@ -842,6 +860,80 @@
         }
 
         return get_scan($dbh, $scan['id']);
+    }
+    
+    function get_scan_notes(&$dbh, $page, $scan_id=false)
+    {
+        list($count, $offset, $perpage, $page) = get_pagination($page);
+        
+        $q = sprintf('SELECT scan_id, number, note,
+                             north, west, south, east
+                      FROM scan_notes
+                      WHERE %s
+                      ORDER BY created DESC
+                      LIMIT %d OFFSET %d',
+                     ($scan_id ? 'scan_id = '.$dbh->quoteSmart($scan_id) : '1'),
+                     $count,
+                     $offset);
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            $rows[] = $row;
+        }
+        
+        return $rows;
+    }
+    
+    function set_scan_notes(&$dbh, $user_id, $scan_id, $notes)
+    {
+        foreach($notes as $number => $note)
+        {
+            $q = sprintf('REPLACE INTO scan_notes
+                          SET user_id = %s,
+                              scan_id = %s,
+                              note = %s,
+                              north = %.8f,
+                              south = %.8f,
+                              west = %.8f,
+                              east = %.8f,
+                              number = %d',
+
+                         $dbh->quoteSmart($user_id),
+                         $dbh->quoteSmart($scan_id),
+                         $dbh->quoteSmart($note['note']),
+                         $note['north'],
+                         $note['south'],
+                         $note['west'],
+                         $note['east'],
+                         $number);
+    
+            error_log(preg_replace('/\s+/', ' ', $q));
+    
+            $res = $dbh->query($q);
+            
+            if(PEAR::isError($res)) 
+                die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+        
+        $q = sprintf('DELETE FROM scan_notes
+                      WHERE scan_id = %s
+                        AND number > %d',
+                     $dbh->quoteSmart($scan_id),
+                     (is_null($number) ? '-1' : $number));
+        
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
     }
     
     function delete_scan(&$dbh, $scan_id)

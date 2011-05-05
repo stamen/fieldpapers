@@ -46,3 +46,10 @@
 <p>
     <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">#{$scan.print_id|escape} baskıdan bu yerin güncel harıtasını</a> indirin.
 </p>
+
+{if $scan.has_geotiff == "yes" || $scan.has_geojpeg == "yes"}
+    {* TODO: translate me *}
+    <p>
+        <a href="{$base_dir}/scan-large.php?id={$scan.id|escape}">Geodata for this scan</a>.
+    </p>
+{/if}
