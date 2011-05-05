@@ -1,8 +1,20 @@
-{if $scan.has_geotiff == 'yes'}
-    <p>
-        GeoTIFF: <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">walking-paper-{$scan.id|escape}.tif</a>.
-    </p>
-{/if}
+<ul>
+    <li>
+        Original uploaded file: <a href="{$scan.base_url}/{$scan.uploaded_file|escape}">{$scan.uploaded_file|escape}</a>.
+    </li>
+    
+    {if $scan.has_geotiff == 'yes'}
+        <li>
+            GeoTIFF: <a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">walking-paper-{$scan.id|escape}.tif</a>.
+        </li>
+    {/if}
+    
+    {if $notes|@count}
+        <li>
+            Notes on this page as <a href="{$base_dir}/scan-notes.php?id={$scan.id|escape}">tab-separated values</a>.
+        </li>
+    {/if}
+</ul>
 
 {if $scan.has_geojpeg == 'yes'}
     <p class="wide" id="notes-image">

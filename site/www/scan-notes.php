@@ -30,7 +30,22 @@
         }
     }
     
+    $scan_notes = get_scan_notes($dbh, array('page' => 1, 'perpage' => 242), $scan ? $scan['id'] : null);
+    
     if($user['id'])
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
+    
+    header('Content-Type: text/tab-separated-values; charset=utf-8');
+    echo "scan_id	number	note	north	west	south	east\n";
+    
+    foreach($scan_notes as $note)
+        printf("%s	%d	%s	%.8f	%.8f	%.8f	%.8f\n",
+               $note['scan_id'],
+               $note['number'],
+               '"'.str_replace('"', '""', $note['note']).'"',
+               $note['north'],
+               $note['west'],
+               $note['south'],
+               $note['east']);
 
 ?>
