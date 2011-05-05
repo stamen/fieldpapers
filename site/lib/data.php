@@ -922,8 +922,12 @@
                 die_with_code(500, "{$res->message}\n{$q}\n");
         }
         
-        $q = sprintf('DELETE FROM scan_notes WHERE number > %d', $number);
-
+        $q = sprintf('DELETE FROM scan_notes
+                      WHERE scan_id = %s
+                        AND number > %d',
+                     $dbh->quoteSmart($scan_id),
+                     (is_null($number) ? '-1' : $number));
+        
         error_log(preg_replace('/\s+/', ' ', $q));
 
         $res = $dbh->query($q);

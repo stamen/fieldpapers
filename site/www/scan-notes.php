@@ -6,7 +6,7 @@
     require_once 'data.php';
     
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
-    $notes = is_array($_POST['notes']) ? $_POST['notes'] : null;
+    $notes = is_array($_POST['notes']) ? $_POST['notes'] : array();
     list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     enforce_master_on_off_switch($language);
@@ -18,13 +18,16 @@
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
     $scan = get_scan($dbh, $scan_id);
     
-    if($scan && $notes)
+    if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
-        $dbh->query('START TRANSACTION');
-
-        set_scan_notes($dbh, $user['id'], $scan['id'], $notes);
-        
-        $dbh->query('COMMIT');
+        if($scan)
+        {
+            $dbh->query('START TRANSACTION');
+    
+            set_scan_notes($dbh, $user['id'], $scan['id'], $notes);
+            
+            $dbh->query('COMMIT');
+        }
     }
     
     if($user['id'])
