@@ -18,6 +18,8 @@ from decode import Marker
 parser = optparse.OptionParser(usage="""poll.py [options]
 """)
 
+parser.set_defaults(prints_only=False)
+
 parser.add_option('-p', '--password', dest='password',
                   help='Paperwalking queue password',
                   action='store')
@@ -25,6 +27,10 @@ parser.add_option('-p', '--password', dest='password',
 parser.add_option('-b', '--apibase', dest='apibase',
                   help='URL root of queue API',
                   action='store')
+
+parser.add_option('--prints-only', dest='prints_only',
+                  help='Just do prints, no scans',
+                  action='store_true')
 
 def getMarkers():
     """
@@ -69,6 +75,7 @@ if __name__ == '__main__':
     s, host, path, p, q, f = urlparse.urlparse(options.apibase.rstrip('/'))
     host, port = (':' in host) and host.split(':') or (host, '80')
     
+    prints_only = options.prints_only
     apibase = options.apibase.rstrip('/')
     password = options.password
     
@@ -100,8 +107,6 @@ if __name__ == '__main__':
                 # probably no queue message
                 pass
             else:
-                print >> sys.stderr, '_' * 80
-    
                 try:
                     msg = json.loads(content)
                     
@@ -113,6 +118,13 @@ if __name__ == '__main__':
                     # JSON parse succeeded so we'll determine if there's a print or scan here.
                     action = msg.get('action', 'compose')
 
+                    if action == 'decode' and prints_only:
+                        updateQueue(apibase, password, message_id, 15)
+                        time.sleep(2)
+                        continue
+
+                    print >> sys.stderr, '_' * 80
+        
                     if action == 'decode':
                         if 'url' not in msg:
                             # we're no longer set up to handle these.
