@@ -2,12 +2,13 @@ from sys import argv, stderr
 from StringIO import StringIO
 from subprocess import Popen, PIPE
 from os.path import basename, dirname, join as pathjoin
-from os import close, write, unlink, rename
+from os import close, write, unlink
 from xml.etree import ElementTree
 from urlparse import urlparse
 from tempfile import mkstemp
 from urllib import urlopen
 from random import random
+from shutil import move
 from glob import glob
 
 try:
@@ -395,8 +396,8 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
     postblob_img = Image.open(postblob_filename)
 
-    rename(highpass_filename, 'highpass.jpg')
-    rename(preblobs_filename, 'preblobs.jpg')
+    move(highpass_filename, 'highpass.jpg')
+    move(preblobs_filename, 'preblobs.jpg')
     unlink(postblob_filename)
     
     _update_step(STEP_FINDING_NEEDLES)
