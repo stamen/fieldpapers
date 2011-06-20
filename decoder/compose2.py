@@ -4,11 +4,12 @@ from itertools import product
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname
 from urlparse import urljoin, urlparse, parse_qs
-from os import close, write, unlink, rename
+from os import close, write, unlink
 from json import dumps as json_encode
 from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
+from shutil import move
 
 from ModestMaps import Map, mapByExtentZoom, mapByCenterZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
@@ -416,7 +417,7 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
 
     yield 10
     
-    rename(print_filename, 'out.pdf')
+    move(print_filename, 'out.pdf')
     
     _finish_print(pdf_url, preview_url, json_encode(print_data))
     

@@ -103,7 +103,7 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     driver = gdal.GetDriverByName('GTiff')
     
     handle, geotiff_filename = mkstemp(prefix='geotiff-', suffix='.tif')
-    geotiff_ds = driver.Create(geotiff_filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80'])
+    geotiff_ds = driver.Create(geotiff_filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80', 'BLOCKYSIZE=8'])
     geotiff_ds.SetGCPs(gcps, str(merc))
     
     close(handle)
@@ -153,7 +153,8 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     proj = osr.CoordinateTransformation(merc, latlon)
     
     x1, y1, x2, y2 = img_bounds
-    (lon1, lat1, z1), (lon2, lat2, z2) = proj.TransformPoints([(x1, y1), (x2, y2)])
+    lon1, lat1, z1 = proj.TransformPoint(x1, y1)
+    lon2, lat2, z2 = proj.TransformPoint(x2, y2)
     img_bounds = min(lat1, lat2), min(lon1, lon2), max(lat1, lat2), max(lon1, lon2)
     
     #
