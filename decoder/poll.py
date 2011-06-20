@@ -66,6 +66,15 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
     
+    if len(args) and args[0] == 'once':
+        due = time.time()
+    
+    elif len(args) and args[0].isdigit():
+        due = time.time() + float(args[0])
+    
+    else:
+        due = time.time() + 60
+    
     s, host, path, p, q, f = urlparse.urlparse(options.apibase.rstrip('/'))
     host, port = (':' in host) and host.split(':') or (host, '80')
     
@@ -162,7 +171,7 @@ if __name__ == '__main__':
                 print >> sys.stderr, 'No, seriously.'
                 raise
 
-        if len(args) and args[0] == 'once':
+        if time.time() >= due:
             break
 
         # exponential back off
