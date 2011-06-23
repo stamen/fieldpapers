@@ -82,6 +82,14 @@
         <a href="{$base_dir}/zeitgeist.php">Statistik</a>
         <a href="{$base_dir}/about.php">Om</a>
 
+	{elseif $language == "id"}
+        <a href="{$base_dir}/">Beranda</a>
+        <a href="{$base_dir}/prints.php">Hasil Cetak</a>
+        <a href="{$base_dir}/scans.php">Scan</a>
+        <a href="{$base_dir}/upload.php">Unggah</a>
+        <a href="{$base_dir}/zeitgeist.php">Statistik</a>
+        <a href="{$base_dir}/about.php">Tentang</a>
+
     {else}
         <a href="{$base_dir}/">Home</a>
         <a href="{$base_dir}/prints.php">Prints</a>

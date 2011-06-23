@@ -23,6 +23,8 @@
             Site Unavailable
         {elseif $language == "sv"}
             Site Unavailable
+        {elseif $language == "id"}
+						Situs Tidak Tersedia
         {else}
             Site Unavailable
         {/if}

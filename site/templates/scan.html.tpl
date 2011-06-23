@@ -23,6 +23,8 @@
             Отсканированная карта #{$scan.id|escape}
         {elseif $language == "sv"}
             Skannad Karta #{$scan.id|escape}
+        {elseif $language == "id"}
+            Peta yang telah discan #{$scan.id|escape}
         {else}
             Scanned Map #{$scan.id|escape}
         {/if}
@@ -106,6 +108,8 @@
                             {assign var="label" value="Редактировать"}
                         {elseif $language == "sv"}
                             {assign var="label" value="Redigera"}
+                        {elseif $language == "id"}
+                            {assign var="label" value="Edit"}
                         {else}
                             {assign var="label" value="Edit"}
                         {/if}

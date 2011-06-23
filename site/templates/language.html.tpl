@@ -24,6 +24,8 @@
             Локализация
         {elseif $language == "sv"}
             Lokalisering
+        {elseif $language == "id"}
+            Lokalisasi
         {else}
             Localization
         {/if}

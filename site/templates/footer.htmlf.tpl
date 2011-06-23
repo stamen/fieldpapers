@@ -258,6 +258,8 @@
         Swedish translation by Frank Eriksson
 		<br />
         Turkish translation by Caleb Maclennan
+		<br />
+        Indonesian translation by Va Santhi and Emir Hartato
 		
     {/if}
 </p>
