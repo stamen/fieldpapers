@@ -162,9 +162,14 @@ if __name__ == '__main__':
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
                         progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
                 
-                for timeout in progress:
-                    # push back the message in time
-                    updateQueue(apibase, password, message_id, timeout)
+                try:
+                    for timeout in progress:
+                        # push back the message in time
+                        updateQueue(apibase, password, message_id, timeout)
+
+                except Exception, e:
+                    print >> sys.stderr, datetime.datetime.now(), 'Error in message id', message_id, '-', e
+                    updateQueue(apibase, password, message_id, ALL_FINISHED)
 
                 ## clean out the queue message
                 #updateQueue(apibase, password, message_id, False)

@@ -36,14 +36,16 @@ def get_qrcode_image(print_href):
     u = urljoin(print_path, 'code.php') + '?' + urlencode(q)
     
     handle, filename = mkstemp(suffix='.png')
-
-    write(handle, urlopen(u).read())
-    close(handle)
     
-    img = ImageSurface.create_from_png(filename)
+    try:
+        write(handle, urlopen(u).read())
+        close(handle)
+        
+        img = ImageSurface.create_from_png(filename)
+        
+    finally:
+        unlink(filename)
     
-    unlink(filename)
-
     return img
 
 def get_mmap_image(mmap):
@@ -51,12 +53,14 @@ def get_mmap_image(mmap):
     """
     handle, filename = mkstemp(suffix='.png')
 
-    close(handle)
-    mmap.draw(fatbits_ok=True).save(filename)
+    try:
+        close(handle)
+        mmap.draw(fatbits_ok=True).save(filename)
+        
+        img = ImageSurface.create_from_png(filename)
     
-    img = ImageSurface.create_from_png(filename)
-    
-    unlink(filename)
+    finally:
+        unlink(filename)
 
     return img
 
@@ -297,116 +301,121 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_context, finish_drawing = get_drawing_context(print_filename, page_width_pt, page_height_pt)
 
-    map_xmin_pt = .5 * ptpin
-    map_ymin_pt = 1 * ptpin
-    map_xmax_pt = page_width_pt - .5 * ptpin
-    map_ymax_pt = page_height_pt - .5 * ptpin
+    try:
+        map_xmin_pt = .5 * ptpin
+        map_ymin_pt = 1 * ptpin
+        map_xmax_pt = page_width_pt - .5 * ptpin
+        map_ymax_pt = page_height_pt - .5 * ptpin
+        
+        map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
     
-    map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
-
-    if orientation and bounds and zoom and provider and layout:
+        if orientation and bounds and zoom and provider and layout:
+        
+            print 'Orientation:', orientation
+            print 'Bounds:', bounds
+            print 'Zoom:', zoom
+            print 'Layout:', layout
+            print 'Provider:', provider
+            print 'Size:', get_preview_map_size(orientation, paper_size)
+            
+            print_pages = print_data['pages']
+            
+            north, west, south, east = bounds
+            width, height = get_preview_map_size(orientation, paper_size)
+            
+            northwest = Location(north, west)
+            southeast = Location(south, east)
+            
+            #
+            # Prepare preview.jpg
+            #
+            mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
+                                           northwest, southeast, zoom,
+                                           width, height)
+            
+            yield 30
+            
+            out = StringIO()
+            mmap.draw(fatbits_ok=True).save(out, format='JPEG')
+            preview_url = _append_file('preview.jpg', out.getvalue())
+            
+            print 'Sent preview.jpg'
+            
+            #
+            # Prepare full-size image
+            #
+            zdiff = min(18, zoom + 2) - zoom
+            print 'Zoom diff:', zdiff
+            
+            mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
+                                           northwest, southeast, zoom + zdiff,
+                                           width * 2**zdiff, height * 2**zdiff)
+            
+            yield 60
+            
+            add_print_page(print_context, mmap, print_href, map_bounds_pt, points_FG, hm2pt_ratio)
+            
+            # out = StringIO()
+            # mmap.draw().save(out, format='JPEG')
+            # print_url = append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
+            # 
+            # print 'Sent print.jpg'
+            
+            page_nw = mmap.pointLocation(Point(0, 0))
+            page_se = mmap.pointLocation(mmap.dimensions)
+            
+            page_data = {'print': 'print.jpg', 'preview': 'preview.jpg', 'bounds': {}}
+            page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
+            page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
+            print_pages.append(page_data)
+            
+            rows, cols = map(int, layout.split(','))
+            
+            if rows > 1 and cols > 1:
+                for (row, col) in product(range(rows), range(cols)):
+                    
+                    sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
+                    sub_part = '%(row)d,%(col)d' % locals()
+                    sub_name = 'print-%(sub_part)s.jpg' % locals()
+                    sub_href = print_href + '/' + sub_part
+                    
+                    yield 60
+                    
+                    add_print_page(print_context, sub_mmap, sub_href, map_bounds_pt, points_FG, hm2pt_ratio)
+            
+                    #
+                    # Prepare preview image
+                    #
+                    prev_cen = sub_mmap.pointLocation(Point(sub_mmap.dimensions.x / 2, sub_mmap.dimensions.y / 2))
+                    prev_dim = Point(sub_mmap.dimensions.x / 2**zdiff, sub_mmap.dimensions.y / 2**zdiff)
+                    prev_mmap = mapByCenterZoom(sub_mmap.provider, prev_cen, sub_mmap.coordinate.zoom - zdiff, prev_dim)
+                    prev_name = 'preview-%(sub_part)s.jpg' % locals()
+            
+                    out = StringIO()
+                    prev_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
+                    prev_href = _append_file(prev_name, out.getvalue())
+                    
+                    #
+                    # Populate page data
+                    #
+                    page_nw = sub_mmap.pointLocation(Point(0, 0))
+                    page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
+                    
+                    page_data = {'part': sub_part, 'preview_href': prev_href, 'bounds': {}}
+                    page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
+                    page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
     
-        print 'Orientation:', orientation
-        print 'Bounds:', bounds
-        print 'Zoom:', zoom
-        print 'Layout:', layout
-        print 'Provider:', provider
-        print 'Size:', get_preview_map_size(orientation, paper_size)
+                    print_pages.append(page_data)
         
-        print_pages = print_data['pages']
-        
-        north, west, south, east = bounds
-        width, height = get_preview_map_size(orientation, paper_size)
-        
-        northwest = Location(north, west)
-        southeast = Location(south, east)
-        
-        #
-        # Prepare preview.jpg
-        #
-        mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
-                                       northwest, southeast, zoom,
-                                       width, height)
-        
-        yield 30
-        
-        out = StringIO()
-        mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-        preview_url = _append_file('preview.jpg', out.getvalue())
-        
-        print 'Sent preview.jpg'
-        
-        #
-        # Prepare full-size image
-        #
-        zdiff = min(18, zoom + 2) - zoom
-        print 'Zoom diff:', zdiff
-        
-        mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
-                                       northwest, southeast, zoom + zdiff,
-                                       width * 2**zdiff, height * 2**zdiff)
-        
-        yield 60
-        
-        add_print_page(print_context, mmap, print_href, map_bounds_pt, points_FG, hm2pt_ratio)
-        
-        # out = StringIO()
-        # mmap.draw().save(out, format='JPEG')
-        # print_url = append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
-        # 
-        # print 'Sent print.jpg'
-        
-        page_nw = mmap.pointLocation(Point(0, 0))
-        page_se = mmap.pointLocation(mmap.dimensions)
-        
-        page_data = {'print': 'print.jpg', 'preview': 'preview.jpg', 'bounds': {}}
-        page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
-        page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-        print_pages.append(page_data)
-        
-        rows, cols = map(int, layout.split(','))
-        
-        if rows > 1 and cols > 1:
-            for (row, col) in product(range(rows), range(cols)):
-                
-                sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
-                sub_part = '%(row)d,%(col)d' % locals()
-                sub_name = 'print-%(sub_part)s.jpg' % locals()
-                sub_href = print_href + '/' + sub_part
-                
-                yield 60
-                
-                add_print_page(print_context, sub_mmap, sub_href, map_bounds_pt, points_FG, hm2pt_ratio)
-        
-                #
-                # Prepare preview image
-                #
-                prev_cen = sub_mmap.pointLocation(Point(sub_mmap.dimensions.x / 2, sub_mmap.dimensions.y / 2))
-                prev_dim = Point(sub_mmap.dimensions.x / 2**zdiff, sub_mmap.dimensions.y / 2**zdiff)
-                prev_mmap = mapByCenterZoom(sub_mmap.provider, prev_cen, sub_mmap.coordinate.zoom - zdiff, prev_dim)
-                prev_name = 'preview-%(sub_part)s.jpg' % locals()
-        
-                out = StringIO()
-                prev_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-                prev_href = _append_file(prev_name, out.getvalue())
-                
-                #
-                # Populate page data
-                #
-                page_nw = sub_mmap.pointLocation(Point(0, 0))
-                page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
-                
-                page_data = {'part': sub_part, 'preview_href': prev_href, 'bounds': {}}
-                page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
-                page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-
-                print_pages.append(page_data)
+        else:
+            yield ALL_FINISHED
+            return
     
-    else:
-        yield ALL_FINISHED
-        return
+    except:
+        raise
     
-    finish_drawing()
+    finally:
+        finish_drawing()
     
     yield 60
     
