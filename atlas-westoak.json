@@ -11,7 +11,7 @@
             "properties":
             {
                 "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
-                "zoom": 15
+                "zoom": 17
             },
             "type": "Feature",
             "geometry":
@@ -24,13 +24,13 @@
             "properties":
             {
                 "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
-                "zoom": 15
+                "zoom": 17
             },
             "type": "Feature",
             "geometry":
             {
-                "type": "Polygon",
-                "coordinates": [[ [-122.289914, 37.829211], [-122.289914, 37.813753], [-122.274464, 37.813753], [-122.274464, 37.829211], [-122.289914, 37.829211] ]]
+                "type": "Point",
+                "coordinates": [-122.281694, 37.822091]
             }
         }
     ]
