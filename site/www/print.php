@@ -30,6 +30,7 @@
     
     $print = get_print($dbh, $print_id);
     
+    /*
     if($print && $_SERVER['REQUEST_METHOD'] == 'POST')
     {
         if($_POST['password'] != API_PASSWORD)
@@ -75,6 +76,7 @@
         $print = set_print($dbh, $print);
         $dbh->query('COMMIT');
     }
+    */
     
     $sm = get_smarty_instance();
     $sm->assign('print', $print);

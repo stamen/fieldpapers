@@ -526,8 +526,8 @@
     {
         $atlas_part = false;
     
-        if(preg_match('#^(\w+)/(\d+,\d+)$#', $print_id, $m))
-            list($print_id, $atlas_part) = array($m[1], $m[2]);
+        if(preg_match('#^(\w+)/(\d+)$#', $print_id, $m))
+            list($print_id, $page_number) = array($m[1], $m[2]);
     
         $q = sprintf("SELECT layout, atlas_pages,
                              paper_size, orientation, provider,
@@ -536,6 +536,7 @@
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(composed) AS composed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
                              user_id
@@ -562,13 +563,9 @@
         if(empty($row['preview_url']) && S3_BUCKET_ID)
             $row['preview_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/preview.png', S3_BUCKET_ID, $row['id']);
         
-        if($atlas_part)
+        if($page_number)
         {
-            $pages = $row['atlas_pages'] ? json_decode($row['atlas_pages'], true) : array();
-            
-            foreach($pages as $page)
-                if($page['part'] == $atlas_part)
-                    $row['atlas_page'] = $page;
+            $row['page'] = get_print_page($dbh, $print_id, $page_number);
         }
         
         return $row;
