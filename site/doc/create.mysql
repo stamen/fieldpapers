@@ -58,6 +58,40 @@ ALTER TABLE prints ADD COLUMN atlas_pages TEXT NULL AFTER geotiff_url;
 
 
 
+DROP TABLE IF EXISTS pages;
+
+CREATE TABLE pages (
+
+    print_id        VARCHAR(16) NOT NULL,
+    page_number     INT UNSIGNED,
+    
+    north           DOUBLE,
+    south           DOUBLE,
+    east            DOUBLE,
+    west            DOUBLE,
+    
+    zoom            INT UNSIGNED,
+    
+    country_name    VARCHAR(64),
+    country_woeid   INT UNSIGNED,
+    
+    region_name     VARCHAR(64),
+    region_woeid    INT UNSIGNED,
+    
+    place_name      VARCHAR(128),
+    place_woeid     INT UNSIGNED,
+    
+    user_id         VARCHAR(8) NOT NULL,
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (print_id, page_number),
+    INDEX print (print_id),
+    INDEX `user` (user_id)
+
+) ENGINE=InnoDB, CHARACTER SET utf8;
+
+
+
 DROP TABLE IF EXISTS scans;
 
 CREATE TABLE scans (
