@@ -32,8 +32,6 @@ def finish_print(apibase, password, print_id, form_data):
     res = req.getresponse()
     
     assert res.status == 200, 'POST to finish-print.php resulting in status %s instead of 200' % res.status
-    
-    print res.read()
 
     return
 
