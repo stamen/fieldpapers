@@ -23,6 +23,27 @@
     define('STEP_ERROR', 99);
     define('STEP_FATAL_ERROR', 100);
     define('STEP_FATAL_QRCODE_ERROR', 101);
+    
+    // basic conversions between millimeters, points, and inches
+    define('MMPPT', 0.352777778);
+    define('INPPT', 0.013888889);
+    define('PTPIN', 1/INPPT);
+    define('PTPMM', 1/MMPPT);
+    
+    // paper sizes in printed points
+    define('PAPER_LANDSCAPE_A3_WIDTH', 420 * PTPMM);
+    define('PAPER_LANDSCAPE_A3_HEIGHT', 297 * PTPMM);
+    define('PAPER_LANDSCAPE_A4_WIDTH', 297 * PTPMM);
+    define('PAPER_LANDSCAPE_A4_HEIGHT', 210 * PTPMM);
+    define('PAPER_LANDSCAPE_LTR_WIDTH', 11 * PTPIN);
+    define('PAPER_LANDSCAPE_LTR_HEIGHT', 8.5 * PTPIN);
+
+    define('PAPER_PORTRAIT_A3_WIDTH', 297 * PTPMM);
+    define('PAPER_PORTRAIT_A3_HEIGHT', 420 * PTPMM);
+    define('PAPER_PORTRAIT_A4_WIDTH', 210 * PTPMM);
+    define('PAPER_PORTRAIT_A4_HEIGHT', 297 * PTPMM);
+    define('PAPER_PORTRAIT_LTR_WIDTH', 8.5 * PTPIN);
+    define('PAPER_PORTRAIT_LTR_HEIGHT', 11 * PTPIN);
 
     function &get_db_connection()
     {
