@@ -82,18 +82,12 @@
         
         if($feature['geometry']['type'] == 'Point') {
 
+            // Between 150-200dpi on most paper sizes.
+            // TODO: make this more flexible.
+            $dimensions = new MMaps_Point(1200, 1200);
+            
             $coords = $feature['geometry']['coordinates'];
             $center = new MMaps_Location($coords[1], $coords[0]);
-            $dimensions = new MMaps_Point(1200, 1200); // aims for between 150-200dpi
-            
-            if($paper_aspect >= 1) {
-                // paper is wide
-                $dimensions->x = floor($dimensions->x * $paper_aspect);
-            
-            } else {
-                // paper is tall
-                $dimensions->y = floor($dimensions->y / $paper_aspect);
-            }
 
             // make a temporary map with the correct center and aspect ratio
             $_mmap = MMaps_mapByCenterZoom($provider, $center, $zoom, $dimensions);
@@ -125,11 +119,27 @@
         }
         
         //
-        // If we got this far, we know we have a meaningful zoom and extent for this page.
+        // If we got this far, we know we have a meaningful zoom and extent
+        // for this page, now adjust it to the known aspect ration of the page.
         //
 
-        $mmap = MMaps_mapByExtentZoom($provider, $extent[0], $extent[1], $zoom);
+        $_mmap = MMaps_mapByExtentZoom($provider, $extent[0], $extent[1], $zoom);
+        $dim = $_mmap->dimensions;
         
+        $_mmap_center = $_mmap->pointLocation(new MMaps_Point($dim->x/2, $dim->y/2));
+        $_mmap_aspect = $dim->x / $dim->y;
+        
+        if($paper_aspect > $_mmap_aspect) {
+            // paper is wider than the map
+            $dim->x *= ($paper_aspect / $_mmap_aspect);
+        
+        } else {
+            // paper is taller than the map
+            $dim->y *= ($_mmap_aspect / $paper_aspect);
+        }
+        
+        $mmap = MMaps_mapByCenterZoom($provider, $_mmap_center, $zoom, $dim);
+
         print_r($mmap);
     }
 
