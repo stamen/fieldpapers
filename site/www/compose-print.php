@@ -59,8 +59,10 @@
     // Each feature in the GeoJSON becomes a single page in the atlas.
     //
     
-    foreach($json['features'] as $feature)
+    foreach($json['features'] as $f => $feature)
     {
+        $page_number = $f + 1;
+    
         //
         // Check the properties for a provider and explicit zoom.
         //
@@ -94,7 +96,7 @@
 
             // make a new extent with the corners of the map above.
             $extent = array($_mmap->pointLocation(new MMaps_Point(0, 0)),
-                            $_mmap->pointLocation($mmap->dimensions));
+                            $_mmap->pointLocation($_mmap->dimensions));
         
         } elseif($feature['geometry']['type'] == 'Polygon') {
 
@@ -139,8 +141,15 @@
         }
         
         $mmap = MMaps_mapByCenterZoom($provider, $_mmap_center, $zoom, $dim);
+        
+        $extent = array($mmap->pointLocation(new MMaps_Point(0, 0)),
+                        $mmap->pointLocation($mmap->dimensions));
 
-        print_r($mmap);
+        echo "Page: ".$page_number."\n";
+        echo "Providers: ".join(', ', $mmap->provider->templates)."\n";
+        echo "Extent: ".join(', ', array($extent[0]->lat, $extent[0]->lon, $extent[1]->lat, $extent[1]->lon))."\n";
+        echo "Zoom: ".$mmap->coordinate->zoom."\n";
+        echo "\n";
     }
 
 ?>
