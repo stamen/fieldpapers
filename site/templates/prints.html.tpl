@@ -4,29 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>{strip}
-        {if $language == "de"}
-            Zuletzt gedruckt
-        {elseif $language == "nl"}
-            Recente afdrukken
-        {elseif $language == "es"}
-            Últimas impresiones
-        {elseif $language == "fr"}
-            Impressions récentes
-        {elseif $language == "ja"}
-            最近の印刷
-        {elseif $language == "it"}
-            Stampe recenti
-        {elseif $language == "tr"}
-            Son Baskılar
-        {elseif $language == "ru"}
-            Недавние распечатки
-        {elseif $language == "sv"}
-            Senaste Utskrifter
-        {else}
-            Recent Prints
-        {/if}
-    {/strip} (Walking Papers)</title>
+    <title>Recent Prints (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
@@ -34,29 +12,7 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    <h2>{strip}
-        {if $language == "de"}
-            Zuletzt gedruckt
-        {elseif $language == "nl"}
-            Recente afdrukken
-        {elseif $language == "es"}
-            Últimas impresiones     
-        {elseif $language == "fr"}
-            Impressions récentes
-        {elseif $language == "ja"}
-            最近の印刷
-        {elseif $language == "it"}
-            Stampe recenti    
-        {elseif $language == "tr"}
-            Son Baskılar
-        {elseif $language == "ru"}
-            Недавние распечатки
-        {elseif $language == "sv"}
-            Senaste Utskrifter
-        {else}
-            Recent Prints
-        {/if}
-    {/strip}</h2>
+    <h2>Recent Prints</h2>
     
     {assign var="prints_count" value=$prints|@count}
     

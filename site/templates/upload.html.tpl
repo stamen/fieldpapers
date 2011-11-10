@@ -4,29 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>{strip}
-        {if $language == "de"}
-            Scan hochladen
-        {elseif $language == "nl"}
-            Scan uploaden
-        {elseif $language == "es"}
-            Subir scan
-        {elseif $language == "fr"}
-            Envoyer un scan
-        {elseif $language == "ja"}
-            スキャナーデータのアップロード
-        {elseif $language == "it"}
-            Invia una mappa scannerizzata
-        {elseif $language == "tr"}
-			Taramayı yükle
-        {elseif $language == "ru"}
-			Загрузить скан
-        {elseif $language == "sv"}
-            Ladda upp en inskanning
-        {else}
-            Upload Scan
-        {/if}
-    {/strip} (Walking Papers)</title>
+    <title>Upload Scan (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <meta http-equiv="refresh" content="30" />
 </head>
@@ -36,29 +14,6 @@
     
     {include file="$language/upload-instructions.htmlf.tpl"}
     
-    {if $language == "de"}
-        {assign var="label" value="Hochladen"}
-    {elseif $language == "fr"}
-        {assign var="label" value="Envoyer"}
-    {elseif $language == "nl"}
-        {* nl: WRITE ME *}
-        {assign var="label" value="Send"}
-    {elseif $language == "ja"}
-        {assign var="label" value="送信"}
-    {elseif $language == "es"}
-        {assign var="label" value="Enviar"}
-    {elseif $language == "it"}
-        {assign var="label" value="Invia"}
-    {elseif $language == "tr"}
-        {assign var="label" value="Gönder"}
-    {elseif $language == "ru"}
-        {assign var="label" value="Отправить"}
-    {elseif $language == "sv"}
-        {assign var="label" value="Skicka"}
-    {else}
-        {assign var="label" value="Send"}
-    {/if}
-
     {if $s3post}
         <form action="http://{$s3post.bucket|escape}.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
             <input name="AWSAccessKeyId" type="hidden" value="{$s3post.access|escape}" />
@@ -70,7 +25,7 @@
             <input name="signature" type="hidden" value="{$s3post.signature|escape}" />
             
             <input name="file" type="file" />
-            <input class="mac-button" type="submit" value="{$label}" />
+            <input class="mac-button" type="submit" value="Send" />
         </form>
 
     {elseif $localpost}
@@ -82,7 +37,7 @@
             <input name="signature" type="hidden" value="{$localpost.signature|escape}" />
             
             <input name="file" type="file" />
-            <input class="mac-button" type="submit" value="{$label}" />
+            <input class="mac-button" type="submit" value="Send" />
         </form>
     {/if}
     
