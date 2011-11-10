@@ -1,0 +1,2 @@
+Normally, getting Modest Maps images into PHP means running a Python daemon
+with ws-compose. This is an effort to close that loop, initially for Walking Papers.
