@@ -169,8 +169,7 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     ctx.set_source_rgb(1, 1, 1)
     ctx.fill()
     
-    if href:
-        place_image(ctx, get_qrcode_image(href), -83, -83, 83, 83)
+    place_image(ctx, get_qrcode_image(href), -83, -83, 83, 83)
     
     ctx.restore()
     
@@ -284,8 +283,8 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     """
     yield 5
     
-    #print_path = 'print.php?' + urlencode({'id': print_id})
-    #print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
+    print_path = 'print.php?' + urlencode({'id': print_id})
+    print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
     #print_data = {'pages': []}
     
     #
@@ -308,8 +307,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_context, finish_drawing = get_drawing_context(print_filename, page_width_pt, page_height_pt)
     
-    print print_filename
-    
     map_xmin_pt = .5 * ptpin
     map_ymin_pt = 1 * ptpin
     map_xmax_pt = page_width_pt - .5 * ptpin
@@ -318,6 +315,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
 
     for page in pages:
+        page_href = print_href and (print_href + '/%(number)d' % page) or None
     
         provider = TemplatedMercatorProvider(page['provider'])
         zoom = page['zoom']
@@ -332,7 +330,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         
         print 'Dimensions:', page_mmap.dimensions
         
-        add_print_page(print_context, page_mmap, False, map_bounds_pt, points_FG, hm2pt_ratio)
+        add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio)
         
         #
         # Now make a smaller preview map for the page,
@@ -352,9 +350,14 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     
     finish_drawing()
     
+    pdf_name = 'walking-paper-%s.pdf' % print_id
+    pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
+    
     move(print_filename, 'out.pdf')
     
     exit(1)
+    
+    ############################################################################
 
     try:
         map_xmin_pt = .5 * ptpin
