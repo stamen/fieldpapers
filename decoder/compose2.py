@@ -87,7 +87,7 @@ def get_mmap_page(mmap, row, col, rows, cols):
     return mapByCenterZoom(mmap.provider, location, zoom, mmap.dimensions)
 
 def paper_info(paper_size, orientation):
-    """
+    """ Return page width, height, differentiating points and aspect ration.
     """
     dim = __import__('dimensions')
     
@@ -168,7 +168,8 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     ctx.set_source_rgb(1, 1, 1)
     ctx.fill()
     
-    place_image(ctx, get_qrcode_image(href), -83, -83, 83, 83)
+    if href:
+        place_image(ctx, get_qrcode_image(href), -83, -83, 83, 83)
     
     ctx.restore()
     
@@ -277,14 +278,14 @@ parser.add_option('-z', '--zoom', dest='zoom',
 parser.add_option('-p', '--provider', dest='provider',
                   help='Map provider in URL template form.')
 
-def main(apibase, password, print_id, paper_size, orientation=None, layout=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
+def main(apibase, password, print_id, pages, paper_size, orientation):
     """
     """
     yield 5
     
-    print_path = 'print.php?' + urlencode({'id': print_id})
-    print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
-    print_data = {'pages': []}
+    #print_path = 'print.php?' + urlencode({'id': print_id})
+    #print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
+    #print_data = {'pages': []}
     
     #
     # Prepare a shorthand for pushing data.
@@ -300,6 +301,37 @@ def main(apibase, password, print_id, paper_size, orientation=None, layout=None,
     
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_context, finish_drawing = get_drawing_context(print_filename, page_width_pt, page_height_pt)
+    
+    print print_filename
+    
+    map_xmin_pt = .5 * ptpin
+    map_ymin_pt = 1 * ptpin
+    map_xmax_pt = page_width_pt - .5 * ptpin
+    map_ymax_pt = page_height_pt - .5 * ptpin
+    
+    map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
+
+    for page in pages:
+    
+        provider = page['provider']
+        zoom = page['zoom']
+        
+        north, west, south, east = page['bounds']
+        width, height = get_preview_map_size(orientation, paper_size)
+        
+        northwest = Location(north, west)
+        southeast = Location(south, east)
+        
+        page_mmap = mapByExtentZoom(TemplatedMercatorProvider(provider),
+                                    northwest, southeast, zoom)
+        
+        add_print_page(print_context, page_mmap, False, map_bounds_pt, points_FG, hm2pt_ratio)
+    
+    finish_drawing()
+    
+    move(print_filename, 'out.pdf')
+    
+    exit(1)
 
     try:
         map_xmin_pt = .5 * ptpin

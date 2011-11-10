@@ -147,7 +147,21 @@ if __name__ == '__main__':
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
                         progress = decode2.main(apibase, password, msg['scan_id'], url, getMarkers())
                     
+                    elif action == 'compose print':
+                        #
+                        # This is the "new" compose, from November 2011 atlas work.
+                        #
+                        kwargs = dict(print_id=msg['print_id'],
+                                      paper_size=msg['paper_size'],
+                                      orientation=msg['orientation'],
+                                      pages=msg['pages'])
+                        
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
+                        progress = compose2.main(apibase, password, **kwargs)
+                    
                     elif action == 'compose':
+                        raise Exception('"compose" no longer works.')
+                    
                         kwargs = {'paper_size': msg['paper_size']}
                         
                         try:
@@ -169,6 +183,7 @@ if __name__ == '__main__':
 
                 except Exception, e:
                     print >> sys.stderr, datetime.datetime.now(), 'Error in message id', message_id, '-', e
+                    raise
                     updateQueue(apibase, password, message_id, ALL_FINISHED)
 
                 ## clean out the queue message
