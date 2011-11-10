@@ -295,7 +295,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     _finish_print = lambda pdf, prev, data: print_id and finish_print(apibase, password, print_id, pdf, prev, data) or None
     
     print 'Print:', print_id
-    print 'Paper:', paper_size
+    print 'Paper:', orientation, paper_size
     
     #
     # Prepare output context.
@@ -328,8 +328,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         
         page_mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
         
-        print 'Dimensions:', page_mmap.dimensions
-        
         add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio)
         
         #
@@ -342,7 +340,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         while preview_mmap.dimensions.x > 600:
             preview_zoom = preview_mmap.coordinate.zoom - 1
             preview_mmap = mapByExtentZoom(provider, northwest, southeast, preview_zoom)
-            print 'Preview:', preview_mmap.dimensions
 
         out = StringIO()
         preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
