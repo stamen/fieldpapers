@@ -314,10 +314,9 @@
             $print_id = generate_id();
             
             $q = sprintf('INSERT INTO prints
-                          SET id = %s, user_id = %s, last_step = %d',
+                          SET id = %s, user_id = %s',
                          $dbh->quoteSmart($print_id),
-                         $dbh->quoteSmart($user_id),
-                         $dbh->quoteSmart(STEP_QUEUED));
+                         $dbh->quoteSmart($user_id));
 
             error_log(preg_replace('/\s+/', ' ', $q));
     
@@ -482,18 +481,19 @@
         
         $q = sprintf("SELECT paper_size, orientation, provider,
                              pdf_url, preview_url, geotiff_url,
-                             id, last_step, north, south, east, west, zoom,
+                             id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(composed) AS composed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
                              user_id
                       FROM prints
-                      WHERE last_step = %d
+                      WHERE composed
                       ORDER BY created DESC
                       LIMIT %d OFFSET %d",
-                     STEP_FINISHED, $count, $offset);
+                     $count, $offset);
     
         $res = $dbh->query($q);
         
@@ -532,7 +532,7 @@
         $q = sprintf("SELECT layout, atlas_pages,
                              paper_size, orientation, provider,
                              pdf_url, preview_url, geotiff_url,
-                             id, last_step, north, south, east, west, zoom,
+                             id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
@@ -858,13 +858,10 @@
             return false;
 
         $update_clauses = array();
-        $column_names = array_keys(table_columns($dbh, 'prints'));
 
-        // TODO: ditch dependency on table_columns()
-        // TODO: ditch special-case for provider
-        foreach(array('last_step', 'north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'layout', 'provider', 'pdf_url', 'preview_url', 'geotiff_url', 'atlas_pages', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
-            if(in_array($field, $column_names) && !is_null($print[$field]))
-                if($print[$field] != $old_print[$field] || in_array($field, array('provider')))
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'layout', 'provider', 'pdf_url', 'preview_url', 'geotiff_url', 'atlas_pages', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+            if(!is_null($print[$field]))
+                if($print[$field] != $old_print[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));
 
         if(empty($update_clauses)) {

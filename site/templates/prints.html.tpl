@@ -70,7 +70,7 @@
     <ol start="{$offset+1}">
         {foreach from=$prints item="print"}
             <li>
-                {if $print.last_step != $constants.STEP_FINISHED}
+                {if !$print.composed}
                     <strike>
                         <b id="print-{$print.id|escape}">{$print.age|nice_relativetime|escape}</b></strike>
                 

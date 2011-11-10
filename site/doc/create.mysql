@@ -19,8 +19,6 @@ CREATE TABLE prints (
 
     id              VARCHAR(8) NOT NULL,
     
-    last_step       INT NULL,
-    
     north           DOUBLE,
     south           DOUBLE,
     east            DOUBLE,
