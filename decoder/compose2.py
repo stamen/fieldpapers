@@ -307,54 +307,67 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
     print_context, finish_drawing = get_drawing_context(print_filename, page_width_pt, page_height_pt)
     
-    map_xmin_pt = .5 * ptpin
-    map_ymin_pt = 1 * ptpin
-    map_xmax_pt = page_width_pt - .5 * ptpin
-    map_ymax_pt = page_height_pt - .5 * ptpin
+    try:
+        map_xmin_pt = .5 * ptpin
+        map_ymin_pt = 1 * ptpin
+        map_xmax_pt = page_width_pt - .5 * ptpin
+        map_ymax_pt = page_height_pt - .5 * ptpin
+        
+        map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
     
-    map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
-
-    for page in pages:
-        page_href = print_href and (print_href + '/%(number)d' % page) or None
-    
-        provider = TemplatedMercatorProvider(page['provider'])
-        zoom = page['zoom']
-        
-        north, west, south, east = page['bounds']
-        northwest = Location(north, west)
-        southeast = Location(south, east)
-        
-        page_mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
-        
-        add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio)
-        
         #
-        # Now make a smaller preview map for the page,
-        # 600px looking like a reasonable upper bound.
+        # Add pages to the PDF one by one.
+        #
+    
+        for page in pages:
+            page_href = print_href and (print_href + '/%(number)d' % page) or None
+        
+            provider = TemplatedMercatorProvider(page['provider'])
+            zoom = page['zoom']
+            
+            north, west, south, east = page['bounds']
+            northwest = Location(north, west)
+            southeast = Location(south, east)
+            
+            page_mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
+            
+            yield 60
+            
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio)
+            
+            #
+            # Now make a smaller preview map for the page,
+            # 600px looking like a reasonable upper bound.
+            #
+            
+            preview_mmap = copy(page_mmap)
+            
+            while preview_mmap.dimensions.x > 600:
+                preview_zoom = preview_mmap.coordinate.zoom - 1
+                preview_mmap = mapByExtentZoom(provider, northwest, southeast, preview_zoom)
+    
+            yield 15
+            
+            out = StringIO()
+            preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
+            preview_url = _append_file('preview-p%(number)d.jpg' % page, out.getvalue())
+            print_form['pages[%(number)d][preview_url]' % page] = preview_url
+    
+        #
+        # Complete the PDF and upload it.
         #
         
-        preview_mmap = copy(page_mmap)
+        finish_drawing()
         
-        while preview_mmap.dimensions.x > 600:
-            preview_zoom = preview_mmap.coordinate.zoom - 1
-            preview_mmap = mapByExtentZoom(provider, northwest, southeast, preview_zoom)
+        pdf_name = 'walking-paper-%s.pdf' % print_id
+        pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
+        print_form['pdf_url'] = pdf_url
 
-        out = StringIO()
-        preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
-        preview_url = _append_file('preview-p%(number)d.jpg' % page, out.getvalue())
-        print_form['pages[%(number)d][preview_url]' % page] = preview_url
+    except:
+        raise
     
-    #
-    # Complete the PDF and upload it.
-    #
-    
-    finish_drawing()
-    
-    pdf_name = 'walking-paper-%s.pdf' % print_id
-    pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
-    print_form['pdf_url'] = pdf_url
-    
-    move(print_filename, 'out.pdf')
+    finally:
+        unlink(print_filename)
     
     #
     # Make a small preview map of the whole print coverage area.
@@ -369,6 +382,8 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     dimensions = Point(*get_preview_map_size(orientation, paper_size))
     
     preview_mmap = mapByExtent(provider, northwest, southeast, dimensions)
+    
+    yield 15
 
     out = StringIO()
     preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
@@ -376,145 +391,10 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     print_form['preview_url'] = preview_url
     
     #
+    # All done, wrap it up.
     #
-    #
-    
-    print print_form
     
     _finish_print(print_form)
-    
-    exit(1)
-    
-    ############################################################################
-
-    try:
-        map_xmin_pt = .5 * ptpin
-        map_ymin_pt = 1 * ptpin
-        map_xmax_pt = page_width_pt - .5 * ptpin
-        map_ymax_pt = page_height_pt - .5 * ptpin
-        
-        map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
-    
-        if orientation and bounds and zoom and provider and layout:
-        
-            print 'Orientation:', orientation
-            print 'Bounds:', bounds
-            print 'Zoom:', zoom
-            print 'Layout:', layout
-            print 'Provider:', provider
-            print 'Size:', get_preview_map_size(orientation, paper_size)
-            
-            print_pages = print_data['pages']
-            
-            north, west, south, east = bounds
-            width, height = get_preview_map_size(orientation, paper_size)
-            
-            northwest = Location(north, west)
-            southeast = Location(south, east)
-            
-            #
-            # Prepare preview.jpg
-            #
-            mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
-                                           northwest, southeast, zoom,
-                                           width, height)
-            
-            yield 30
-            
-            out = StringIO()
-            mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-            preview_url = _append_file('preview.jpg', out.getvalue())
-            
-            print 'Sent preview.jpg'
-            
-            #
-            # Prepare full-size image
-            #
-            zdiff = min(18, zoom + 2) - zoom
-            print 'Zoom diff:', zdiff
-            
-            mmap = map_by_extent_zoom_size(TemplatedMercatorProvider(provider),
-                                           northwest, southeast, zoom + zdiff,
-                                           width * 2**zdiff, height * 2**zdiff)
-            
-            yield 60
-            
-            add_print_page(print_context, mmap, print_href, map_bounds_pt, points_FG, hm2pt_ratio)
-            
-            # out = StringIO()
-            # mmap.draw().save(out, format='JPEG')
-            # print_url = append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
-            # 
-            # print 'Sent print.jpg'
-            
-            page_nw = mmap.pointLocation(Point(0, 0))
-            page_se = mmap.pointLocation(mmap.dimensions)
-            
-            page_data = {'print': 'print.jpg', 'preview': 'preview.jpg', 'bounds': {}}
-            page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
-            page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-            print_pages.append(page_data)
-            
-            rows, cols = map(int, layout.split(','))
-            
-            if rows > 1 and cols > 1:
-                for (row, col) in product(range(rows), range(cols)):
-                    
-                    sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
-                    sub_part = '%(row)d,%(col)d' % locals()
-                    sub_name = 'print-%(sub_part)s.jpg' % locals()
-                    sub_href = print_href + '/' + sub_part
-                    
-                    yield 60
-                    
-                    add_print_page(print_context, sub_mmap, sub_href, map_bounds_pt, points_FG, hm2pt_ratio)
-            
-                    #
-                    # Prepare preview image
-                    #
-                    prev_cen = sub_mmap.pointLocation(Point(sub_mmap.dimensions.x / 2, sub_mmap.dimensions.y / 2))
-                    prev_dim = Point(sub_mmap.dimensions.x / 2**zdiff, sub_mmap.dimensions.y / 2**zdiff)
-                    prev_mmap = mapByCenterZoom(sub_mmap.provider, prev_cen, sub_mmap.coordinate.zoom - zdiff, prev_dim)
-                    prev_name = 'preview-%(sub_part)s.jpg' % locals()
-            
-                    out = StringIO()
-                    prev_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-                    prev_href = _append_file(prev_name, out.getvalue())
-                    
-                    #
-                    # Populate page data
-                    #
-                    page_nw = sub_mmap.pointLocation(Point(0, 0))
-                    page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
-                    
-                    page_data = {'part': sub_part, 'preview_href': prev_href, 'bounds': {}}
-                    page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
-                    page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-    
-                    print_pages.append(page_data)
-        
-        else:
-            yield ALL_FINISHED
-            return
-    
-    except:
-        raise
-    
-    finally:
-        finish_drawing()
-    
-    yield 60
-    
-    pdf_name = 'walking-paper-%s.pdf' % print_id
-    pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
-    
-    print json_encode(print_data)
-
-    yield 10
-    
-    move(print_filename, 'out.pdf')
-    
-    _finish_print(pdf_url, preview_url, json_encode(print_data))
     
     yield ALL_FINISHED
 
