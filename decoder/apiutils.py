@@ -9,7 +9,7 @@ from mimetypes import guess_type
 # yield this value from decode and compose main() in lieu of a timeout
 ALL_FINISHED = -1
 
-def finish_print(apibase, password, print_id, pdf_url, preview_url, print_data):
+def finish_print(apibase, password, print_id, form_data):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -23,17 +23,17 @@ def finish_print(apibase, password, print_id, pdf_url, preview_url, print_data):
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
     query = urlencode({'id': print_id})
-    params = urlencode({'password': password,
-                        'last_step': 6,
-                        'pdf_url': pdf_url,
-                        'preview_url': preview_url,
-                        'print_data': print_data})
+
+    form_data.update(dict(password=password))
+    params = urlencode(form_data)
     
     req = HTTPConnection(host, port)
-    req.request('POST', path + '/print.php?' + query, params, headers)
+    req.request('POST', path + '/finish-print.php?' + query, params, headers)
     res = req.getresponse()
     
-    assert res.status == 200, 'POST to print.php resulting in status %s instead of 200' % res.status
+    assert res.status == 200, 'POST to finish-print.php resulting in status %s instead of 200' % res.status
+    
+    print res.read()
 
     return
 
