@@ -6,7 +6,7 @@
     require_once 'output.php';
 
     require_once 'ModestMaps/ModestMaps.php';
-
+    
     $json = json_decode(file_get_contents('php://input'), true);
     
     //
@@ -54,6 +54,11 @@
         die_with_code(500, "I don't know how to do this yet, sorry.");
     }
     
+    $message = array('action' => 'compose print',
+                     'paper_size' => $paper_size,
+                     'orientation' => $orientation,
+                     'pages' => array());
+    
     //
     // Iterate over each feature and determine an appropriate extent and zoom.
     // Each feature in the GeoJSON becomes a single page in the atlas.
@@ -61,7 +66,7 @@
     
     foreach($json['features'] as $f => $feature)
     {
-        $page_number = $f + 1;
+        $number = $f + 1;
     
         //
         // Check the properties for a provider and explicit zoom.
@@ -141,15 +146,59 @@
         }
         
         $mmap = MMaps_mapByCenterZoom($provider, $_mmap_center, $zoom, $dim);
-        
-        $extent = array($mmap->pointLocation(new MMaps_Point(0, 0)),
-                        $mmap->pointLocation($mmap->dimensions));
 
-        echo "Page: ".$page_number."\n";
-        echo "Providers: ".join(', ', $mmap->provider->templates)."\n";
-        echo "Extent: ".join(', ', array($extent[0]->lat, $extent[0]->lon, $extent[1]->lat, $extent[1]->lon))."\n";
-        echo "Zoom: ".$mmap->coordinate->zoom."\n";
-        echo "\n";
+        $provider = join(',', $mmap->provider->templates);
+        
+        $northwest = $mmap->pointLocation(new MMaps_Point(0, 0));
+        $southeast = $mmap->pointLocation($mmap->dimensions);
+        $bounds = array($northwest->lat, $northwest->lon, $southeast->lat, $southeast->lon);
+        
+        $message['pages'][] = compact('number', 'provider', 'bounds', 'zoom');
     }
+    
+    //
+    // Make room in the database for the new print and all its pages.
+    //
+    
+    $dbh =& get_db_connection();
+    $dbh->query('START TRANSACTION');
+        
+    $print = add_print(&$dbh, 'nobody');
+    
+    $print['paper_size'] = $message['paper_size'];
+    $print['orientation'] = $message['orientation'];
+
+    $print['north'] = $message['pages'][0]['bounds'][0];
+    $print['south'] = $message['pages'][0]['bounds'][2];
+    $print['west'] = $message['pages'][0]['bounds'][1];
+    $print['east'] = $message['pages'][0]['bounds'][3];
+    
+    foreach($message['pages'] as $_page)
+    {
+        $page = add_print_page($dbh, $print['id'], $_page['number']);
+        
+        $page['provider'] = $_page['provider'];
+        $page['zoom'] = $_page['zoom'];
+    
+        $page['north'] = $_page['bounds'][0];
+        $page['south'] = $_page['bounds'][2];
+        $page['west'] = $_page['bounds'][1];
+        $page['east'] = $_page['bounds'][3];
+        
+        set_print_page($dbh, $page);
+
+        $print['north'] = max($print['north'], $page['north']);
+        $print['south'] = min($print['south'], $page['south']);
+        $print['west'] = min($print['west'], $page['west']);
+        $print['east'] = max($print['east'], $page['east']);
+    }
+    
+    set_print($dbh, $print);
+
+    $message['print_id'] = $print['id'];
+
+    add_message($dbh, json_encode($message));
+    
+    $dbh->query('COMMIT');
 
 ?>
