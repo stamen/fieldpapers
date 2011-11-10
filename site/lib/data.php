@@ -335,6 +335,25 @@
         }
     }
     
+    function add_print_page(&$dbh, $print_id, $page_number)
+    {
+        $q = sprintf('INSERT INTO pages
+                      SET print_id = %s, page_number = %d',
+                     $dbh->quoteSmart($print_id),
+                     $dbh->quoteSmart($page_number));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+        {
+            die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+        
+        return get_print_page($dbh, $print_id, $page_number);
+    }
+    
     function add_scan(&$dbh, $user_id)
     {
         while(true)
@@ -551,6 +570,33 @@
                 if($page['part'] == $atlas_part)
                     $row['atlas_page'] = $page;
         }
+        
+        return $row;
+    }
+    
+    function get_print_page(&$dbh, $print_id, $page_number)
+    {
+        $q = sprintf("SELECT print_id, page_number,
+                             provider, preview_url,
+                             north, south, east, west, zoom,
+                             (north + south) / 2 AS latitude,
+                             (east + west) / 2 AS longitude,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                             user_id
+                      FROM pages
+                      WHERE print_id = %s
+                        AND page_number = %s",
+                     $dbh->quoteSmart($print_id),
+                     $dbh->quoteSmart($page_number));
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
         
         return $row;
     }
@@ -843,6 +889,42 @@
         }
 
         return get_print($dbh, $print['id']);
+    }
+    
+    function set_print_page(&$dbh, $page)
+    {
+        $old_page = get_print_page($dbh, $page['print_id'], $page['page_number']);
+        
+        if(!$old_page)
+            return false;
+
+        $update_clauses = array();
+
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'provider', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+            if(!is_null($page[$field]))
+                if($page[$field] != $old_page[$field])
+                    $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($page[$field]));
+
+        if(empty($update_clauses)) {
+            error_log("skipping page {$page['print_id']}/{$page['page_number']} update since there's nothing to change");
+
+        } else {
+            $update_clauses = join(', ', $update_clauses);
+            
+            $q = "UPDATE pages
+                  SET {$update_clauses}
+                  WHERE print_id = ".$dbh->quoteSmart($page['print_id'])."
+                    AND page_number = ".$dbh->quoteSmart($page['page_number']);
+    
+            error_log(preg_replace('/\s+/', ' ', $q));
+    
+            $res = $dbh->query($q);
+            
+            if(PEAR::isError($res))
+                die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+
+        return get_print_page($dbh, $page['print_id'], $page['page_number']);
     }
     
     function set_scan(&$dbh, $scan)
