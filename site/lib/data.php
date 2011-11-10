@@ -967,6 +967,29 @@
         return get_scan($dbh, $scan['id']);
     }
     
+    function finish_print(&$dbh, $print_id)
+    {
+        $q = sprintf('UPDATE pages SET composed = NOW() WHERE print_id = %s',
+                     $dbh->quoteSmart($print_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $q = sprintf('UPDATE prints SET composed = NOW() WHERE id = %s',
+                     $dbh->quoteSmart($print_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+    }
+    
     function get_scan_notes(&$dbh, $page, $scan_id=false)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
