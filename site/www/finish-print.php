@@ -29,94 +29,41 @@
     
     $print = get_print($dbh, $print_id);
     
-    if($print && $_SERVER['REQUEST_METHOD'] == 'POST')
+    if(!$print)
     {
+        die_with_code(400, "I don't know that print");
+    }
+    
+    if($_SERVER['REQUEST_METHOD'] == 'POST')
+    {
+        if($_POST['password'] != API_PASSWORD)
+            die_with_code(401, 'Sorry, bad password');
+        
         $dbh->query('START TRANSACTION');
-
-        $print['pdf_url'] = $_POST['pdf_url'];
-        $print['preview_url'] = $_POST['preview_url'];
-        set_print($dbh, $print);
         
         foreach($_POST['pages'] as $page_number => $_page)
         {
             $page = get_print_page($dbh, $print['id'], $page_number);
             
-            if($page)
+            if(!$page)
             {
-                $page['preview_url'] = $_page['preview_url'];
-                set_print_page($dbh, $page);
+                die_with_code(400, "I don't know that page");
             }
+        
+            $page['preview_url'] = $_page['preview_url'];
+            set_print_page($dbh, $page);
         }
 
-        $dbh->query('COMMIT');
-        
-        exit();
-    
-        if($_POST['password'] != API_PASSWORD)
-            die_with_code(401, 'Sorry, bad password');
-        
-        // we accept a subset of print properties here
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper', 'last_step') as $field)
-            if(isset($_POST[$field]))
-                $print[$field] = $_POST[$field];
-        
-        add_log($dbh, "Posting additional details to print {$print['id']}");
+        $print['pdf_url'] = $_POST['pdf_url'];
+        $print['preview_url'] = $_POST['preview_url'];
+        set_print($dbh, $print);
 
-        if($_POST['last_step'] == STEP_FINISHED)
-        {
-            $print_data = json_decode($_POST['print_data'], true);
-            $atlas_pages = array();
-            
-            foreach($print_data['pages'] as $page)
-                if($page['part'])
-                    $atlas_pages[] = $page;
-            
-            $print['pdf_url'] = $_POST['pdf_url'];
-            $print['preview_url'] = $_POST['preview_url'];
-            $print['last_step'] = $_POST['last_step'];
-            $print['atlas_pages'] = json_encode($atlas_pages);
-        }
-        
-        $north = $print['north'];
-        $south = $print['south'];
-        $east = $print['east'];
-        $west = $print['west'];
-        $zoom = $print['zoom'];
-        
-        if(isset($north) && isset($south) && isset($east) && isset($west) && $zoom)
-        {
-            list($print['country_name'], $print['country_woeid'],
-                 $print['region_name'], $print['region_woeid'],
-                 $print['place_name'], $print['place_woeid'])
-             = latlon_placeinfo(($north + $south) / 2, ($west + $east) / 2, $zoom - 1);
-        }
-        
-        $dbh->query('START TRANSACTION');
-        $print = set_print($dbh, $print);
+        finish_print($dbh, $print['id']);
+
         $dbh->query('COMMIT');
     }
     
-    $sm = get_smarty_instance();
-    $sm->assign('print', $print);
-    $sm->assign('language', $language);
-    
-    print_headers($print);
-
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type, array('text/html', 'application/paperwalking+xml'));
-    
-    if($type == 'text/html') {
-        header("Content-Type: text/html; charset=UTF-8");
-        print $sm->fetch("print.html.tpl");
-    
-    } elseif($type == 'application/paperwalking+xml') { 
-        header("Content-Type: application/paperwalking+xml; charset=UTF-8");
-        print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
-        print $sm->fetch("print.xml.tpl");
-    
-    } else {
-        header('HTTP/1.1 406');
-        die("Unknown content-type.\n");
-    }
+    header('HTTP/1.1 200');
+    echo "OK\n";
 
 ?>
