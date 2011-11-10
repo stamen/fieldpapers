@@ -1,0 +1,37 @@
+{
+    "properties":
+    {
+        "paper_size": "letter",
+        "orientation": "portrait"
+    },
+    "type": "FeatureCollection",
+    "features":
+    [
+        {
+            "properties":
+            {
+                "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
+                "zoom": 15
+            },
+            "type": "Feature",
+            "geometry":
+            {
+                "type": "Polygon",
+                "coordinates": [[ [-122.293647, 37.817211], [-122.293647, 37.801750], [-122.278198, 37.801750], [-122.278198, 37.817211], [-122.293647, 37.817211] ]]
+            }
+        },
+        {
+            "properties":
+            {
+                "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
+                "zoom": 15
+            },
+            "type": "Feature",
+            "geometry":
+            {
+                "type": "Polygon",
+                "coordinates": [[ [-122.289914, 37.829211], [-122.289914, 37.813753], [-122.274464, 37.813753], [-122.274464, 37.829211], [-122.289914, 37.829211] ]]
+            }
+        }
+    ]
+}
