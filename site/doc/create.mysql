@@ -47,6 +47,7 @@ CREATE TABLE prints (
     
     user_id         VARCHAR(8) NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    composed        TIMESTAMP DEFAULT 0,
     
     PRIMARY KEY (id),
     INDEX `user` (user_id)
@@ -86,6 +87,7 @@ CREATE TABLE pages (
     
     user_id         VARCHAR(8) NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    composed        TIMESTAMP DEFAULT 0,
     
     PRIMARY KEY (print_id, page_number),
     INDEX print (print_id),
