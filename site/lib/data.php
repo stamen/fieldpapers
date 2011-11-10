@@ -911,11 +911,13 @@
         } else {
             $update_clauses = join(', ', $update_clauses);
             
-            $q = "UPDATE pages
-                  SET {$update_clauses}
-                  WHERE print_id = ".$dbh->quoteSmart($page['print_id'])."
-                    AND page_number = ".$dbh->quoteSmart($page['page_number']);
-    
+            $q = sprintf('UPDATE pages SET %s
+                          WHERE print_id = %s
+                            AND page_number = %s',
+                         $update_clauses,
+                         $dbh->quoteSmart($page['print_id']),
+                         $dbh->quoteSmart($page['page_number']));
+            
             error_log(preg_replace('/\s+/', ' ', $q));
     
             $res = $dbh->query($q);
