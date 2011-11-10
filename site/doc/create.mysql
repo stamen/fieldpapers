@@ -72,6 +72,9 @@ CREATE TABLE pages (
     
     zoom            INT UNSIGNED,
     
+    provider        VARCHAR(255),
+    preview_url     VARCHAR(255),
+
     country_name    VARCHAR(64),
     country_woeid   INT UNSIGNED,
     
