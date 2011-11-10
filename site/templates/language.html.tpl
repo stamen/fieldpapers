@@ -4,30 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>{strip}
-        {if $language == "de"}
-            Lokalisierung
-        {elseif $language == "nl"}
-            {* nl: WRITE ME *}
-            Localization
-        {elseif $language == "es"}
-            Localización
-        {elseif $language == "fr"}
-            Traduction
-        {elseif $language == "ja"}
-            地域化
-        {elseif $language == "it"}
-            Localizzazione
-        {elseif $language == "tr"}
-            Yerelleştirme
-        {elseif $language == "ru"}
-            Локализация
-        {elseif $language == "sv"}
-            Lokalisering
-        {else}
-            Localization
-        {/if}
-    {/strip} (Walking Papers)</title>
+    <title>Localization (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <link rel="stylesheet" href="{$base_dir}/index.css" type="text/css" />
 </head>
