@@ -28,12 +28,12 @@
         {/if}
     {/strip} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
-    {if $print.atlas_page}
-        <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$print.id|escape}/{$print.atlas_page.part|escape}&amp;type=xml" />
+    {if $print.page}
+        <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$print.id|escape}/{$print.page.page_number|escape}&amp;type=xml" />
     {else}
         <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$print.id|escape}&amp;type=xml" />
     {/if}
-    {if $print && $print.last_step != STEP_FINISHED && $print.last_step != $constants.STEP_FATAL_ERROR}
+    {if $print && !$print.composed}
         <meta http-equiv="refresh" content="5" />
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
@@ -43,12 +43,12 @@
 <body>
 
     <span id="print-info" style="display: none;">
-        {if $print.atlas_page}
-            <span class="print">{$print.id|escape}/{$print.atlas_page.part|escape}</span>
-            <span class="north">{$print.atlas_page.bounds.north|escape}</span>
-            <span class="south">{$print.atlas_page.bounds.south|escape}</span>
-            <span class="east">{$print.atlas_page.bounds.east|escape}</span>
-            <span class="west">{$print.atlas_page.bounds.west|escape}</span>
+        {if $print.page}
+            <span class="print">{$print.id|escape}/{$print.page.page_number|escape}</span>
+            <span class="north">{$print.page.north|escape}</span>
+            <span class="south">{$print.page.south|escape}</span>
+            <span class="east">{$print.page.east|escape}</span>
+            <span class="west">{$print.page.west|escape}</span>
         {else}
             <span class="print">{$print.id|escape}</span>
             <span class="north">{$print.north|escape}</span>
@@ -63,7 +63,7 @@
     {include file="navigation.htmlf.tpl"}
     
     {if $print}
-        {if $print.last_step == $constants.STEP_FINISHED}
+        {if $print.composed}
 
             {include file="$language/print-info.htmlf.tpl"}
         
@@ -130,8 +130,8 @@
             {/if}
             
             <div class="sheet {$print.paper_size|escape} {$print.orientation|escape}">
-                {if $print.atlas_page}
-                    <img src="{$print.atlas_page.preview_href|escape}"/>
+                {if $print.page}
+                    <img src="{$print.page.preview_url|escape}"/>
                 {else}
                     <img src="{$print.preview_url|escape}"/>
                 {/if}
