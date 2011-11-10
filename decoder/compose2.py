@@ -1,5 +1,6 @@
 ﻿from sys import argv
 from math import log
+from copy import copy
 from itertools import product
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname
@@ -288,14 +289,19 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     #print_data = {'pages': []}
     
     #
-    # Prepare a shorthand for pushing data.
+    # Prepare a shorthands for pushing data.
     #
+
     _append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
     _finish_print = lambda pdf, prev, data: print_id and finish_print(apibase, password, print_id, pdf, prev, data) or None
     
     print 'Print:', print_id
     print 'Paper:', paper_size
     
+    #
+    # Prepare output context.
+    #
+
     handle, print_filename = mkstemp(suffix='.pdf')
     close(handle)
     
@@ -313,7 +319,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
 
     for page in pages:
     
-        provider = page['provider']
+        provider = TemplatedMercatorProvider(page['provider'])
         zoom = page['zoom']
         
         north, west, south, east = page['bounds']
@@ -322,10 +328,27 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         northwest = Location(north, west)
         southeast = Location(south, east)
         
-        page_mmap = mapByExtentZoom(TemplatedMercatorProvider(provider),
-                                    northwest, southeast, zoom)
+        page_mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
+        
+        print 'Dimensions:', page_mmap.dimensions
         
         add_print_page(print_context, page_mmap, False, map_bounds_pt, points_FG, hm2pt_ratio)
+        
+        #
+        # Now make a smaller preview map for the page,
+        # 600px looking like a reasonable upper bound.
+        #
+        
+        preview_mmap = copy(page_mmap)
+        
+        while preview_mmap.dimensions.x > 600:
+            preview_zoom = preview_mmap.coordinate.zoom - 1
+            preview_mmap = mapByExtentZoom(provider, northwest, southeast, preview_zoom)
+            print 'Preview:', preview_mmap.dimensions
+
+        out = StringIO()
+        preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
+        preview_url = _append_file('preview-page-%(number)d.jpg' % page, out.getvalue())
     
     finish_drawing()
     
