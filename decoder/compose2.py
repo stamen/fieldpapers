@@ -12,7 +12,7 @@ from StringIO import StringIO
 from tempfile import mkstemp
 from shutil import move
 
-from ModestMaps import Map, mapByExtentZoom, mapByCenterZoom
+from ModestMaps import Map, mapByExtent, mapByExtentZoom, mapByCenterZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
 from ModestMaps.Geo import Location
 from ModestMaps.Core import Point
@@ -285,14 +285,14 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     
     print_path = 'print.php?' + urlencode({'id': print_id})
     print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
-    #print_data = {'pages': []}
+    print_form = {}
     
     #
     # Prepare a shorthands for pushing data.
     #
 
     _append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
-    _finish_print = lambda pdf, prev, data: print_id and finish_print(apibase, password, print_id, pdf, prev, data) or None
+    _finish_print = lambda form: print_id and finish_print(apibase, password, print_id, form) or None
     
     print 'Print:', print_id
     print 'Paper:', orientation, paper_size
@@ -321,8 +321,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         zoom = page['zoom']
         
         north, west, south, east = page['bounds']
-        width, height = get_preview_map_size(orientation, paper_size)
-        
         northwest = Location(north, west)
         southeast = Location(south, east)
         
@@ -342,15 +340,48 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
             preview_mmap = mapByExtentZoom(provider, northwest, southeast, preview_zoom)
 
         out = StringIO()
-        preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-        preview_url = _append_file('preview-page-%(number)d.jpg' % page, out.getvalue())
+        preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
+        preview_url = _append_file('preview-p%(number)d.jpg' % page, out.getvalue())
+        print_form['pages[%(number)d][preview_url]' % page] = preview_url
+    
+    #
+    # Complete the PDF and upload it.
+    #
     
     finish_drawing()
     
     pdf_name = 'walking-paper-%s.pdf' % print_id
     pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
+    print_form['pdf_url'] = pdf_url
     
     move(print_filename, 'out.pdf')
+    
+    #
+    # Make a small preview map of the whole print coverage area.
+    #
+    
+    provider = TemplatedMercatorProvider(pages[0]['provider'])
+    
+    norths, wests, souths, easts = zip(*[page['bounds'] for page in pages])
+    northwest = Location(max(norths), min(wests))
+    southeast = Location(min(souths), max(easts))
+    
+    dimensions = Point(*get_preview_map_size(orientation, paper_size))
+    
+    preview_mmap = mapByExtent(provider, northwest, southeast, dimensions)
+
+    out = StringIO()
+    preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
+    preview_url = _append_file('preview.jpg' % page, out.getvalue())
+    print_form['preview_url'] = preview_url
+    
+    #
+    #
+    #
+    
+    print print_form
+    
+    _finish_print(print_form)
     
     exit(1)
     
