@@ -1,46 +1,95 @@
 <?php
 
+    require_once 'output.php';
     require_once 'ModestMaps/ModestMaps.php';
     
-    function geojson_point_extent()
+   /**
+    * Perform a few basic idiot-checks to verify that we're looking at GeoJSON.
+    */
+    function is_geojson($json)
     {
-    }
-    
-    function geojson_polygon_extent()
-    {
-    }
-    
-    function compose_from_geojson(&$dbh, $data)
-    {
-        $json = json_decode($data, true);
-        
-        //
-        // Perform a few basic idiot-checks to verify that we're looking at GeoJSON.
-        //
-        
         if(!is_array($json))
         {
-            die_with_code(400, 'Bad JSON input');
+            return false;
         }
     
         if($json['type'] != 'FeatureCollection' || !is_array($json['features']))
         {
-            die_with_code(400, 'Bad GeoJSON input');
+            return false;
         }
         
         foreach($json['features'] as $feature)
         {
             if(!is_array($feature))
             {
-                die_with_code(400, 'Bad JSON input');
+                return false;
             }
         
             if($feature['type'] != 'Feature' || !is_array($feature['geometry']))
             {
-                die_with_code(400, 'Bad GeoJSON input');
+                return false;
             }
         }
+        
+        return true;
+    }
     
+   /**
+    * Return a four-element geographic bbox for a point and zoom.
+    */
+    function geojson_point_extent($geometry, $zoom)
+    {
+        $provider = new MMaps_OpenStreetMap_Provider();
+    
+        // Between 150-200dpi on most paper sizes.
+        // TODO: make this more flexible.
+        $dimensions = new MMaps_Point(1200, 1200);
+        
+        $coords = $geometry['coordinates'];
+        $center = new MMaps_Location($coords[1], $coords[0]);
+
+        // make a temporary map with the correct center and aspect ratio
+        $mmap = MMaps_mapByCenterZoom($provider, $center, $zoom, $dimensions);
+
+        // make a new extent with the corners of the map above.
+        return array($mmap->pointLocation(new MMaps_Point(0, 0)),
+                     $mmap->pointLocation($mmap->dimensions));
+    }
+    
+   /**
+    * Return a four-element geographic bbox for a polygon.
+    */
+    function geojson_polygon_extent($geometry)
+    {
+        $coords = $geometry['coordinates'][0];
+        
+        list($minlon, $minlat) = array($coords[0][0], $coords[0][1]);
+        list($maxlon, $maxlat) = array($coords[0][0], $coords[0][1]);
+        
+        foreach($coords as $coord)
+        {
+            $minlon = min($minlon, $coord[0]);
+            $minlat = min($minlat, $coord[1]);
+            $maxlon = max($maxlon, $coord[0]);
+            $maxlat = max($maxlat, $coord[1]);
+        }
+        
+        return array(new MMaps_Location($minlat, $minlon),
+                     new MMaps_Location($maxlat, $maxlon));
+    }
+    
+   /**
+    * Convert a string of GeoJSON data an atlas composition and queue it up.
+    */
+    function compose_from_geojson(&$dbh, $data)
+    {
+        $json = json_decode($data, true);
+        
+        if(!is_geojson($json))
+        {
+            die_with_code(400, 'Bad GeoJSON input');
+        }
+        
         //
         // Move on to the actual business of converting GeoJSON to an atlas.
         // Start with a global paper size and orientation for the full document.
@@ -93,38 +142,10 @@
             $extent = null;
             
             if($feature['geometry']['type'] == 'Point') {
-    
-                // Between 150-200dpi on most paper sizes.
-                // TODO: make this more flexible.
-                $dimensions = new MMaps_Point(1200, 1200);
-                
-                $coords = $feature['geometry']['coordinates'];
-                $center = new MMaps_Location($coords[1], $coords[0]);
-    
-                // make a temporary map with the correct center and aspect ratio
-                $_mmap = MMaps_mapByCenterZoom($provider, $center, $zoom, $dimensions);
-    
-                // make a new extent with the corners of the map above.
-                $extent = array($_mmap->pointLocation(new MMaps_Point(0, 0)),
-                                $_mmap->pointLocation($_mmap->dimensions));
+                $extent = geojson_point_extent($feature['geometry'], $zoom);
             
             } elseif($feature['geometry']['type'] == 'Polygon') {
-    
-                $coords = $feature['geometry']['coordinates'][0];
-                
-                list($minlon, $minlat) = array($coords[0][0], $coords[0][1]);
-                list($maxlon, $maxlat) = array($coords[0][0], $coords[0][1]);
-                
-                foreach($coords as $coord)
-                {
-                    $minlon = min($minlon, $coord[0]);
-                    $minlat = min($minlat, $coord[1]);
-                    $maxlon = max($maxlon, $coord[0]);
-                    $maxlat = max($maxlat, $coord[1]);
-                }
-                
-                $extent = array(new MMaps_Location($minlat, $minlon),
-                                new MMaps_Location($maxlat, $maxlon));
+                $extent = geojson_polygon_extent($feature['geometry']);
             
             } else {
                 die_with_code(500, "I don't know how to do this yet, sorry.");
