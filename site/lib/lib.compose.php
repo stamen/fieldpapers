@@ -121,7 +121,7 @@
             $page['zoom'] = intval($print['zoom']) + 2;
         }
         
-        $message = array('action' => 'compose print',
+        $message = array('action' => 'compose',
                          'paper_size' => $print['paper_size'],
                          'orientation' => $print['orientation'],
                          'pages' => array(
@@ -172,7 +172,7 @@
             die_with_code(500, "I don't know how to do this yet, sorry.");
         }
         
-        $message = array('action' => 'compose print',
+        $message = array('action' => 'compose',
                          'paper_size' => $paper_size,
                          'orientation' => $orientation,
                          'pages' => array());
