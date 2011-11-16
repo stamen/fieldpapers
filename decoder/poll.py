@@ -147,10 +147,7 @@ if __name__ == '__main__':
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
                         progress = decode2.main(apibase, password, msg['scan_id'], url, getMarkers())
                     
-                    elif action == 'compose print':
-                        #
-                        # This is the "new" compose, from November 2011 atlas work.
-                        #
+                    elif action == 'compose':
                         kwargs = dict(print_id=msg['print_id'],
                                       paper_size=msg['paper_size'],
                                       orientation=msg['orientation'],
@@ -158,23 +155,6 @@ if __name__ == '__main__':
                         
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
                         progress = compose2.main(apibase, password, **kwargs)
-                    
-                    elif action == 'compose':
-                        raise Exception('"compose" no longer works.')
-                    
-                        kwargs = {'paper_size': msg['paper_size']}
-                        
-                        try:
-                            kwargs['geotiff_url'] = msg['geotiff_url']
-                        except KeyError:
-                            kwargs['provider'] = msg['provider']
-                            kwargs['orientation'] = msg['orientation']
-                            kwargs['layout'] = msg['layout']
-                            kwargs['bounds'] = msg['bounds']
-                            kwargs['zoom'] = msg['zoom']
-    
-                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
-                        progress = compose2.main(apibase, password, msg['print_id'], **kwargs)
                 
                 try:
                     for timeout in progress:
