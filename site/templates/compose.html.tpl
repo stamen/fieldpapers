@@ -4,27 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>{strip}
-        {if $language == "de"}
-            Zusammenstellen
-        {elseif $language == "nl"}
-            Samenstellen
-        {elseif $language == "es"}
-            Componer
-        {elseif $language == "fr"}
-            Composer
-        {elseif $language == "ja"}
-            作成
-        {elseif $language == "it"}
-            Compositore
-        {elseif $language == "tr"}
-            Oluşturucu
-        {elseif $language == "sv"}
-        	Sammanställning
-        {else}
-            Componer
-        {/if}
-    {/strip} (Walking Papers)</title>
+    <title>Compose (Walking Papers)</title>
 </head>
 <body>
 

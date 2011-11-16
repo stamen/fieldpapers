@@ -4,29 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>{strip}
-        {if $language == "de"}
-            Zuletzt gescannt
-        {elseif $language == "nl"}
-            Recente scans
-        {elseif $language == "es"}
-            Últimos scans    
-        {elseif $language == "fr"}
-            Scans récents
-        {elseif $language == "ja"}
-            最近の取込データ
-        {elseif $language == "it"}
-            Scansioni recenti
-        {elseif $language == "tr"}
-            Son Taramalar
-        {elseif $language == "ru"}
-            Недавние сканы
-        {elseif $language == "sv"}
-            Senast inskannat
-        {else}
-            Recent Scans
-        {/if}
-    {/strip} (Walking Papers)</title>
+    <title>Recent Scans (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <link rel="stylesheet" href="{$base_dir}/scans.css" type="text/css" />
     <link rel="data" type="application/json" href="{$base_dir}{$base_href}?type=json" />
@@ -41,29 +19,7 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    <h2>{strip}
-        {if $language == "de"}
-            Zuletzt gescannt
-        {elseif $language == "nl"}
-            Recente scans
-        {elseif $language == "es"}
-          Últimos scans
-        {elseif $language == "fr"}
-            Scans récents
-        {elseif $language == "ja"}
-            最近の取込データ
-        {elseif $language == "it"}
-            Scansioni recenti
-        {elseif $language == "tr"}
-            Son Taramalar
-        {elseif $language == "ru"}
-            Недавние сканы
-        {elseif $language == "sv"}
-            Senaste inskanningarna
-        {else}
-            Recent Scans
-        {/if}
-    {/strip}</h2>
+    <h2>Recent Scans</h2>
     
     {assign var="scans_count" value=$scans|@count}
     

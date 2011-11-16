@@ -4,29 +4,7 @@
 <html lang="{$language}default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>{strip}
-        {if $language == "de"}
-            Statistik
-        {elseif $language == "nl"}
-            Statistieken
-        {elseif $language == "es"}
-            Estadísticas    
-        {elseif $language == "fr"}
-            Statistiques
-        {elseif $language == "ja"}
-            統計
-        {elseif $language == "it"}
-            Statistiche
-        {elseif $language == "tr"}
-            İstatistik
-        {elseif $language == "sv"}
-            Statistik
-        {elseif $language == "ru"}
-            Статистика
-        {else}
-            Zeitgeist
-        {/if}
-    {/strip} (Walking Papers)</title>
+    <title>Zeitgeist (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
@@ -34,29 +12,7 @@
 
     {include file="navigation.htmlf.tpl"}
     
-    <h2>{strip}
-        {if $language == "de"}
-            Statistik
-        {elseif $language == "nl"}
-            Statistieken
-        {elseif $language == "es"}
-            Estadísticas    
-        {elseif $language == "fr"}
-            Statistiques
-        {elseif $language == "ja"}
-            統計
-        {elseif $language == "it"}
-            Statistiche
-        {elseif $language == "tr"}
-            İstatistik
-        {elseif $language == "sv"}
-            Statistik
-        {elseif $language == "ru"}
-            Статистика
-        {else}
-            Zeitgeist
-        {/if}
-    {/strip}</h2>
+    <h2>Zeitgeist</h2>
     
     {include file="$language/zeitgeist-countries.htmlf.tpl"}
     
