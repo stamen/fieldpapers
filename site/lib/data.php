@@ -191,42 +191,6 @@
             // any one of en-us, en-gb, etc.
             if(preg_match('/^en\b/', $language))
                 return 'en';
-
-            // any one of de, de-ch, etc.
-            if(preg_match('/^de\b/', $language))
-                return 'de';
-
-            // nl or nl-be
-            if(preg_match('/^nl\b/', $language))
-                return 'nl';
-
-            // es...
-            if(preg_match('/^es\b/', $language))
-                return 'es';
-
-            // fr or fr-
-            if(preg_match('/^fr\b/', $language))
-                return 'fr';
-            
-            // ja or ja-
-            if(preg_match('/^ja\b/', $language))
-            return 'ja';
-            
-            // it or it-
-            if(preg_match('/^it\b/', $language))
-            return 'it';
-
-            // tr or tr-
-            if(preg_match('/^tr\b/', $language))
-            return 'tr';
-
-            // ru or ru-
-            if(preg_match('/^ru\b/', $language))
-            return 'ru';
-
-            // sv or sv-
-            if(preg_match('/^sv\b/', $language))
-            return 'sv';
         }
         
         // english is the default
