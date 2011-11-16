@@ -337,7 +337,7 @@
             </p>
         </form>
 
-        <form action="{$base_dir}/compose.php" method="post" name="uploads" style="display: none;" enctype="multipart/form-data">
+        <form action="{$base_dir}/compose-print.php" method="post" name="uploads" style="display: none;" enctype="multipart/form-data">
             <p>
                 <input name="file" type="file" />
             </p>
@@ -356,7 +356,7 @@
         </form>
     {/if}
 
-    <form action="{$base_dir}/compose.php" method="post" name="bounds" style="display: block;">
+    <form action="{$base_dir}/compose-print.php" method="post" name="bounds" style="display: block;">
         <input name="north" type="hidden" />
         <input name="south" type="hidden" />
         <input name="east" type="hidden" />
