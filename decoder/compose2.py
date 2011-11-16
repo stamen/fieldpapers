@@ -320,6 +320,8 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         #
     
         for page in pages:
+            page['number'] = int(page['number'])
+        
             page_href = print_href and (print_href + '/%(number)d' % page) or None
         
             provider = TemplatedMercatorProvider(page['provider'])

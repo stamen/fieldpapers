@@ -79,7 +79,71 @@
     }
     
    /**
-    * Convert a string of GeoJSON data an atlas composition and queue it up.
+    * Convert an array of form fields to an atlas composition and queue it up.
+    */
+    function compose_from_fields(&$dbh, $form)
+    {
+        $print = add_print($dbh, 'nobody');
+        $page = add_print_page($dbh, $print['id'], 1);
+        
+        $paper = $form['paper'] ? $form['paper'] : null;
+        
+        if(preg_match('/^(portrait|landscape)-(letter|a4|a3)$/', $paper, $parts)) {
+            $print['orientation'] = $parts[1];
+            $print['paper_size'] = $parts[2];
+            
+        } else {
+            die_with_code(500, "Give us a meaningful paper, not \"{$print['paper']}\"\n");
+        }
+        
+        $print['north'] = is_numeric($form['north']) ? floatval($form['north']) : null;
+        $print['south'] = is_numeric($form['south']) ? floatval($form['south']) : null;
+        $print['east'] = is_numeric($form['east']) ? floatval($form['east']) : null;
+        $print['west'] = is_numeric($form['west']) ? floatval($form['west']) : null;
+        $print['zoom'] = is_numeric($form['zoom']) ? intval($form['zoom']) : null;
+        
+        $page['provider'] = $form['provider'] ? $form['provider'] : null;
+        
+        $page['north'] = $print['north'];
+        $page['south'] = $print['south'];
+        $page['east'] = $print['east'];
+        $page['west'] = $print['west'];
+
+        //
+        // A form submission uses the zoom level of the visible map widget
+        // not the intended zoom of the printed map, so we adjust it up to
+        // get a higher-resolution print.
+        //
+        if($print['paper_size'] == 'a3') {
+            $page['zoom'] = intval($print['zoom']) + 3;
+        
+        } else {
+            $page['zoom'] = intval($print['zoom']) + 2;
+        }
+        
+        $message = array('action' => 'compose print',
+                         'paper_size' => $print['paper_size'],
+                         'orientation' => $print['orientation'],
+                         'pages' => array(
+                            array('zoom' => $page['zoom'],
+                                  'number' => $page['page_number'],
+                                  'provider' => $page['provider'],
+                                  'bounds' => array($page['north'], $page['west'], $page['south'], $page['east'])
+                                  )
+                            )
+                         );
+        
+        set_print($dbh, $print);
+        set_print_page($dbh, $page);
+    
+        $message['print_id'] = $print['id'];
+        add_message($dbh, json_encode($message));
+        
+        return $print;
+    }
+    
+   /**
+    * Convert a string of GeoJSON data to an atlas composition and queue it up.
     */
     function compose_from_geojson(&$dbh, $data)
     {
@@ -219,8 +283,9 @@
         set_print($dbh, $print);
     
         $message['print_id'] = $print['id'];
-    
         add_message($dbh, json_encode($message));
+        
+        return $print;
     }
 
 ?>
