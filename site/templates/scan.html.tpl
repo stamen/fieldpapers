@@ -4,29 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>{strip}
-        {if $language == "de"}
-            Eingescannte Karte #{$scan.id|escape}
-        {elseif $language == "nl"}
-            Gescande kaart #{$scan.id|escape}
-        {elseif $language == "es"}
-            Mapa escaneado #{$scan.id|escape}
-        {elseif $language == "fr"}
-            Carte scannée #{$scan.id|escape}
-        {elseif $language == "ja"}
-            取り込んだ地図#{$scan.id|escape}
-        {elseif $language == "it"}
-            Mappa scansionata #{$scan.id|escape}
-        {elseif $language == "tr"}
-            #{$scan.id|escape} Taramış Harita
-        {elseif $language == "ru"}
-            Отсканированная карта #{$scan.id|escape}
-        {elseif $language == "sv"}
-            Skannad Karta #{$scan.id|escape}
-        {else}
-            Scanned Map #{$scan.id|escape}
-        {/if}
-    {/strip} (Walking Papers)</title>
+    <title>Scanned Map #{$scan.id|escape} (Walking Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <link rel="stylesheet" href="{$base_dir}/scan.css" type="text/css" />
     <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$scan.id|escape:"url"}&amp;type=xml" />
