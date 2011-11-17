@@ -66,15 +66,9 @@ function editInPotlatch(inputs)
     if(inputs['username'].value)
         createCookie('openstreetmap-username', inputs['username'].value, 15);
     
-    var pl = new SWFObject("http://www.openstreetmap.org/potlatch/potlatch.swf?d="+Math.round(Math.random()*1000), "potlatch", "100%", "100%", "6", "#FFFFFF");
-
-    pl.addVariable('scale', tl.zoom);
-    pl.addVariable('token', token);
-    pl.addVariable('custombg', custombg);
-    pl.addVariable('lat', center.lat);
-    pl.addVariable('long', center.lon);
-
-    pl.write("editor");
+    var flashvars = {'scale': tl.zoom, 'token': token, 'custombg': custombg, 'lat': center.lat, 'long': center.lon};
+    
+    swfobject.embedSWF('http://www.openstreetmap.org/potlatch/potlatch.swf?d='+Math.round(Math.random()*1000), 'editor-form', '100%', '100%', '6', false, flashvars);
     
     return false;
 }
