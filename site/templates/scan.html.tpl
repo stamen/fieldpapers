@@ -34,7 +34,7 @@
     {if $scan && $scan.last_step != 6 && $scan.last_step != $constants.STEP_FATAL_ERROR && $scan.last_step != $constants.STEP_FATAL_QRCODE_ERROR}
         <meta http-equiv="refresh" content="5" />
     {else}
-        <script type="text/javascript" src="http://www.openstreetmap.org/javascripts/swfobject.js"></script>
+        <script type="text/javascript" src="{$base_dir}/swfobject.js"></script>
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/script.js"></script>
         <script type="text/javascript" src="{$base_dir}/scan.js"></script>
@@ -82,7 +82,7 @@
             {include file="$language/scan-editor-info.htmlf.tpl"}
             
             <div id="editor">
-                <form onsubmit="return editInPotlatch(this.elements);">
+                <form onsubmit="return editInPotlatch(this.elements);" id="editor-form">
 
                     {include file="$language/scan-potlatch-info.htmlf.tpl"}
 
