@@ -598,13 +598,14 @@
             : '';
         
         $q = sprintf("SELECT {$woeid_column_names}
-                             s.id, s.print_id, s.last_step,
+                             s.id, s.print_id,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
                              s.description, s.is_private, s.will_edit,
                              (p.north + p.south) / 2 AS print_latitude,
                              (p.east + p.west) / 2 AS print_longitude,
                              UNIX_TIMESTAMP(s.created) AS created,
+                             UNIX_TIMESTAMP(s.decoded) AS decoded,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
                              {$base_url} {$uploaded_file}
                              {$has_geotiff} {$has_stickers}
@@ -613,11 +614,10 @@
                       FROM scans AS s
                       LEFT JOIN prints AS p
                         ON p.id = s.print_id
-                      WHERE s.last_step = %d
+                      WHERE decoded
                         AND %s
                       ORDER BY s.created DESC
                       LIMIT %d OFFSET %d",
-                     STEP_FINISHED,
                      ($include_private ? '1' : "s.is_private='no'"),
                      $count, $offset);
     
@@ -642,11 +642,12 @@
     
     function get_scan(&$dbh, $scan_id)
     {
-        $q = sprintf("SELECT id, print_id, last_step,
+        $q = sprintf("SELECT id, print_id,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
                              description, is_private, will_edit,
                              UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(decoded) AS decoded,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              base_url, uploaded_file,
                              has_geotiff, has_stickers,
@@ -899,7 +900,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers') as $field)
+        foreach(array('print_id', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers') as $field)
             if(in_array($field, $column_names) && !is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
@@ -939,6 +940,19 @@
 
         $q = sprintf('UPDATE prints SET composed = NOW() WHERE id = %s',
                      $dbh->quoteSmart($print_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+    }
+    
+    function finish_scan(&$dbh, $scan_id)
+    {
+        $q = sprintf('UPDATE scans SET decoded = NOW() WHERE id = %s',
+                     $dbh->quoteSmart($scan_id));
 
         error_log(preg_replace('/\s+/', ' ', $q));
 
@@ -1057,7 +1071,7 @@
         {
             $q = sprintf('SELECT id
                           FROM scans
-                          WHERE last_step = 0
+                          WHERE NOT decoded
                             AND created < NOW() - INTERVAL %d SECOND
                           LIMIT 1',
                          $age);
