@@ -4,7 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Uploaded Scan (Walking Papers)</title>
+    <title>Uploaded Scan (Field Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <style type="text/css" title="text/css">
     /* <![CDATA[{literal} */

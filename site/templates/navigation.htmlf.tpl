@@ -1,6 +1,6 @@
 {* include file="language.htmlf.tpl" *}
 
-<h1><a href="{$base_dir}/"><img src="{$base_dir}/icon.png" border="0" align="bottom" alt="" /> Walking Papers</a></h1>
+<h1><a href="{$base_dir}/"><img src="{$base_dir}/icon.png" border="0" align="bottom" alt="" /> Field Papers</a></h1>
 
 <p id="navigation">
     <a href="{$base_dir}/">Home</a>

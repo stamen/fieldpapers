@@ -1,4 +1,4 @@
-<h2>About Walking Papers</h2>
+<h2>About Field Papers</h2>
 
 <p>
     OpenStreetMap, the wiki-style map of the world that anyone can edit, is in need of a new way to add content. Walking Papers is a way to “round trip” map data through paper, to make it easier to perform the kinds of eyes-on-the-street edits that OSM needs now the most, as well as distributing the load by making it possible for legible, easy notes to be shared and turned into real geographical data. 

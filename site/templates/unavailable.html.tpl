@@ -4,7 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Site Unavailable (Walking Papers)</title>
+    <title>Site Unavailable (Field Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
 </head>
 <body>
@@ -14,7 +14,7 @@
     <h2>Site Unavailable</h2>
     
     <p>
-        Walking Papers is currently unavailable. Please try back in a few minutes!
+        Field Papers is currently unavailable. Please try back in a few minutes!
     </p>
     
     {include file="footer.htmlf.tpl"}
