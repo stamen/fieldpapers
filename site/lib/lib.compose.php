@@ -102,7 +102,12 @@
         $print['west'] = is_numeric($form['west']) ? floatval($form['west']) : null;
         $print['zoom'] = is_numeric($form['zoom']) ? intval($form['zoom']) : null;
         
-        $page['provider'] = $form['provider'] ? $form['provider'] : null;
+        $page['provider'] = $form['provider'] ? $form['provider'] : 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
+        
+        if(in_array($form['grid'], array('utm', 'mgrs')))
+        {
+            $page['provider'] .= ",http://tiles.teczno.com/{$form['grid']}/{Z}/{X}/{Y}.png";
+        }
         
         $page['north'] = $print['north'];
         $page['south'] = $print['south'];
