@@ -249,6 +249,7 @@
             <input type="hidden" name="source" value="bounds" />
         </p>
         
+        <!--
         <p>
             Layout:
             
@@ -257,6 +258,7 @@
             <label><input name="layout" type="radio" value="4,4" onchange="setLayout(this.value);" /> 16 pages (4×4)</label>
             {* <label><input name="layout" type="radio" value="8,8" onchange="setLayout(this.value);" /> 64 pages (8×8)</label> *}
         </p>
+        -->
 
         {if $request.get.provider}
             <input type="hidden" name="provider" value="{$provider|escape}" />
