@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Append File (Walking Papers)</title>
+    <title>Append File (Field Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     <meta http-equiv="refresh" content="30" />
 </head>

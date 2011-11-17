@@ -4,7 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Compose (Walking Papers)</title>
+    <title>Compose (Field Papers)</title>
 </head>
 <body>
 

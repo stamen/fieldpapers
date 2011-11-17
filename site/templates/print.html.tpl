@@ -4,7 +4,7 @@
 <html lang="{$language|default:"en"}">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Print #{$print.id|escape} (Walking Papers)</title>
+    <title>Print #{$print.id|escape} (Field Papers)</title>
     <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
     {if $print.page}
         <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$print.id|escape}/{$print.page.page_number|escape}&amp;type=xml" />
