@@ -25,6 +25,7 @@
     
     $scan = get_scan($dbh, $scan_id);
     
+    /*
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
         if($scan)
@@ -86,6 +87,7 @@
             }
         }
     }
+    */
     
     if($scan)
     {

@@ -51,7 +51,7 @@ def update_step(apibase, password, scan_id, step_number):
     
     return
 
-def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
+def finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -72,10 +72,10 @@ def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, 
                         'geojpeg_bounds': '%.8f,%.8f,%.8f,%.8f' % geojpeg_bounds})
     
     req = HTTPConnection(host, port)
-    req.request('POST', path + '/scan.php?' + query, params, headers)
+    req.request('POST', path + '/finish-scan.php?' + query, params, headers)
     res = req.getresponse()
     
-    assert res.status == 200, 'POST to scan.php resulting in status %s instead of 200' % res.status
+    assert res.status == 200, 'POST to finish-scan.php resulting in status %s instead of 200' % res.status
 
     return
 
