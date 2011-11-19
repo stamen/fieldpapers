@@ -370,41 +370,6 @@
         }
     }
     
-    function add_step(&$dbh, $scan_id, $number)
-    {
-        $q = sprintf('INSERT INTO steps
-                      SET scan_id = %s, number = %d',
-                     $dbh->quoteSmart($scan_id),
-                     $number);
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-        {
-            if($res->getCode() == DB_ERROR_ALREADY_EXISTS)
-                return false;
-
-            die_with_code(500, "{$res->message}\n{$q}\n");
-        }
-
-        $q = sprintf('UPDATE scans
-                      SET last_step = %s
-                      WHERE id = %s',
-                     $number,
-                     $dbh->quoteSmart($scan_id));
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        return true;
-    }
-    
     function add_message(&$dbh, $content)
     {
         $q = sprintf('INSERT INTO messages
@@ -686,99 +651,6 @@
         return $res->fetchRow(DB_FETCHMODE_ASSOC);
     }
     
-    function get_step_description($number)
-    {
-        switch($number)
-        {
-            case STEP_UPLOADING:
-                return 'Preparing for upload';
-
-            case STEP_QUEUED:
-                return 'Queued for processing';
-
-            case STEP_SIFTING:
-                return 'Sifting';
-
-            case STEP_FINDING_NEEDLES:
-                return 'Finding needles';
-
-            case STEP_READING_QR_CODE:
-                return 'Reading QR code';
-
-            case STEP_TILING_UPLOADING:
-                return 'Tiling and uploading';
-
-            case STEP_FINISHED:
-                return 'Finished';
-
-            case STEP_BAD_QRCODE:
-                return 'We could not read the QR code';
-
-            case STEP_ERROR:
-                return 'A temporary error has occured';
-
-            case STEP_FATAL_QRCODE_ERROR:
-                return 'We could not read the QR code';
-
-            case STEP_FATAL_ERROR:
-                return 'A permanent error has occured';
-        }
-
-        return new PEAR_Error('dunno');
-    }
-    
-    function get_step(&$dbh, $scan_id, $number=false)
-    {
-        if(is_numeric($number)) {
-            $q = sprintf('SELECT *
-                          FROM steps
-                          WHERE scan_id = %s
-                            AND number = %d',
-                         $dbh->quoteSmart($scan_id),
-                         $number);
-
-        } else {
-            $q = sprintf('SELECT *
-                          FROM steps
-                          WHERE scan_id = %s
-                          ORDER BY created DESC
-                          LIMIT 1',
-                         $dbh->quoteSmart($scan_id));
-        }
-                     
-    
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        return $res->fetchRow(DB_FETCHMODE_ASSOC);
-    }
-    
-    function get_steps(&$dbh, $scan_id, $limit=100)
-    {
-        $q = sprintf('SELECT scan_id, number,
-                             user_id, created
-                      FROM steps
-                      WHERE scan_id = %s
-                      ORDER BY created DESC
-                      LIMIT %d',
-                     $dbh->quoteSmart($scan_id),
-                     $limit);
-    
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        $steps = array();
-        
-        while($step = $res->fetchRow(DB_FETCHMODE_ASSOC))
-            $steps[] = $step;
-
-        return $steps;
-    }
-    
     function get_message(&$dbh, $timeout)
     {
         $res = $dbh->query('LOCK TABLES messages WRITE');
@@ -1038,17 +910,6 @@
     {
         $q = sprintf('DELETE FROM scans
                       WHERE id = %s',
-                     $dbh->quoteSmart($scan_id));
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        $q = sprintf('DELETE FROM steps
-                      WHERE scan_id = %s',
                      $dbh->quoteSmart($scan_id));
 
         error_log(preg_replace('/\s+/', ' ', $q));

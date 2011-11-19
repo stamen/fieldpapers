@@ -1,6 +1,6 @@
 {if $scan.last_step == $constants.STEP_FATAL_ERROR || $scan.last_step == $constants.STEP_FATAL_QRCODE_ERROR}
     <p>
-        {$scan.last_step|step_description|escape}, giving up.
+        Giving up.
     </p>
     <p>
         You might try uploading your scan again, making sure that
