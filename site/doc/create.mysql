@@ -158,23 +158,6 @@ CREATE TABLE scan_notes (
 
 
 
-DROP TABLE IF EXISTS steps;
-
-CREATE TABLE steps (
-
-    scan_id     VARCHAR(8) NOT NULL,
-    number      INT NOT NULL,
-
-    user_id     VARCHAR(8) NOT NULL,
-    created     TIMESTAMP,
-
-    INDEX scan_step (scan_id, number),
-    INDEX `user` (user_id)
-
-) ENGINE=InnoDB, CHARACTER SET utf8;
-
-
-
 DROP TABLE IF EXISTS messages;
 
 CREATE TABLE messages (
