@@ -102,7 +102,6 @@ CREATE TABLE scans (
     id              VARCHAR(8) NOT NULL,
 
     print_id        VARCHAR(16) NOT NULL,
-    last_step       INT NULL,
     
     min_row         FLOAT,
     min_column      FLOAT,
@@ -127,8 +126,7 @@ CREATE TABLE scans (
     
     PRIMARY KEY (id),
     INDEX print (print_id),
-    INDEX `user` (user_id),
-    INDEX step (last_step)
+    INDEX `user` (user_id)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 

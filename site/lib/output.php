@@ -146,7 +146,7 @@
     {
         header(sprintf('X-Scan-ID: %s', $scan['id']));
         header(sprintf('X-Scan-User-ID: %s', $scan['user_id']));
-        header(sprintf('X-Scan-Finished: %s', ($scan['last_step'] == STEP_FINISHED) ? 'yes' : 'no'));
+        header(sprintf('X-Scan-Decoded: %s', $scan['decoded']));
         //header(sprintf('X-Scan-Private: %s', $scan['is_private']));
         header(sprintf('X-Scan-Will-Edit: %s', $scan['will_edit']));
         header(sprintf('X-Scan-Minimum-Coord: %.3f %.3f %d', $scan['min_row'], $scan['min_column'], $scan['min_zoom']));
@@ -159,7 +159,6 @@
     
     function modify_scan_for_json($scan)
     {
-        unset($scan['last_step']);
         unset($scan['age']);
 
         $scan['min_row'] = floatval($scan['min_row']);

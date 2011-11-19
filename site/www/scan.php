@@ -119,7 +119,6 @@
     } elseif($type == 'application/json') { 
         $scan = modify_scan_for_json($scan);
         
-        unset($print['last_step']);
         unset($print['age']);
 
         $print['north'] = floatval($print['north']);

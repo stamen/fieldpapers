@@ -48,7 +48,7 @@
     if($attempted_upload && !$acceptable_upload)
         die_with_code(400, 'Sorry, something about your file was bad');
 
-    if($acceptable_upload && $scan && $scan['last_step'] <= 1)
+    if($acceptable_upload && $scan && !$scan['decoded'])
     {
         $dbh->query('START TRANSACTION');
 
