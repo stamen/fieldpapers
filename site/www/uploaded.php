@@ -52,20 +52,16 @@
     {
         $dbh->query('START TRANSACTION');
 
-        $added = add_step($dbh, $scan['id'], 1);
+        $message = array('action' => 'decode',
+                         'scan_id' => $scan['id'],
+                         'url' => $url);
         
-        if($added)
-        {
-            $message = array('action' => 'decode',
-                             'scan_id' => $scan['id'],
-                             'url' => $url);
-            
-            add_message($dbh, json_encode($message));
-        }
+        add_message($dbh, json_encode($message));
         
         $scan = get_scan($dbh, $scan['id']);
         $parsed_url = parse_url($url);
         $scan['base_url'] = "http://{$parsed_url['host']}".dirname($parsed_url['path']);
+
         set_scan($dbh, $scan);
         
         $dbh->query('COMMIT');
