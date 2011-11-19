@@ -35,22 +35,6 @@ def finish_print(apibase, password, print_id, form_data):
 
     return
 
-def update_step(apibase, password, scan_id, step_number):
-    """
-    """
-    s, host, path, p, q, f = urlparse(apibase)
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
-    params = urlencode({'scan': scan_id, 'step': step_number, 'password': password})
-    
-    req = HTTPConnection(host, 80)
-    req.request('POST', path + '/step.php', params, headers)
-    res = req.getresponse()
-    
-    assert res.status == 200, 'POST to step.php %s/%d resulting in status %s instead of 200' % (scan_id, step_number, res.status)
-    
-    return
-
 def finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
     """
     """
