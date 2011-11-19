@@ -31,7 +31,6 @@
         {
             $scan = array('id' => $scan_id,
                           'print_id' => $_POST['print_id'],
-                          'last_step' => $_POST['last_step'],
                           'user_name' => $_POST['user_name'],
                           'min_row' => $_POST['min_row'],
                           'min_column' => $_POST['min_column'],

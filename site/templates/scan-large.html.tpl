@@ -39,7 +39,7 @@
     {include file="navigation.htmlf.tpl"}
     
     {if $scan}
-        {if $scan.last_step == $constants.STEP_FINISHED}
+        {if $scan.decoded}
             {include file="$language/scan-large-info.htmlf.tpl"}
         {/if}
     {/if}
