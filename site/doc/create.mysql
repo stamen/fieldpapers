@@ -102,7 +102,6 @@ CREATE TABLE scans (
     id              VARCHAR(8) NOT NULL,
 
     print_id        VARCHAR(16) NOT NULL,
-    last_step       INT NULL,
     
     min_row         FLOAT,
     min_column      FLOAT,
@@ -123,11 +122,11 @@ CREATE TABLE scans (
 
     user_id         VARCHAR(8) NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    decoded         TIMESTAMP DEFAULT 0,
     
     PRIMARY KEY (id),
     INDEX print (print_id),
-    INDEX `user` (user_id),
-    INDEX step (last_step)
+    INDEX `user` (user_id)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
@@ -154,23 +153,6 @@ CREATE TABLE scan_notes (
     created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     PRIMARY KEY (scan_id, number)
-
-) ENGINE=InnoDB, CHARACTER SET utf8;
-
-
-
-DROP TABLE IF EXISTS steps;
-
-CREATE TABLE steps (
-
-    scan_id     VARCHAR(8) NOT NULL,
-    number      INT NOT NULL,
-
-    user_id     VARCHAR(8) NOT NULL,
-    created     TIMESTAMP,
-
-    INDEX scan_step (scan_id, number),
-    INDEX `user` (user_id)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 

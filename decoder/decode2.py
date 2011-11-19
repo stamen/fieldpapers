@@ -23,7 +23,7 @@ else:
 from ModestMaps.Core import Point, Coordinate
 
 from geoutils import create_geotiff, generate_tiles
-from apiutils import append_scan_file, update_scan, update_step, ALL_FINISHED
+from apiutils import append_scan_file, finish_scan, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from imagemath import imgblobs, extract_image, open as imageopen
 from matrixmath import Transform, quad2quad
@@ -354,7 +354,7 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     # Prepare a shorthand for pushing data.
     #
     _append_file = lambda name, body: scan_id and append_scan_file(scan_id, name, body, apibase, password) or None
-    _update_step = lambda step_number: scan_id and update_step(apibase, password, scan_id, step_number) or None
+    _finish_scan = lambda form: scan_id and finish_scan(apibase, password, scan_id, form) or None
     
     def _append_image(filename, image):
         """ Append specifically an image.
@@ -372,8 +372,6 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     
     handle, postblob_filename = mkstemp(prefix='postblob-', suffix='.png')
     close(handle)
-    
-    _update_step(STEP_SIFTING)
     
     print >> stderr, 'Downloading', url
     
@@ -400,8 +398,6 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     move(preblobs_filename, 'preblobs.jpg')
     unlink(postblob_filename)
     
-    _update_step(STEP_FINDING_NEEDLES)
-
     for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
 
         yield 10
@@ -414,8 +410,6 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         
         yield 10
 
-        _update_step(STEP_READING_QR_CODE)
-
         try:
             print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
         except CodeReadException:
@@ -425,8 +419,6 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         if (_paper, _orientation) != (paper, orientation):
             continue
         
-        _update_step(STEP_TILING_UPLOADING)
-
         draw_postblobs(postblob_img, blobs_abcde)
         _append_image('postblob.jpg', postblob_img)
         postblob_img.save('postblob.jpg')
@@ -473,10 +465,8 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         min_coord = Coordinate(minrow, mincol, minzoom)
         max_coord = Coordinate(maxrow, maxcol, maxzoom)
         
-        update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
+        finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
 
-        _update_step(STEP_FINISHED)
-        
         yield ALL_FINISHED
         
         return
@@ -495,7 +485,6 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     except Exception, e:
         print 'Exception in decode.main, giving up:', e
 
-        _update_step(STEP_FATAL_ERROR)
         yield ALL_FINISHED
 
 if __name__ == '__main__':

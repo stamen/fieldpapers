@@ -340,8 +340,6 @@
                 die_with_code(500, "{$res->message}\n{$q}\n");
             }
             
-            add_step($dbh, $scan_id, 0);
-            
             return get_scan($dbh, $scan_id);
         }
     }
@@ -370,41 +368,6 @@
             
             return get_user($dbh, $user_id);
         }
-    }
-    
-    function add_step(&$dbh, $scan_id, $number)
-    {
-        $q = sprintf('INSERT INTO steps
-                      SET scan_id = %s, number = %d',
-                     $dbh->quoteSmart($scan_id),
-                     $number);
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-        {
-            if($res->getCode() == DB_ERROR_ALREADY_EXISTS)
-                return false;
-
-            die_with_code(500, "{$res->message}\n{$q}\n");
-        }
-
-        $q = sprintf('UPDATE scans
-                      SET last_step = %s
-                      WHERE id = %s',
-                     $number,
-                     $dbh->quoteSmart($scan_id));
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        return true;
     }
     
     function add_message(&$dbh, $content)
@@ -598,13 +561,14 @@
             : '';
         
         $q = sprintf("SELECT {$woeid_column_names}
-                             s.id, s.print_id, s.last_step,
+                             s.id, s.print_id,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
                              s.description, s.is_private, s.will_edit,
                              (p.north + p.south) / 2 AS print_latitude,
                              (p.east + p.west) / 2 AS print_longitude,
                              UNIX_TIMESTAMP(s.created) AS created,
+                             UNIX_TIMESTAMP(s.decoded) AS decoded,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
                              {$base_url} {$uploaded_file}
                              {$has_geotiff} {$has_stickers}
@@ -613,11 +577,10 @@
                       FROM scans AS s
                       LEFT JOIN prints AS p
                         ON p.id = s.print_id
-                      WHERE s.last_step = %d
+                      WHERE decoded
                         AND %s
                       ORDER BY s.created DESC
                       LIMIT %d OFFSET %d",
-                     STEP_FINISHED,
                      ($include_private ? '1' : "s.is_private='no'"),
                      $count, $offset);
     
@@ -642,11 +605,12 @@
     
     function get_scan(&$dbh, $scan_id)
     {
-        $q = sprintf("SELECT id, print_id, last_step,
+        $q = sprintf("SELECT id, print_id,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
                              description, is_private, will_edit,
                              UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(decoded) AS decoded,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              base_url, uploaded_file,
                              has_geotiff, has_stickers,
@@ -685,99 +649,6 @@
             die_with_code(500, "{$res->message}\n{$q}\n");
 
         return $res->fetchRow(DB_FETCHMODE_ASSOC);
-    }
-    
-    function get_step_description($number)
-    {
-        switch($number)
-        {
-            case STEP_UPLOADING:
-                return 'Preparing for upload';
-
-            case STEP_QUEUED:
-                return 'Queued for processing';
-
-            case STEP_SIFTING:
-                return 'Sifting';
-
-            case STEP_FINDING_NEEDLES:
-                return 'Finding needles';
-
-            case STEP_READING_QR_CODE:
-                return 'Reading QR code';
-
-            case STEP_TILING_UPLOADING:
-                return 'Tiling and uploading';
-
-            case STEP_FINISHED:
-                return 'Finished';
-
-            case STEP_BAD_QRCODE:
-                return 'We could not read the QR code';
-
-            case STEP_ERROR:
-                return 'A temporary error has occured';
-
-            case STEP_FATAL_QRCODE_ERROR:
-                return 'We could not read the QR code';
-
-            case STEP_FATAL_ERROR:
-                return 'A permanent error has occured';
-        }
-
-        return new PEAR_Error('dunno');
-    }
-    
-    function get_step(&$dbh, $scan_id, $number=false)
-    {
-        if(is_numeric($number)) {
-            $q = sprintf('SELECT *
-                          FROM steps
-                          WHERE scan_id = %s
-                            AND number = %d',
-                         $dbh->quoteSmart($scan_id),
-                         $number);
-
-        } else {
-            $q = sprintf('SELECT *
-                          FROM steps
-                          WHERE scan_id = %s
-                          ORDER BY created DESC
-                          LIMIT 1',
-                         $dbh->quoteSmart($scan_id));
-        }
-                     
-    
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        return $res->fetchRow(DB_FETCHMODE_ASSOC);
-    }
-    
-    function get_steps(&$dbh, $scan_id, $limit=100)
-    {
-        $q = sprintf('SELECT scan_id, number,
-                             user_id, created
-                      FROM steps
-                      WHERE scan_id = %s
-                      ORDER BY created DESC
-                      LIMIT %d',
-                     $dbh->quoteSmart($scan_id),
-                     $limit);
-    
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        $steps = array();
-        
-        while($step = $res->fetchRow(DB_FETCHMODE_ASSOC))
-            $steps[] = $step;
-
-        return $steps;
     }
     
     function get_message(&$dbh, $timeout)
@@ -899,7 +770,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'last_step', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers') as $field)
+        foreach(array('print_id', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers') as $field)
             if(in_array($field, $column_names) && !is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
@@ -939,6 +810,19 @@
 
         $q = sprintf('UPDATE prints SET composed = NOW() WHERE id = %s',
                      $dbh->quoteSmart($print_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+    }
+    
+    function finish_scan(&$dbh, $scan_id)
+    {
+        $q = sprintf('UPDATE scans SET decoded = NOW() WHERE id = %s',
+                     $dbh->quoteSmart($scan_id));
 
         error_log(preg_replace('/\s+/', ' ', $q));
 
@@ -1035,17 +919,6 @@
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
 
-        $q = sprintf('DELETE FROM steps
-                      WHERE scan_id = %s',
-                     $dbh->quoteSmart($scan_id));
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
         return true;
     }
     
@@ -1057,7 +930,7 @@
         {
             $q = sprintf('SELECT id
                           FROM scans
-                          WHERE last_step = 0
+                          WHERE NOT decoded
                             AND created < NOW() - INTERVAL %d SECOND
                           LIMIT 1',
                          $age);
