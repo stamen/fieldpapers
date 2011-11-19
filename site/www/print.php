@@ -30,54 +30,6 @@
     
     $print = get_print($dbh, $print_id);
     
-    /*
-    if($print && $_SERVER['REQUEST_METHOD'] == 'POST')
-    {
-        if($_POST['password'] != API_PASSWORD)
-            die_with_code(401, 'Sorry, bad password');
-        
-        // we accept a subset of print properties here
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper', 'last_step') as $field)
-            if(isset($_POST[$field]))
-                $print[$field] = $_POST[$field];
-        
-        add_log($dbh, "Posting additional details to print {$print['id']}");
-
-        if($_POST['last_step'] == STEP_FINISHED)
-        {
-            $print_data = json_decode($_POST['print_data'], true);
-            $atlas_pages = array();
-            
-            foreach($print_data['pages'] as $page)
-                if($page['part'])
-                    $atlas_pages[] = $page;
-            
-            $print['pdf_url'] = $_POST['pdf_url'];
-            $print['preview_url'] = $_POST['preview_url'];
-            $print['last_step'] = $_POST['last_step'];
-            $print['atlas_pages'] = json_encode($atlas_pages);
-        }
-        
-        $north = $print['north'];
-        $south = $print['south'];
-        $east = $print['east'];
-        $west = $print['west'];
-        $zoom = $print['zoom'];
-        
-        if(isset($north) && isset($south) && isset($east) && isset($west) && $zoom)
-        {
-            list($print['country_name'], $print['country_woeid'],
-                 $print['region_name'], $print['region_woeid'],
-                 $print['place_name'], $print['place_woeid'])
-             = latlon_placeinfo(($north + $south) / 2, ($west + $east) / 2, $zoom - 1);
-        }
-        
-        $dbh->query('START TRANSACTION');
-        $print = set_print($dbh, $print);
-        $dbh->query('COMMIT');
-    }
-    */
-    
     $sm = get_smarty_instance();
     $sm->assign('print', $print);
     $sm->assign('language', $language);
