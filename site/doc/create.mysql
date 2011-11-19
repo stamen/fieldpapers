@@ -123,6 +123,7 @@ CREATE TABLE scans (
     user_id         VARCHAR(8) NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     decoded         TIMESTAMP DEFAULT 0,
+    failed          INT UNSIGNED DEFAULT 0,
     
     PRIMARY KEY (id),
     INDEX print (print_id),
