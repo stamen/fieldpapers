@@ -23,7 +23,7 @@ else:
 from ModestMaps.Core import Point, Coordinate
 
 from geoutils import create_geotiff, generate_tiles
-from apiutils import append_scan_file, finish_scan, update_step, ALL_FINISHED
+from apiutils import append_scan_file, finish_scan, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from imagemath import imgblobs, extract_image, open as imageopen
 from matrixmath import Transform, quad2quad
