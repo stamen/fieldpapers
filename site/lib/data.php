@@ -340,8 +340,6 @@
                 die_with_code(500, "{$res->message}\n{$q}\n");
             }
             
-            add_step($dbh, $scan_id, 0);
-            
             return get_scan($dbh, $scan_id);
         }
     }
