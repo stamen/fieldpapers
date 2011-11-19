@@ -57,7 +57,6 @@
         $geotiff_mimetype = trim(`file -bi {$_FILES['file']['tmp_name']}`);
         
         $print['geotiff_url'] = post_file("prints/{$print['id']}/{$geotiff_filename}", $geotiff_contents, $geotiff_mimetype);
-        $print['last_step'] = STEP_QUEUED;
         
         if(preg_match('/\b(letter|a4|a3)\b/', $paper, $parts)) {
             $print['paper_size'] = $parts[1];
@@ -105,7 +104,6 @@
         $print['provider'] = $provider;
         $print['orientation'] = $orientation;
         $print['paper_size'] = $paper_size;
-        $print['last_step'] = STEP_QUEUED;
         $print['layout'] = $layout;
 
         set_print($dbh, $print);

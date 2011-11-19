@@ -36,7 +36,7 @@
 
     $res = $dbh->query('SELECT COUNT(*)
                         FROM scans
-                        WHERE last_step = '.STEP_FINISHED);
+                        WHERE decoded');
     
     if(PEAR::isError($res)) 
         die_with_code(500, "{$res->message}\n");

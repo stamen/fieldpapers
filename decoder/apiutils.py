@@ -35,23 +35,7 @@ def finish_print(apibase, password, print_id, form_data):
 
     return
 
-def update_step(apibase, password, scan_id, step_number):
-    """
-    """
-    s, host, path, p, q, f = urlparse(apibase)
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
-    params = urlencode({'scan': scan_id, 'step': step_number, 'password': password})
-    
-    req = HTTPConnection(host, 80)
-    req.request('POST', path + '/step.php', params, headers)
-    res = req.getresponse()
-    
-    assert res.status == 200, 'POST to step.php %s/%d resulting in status %s instead of 200' % (scan_id, step_number, res.status)
-    
-    return
-
-def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
+def finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -72,10 +56,10 @@ def update_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, 
                         'geojpeg_bounds': '%.8f,%.8f,%.8f,%.8f' % geojpeg_bounds})
     
     req = HTTPConnection(host, port)
-    req.request('POST', path + '/scan.php?' + query, params, headers)
+    req.request('POST', path + '/finish-scan.php?' + query, params, headers)
     res = req.getresponse()
     
-    assert res.status == 200, 'POST to scan.php resulting in status %s instead of 200' % res.status
+    assert res.status == 200, 'POST to finish-scan.php resulting in status %s instead of 200' % res.status
 
     return
 

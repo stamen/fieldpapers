@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{$base_dir}/scan.css" type="text/css" />
     <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$scan.id|escape:"url"}&amp;type=xml" />
     <link rel="data" type="application/json" href="{$base_dir}{$base_href}?id={$scan.id|escape:"url"}&amp;type=json" />
-    {if $scan && $scan.last_step != 6 && $scan.last_step != $constants.STEP_FATAL_ERROR && $scan.last_step != $constants.STEP_FATAL_QRCODE_ERROR}
+    {if $scan && !$scan.decoded}
         <meta http-equiv="refresh" content="5" />
     {else}
         <script type="text/javascript" src="{$base_dir}/swfobject.js"></script>
@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    {if $scan && $scan.last_step == $constants.STEP_FINISHED}
+    {if $scan && $scan.decoded}
         <span id="scan-info" style="display: none;">
             <span class="scan">{$scan.id|escape}</span>
             <span class="tile">{$scan.base_url}/{$scan.id|escape}/{literal}{z}/{x}/{y}{/literal}.jpg</span>
@@ -53,7 +53,7 @@
     {include file="navigation.htmlf.tpl"}
     
     {if $scan}
-        {if $scan.last_step == $constants.STEP_FINISHED}
+        {if $scan.decoded}
 
             {include file="$language/scan-info.htmlf.tpl"}
             
