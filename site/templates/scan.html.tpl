@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{$base_dir}/scan.css" type="text/css" />
     <link rel="data" type="application/paperwalking+xml" href="{$base_dir}{$base_href}?id={$scan.id|escape:"url"}&amp;type=xml" />
     <link rel="data" type="application/json" href="{$base_dir}{$base_href}?id={$scan.id|escape:"url"}&amp;type=json" />
-    {if $scan && !$scan.decoded}
+    {if $scan && !$scan.decoded && !$scan.failed}
         <meta http-equiv="refresh" content="5" />
     {else}
         <script type="text/javascript" src="{$base_dir}/swfobject.js"></script>
@@ -49,60 +49,33 @@
             {/if}
         </span>
     {/if}
-
+    
     {include file="navigation.htmlf.tpl"}
     
-    {if $scan}
-        {if $scan.decoded}
+    {if $scan && $scan.decoded}
+        {include file="$language/scan-info.htmlf.tpl"}
+        {include file="$language/scan-editor-info.htmlf.tpl"}
+        
+        <div id="editor">
+            <form onsubmit="return editInPotlatch(this.elements);" id="editor-form">
 
-            {include file="$language/scan-info.htmlf.tpl"}
-            
-            {include file="$language/scan-editor-info.htmlf.tpl"}
-            
-            <div id="editor">
-                <form onsubmit="return editInPotlatch(this.elements);" id="editor-form">
+                {include file="$language/scan-potlatch-info.htmlf.tpl"}
 
-                    {include file="$language/scan-potlatch-info.htmlf.tpl"}
+                <p>
+                    <input class="mac-button" name="action" type="submit" value="Edit" />
+                    <input name="minrow" type="hidden" value="{$scan.min_row|escape}" />
+                    <input name="mincolumn" type="hidden" value="{$scan.min_column|escape}" />
+                    <input name="minzoom" type="hidden" value="{$scan.min_zoom|escape}" />
+                    <input name="maxrow" type="hidden" value="{$scan.max_row|escape}" />
+                    <input name="maxcolumn" type="hidden" value="{$scan.max_column|escape}" />
+                    <input name="maxzoom" type="hidden" value="{$scan.max_zoom|escape}" />
+                    <input name="base_url" type="hidden" value="{$scan.base_url|escape}" />
+                </p>
+            </form>
+        </div>
 
-                    <p>
-                        {if $language == "de"}
-                            {assign var="label" value="Bearbeiten"}
-                        {elseif $language == "nl"}
-                            {* nl: WRITE ME *}
-                            {assign var="label" value="Edit"}
-                        {elseif $language == "es"}
-                            {assign var="label" value="Editar"}
-                        {elseif $language == "fr"}
-                            {assign var="label" value="Modifier"}
-                        {elseif $language == "ja"}
-                            {assign var="label" value="編集"}
-                        {elseif $language == "it"}
-                            {assign var="label" value="Modifica"}
-                        {elseif $language == "tr"}
-                            {assign var="label" value="Değiştir"}
-                        {elseif $language == "ru"}
-                            {assign var="label" value="Редактировать"}
-                        {elseif $language == "sv"}
-                            {assign var="label" value="Redigera"}
-                        {else}
-                            {assign var="label" value="Edit"}
-                        {/if}
-                        <input class="mac-button" name="action" type="submit" value="{$label}" />
-                        <input name="minrow" type="hidden" value="{$scan.min_row|escape}" />
-                        <input name="mincolumn" type="hidden" value="{$scan.min_column|escape}" />
-                        <input name="minzoom" type="hidden" value="{$scan.min_zoom|escape}" />
-                        <input name="maxrow" type="hidden" value="{$scan.max_row|escape}" />
-                        <input name="maxcolumn" type="hidden" value="{$scan.max_column|escape}" />
-                        <input name="maxzoom" type="hidden" value="{$scan.max_zoom|escape}" />
-                        <input name="base_url" type="hidden" value="{$scan.base_url|escape}" />
-                    </p>
-                </form>
-            </div>
-        {else}
-
-            {include file="$language/scan-process-info.htmlf.tpl"}
-
-        {/if}
+    {elseif $scan}
+        {include file="$language/scan-process-info.htmlf.tpl"}
     {/if}
     
     {include file="footer.htmlf.tpl"}
