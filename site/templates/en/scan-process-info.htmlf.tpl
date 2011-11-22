@@ -1,4 +1,4 @@
-{if $scan.last_step == $constants.STEP_FATAL_ERROR || $scan.last_step == $constants.STEP_FATAL_QRCODE_ERROR}
+{if $scan.failed}
     <p>
         Giving up.
     </p>
@@ -10,18 +10,6 @@
         If this doesn’t help,
         <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">let us know</a>.
     </p>
-    
-    {if $scan.last_step == $constants.STEP_FATAL_QRCODE_ERROR}
-        <p>
-            Here’s the part of your scan where we tried to find a code:
-        </p>
-        <p>
-            <img width="65%" border="1" src="{$scan.base_url}/qrcode.jpg" />
-        </p>
-        
-        {* TODO: duplicate this file to languages other than English *}
-        {include file="en/scan-process-qrcode.htmlf.tpl"}
-    {/if}
     
 {else}
     <p>

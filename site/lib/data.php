@@ -570,7 +570,7 @@
                              UNIX_TIMESTAMP(s.created) AS created,
                              UNIX_TIMESTAMP(s.decoded) AS decoded,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
-                             {$base_url} {$uploaded_file}
+                             failed, {$base_url} {$uploaded_file}
                              {$has_geotiff} {$has_stickers}
                              {$has_geojpeg} {$geojpeg_bounds}
                              s.user_id
@@ -612,7 +612,7 @@
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(decoded) AS decoded,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
-                             base_url, uploaded_file,
+                             failed, base_url, uploaded_file,
                              has_geotiff, has_stickers,
                              has_geojpeg, geojpeg_bounds,
                              decoding_json, user_id
