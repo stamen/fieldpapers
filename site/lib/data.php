@@ -832,6 +832,20 @@
             die_with_code(500, "{$res->message}\n{$q}\n");
     }
     
+    function fail_scan(&$dbh, $scan_id, $failure=1)
+    {
+        $q = sprintf('UPDATE scans SET failed = %s WHERE id = %s',
+                     $dbh->quoteSmart($failure),
+                     $dbh->quoteSmart($scan_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+    }
+    
     function get_scan_notes(&$dbh, $page, $scan_id=false)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
