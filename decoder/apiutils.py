@@ -72,7 +72,7 @@ def fail_scan(apibase, password, scan_id):
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
     query = urlencode({'id': scan_id})
-    params = urlencode({})
+    params = urlencode({'password': password})
     
     req = HTTPConnection(host, port)
     req.request('POST', path + '/fail-scan.php?' + query, params, headers)
