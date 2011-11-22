@@ -23,7 +23,7 @@ else:
 from ModestMaps.Core import Point, Coordinate
 
 from geoutils import create_geotiff, generate_tiles
-from apiutils import append_scan_file, finish_scan, ALL_FINISHED
+from apiutils import append_scan_file, finish_scan, fail_scan, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from imagemath import imgblobs, extract_image, open as imageopen
 from matrixmath import Transform, quad2quad
@@ -353,8 +353,17 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     #
     # Prepare a shorthand for pushing data.
     #
-    _append_file = lambda name, body: scan_id and append_scan_file(scan_id, name, body, apibase, password) or None
-    _finish_scan = lambda form: scan_id and finish_scan(apibase, password, scan_id, form) or None
+    def _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds):
+        """
+        """
+        if scan_id:
+            finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
+    
+    def _append_file(name, body):
+        """ Append generally a file.
+        """
+        if scan_id:
+            append_scan_file(scan_id, name, body, apibase, password)
     
     def _append_image(filename, image):
         """ Append specifically an image.
@@ -381,6 +390,10 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         print >> stderr, 'Failed:', e
 
         yield ALL_FINISHED
+        
+        if scan_id:
+            fail_scan(apibase, password, scan_id)
+
         return
     else:
         blobs = imgblobs(input, highpass_filename, preblobs_filename, postblob_filename)
@@ -465,7 +478,7 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         min_coord = Coordinate(minrow, mincol, minzoom)
         max_coord = Coordinate(maxrow, maxcol, maxzoom)
         
-        finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
+        _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds)
 
         yield ALL_FINISHED
         
@@ -474,6 +487,8 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     #
     # If we got this far, it means nothing was detected in the image.
     #
+    fail_scan()
+    
     print >> stderr, '--old--' * 12
     
     from decode import main as old_decode_main

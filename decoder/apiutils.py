@@ -63,6 +63,25 @@ def finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, 
 
     return
 
+def fail_scan(apibase, password, scan_id):
+    """
+    """
+    s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+    query = urlencode({'id': scan_id})
+    params = urlencode({})
+    
+    req = HTTPConnection(host, port)
+    req.request('POST', path + '/fail-scan.php?' + query, params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to fail-scan.php resulting in status %s instead of 200' % res.status
+
+    return
+
 def append_print_file(print_id, file_path, file_contents, apibase, password):
     """ Upload a file via the API append.php form input provision thingie.
     """
