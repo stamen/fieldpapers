@@ -354,10 +354,12 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     # Prepare a shorthand for pushing data.
     #
     def _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds):
-        """
-        """
         if scan_id:
             finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
+    
+    def _fail_scan():
+        if scan_id:
+            fail_scan(apibase, password, scan_id)
     
     def _append_file(name, body):
         """ Append generally a file.
@@ -382,125 +384,103 @@ def main(apibase, password, scan_id, url, old_decode_markers):
     handle, postblob_filename = mkstemp(prefix='postblob-', suffix='.png')
     close(handle)
     
-    print >> stderr, 'Downloading', url
-    
     try:
+        print >> stderr, 'Downloading', url
+    
         input = imageopen(url)
-    except IOError, e:
-        print >> stderr, 'Failed:', e
-
-        yield ALL_FINISHED
-        
-        if scan_id:
-            fail_scan(apibase, password, scan_id)
-
-        return
-    else:
         blobs = imgblobs(input, highpass_filename, preblobs_filename, postblob_filename)
     
-    s, h, path, p, q, f = urlparse(url)
-    uploaded_file = basename(path)
-    
-    yield 10
-    
-    _append_file('highpass.jpg', open(highpass_filename, 'r').read())
-    _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
-    postblob_img = Image.open(postblob_filename)
-
-    move(highpass_filename, 'highpass.jpg')
-    move(preblobs_filename, 'preblobs.jpg')
-    unlink(postblob_filename)
-    
-    for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
-
-        yield 10
-
-        print >> stderr, paper, orientation, '--', s2p
-        
-        qrcode_img = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
-        _append_image('qrcode.png', qrcode_img)
-        qrcode_img.save('qrcode.png')
+        s, h, path, p, q, f = urlparse(url)
+        uploaded_file = basename(path)
         
         yield 10
+        
+        _append_file('highpass.jpg', open(highpass_filename, 'r').read())
+        _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
+        postblob_img = Image.open(postblob_filename)
+    
+        move(highpass_filename, 'highpass.jpg')
+        move(preblobs_filename, 'preblobs.jpg')
+        unlink(postblob_filename)
 
-        try:
-            print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
-        except CodeReadException:
-            print >> stderr, 'could not read the QR code.'
-            continue
-
-        if (_paper, _orientation) != (paper, orientation):
-            continue
-        
-        draw_postblobs(postblob_img, blobs_abcde)
-        _append_image('postblob.jpg', postblob_img)
-        postblob_img.save('postblob.jpg')
-        
-        print >> stderr, 'geotiff...',
-        
-        paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
-        geo_args = paper_width_pt, paper_height_pt, north, west, south, east
-
-        geotiff_bytes, geojpeg_img, img_bounds = create_geotiff(input, s2p.inverse(), *geo_args)
-        
-        _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
-        _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
-        
-        print >> stderr, 'done.'
-        print >> stderr, 'tiles...',
-        
-        minrow, mincol, minzoom = 2**20, 2**20, 20
-        maxrow, maxcol, maxzoom = 0, 0, 0
-
-        for (coord, tile_img) in generate_tiles(input, s2p, *geo_args):
-
-            _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)
-            print >> stderr, coord.zoom,
+        for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
+    
+            yield 10
+    
+            print >> stderr, paper, orientation, '--', s2p
             
-            minrow = min(minrow, coord.row)
-            mincol = min(mincol, coord.column)
-            minzoom = min(minzoom, coord.zoom)
+            qrcode_img = extract_image(s2p, (-90-9, -90-9, 0+9, 0+9), input, (500, 500))
+            _append_image('qrcode.png', qrcode_img)
+            qrcode_img.save('qrcode.png')
             
-            maxrow = max(maxrow, coord.row)
-            maxcol = max(maxcol, coord.column)
-            maxzoom = max(minzoom, coord.zoom)
-        
-        print >> stderr, '...done.'
+            yield 10
+    
+            try:
+                print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
+            except CodeReadException:
+                print >> stderr, 'could not read the QR code.'
+                continue
+    
+            if (_paper, _orientation) != (paper, orientation):
+                continue
+            
+            draw_postblobs(postblob_img, blobs_abcde)
+            _append_image('postblob.jpg', postblob_img)
+            postblob_img.save('postblob.jpg')
+            
+            print >> stderr, 'geotiff...',
+            
+            raise Exception('blah blah blah')
+            
+            paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
+            geo_args = paper_width_pt, paper_height_pt, north, west, south, east
+    
+            geotiff_bytes, geojpeg_img, img_bounds = create_geotiff(input, s2p.inverse(), *geo_args)
+            
+            _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
+            _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
+            
+            print >> stderr, 'done.'
+            print >> stderr, 'tiles...',
+            
+            minrow, mincol, minzoom = 2**20, 2**20, 20
+            maxrow, maxcol, maxzoom = 0, 0, 0
+    
+            for (coord, tile_img) in generate_tiles(input, s2p, *geo_args):
+    
+                _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)
+                print >> stderr, coord.zoom,
+                
+                minrow = min(minrow, coord.row)
+                mincol = min(mincol, coord.column)
+                minzoom = min(minzoom, coord.zoom)
+                
+                maxrow = max(maxrow, coord.row)
+                maxcol = max(maxcol, coord.column)
+                maxzoom = max(minzoom, coord.zoom)
+            
+            print >> stderr, '...done.'
+    
+            preview_img = input.copy()
+            preview_img.thumbnail((409, 280), Image.ANTIALIAS)
+            _append_image('preview.jpg', preview_img)
+            
+            large_img = input.copy()
+            large_img.thumbnail((900, 900), Image.ANTIALIAS)
+            _append_image('large.jpg', large_img)
+            
+            min_coord = Coordinate(minrow, mincol, minzoom)
+            max_coord = Coordinate(maxrow, maxcol, maxzoom)
 
-        preview_img = input.copy()
-        preview_img.thumbnail((409, 280), Image.ANTIALIAS)
-        _append_image('preview.jpg', preview_img)
-        
-        large_img = input.copy()
-        large_img.thumbnail((900, 900), Image.ANTIALIAS)
-        _append_image('large.jpg', large_img)
-        
-        min_coord = Coordinate(minrow, mincol, minzoom)
-        max_coord = Coordinate(maxrow, maxcol, maxzoom)
-        
-        _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds)
-
-        yield ALL_FINISHED
-        
-        return
-    
-    #
-    # If we got this far, it means nothing was detected in the image.
-    #
-    fail_scan()
-    
-    print >> stderr, '--old--' * 12
-    
-    from decode import main as old_decode_main
-    secondary_progress = old_decode_main(scan_id, url, old_decode_markers, apibase, password, None, True)
-    
-    try:
-        for timeout in secondary_progress:
-            yield timeout
     except Exception, e:
-        print 'Exception in decode.main, giving up:', e
+        print >> stderr, 'Failed because:', e
 
-        yield ALL_FINISHED
+        _fail_scan()
+    
+    else:
+        _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds)
+    
+    yield ALL_FINISHED
 
 if __name__ == '__main__':
 
