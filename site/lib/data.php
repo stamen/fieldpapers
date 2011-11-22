@@ -529,38 +529,7 @@
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
     
-        // TODO: ditch dependency on table_columns()
-        $column_names = array_keys(table_columns($dbh, 'scans'));
-        
-        $woeid_column_names = in_array('place_woeid', $column_names)
-            ? 'p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,'
-            : '';
-        
-        $base_url = in_array('base_url', $column_names)
-            ? 's.base_url,'
-            : '';
-        
-        $uploaded_file = in_array('uploaded_file', $column_names)
-            ? 's.uploaded_file,'
-            : '';
-        
-        $has_geotiff = in_array('has_geotiff', $column_names)
-            ? 's.has_geotiff,'
-            : '';
-        
-        $has_geojpeg = in_array('has_geojpeg', $column_names)
-            ? 's.has_geojpeg,'
-            : '';
-        
-        $geojpeg_bounds = in_array('geojpeg_bounds', $column_names)
-            ? 's.geojpeg_bounds,'
-            : '';
-        
-        $has_stickers = in_array('has_stickers', $column_names)
-            ? 's.has_stickers,'
-            : '';
-        
-        $q = sprintf("SELECT {$woeid_column_names}
+        $q = sprintf("SELECT p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,
                              s.id, s.print_id,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
@@ -570,9 +539,9 @@
                              UNIX_TIMESTAMP(s.created) AS created,
                              UNIX_TIMESTAMP(s.decoded) AS decoded,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
-                             failed, {$base_url} {$uploaded_file}
-                             {$has_geotiff} {$has_stickers}
-                             {$has_geojpeg} {$geojpeg_bounds}
+                             failed, s.base_url, s.uploaded_file,
+                             s.has_geotiff, s.has_stickers,
+                             s.has_geojpeg, s.geojpeg_bounds,
                              s.user_id
                       FROM scans AS s
                       LEFT JOIN prints AS p
