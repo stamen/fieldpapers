@@ -23,6 +23,8 @@
 			Загрузить скан
         {elseif $language == "sv"}
             Ladda upp en inskanning
+        {elseif $language == "id"}
+            Unggah Hasil Scan
         {else}
             Upload Scan
         {/if}
@@ -55,6 +57,8 @@
         {assign var="label" value="Отправить"}
     {elseif $language == "sv"}
         {assign var="label" value="Skicka"}
+    {elseif $language == "id"}
+        {assign var="label" value="Kirim"}
     {else}
         {assign var="label" value="Send"}
     {/if}

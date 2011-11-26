@@ -42,6 +42,8 @@
             Недавние сканы
         {elseif $language == "sv"}
             Senaste inskanningar
+        {elseif $language == "id"}
+            Hasil Scan Terbaru
         {else}
             Recent Scans
         {/if}
@@ -69,6 +71,8 @@
                 Еще недавние сканы
             {elseif $language == "sv"}
                 Fler inskanningar
+            {elseif $language == "id"}
+                Hasil Scan Berikutnya
             {else}
                 More recent scans
             {/if}
@@ -95,6 +99,8 @@
                 Распечатать
             {elseif $language == "sv"}
                 Gör en utskrift
+            {elseif $language == "id"}
+                Mencetak Walking Paper
             {else}
                 Make A Print
             {/if}
@@ -124,6 +130,8 @@
             {assign var="label" value="Найти"}
         {elseif $language == "sv"}
             {assign var="label" value="Hitta"}
+        {elseif $language == "id"}
+            {assign var="label" value="Cari"}
         {else}
             {assign var="label" value="Find"}
         {/if}
@@ -176,6 +184,8 @@
 				    Для картирования на уровне улиц рекомендуется масштабный уровень <b>14 или крупнее</b>.
             {elseif $language == "sv"}
 				    En zoom-nivå på <b>14 eller mer</b> är rekommenderat för kartläggning på gatunivå.
+            {elseif $language == "id"}
+				    Perbesaran pada level <b>14 atau lebih</b> lebih disarankan untuk pemetaan jalan.
             {else}
                 A zoom level of <b>14 or more</b> is recommended for street-level mapping.
             {/if}
@@ -226,6 +236,8 @@
                     alert("Не могу найти места с таким именем.");
                 {elseif $language == "sv"}
                 	alert("Tyvärr, Jag kunde inte hitta en plats med det namnet.");
+                {elseif $language == "id"}
+                	alert("Maaf, kami tidak dapat menemukan tempat dengan nama tersebut.");
                 {else}
                     alert("Sorry, I couldn't find a place by that name.");
                 {/if}
@@ -382,6 +394,8 @@
                 Ориентация:
             {elseif $language == "sv"}
                 Orientering:
+            {elseif $language == "id"}
+                Orientasi:
             {else}
                 Orientation:
             {/if}
@@ -456,6 +470,8 @@
                 {assign var="label" value="Создать"}
             {elseif $language == "sv"}
                 {assign var="label" value="Skapa"}
+            {elseif $language == "id"}
+                {assign var="label" value="Buat"}
             {else}
                 {assign var="label" value="Make"}
             {/if}
@@ -503,6 +519,8 @@
                     Основа:
                 {elseif $language == "sv"}
                 	Kartstil:
+                {elseif $language == "id"}
+                	Penyedia:
                 {else}
                     Provider:
                 {/if}
@@ -560,6 +578,8 @@
             Недавние распечатки
         {elseif $language == "sv"}
         	Senaste utskrifter
+        {elseif $language == "id"}
+        	Terakhir Cetak
         {else}
             Recent Prints
         {/if}
@@ -610,6 +630,8 @@
                 Еще недавние распечатки...
             {elseif $language == "sv"}
                 Fler utskrifter...
+            {elseif $language == "id"}
+                Hasil cetak berikutnya...
             {else}
                 More recent prints...
             {/if}

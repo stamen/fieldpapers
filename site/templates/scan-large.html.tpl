@@ -23,6 +23,8 @@
             Отсканированная карта #{$scan.id|escape}
         {elseif $language == "sv"}
             Skannad Karta #{$scan.id|escape}
+        {elseif $language == "id"}
+            Peta yang telah discan #{$scan.id|escape}
         {else}
             Scanned Map #{$scan.id|escape}
         {/if}

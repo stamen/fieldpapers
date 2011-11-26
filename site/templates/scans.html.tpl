@@ -23,6 +23,8 @@
             Недавние сканы
         {elseif $language == "sv"}
             Senast inskannat
+        {elseif $language == "id"}
+            Hasil Scan Terbaru
         {else}
             Recent Scans
         {/if}

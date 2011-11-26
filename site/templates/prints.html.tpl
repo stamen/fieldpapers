@@ -23,6 +23,8 @@
             Недавние распечатки
         {elseif $language == "sv"}
             Senaste Utskrifter
+        {elseif $language == "id"}
+            Terakhir Cetak
         {else}
             Recent Prints
         {/if}
@@ -53,6 +55,8 @@
             Недавние распечатки
         {elseif $language == "sv"}
             Senaste Utskrifter
+        {elseif $language == "id"}
+            Terakhir Cetak
         {else}
             Recent Prints
         {/if}

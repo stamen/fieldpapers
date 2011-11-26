@@ -23,6 +23,8 @@
             Распечатка #{$print.id|escape}
         {elseif $language == "sv"}
         	Utskrift #{$print.id|escape}
+        {elseif $language == "id"}
+        	Cetak #{$print.id|escape}
         {else}
             Print #{$print.id|escape}
         {/if}
@@ -97,6 +99,8 @@
                             Эта карта неправильная или устарела?
                         {elseif $language == "sv"}
                             Är detta fel karta, eller föråldrad?
+                        {elseif $language == "id"}
+                            Apakah peta ini tidak tepat, atau sudah tidak berlaku?
                         {else}
                             Is this map wrong, or out of date?
                         {/if}
@@ -120,6 +124,8 @@
                             {assign var="label" value="Переделать"}
                         {elseif $language == "sv"}
                             {assign var="label" value="Gör om"}
+                        {elseif $language == "id"}
+                            {assign var="label" value="Ulangi"}
                         {else}
                             {assign var="label" value="Redo"}
                         {/if}

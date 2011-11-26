@@ -23,6 +23,8 @@
             Загруженный скан
         {elseif $language == "sv"}
         	Uppladdad inskanning
+        {elseif $language == "id"}
+        	Hasil scan yang telah diunggah
         {else}
             Uploaded Scan
         {/if}
@@ -62,6 +64,8 @@
             Вы загрузили отсканированную карту
         {elseif $language == "sv"}
         	Du har laddat upp en inskannad karta
+        {elseif $language == "id"}
+        	Anda Telah Mengunggah Peta Hasil Scan
         {else}
             You’ve Uploaded A Scanned Map
         {/if}    
@@ -90,6 +94,8 @@
         {elseif $language == "sv"}
             Du har nu laddat upp en inskannad karta, och nu behöver du lägga till
             lite mer information om den innan du kan fortsätta.
+        {elseif $language == "id"}
+            Anda baru saja mengunggah peta yang telah discan, berikutnya Anda akan menambahkan sedikit informasi mengenai peta tersebut sebelum ditandai.
         {else}
             You’ve just uploaded a scanned map, and you’re about to add
             a few bits of information about it before you proceed to trace it.
@@ -117,6 +123,8 @@
                 только для вас?
             {elseif $language == "sv"}
             	privat?
+            {elseif $language == "id"}
+            	milik pribadi?
             {else}
                 private?
             {/if}
@@ -144,6 +152,8 @@
 					Вы планируете редактировать карту сами?
 				{elseif $language == "sv"}
 					Tänker du redigera denna själv?
+                {elseif $language == "id"}
+										Apakah Anda berencana untuk mengedit kembali?
                 {else}
                     Do you plan to edit this yourself?
                 {/if}
@@ -166,6 +176,8 @@
                         {assign var="label" value="Да"}
                     {elseif $language == "sv"}
                         {assign var="label" value="Ja"}
+                    {elseif $language == "id"}
+                        {assign var="label" value="Ya"}
                     {else}
                         {assign var="label" value="Yes"}
                     {/if}    
@@ -188,6 +200,8 @@
                         {assign var="label" value="Нет"}
                     {elseif $language == "sv"}
                         {assign var="label" value="Nej"}
+                    {elseif $language == "id"}
+                        {assign var="label" value="Tidak"}
                     {else}
                         {assign var="label" value="No"}
                     {/if}    
@@ -219,6 +233,8 @@
                 {elseif $language == "sv"}
                 	Du behöver inte redigera OpenStreetMap själv; Om du svarar "Nej"
                 	så vet andra besökare vilka inskanningar de kan hjälpa till med.
+                {elseif $language == "id"}
+                	Anda tidak harus melakukan proses editing OpenStreetMap sendiri. Pilih "Tidak" berarti Anda memperbolehkan pengguna lain mengetahui hasil scan dan membantu dalam proses editing.
                 {else}
                     You don’t have to do your own OpenStreetMap editing. Saying “no”
                     will let other visitors know about scans they can help with.
@@ -245,6 +261,8 @@
                     Опишите ваши добавления.
                 {elseif $language == "sv"}
                     Beskriv dina tillägg.
+                {elseif $language == "id"}
+                    Jelaskan tambahan yang Anda buat.
                 {else}
                     Describe your additions.
                 {/if}
@@ -274,6 +292,8 @@
                 {elseif $language == "sv"}
                     La du till affärer, korrigerade gångvägar, markerade trafikljus, ritade in en park,
                     eller placerade brevlådor? Skriv några få ord om ändringarna på detta område.
+								{elseif $language == "id"}
+                    Apakah Anda menambahkan objek bisnis, memperbaiki jalan setapak, menandai lampu lalu lintas, menandai kawasan taman, menandai kotak surat? Tulis beberapa kata mengenai perubahan yang Anda buat pada wilayah ini.
                 {else}
                     Did you add businesses, fix footpaths, mark traffic lights, outline parks,
                     place mailboxes? Write a few words about the changes to this area.
@@ -301,6 +321,8 @@
             {assign var="label" value="Сохранить"}
         {elseif $language == "sv"}
             {assign var="label" value="Spara"}
+        {elseif $language == "id"}
+            {assign var="label" value="Simpan"}
         {else}
             {assign var="label" value="Save"}
         {/if}

@@ -21,6 +21,8 @@
             Oluşturucu
         {elseif $language == "sv"}
         	Sammanställning
+        {elseif $language == "id"}
+        	Buat Baru
         {else}
             Componer
         {/if}

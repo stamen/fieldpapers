@@ -23,6 +23,8 @@
             Om
         {elseif $language == "ru"}
             О сервисе
+        {elseif $language == "id"}
+            Tentang
         {else}
             About
         {/if}
