@@ -206,6 +206,10 @@
             // sv or sv-
             if(preg_match('/^sv\b/', $language))
             return 'sv';
+
+            // id or id-
+            if(preg_match('/^id\b/', $language))
+                return 'id';
         }
         
         // english is the default
