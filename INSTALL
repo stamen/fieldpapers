@@ -54,7 +54,7 @@ Try http://example.host in a browser.
 Now, to install Paperwalking itself:
 
 % cd /var/www
-% git clone http://github.com/migurski/paperwalking.git paperwalking
+% git clone git@github.com:stamen/paperwalking.git paperwalking
 % cd paperwalking
 
 % mysql -u root
