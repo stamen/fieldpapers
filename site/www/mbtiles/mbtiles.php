@@ -3,7 +3,7 @@
 	//path_info = /slug/z/x/y.png
 	$URL_PATH = $_SERVER['PATH_INFO'];
 		
-	if(preg_match('#^/[^/]+/(\d+)/(\d+)/(\d+)\.\w+$#', $URL_PATH, $matches))
+	if(preg_match('#^/([^/])+/(\d+)/(\d+)/(\d+)\.\w+$#', $URL_PATH, $matches))
 	{
 		list($all, $slug, $zoom, $column, $row) = $matches;
 	}
