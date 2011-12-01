@@ -5,6 +5,9 @@
 	
 	$target_mbtiles_path = $target_mbtiles_folder . basename($_FILES['uploaded_mbtiles']['name']);
 	
+	//echo $target_mbtiles_path;
+	//exit();
+	
 	if(move_uploaded_file($_FILES['uploaded_mbtiles']['tmp_name'], $target_mbtiles_path)){
 		echo basename($_FILES['uploaded_mbtiles']['name']) . " has been successfully uploaded";
 	} else {
