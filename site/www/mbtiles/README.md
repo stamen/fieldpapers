@@ -13,7 +13,7 @@ which is essentially a SQLite flat file(SQLite v3.0.0+). You can find the
 [mbtiles spec](https://github.com/mapbox/mbtiles-spec/blob/master/1.2/spec.md). You 
 can also query a database in your MBTiles file with:
 
- `select zoom_level, tile_column, tile_row, length(tile_data) from tiles;`
+    `select zoom_level, tile_column, tile_row, length(tile_data) from tiles;`
 
  You will find a quick description of each tile: a tile's zoom level, column number, 
 row number, and the file-size of an individual tile.
