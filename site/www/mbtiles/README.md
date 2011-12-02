@@ -12,11 +12,11 @@ Uploading a file will trigger the uploader.php script.
 which is essentially a SQLite flat file(SQLite v3.0.0+). You can learn more about
 MBTiles with the [MBTiles spec](https://github.com/mapbox/mbtiles-spec/blob/master/1.2/spec.md). 
 
- To explore your MBTiles file, you can query a database in your file with:
+    To explore your MBTiles file, you can query a database in your file with:
 
     `select zoom_level, tile_column, tile_row, length(tile_data) from tiles;`
 
- You will find a quick description of each tile: a tile's zoom level, column number, 
+    You will find a quick description of each tile: a tile's zoom level, column number, 
 row number, and the file-size of an individual tile.
 
 * Initially, choose a random tile to view, probably one at a low zoom level. Go back to 
