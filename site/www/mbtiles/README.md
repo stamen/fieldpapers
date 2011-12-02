@@ -21,6 +21,6 @@ row number, and the file-size of an individual tile.
 * Initially, choose a random tile to view, probably one at a low zoom level. Go back to 
 your browser and navigate to:
 
- `../site/www/mbtiles/mbtiles.php/name_of_your_mbtiles_files/zoom_level/tile_column/tile_row.png.`
+    `../site/www/mbtiles/mbtiles.php/name_of_your_mbtiles_files/zoom_level/tile_column/tile_row.png.`
 
- You should now be viewing that particular tile in your browser.
+    You should now be viewing that particular tile in your browser.
