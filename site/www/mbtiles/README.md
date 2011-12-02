@@ -9,9 +9,10 @@ the file-size limit for uploads. If your MBTiles file is too large, the upload w
 Uploading a file will trigger the uploader.php script.
 
 * The mbtiles.php script will allow you to access individual tiles in a MBTiles file, 
-which is essentially a SQLite flat file(SQLite v3.0.0+). You can find the 
-[mbtiles spec](https://github.com/mapbox/mbtiles-spec/blob/master/1.2/spec.md). You 
-can also query a database in your MBTiles file with:
+which is essentially a SQLite flat file(SQLite v3.0.0+). You can learn more about
+MBTiles with the [MBTiles spec](https://github.com/mapbox/mbtiles-spec/blob/master/1.2/spec.md). 
+
+ To explore your MBTiles file, you can query a database in your file with:
 
     `select zoom_level, tile_column, tile_row, length(tile_data) from tiles;`
 
