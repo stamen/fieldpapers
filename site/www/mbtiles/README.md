@@ -4,12 +4,12 @@
 "uploaded_mbtiles."
 
 * Upload your MBTiles file with the form found on upload_mbtiles.html. You can find a 
-test file in the fixtures folder. Also, make sure to check your PHP installation to see 
-the file-size limit for uploads. If your MBTiles file is too large, the upload will fail. 
-Uploading a file will trigger the uploader.php script.
+test file in the fixtures folder. Uploading a file will trigger the uploader.php script.
+Make sure to check your PHP installation to see the file-size limit for uploads. If 
+your MBTiles file is too large, the upload will fail. 
 
 * The mbtiles.php script will allow you to access individual tiles in a MBTiles file, 
-which is essentially a SQLite flat file(SQLite v3.0.0+). You can learn more about
+which is essentially a SQLite flat file (SQLite v3.0.0+). You can learn more about
 MBTiles with the [MBTiles spec](https://github.com/mapbox/mbtiles-spec/blob/master/1.2/spec.md). 
 
     To explore your MBTiles file, you can query a database in your file with:
