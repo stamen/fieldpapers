@@ -1,3 +1,4 @@
+<h2>Overview</h2>
 <p>
     Print maps, draw on them, scan them back in and help OpenStreetMap
     improve its coverage of local points of interests and street detail.
