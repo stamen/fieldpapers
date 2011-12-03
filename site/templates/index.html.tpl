@@ -12,8 +12,9 @@
     <script type="text/javascript" src="{$base_dir}/index.js"></script>
 </head>
 <body>
-
     {include file="navigation.htmlf.tpl"}
+    
+    {include file="$language/index-features-paragraph.htmlf.tpl"}
     
     {include file="$language/index-top-paragraph.htmlf.tpl"}
     
