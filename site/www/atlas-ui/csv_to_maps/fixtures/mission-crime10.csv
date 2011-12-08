@@ -1,0 +1,7 @@
+id,sheet_id,user_id,perms,created,latitude,longitude,geohash,address,"crime type",description,time,date
+244583,1457,233,public,"2011-09-26 19:55:37",37.755576,-122.416577,9q8yy34ypj2r,"22nd Street and South Van Ness, San Francisco, CA",Theft,"Theft of unattended cell phone","12:20 a.m.",09/01/2011
+244585,1457,233,public,"2011-09-26 19:55:37",37.760238,-122.419219,9q8yy61136w1,"19th Stret and Mission, San Francisco, CA",Theft,"Theft of unattended purse in bar","2:00 a.m.",09/01/2011
+244587,1457,233,public,"2011-09-26 19:55:37",37.752601,-122.412464,9q8yy2tuyfgh,"24th Street and Balmy, San Francisco, CA",Battery,Battery,"7:05 a.m.",09/01/2011
+244589,1457,233,public,"2011-09-26 19:55:37",37.757169,-122.416729,9q8yy36z7qqy,"21st Street and South Van Ness, San Francisco, CA","Auto Theft","Stolen Auto","8:00 a.m.",09/01/2011
+244589,1457,233,public,"2011-09-26 19:55:37",37.757169,-122.416729,9q8yy36z7qqy,"21st Street and South Van Ness, San Francisco, CA","Auto Theft","Stolen Auto","8:00 a.m.",09/01/2011
+244589,1457,233,public,"2011-09-26 19:55:37",37.757169,-122.416729,9q8yy36z7qqy,"21st Street and South Van Ness, San Francisco, CA","Auto Theft","Stolen Auto","8:00 a.m.",09/01/2011
