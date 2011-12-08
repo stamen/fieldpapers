@@ -16,7 +16,7 @@
     directions</a> to view data from your CSV file. Then try 
     <a href="http://fieldpapers.org/~mevans/fieldpapers/site/www/atlas-ui/csv_to_maps/upload_csv.html">
     uploading</a> a sample CSV file, which you can find 
-    <a href="https://github.com/stamen/paperwalking/tree/atlas-ui-sketch/site/www/atlas-ui/csv_to_maps/fixtures">
+    <a href="http://fieldpapers.org/~mevans/fieldpapers/site/www/atlas-ui/csv_to_maps/fixtures/">
     here</a>.
     </li>
 </p>
