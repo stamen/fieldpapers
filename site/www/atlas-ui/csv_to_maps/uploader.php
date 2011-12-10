@@ -1,4 +1,6 @@
 <?php
+    //Start a session
+    session_start();
     //Upload data e.g., CSV to the server.
     
     $target_data_folder = "../uploaded_data/";
@@ -15,6 +17,11 @@
     $file_name = explode('.',basename($_FILES['uploaded_data']['name']));
     $json_path = $target_data_folder . $file_name[0] . ".json";
     
+    //$_SESSION Associative ARRAY
+    $_SESSION['json_file_path'] = $json_path; //this works
+    
+    //var_dump($_Session);
+        
     $data = fopen($target_csv_data_path,'r') or die("Unable to open file");
     $json_output = fopen($json_path,'w') or die ("Unable to open file");
             
@@ -48,6 +55,6 @@
     fclose($data) or die("Unable to close file.");
     fclose($json_output) or die("Unable to close file.");     
     
-    header('Location: incidents.html');
+    header('Location: incidents.php');
     exit();
 ?>
