@@ -1,3 +1,8 @@
+<?php 
+    session_start();
+    $json_path = $_SESSION['json_file_path'];
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +12,10 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $.getJSON('../uploaded_data/mission-crime10.json', createDisplay);
+    var json_path = '<?php echo $json_path ?>';
+    //console.log(json_path);
+
+    $.getJSON(json_path, createDisplay);
 });
 
 function createDisplay(data) {
@@ -55,8 +63,6 @@ function createDisplay(data) {
         var location2 = new MM.Location(parseFloat(data.incidents[i].latitude), parseFloat(data.incidents[i].longitude));
         markers2[i].title = data.incidents[i].description;
         markerClip2[i].addMarker(markers2[i],location);
-        
-        //console.log(markers2[i].title);
     }
 }
 
