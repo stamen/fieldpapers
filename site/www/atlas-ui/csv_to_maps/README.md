@@ -11,5 +11,5 @@ and formatting; our test file will give you some guidance.
 to see the file-size limit for uploads. The uploader.php script will also convert your CSV data to JSON; 
 a new JSON file will be created and placed in the uploaded_data folder.
 
-* If the upload has succeeded, you will be taken to incidents.html, which will display
+* If the upload has succeeded, you will be taken to incidents.php, which will display
 the incident data from your CSV file on several maps.

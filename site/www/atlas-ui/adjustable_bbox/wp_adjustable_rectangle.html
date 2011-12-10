@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Walking Papers Grid</title>
+<script type="text/javascript" src="../js/modest_maps/modestmaps.js"></script>
+<script type="text/javascript" src="../js/paperjs/lib/paper.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+        window.onload = function () {
+        var MM = com.modestmaps;
+    
+        var map = new MM.Map('map', 
+                          new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
+    
+        map.setCenterZoom(new MM.Location(37.76, -122.45), 12); 
+
+        var radius = 6;
+        var diameter = 12;
+        var threshold = 2;
+        var handle_size_tot = 14;
+        
+        //map dimensions
+        //1000x500
+        //middle third 333 to 666
+        //
+
+        paper.install(window); // global
+        paper.setup('canvas');
+        
+        //Create four handles
+        var handle_tl = new Path.Circle(new Point(333,166), radius);
+        handle_tl.fillColor = '#ffffff';
+        handle_tl.strokeWidth = 2;
+        handle_tl.strokeColor = '#000000';
+        handle_tl.smooth();
+        
+        var handle_tr = new Path.Circle(new Point(666,166), radius);
+        handle_tr.fillColor = '#ffffff';
+        handle_tr.strokeWidth = 2;
+        handle_tr.strokeColor = '#000000';
+        handle_tr.smooth();
+             
+        var handle_br = new Path.Circle(new Point(666,333), radius);
+        handle_br.fillColor = '#ffffff';
+        handle_br.strokeWidth = 2;
+        handle_br.strokeColor = '#000000';
+        handle_br.smooth();
+        
+        var handle_bl = new Path.Circle(new Point(333,333), radius);
+        handle_bl.fillColor = '#ffffff';
+        handle_bl.strokeWidth = 2;
+        handle_bl.strokeColor = '#000000';
+        handle_bl.smooth();
+        
+        //Rectangle
+        var rect = new Path.Rectangle(new Point(333,166), new Point(666, 333));
+        rect.strokeColor = '#e9e9ff';
+        rect.strokeWidth = 8;
+        rect.fillColor = '#e9e9ff';
+        rect.opacity = 0.35;
+        rect.closed = true;
+        rect.selected = true;
+        
+        paper.view.draw();
+        
+        /*
+        var a = new View('canvas');
+        console.log(a.bounds);
+        */
+        
+        //top left for rectangle        
+        //var topLeft = new Point(handle_tl.position.x,handle_tl.position.y);
+                
+        var hitResult_tl;
+        var hitResult_tr;
+        var hitResult_br;
+        var hitResult_bl;
+        
+        var hitResult_rect;
+        
+        var hitOptions = {
+            segments: true,
+            stroke: true,
+            fill: true,
+            tolerance: 5
+        };
+        
+        var tool = new Tool();
+        var activeDrag = null;
+        
+        /*
+        tool.onMouseMove = function(event) {
+            hitResult_tl = handle_tl.hitTest(event.point, hitOptions); //redoing too much
+            hitResult_tr = handle_tr.hitTest(event.point, hitOptions);
+            hitResult_br = handle_br.hitTest(event.point, hitOptions);
+            hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
+            
+            hitResult_rect = rect.hitTest(event.point, hitOptions);
+            
+            if (hitResult_tl) {
+                $("canvas").css({'cursor':'move'});
+            } else if (hitResult_tr) {
+                $("canvas").css({'cursor':'move'});
+            } else if (hitResult_br) {
+                $("canvas").css({'cursor':'move'});
+            } else if (hitResult_bl) {
+                $("canvas").css({'cursor':'move'});
+            } else if (hitResult_rect) {
+                $("canvas").css({'cursor':'move'});
+            } else {
+                $("canvas").css({'cursor':'default'});
+            }
+        
+        }
+        */
+                
+        tool.onMouseDown = function(event) {            
+            hitResult_tl = handle_tl.hitTest(event.point, hitOptions);
+            hitResult_tr = handle_tr.hitTest(event.point, hitOptions);
+            hitResult_br = handle_br.hitTest(event.point, hitOptions);
+            hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
+            
+            if (hitResult_tl) {
+                console.log('tl');
+                activeDrag = handle_tl;
+            } else if (hitResult_tr) {
+                console.log('tr');
+                activeDrag = handle_tr;
+            } else if (hitResult_br) {
+                console.log('br');
+                activeDrag  = handle_br;
+            } else if (hitResult_bl) {
+                console.log('bl');
+                activeDrag = handle_bl;
+            }
+            
+            //Handle the rect
+            hitResult_rect = rect.hitTest(event.point, hitOptions);
+            
+            $("canvas").css({'cursor':'move'});
+        }
+        
+        var width;
+        var height;
+        
+        tool.onMouseDrag = function(event) {
+            //Bounds
+            //width = handle_tr.position.x - event.point.x;
+            //height = handle_br.position.y - event.point.y;
+            
+            if (activeDrag == handle_tl){
+                handle_tl.position.x = event.point.x;
+                handle_bl.position.x += event.delta.x;
+
+                handle_tl.position.y = event.point.y;
+                    
+                handle_tr.position.y += event.delta.y;
+            } else if (activeDrag == handle_tr) {
+                handle_tr.position.x = event.point.x;
+                handle_tr.position.y = event.point.y;
+                
+                handle_br.position.x += event.delta.x;
+                
+                handle_tl.position.y += event.delta.y;
+            } else if (activeDrag == handle_br) {
+                handle_br.position.x = event.point.x;
+                handle_br.position.y = event.point.y;
+                
+                handle_tr.position.x += event.delta.x;
+                
+                handle_bl.position.y += event.delta.y;
+            } else if (activeDrag == handle_bl) {
+                handle_bl.position.x = event.point.x;
+                handle_bl.position.y = event.point.y;
+                
+                handle_tl.position.x += event.delta.x;
+                
+                handle_br.position.y += event.delta.y;
+            }
+            
+            if (hitResult_tl || hitResult_tr || hitResult_br || hitResult_bl) {
+                rect.remove();
+                
+                rect = new Path.Rectangle(new Point(handle_tl.position.x,handle_tl.position.y), new Point(handle_br.position.x,handle_br.position.y));
+                rect.strokeColor = '#e9e9ff';
+                rect.strokeWidth = 8;
+                rect.fillColor = '#e9e9ff';
+                rect.opacity = 0.35;
+                rect.closed = true;
+                rect.selected = true;
+            } else if (hitResult_rect) {
+                handle_br.position.x += event.delta.x;
+                handle_br.position.y += event.delta.y;
+                
+                handle_bl.position.x += event.delta.x;
+                handle_bl.position.y += event.delta.y;
+                
+                handle_tr.position.x += event.delta.x;
+                handle_tr.position.y += event.delta.y;
+                
+                handle_tl.position.x += event.delta.x;
+                handle_tl.position.y += event.delta.y;
+                
+                rect.position.x += event.delta.x;
+                rect.position.y += event.delta.y;
+            }
+        }
+        
+        tool.onMouseUp = function(event) {
+            activeDrag = null;
+            $("canvas").css({'cursor':'default'});
+        }
+        
+    }
+</script>
+<style type="text/css">
+body {
+  background: #fff;
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  margin: 0;
+  padding: 20px;
+  border: 0;
+}
+#map {
+  width: 1000px;
+  height: 500px;
+  position: absolute;
+  z-index:1;
+}
+
+#canvas {
+    position: absolute;
+    z-index: 2;
+}
+</style>
+</head>
+<body>
+<h1>Walking Papers Grid</h1>
+Choose Scale: <select id="scale">
+  <option>2x2</option>
+  <option>4x4</option>
+  <option>8x8</option>
+  <option>16x16</option>
+</select>
+<br /><br />
+Bounds: <span id="location">No Selection Made</span>
+<br /><br />
+<div id="map">
+</div>
+<canvas id="canvas" resize></canvas>
+</body>
+</html>
