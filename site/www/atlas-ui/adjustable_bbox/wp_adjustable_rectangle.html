@@ -53,6 +53,15 @@
         paper.install(window); // global
         paper.setup('canvas');
         
+        //Create Rectangle
+        var rect = new Path.Rectangle(new Point(333,166), new Point(666, 333));
+        rect.strokeColor = '#000000';
+        rect.strokeWidth = 2;
+        rect.dashArray = [12,6];
+        rect.fillColor = '#e9e9ff';
+        rect.opacity = 0.5;
+        rect.closed = true;
+        
         //Create four handles
         var handle_tl = new Path.Circle(new Point(333,166), radius);
         handle_tl.fillColor = '#ffffff';
@@ -77,16 +86,7 @@
         handle_bl.strokeWidth = 2;
         handle_bl.strokeColor = '#000000';
         handle_bl.smooth();
-        
-        //Rectangle
-        var rect = new Path.Rectangle(new Point(333,166), new Point(666, 333));
-        rect.strokeColor = '#e9e9ff';
-        rect.strokeWidth = 8;
-        rect.fillColor = '#e9e9ff';
-        rect.opacity = 0.35;
-        rect.closed = true;
-        rect.selected = true;
-        
+            
         paper.view.draw();
         
         /*
@@ -188,12 +188,19 @@
                 handle_tr.position.y = handle_tl.position.y;
                 
                 rect = new Path.Rectangle(new Point(handle_tl.position.x,handle_tl.position.y), new Point(handle_br.position.x,handle_br.position.y));
-                rect.strokeColor = '#e9e9ff';
-                rect.strokeWidth = 8;
+                rect.strokeColor = '#000000';
+                rect.strokeWidth = 2;
+                rect.dashArray = [12,6];
                 rect.fillColor = '#e9e9ff';
-                rect.opacity = 0.35;
+                rect.opacity = 0.5;
                 rect.closed = true;
                 rect.selected = true;
+                
+                handle_tl.insertAbove(rect);
+                handle_tr.insertAbove(rect);
+                handle_bl.insertAbove(rect);
+                handle_br.insertAbove(rect);
+                
             } else if (hitResult_rect) {
                 handle_br.position.x += event.delta.x;
                 handle_br.position.y += event.delta.y;
