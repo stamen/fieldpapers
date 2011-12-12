@@ -88,32 +88,6 @@
         
         var tool = new Tool();
         var activeDrag = null;
-        
-        /*
-        tool.onMouseMove = function(event) {
-            hitResult_tl = handle_tl.hitTest(event.point, hitOptions); //redoing too much
-            hitResult_tr = handle_tr.hitTest(event.point, hitOptions);
-            hitResult_br = handle_br.hitTest(event.point, hitOptions);
-            hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
-            
-            hitResult_rect = rect.hitTest(event.point, hitOptions);
-            
-            if (hitResult_tl) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_tr) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_br) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_bl) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_rect) {
-                $("canvas").css({'cursor':'move'});
-            } else {
-                $("canvas").css({'cursor':'default'});
-            }
-        
-        }
-        */
                 
         tool.onMouseDown = function(event) {            
             hitResult_tl = handle_tl.hitTest(event.point, hitOptions);
@@ -181,6 +155,12 @@
             
             if (hitResult_tl || hitResult_tr || hitResult_br || hitResult_bl) {
                 rect.remove();
+                
+                handle_bl.position.x = handle_tl.position.x;
+                handle_bl.position.y = handle_br.position.y;
+                
+                handle_tr.position.x = handle_br.position.x;
+                handle_tr.position.y = handle_tl.position.y;
                 
                 rect = new Path.Rectangle(new Point(handle_tl.position.x,handle_tl.position.y), new Point(handle_br.position.x,handle_br.position.y));
                 rect.strokeColor = '#e9e9ff';
