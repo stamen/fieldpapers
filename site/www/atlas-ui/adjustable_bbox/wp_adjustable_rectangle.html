@@ -13,7 +13,32 @@
         var map = new MM.Map('map', 
                           new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
     
-        map.setCenterZoom(new MM.Location(37.76, -122.45), 12); 
+        map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
+        
+        //Set Zoom levels
+        $("a#continent").click(function(event){
+            map.setZoom(2);
+        });
+        
+        $("a#country").click(function(event){
+            map.setZoom(4);
+        });
+        
+        $("a#state").click(function(event){
+            map.setZoom(6);
+        });
+        
+        $("a#city").click(function(event){
+            map.setZoom(12);
+        });
+        
+        $("a#neighborhood").click(function(event){
+            map.setZoom(14);
+        });
+        
+        $("a#street").click(function(event){
+            map.setZoom(17);
+        });
 
         var radius = 6;
         var diameter = 12;
@@ -27,6 +52,15 @@
 
         paper.install(window); // global
         paper.setup('canvas');
+        
+        //Create Rectangle
+        var rect = new Path.Rectangle(new Point(333,166), new Point(666, 333));
+        rect.strokeColor = '#000000';
+        rect.strokeWidth = 2;
+        rect.dashArray = [12,6];
+        rect.fillColor = '#e9e9ff';
+        rect.opacity = 0.5;
+        rect.closed = true;
         
         //Create four handles
         var handle_tl = new Path.Circle(new Point(333,166), radius);
@@ -52,26 +86,9 @@
         handle_bl.strokeWidth = 2;
         handle_bl.strokeColor = '#000000';
         handle_bl.smooth();
-        
-        //Rectangle
-        var rect = new Path.Rectangle(new Point(333,166), new Point(666, 333));
-        rect.strokeColor = '#e9e9ff';
-        rect.strokeWidth = 8;
-        rect.fillColor = '#e9e9ff';
-        rect.opacity = 0.35;
-        rect.closed = true;
-        rect.selected = true;
-        
+            
         paper.view.draw();
-        
-        /*
-        var a = new View('canvas');
-        console.log(a.bounds);
-        */
-        
-        //top left for rectangle        
-        //var topLeft = new Point(handle_tl.position.x,handle_tl.position.y);
-                
+                        
         var hitResult_tl;
         var hitResult_tr;
         var hitResult_br;
@@ -88,32 +105,6 @@
         
         var tool = new Tool();
         var activeDrag = null;
-        
-        /*
-        tool.onMouseMove = function(event) {
-            hitResult_tl = handle_tl.hitTest(event.point, hitOptions); //redoing too much
-            hitResult_tr = handle_tr.hitTest(event.point, hitOptions);
-            hitResult_br = handle_br.hitTest(event.point, hitOptions);
-            hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
-            
-            hitResult_rect = rect.hitTest(event.point, hitOptions);
-            
-            if (hitResult_tl) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_tr) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_br) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_bl) {
-                $("canvas").css({'cursor':'move'});
-            } else if (hitResult_rect) {
-                $("canvas").css({'cursor':'move'});
-            } else {
-                $("canvas").css({'cursor':'default'});
-            }
-        
-        }
-        */
                 
         tool.onMouseDown = function(event) {            
             hitResult_tl = handle_tl.hitTest(event.point, hitOptions);
@@ -122,33 +113,30 @@
             hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
             
             if (hitResult_tl) {
-                console.log('tl');
                 activeDrag = handle_tl;
+                event.stopPropagation();
             } else if (hitResult_tr) {
-                console.log('tr');
                 activeDrag = handle_tr;
+                event.stopPropagation();
             } else if (hitResult_br) {
-                console.log('br');
                 activeDrag  = handle_br;
+                event.stopPropagation();
             } else if (hitResult_bl) {
-                console.log('bl');
-                activeDrag = handle_bl;
+                activeDrag = handle_bl; 
+                event.stopPropagation();
             }
             
-            //Handle the rect
+            //Handle the rectangle
             hitResult_rect = rect.hitTest(event.point, hitOptions);
+            
+            if (hitResult_rect) {
+                event.stopPropagation();
+            }
             
             $("canvas").css({'cursor':'move'});
         }
         
-        var width;
-        var height;
-        
         tool.onMouseDrag = function(event) {
-            //Bounds
-            //width = handle_tr.position.x - event.point.x;
-            //height = handle_br.position.y - event.point.y;
-            
             if (activeDrag == handle_tl){
                 handle_tl.position.x = event.point.x;
                 handle_bl.position.x += event.delta.x;
@@ -182,13 +170,26 @@
             if (hitResult_tl || hitResult_tr || hitResult_br || hitResult_bl) {
                 rect.remove();
                 
+                handle_bl.position.x = handle_tl.position.x;
+                handle_bl.position.y = handle_br.position.y;
+                
+                handle_tr.position.x = handle_br.position.x;
+                handle_tr.position.y = handle_tl.position.y;
+                
                 rect = new Path.Rectangle(new Point(handle_tl.position.x,handle_tl.position.y), new Point(handle_br.position.x,handle_br.position.y));
-                rect.strokeColor = '#e9e9ff';
-                rect.strokeWidth = 8;
+                rect.strokeColor = '#000000';
+                rect.strokeWidth = 2;
+                rect.dashArray = [12,6];
                 rect.fillColor = '#e9e9ff';
-                rect.opacity = 0.35;
+                rect.opacity = 0.5;
                 rect.closed = true;
                 rect.selected = true;
+                
+                handle_tl.insertAbove(rect);
+                handle_tr.insertAbove(rect);
+                handle_bl.insertAbove(rect);
+                handle_br.insertAbove(rect);
+                
             } else if (hitResult_rect) {
                 handle_br.position.x += event.delta.x;
                 handle_br.position.y += event.delta.y;
@@ -246,9 +247,13 @@ Choose Scale: <select id="scale">
 </select>
 <br /><br />
 Bounds: <span id="location">No Selection Made</span>
-<br /><br />
+<br />
+<p>Zoom: <a href="#" id="continent">Continent</a> | <a href="#" id="country">Country</a> 
+| <a href="#" id="state">State</a> | <a href="#" id="city">City</a> | <a href="#" id="neighborhood">Neighborhood</a> 
+| <a href="#" id="street">Street</a>
+</p>
 <div id="map">
+    <canvas id="canvas" resize></canvas>
 </div>
-<canvas id="canvas" resize></canvas>
 </body>
 </html>
