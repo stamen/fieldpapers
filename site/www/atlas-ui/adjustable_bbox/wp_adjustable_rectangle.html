@@ -123,19 +123,31 @@
             if (hitResult_tl) {
                 console.log('tl');
                 activeDrag = handle_tl;
+                
+                event.stopPropagation();
             } else if (hitResult_tr) {
                 console.log('tr');
                 activeDrag = handle_tr;
+                
+                event.stopPropagation();
             } else if (hitResult_br) {
                 console.log('br');
                 activeDrag  = handle_br;
+                
+                event.stopPropagation();
             } else if (hitResult_bl) {
                 console.log('bl');
                 activeDrag = handle_bl;
+                
+                event.stopPropagation();
             }
             
             //Handle the rect
             hitResult_rect = rect.hitTest(event.point, hitOptions);
+            
+            if (hitResult_rect) {
+                event.stopPropagation();
+            }
             
             $("canvas").css({'cursor':'move'});
         }
