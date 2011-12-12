@@ -88,15 +88,7 @@
         handle_bl.smooth();
             
         paper.view.draw();
-        
-        /*
-        var a = new View('canvas');
-        console.log(a.bounds);
-        */
-        
-        //top left for rectangle        
-        //var topLeft = new Point(handle_tl.position.x,handle_tl.position.y);
-                
+                        
         var hitResult_tl;
         var hitResult_tr;
         var hitResult_br;
@@ -121,28 +113,20 @@
             hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
             
             if (hitResult_tl) {
-                console.log('tl');
                 activeDrag = handle_tl;
-                
                 event.stopPropagation();
             } else if (hitResult_tr) {
-                console.log('tr');
                 activeDrag = handle_tr;
-                
                 event.stopPropagation();
             } else if (hitResult_br) {
-                console.log('br');
                 activeDrag  = handle_br;
-                
                 event.stopPropagation();
             } else if (hitResult_bl) {
-                console.log('bl');
-                activeDrag = handle_bl;
-                
+                activeDrag = handle_bl; 
                 event.stopPropagation();
             }
             
-            //Handle the rect
+            //Handle the rectangle
             hitResult_rect = rect.hitTest(event.point, hitOptions);
             
             if (hitResult_rect) {
@@ -152,14 +136,7 @@
             $("canvas").css({'cursor':'move'});
         }
         
-        var width;
-        var height;
-        
         tool.onMouseDrag = function(event) {
-            //Bounds
-            //width = handle_tr.position.x - event.point.x;
-            //height = handle_br.position.y - event.point.y;
-            
             if (activeDrag == handle_tl){
                 handle_tl.position.x = event.point.x;
                 handle_bl.position.x += event.delta.x;
