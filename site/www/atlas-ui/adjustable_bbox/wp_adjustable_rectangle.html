@@ -13,7 +13,32 @@
         var map = new MM.Map('map', 
                           new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
     
-        map.setCenterZoom(new MM.Location(37.76, -122.45), 12); 
+        map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
+        
+        //Set Zoom levels
+        $("a#continent").click(function(event){
+            map.setZoom(2);
+        });
+        
+        $("a#country").click(function(event){
+            map.setZoom(4);
+        });
+        
+        $("a#state").click(function(event){
+            map.setZoom(6);
+        });
+        
+        $("a#city").click(function(event){
+            map.setZoom(12);
+        });
+        
+        $("a#neighborhood").click(function(event){
+            map.setZoom(14);
+        });
+        
+        $("a#street").click(function(event){
+            map.setZoom(17);
+        });
 
         var radius = 6;
         var diameter = 12;
@@ -226,9 +251,13 @@ Choose Scale: <select id="scale">
 </select>
 <br /><br />
 Bounds: <span id="location">No Selection Made</span>
-<br /><br />
+<br />
+<p>Zoom: <a href="#" id="continent">Continent</a> | <a href="#" id="country">Country</a> 
+| <a href="#" id="state">State</a> | <a href="#" id="city">City</a> | <a href="#" id="neighborhood">Neighborhood</a> 
+| <a href="#" id="street">Street</a>
+</p>
 <div id="map">
+    <canvas id="canvas" resize></canvas>
 </div>
-<canvas id="canvas" resize></canvas>
 </body>
 </html>
