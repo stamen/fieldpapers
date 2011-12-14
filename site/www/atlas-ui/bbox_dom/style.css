@@ -30,6 +30,13 @@ form {
     border: 1px solid #000;
 }
 
+#preview_map {
+    width:300px;
+    height:380px;
+
+    margin: auto;
+}
+
 #map {
     border: 1px solid #000;
 }
