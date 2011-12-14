@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>ModestMaps JS: Extent Selector</title>
+        <title>Field Papers: Atlas Page Selector</title>
         <script type="text/javascript" src="js/modestmaps.js"></script>
         <script type="text/javascript" src="js/modestmaps.extent-selector.js"></script>
+        
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        
         <script type="text/javascript">
         var MM = com.modestmaps,
             map, selector, pages = [],
             rows = 0, columns = 0, aspect_ratio = 7.5/9.5,
             unscaled_page_width=75, unscaled_page_height=95, page_container,
-            page_zoom=11;
+            page_zoom = 11;
             
+        function updateExtentInputs() {
+            var len = pages.length;
+            for (var i = 0; i < len; i++) {
+                var page = pages[i],
+                    northwest = map.coordinateLocation(page.coord_top_left),
+                    southeast = map.coordinateLocation(page.coord_bottom_right);
+
+                var input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.name = "pages[" + i + "]";
+                input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
+                // TODO: append input to form
+            }
+        }
+                   
         function setPageSize(width,height){
             page_width = width;
             page_height = height;
@@ -23,8 +42,10 @@
             var northwest = extent.northWest();
             var southeast = extent.southEast();
             
-            var top_left = map.locationPoint(northwest);
-            var bottom_right = map.locationPoint(southeast);
+            var top_left = map.locationPoint(northwest),
+                bottom_right = map.locationPoint(southeast),
+                coord_top_left = map.pointCoordinate(top_left).zoomTo(page_zoom),
+                coord_bottom_right = map.pointCoordinate(bottom_right).zoomTo(page_zoom);
             
             var width = bottom_right.x - top_left.x;
             var height = bottom_right.y - top_left.y;
@@ -37,9 +58,9 @@
             var page_width = unscaled_page_width * page_scale;
             var page_height = unscaled_page_height * page_scale;
             
-            columns = Math.ceil(width/page_width);
-            rows = Math.ceil(height/page_height);
-            
+            var columns = Math.ceil(width/page_width);
+            var rows = Math.ceil(height/page_height);
+            var num_pages = columns * rows;
             
             var container_width = columns * page_width; //quantized width
             var container_height = rows * page_height;
@@ -50,24 +71,10 @@
             page_container.style.left = -(container_width - width)/2 + 'px';
             page_container.style.top = -(container_height - height)/2 + 'px';
             
-            var num_pages= columns * rows;
-            
             if(pages.length < num_pages) {
                 while(pages.length < num_pages) {
                     var page = document.createElement("div");
                     page.appendChild(document.createElement("span")).setAttribute("class","page-label");
-                    
-                    var extent_input = page.appendChild(document.createElement("input"));
-                    extent_input.setAttribute("type","hidden");
-                    extent_input.name = "pages[" + pages.length + "][extent]";
-                    page.extent_input = extent_input;
-                    
-                    var zoom_input = page.appendChild(document.createElement("input"));
-                    zoom_input.setAttribute("type","hidden");
-                    zoom_input.name = "pages[" + pages.length + "][zoom]";
-                    page.zoom_input = zoom_input;
-                    
-                
                     page.setAttribute("class","page");
                     page.style.position = "absolute";
                     page_container.appendChild(page);
@@ -80,39 +87,53 @@
                 }
             }
             
-            var column = 0,
-                row = 0;
+            var coord_top_left_offset = map.pointCoordinate(new MM.Point(top_left.x + page_width, top_left.y + page_height)).zoomTo(page_zoom);
+            var col_step = coord_top_left_offset.column - coord_top_left.column;
+            var row_step = coord_top_left_offset.row - coord_top_left.row;
+            
+            var x = 0,
+                y = 0,
+                row = coord_top_left.row,
+                column = coord_top_left.column;
             
             for (var i=0; i < num_pages; i++) {
                 var page = pages[i];
                 
-                var topLeft = new MM.Point(column * page_width, row * page_height),
-                    bottomRight = new MM.Point(topLeft.x + page_width, topLeft.y + page_height);
-                page.style.left = Math.floor(topLeft.x) + 'px';
-                page.style.top = Math.floor(topLeft.y) + 'px';
-                page.style.width = Math.round(page_width) + 'px';
-                page.style.height = Math.round(page_height) + 'px';
+                var coord_tl = new MM.Coordinate(row, column, page_zoom),
+                    coord_br = new MM.Coordinate(row + row_step, column + col_step, page_zoom),
+                    point_tl = map.coordinatePoint(coord_tl),
+                    point_br = map.coordinatePoint(coord_br);
+                page.style.left = (point_tl.x - top_left.x) + 'px';
+                page.style.top = (point_tl.y - top_left.y) + 'px';
+                page.style.width = page_width + 'px';
+                page.style.height = page_height + 'px';
                 
-                page.firstChild.innerText = i + 1;
+                page.coord_top_left = coord_tl;
+                page.coord_bottom_right = coord_br;
                 
-                var page_extent = MM.MapExtent.fromArray([map.pointLocation(topLeft), map.pointLocation(bottomRight)]);
-                console.log("page_extent[" + i + "]:", page_extent);
-                page.extent_input.value = page_extent.toString();
-                page.zoom_input.value = page_zoom;
-                
-                if (column == columns - 1) {
-                    row += 1;
-                    column = 0;       
+                if (num_pages < 400 && page_width > 20 && page_height > 20) {
+                    page.firstChild.innerText = i + 1;
                 } else {
-                    column += 1;
+                    page.firstChild.innerText = "";
+                }
+                
+                if (x == columns - 1) {
+                    row += row_step;
+                    column = coord_top_left.column; 
+                    x = 0;      
+                    y += 1;
+                } else {
+                    column += col_step;
+                    x += 1;
                 }
             }
+            
+            document.getElementById("page-count").innerText = num_pages;
         }
         
         function onExtentChange(extent) {
             updatePages(extent);
-        }
-            
+        }            
 
         function initMap() {
             // the map
@@ -131,17 +152,10 @@
 
             // update the northwest and south east labels when the extent
             // changes
-            var nwLabel = document.getElementById("nw-label"),
-                seLabel = document.getElementById("se-label"),
-                extentField = document.getElementById("extent-string");
+            var extentField = document.getElementById("extent-string");
             selector.addCallback("extentset", function(o, ext) {
-                // these setters all coerce to strings, which implicitly
-                // calls toString() on the Location and MapExtent instances
-                nwLabel.innerText = ext.northWest();
-                seLabel.innerText = ext.southEast();
                 // and update the extent string field for good measure
                 extentField.value = ext;
-                
                 onExtentChange(ext);
             });
             selector.setExtent(extent);
@@ -154,23 +168,40 @@
                     updatePages(selector.extent);
                 }
             );
-
+            
+            $("#page-zoom").slider({
+                min: 6,
+                max: 14,
+                step: 1,
+                value: page_zoom
+            }).bind("slide", function(e, ui) {
+                page_zoom = ui.value;
+                updatePages(selector.extent);
+            });
         }
 
         </script>
 
         <style type="text/css">
+        @import url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css);
         @import url(style.css);
         #pages {
             position: absolute;
+            z-index: 100;
+            pointer-events: none;
         }
         
         #pages .page {
             border: 1px solid #ccc;
             border: 1px solid rgba(0,0,0,.2);
+            overflow: hidden;
         }
         
         #pages .page-label {
+            font-size: 10px;
+            color: #999;
+            color: rgba(0,0,0,.5);
+
             position: absolute;
             left: 0;
             top: 50%;
@@ -179,11 +210,20 @@
             line-height: 100%;
             margin-top: -.5em;
         }
+        
+        #page-zoom {
+            display: inline-block;
+            width: 300px;
+            margin-right: 15px;
+        }
         </style>
     </head>
     <body onload="initMap()">
-        <h1>ModestMaps JS: Extent Selector</h1>
+        <h1>Field Papers: Atlas Page Selector</h1>
         <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"></p>
+        <p>Page Zoom: <span id="page-zoom"></span>
+            Page Count: <span id="page-count"></span>
+        </p>
         <div id="map">
             <div id="extent" class="map-extent">
                 <div id="pages"></div>
