@@ -25,7 +25,7 @@
             PTPMM = 1/MMPPT;
         var paper_sizes = {};
         // landscape
-        paper_sizes["A3:landscape"] = {width: 420 * PTPMM, height: 297 * PTPMM};
+        paper_sizes["A3:landscape"] = {width: 420 * PTPMM, 'height': 297 * PTPMM};
         paper_sizes["A4:landscape"] = {width: 297 * PTPMM, height: 210 * PTPMM};
         paper_sizes["letter:landscape"] = {width: 11 * PTPIN, height: 8.5 * PTPIN};
         paper_sizes["tabloid:landscape"] = {width: 17 * PTPIN, height: 11 * PTPIN};
@@ -116,6 +116,8 @@
             } else if (page_width > 20) {
                 size = "small";
             }
+            
+            var preview_points = []; //Leaves the possibility to cycle through the preview pages
 
             for (var i=0; i < num_pages; i++) {
                 var page = pages[i];
@@ -123,6 +125,9 @@
                     coord_br = new MM.Coordinate(row + row_step, column + col_step, page_zoom),
                     point_tl = map.coordinatePoint(coord_tl),
                     point_br = map.coordinatePoint(coord_br);
+                    
+                preview_points.push([map.pointLocation(point_tl),map.pointLocation(point_br)]);
+                
                 page.style.left = (point_tl.x - top_left.x) + 'px';
                 page.style.top = (point_tl.y - top_left.y) + 'px';
                 page.style.width = page_width + 'px';
@@ -157,6 +162,8 @@
             }
 
             document.getElementById("page-count").innerText = num_pages;
+            
+            syncMaps(preview_points);
         }
 
         function updateMask(extent) {
@@ -177,7 +184,41 @@
 
         function onExtentChange(extent) {
             updatePages(extent);
-        }            
+        }
+        
+        function syncMaps(bounds) {
+            preview_map.setZoom(page_zoom);
+            
+            var point1, point2;
+            var index = parseInt(pages.length * .5);
+            
+            if (pages.length <= 4) {
+                point1 = bounds[0][0];
+                point2 = bounds[0][1];
+            } else {
+                point1 = bounds[index-1][0];
+                point2 = bounds[index-1][1];
+            }
+            
+            preview_map.setExtent([point1,point2]);
+            
+            setAspectRatio();
+        }
+        
+        function setAspectRatio() {
+            var size = $('#paper-size').val();
+            var orientation = $('#paper-orient').val();
+            var factor = .3;
+            
+            var preview_width = factor * paper_sizes[size + ":" + orientation].width;
+            var preview_height = factor * paper_sizes[size + ":" + orientation].height;
+            
+            $('#preview_map').css({'width' : preview_width, 'height' : preview_height});
+        }
+        
+        function changePage() {
+            // Stub if needed
+        }
 
         /**
          * Form submission stuff
@@ -241,6 +282,10 @@
             // the initial extent
             var extent = new MM.MapExtent(37.837, -122.522, 37.691, -122.350);
             map.setExtent(extent);
+            
+            // Initialize the preview map
+            preview_map = new MM.Map("preview_map", provider);
+            preview_map.setExtent(extent);
 
             // the selector is a map "layer"
             selector = new MM.ExtentSelector(document.getElementById("extent"));
@@ -333,7 +378,6 @@
 
         @import url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css);
         @import url(style.css);
-
         </style>
     </head>
     <body onload="initMap()">
@@ -359,7 +403,8 @@
         <div id="container">
             <div id="preview">
                 <div class="padding">
-                    <h2>Preview goes here</h2>
+                    <h2 style="text-align: center">Field Papers Preview</h2>
+                    <div id="preview_map"></div>
                 </div>
             </div>
             <div id="map">
