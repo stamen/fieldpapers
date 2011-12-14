@@ -237,6 +237,8 @@ if (!com.modestmaps) {
                 this.parent.style.width = ~~width + "px";
                 this.parent.style.height = ~~height + "px";
                 this.parent.style.visibility = "visible";
+
+                this.updateClasses();
             } else {
                 this.parent.style.visibility = "hidden";
             }
@@ -257,7 +259,25 @@ if (!com.modestmaps) {
             this.extent.south = southEast.lat;
             this.extent.west = northWest.lon;
             this.extent.east = southEast.lon;
+            this.updateClasses();
             this.dispatchCallback("extentset", this.extent.copy());
+        },
+
+        lastMoveCenter: null,
+        updateClasses: function() {
+            if (this.allowMoveCenter != this.lastMoveCenter) {
+                var klass = "allow-move-center",
+                    className = this.parent.className;
+                if (this.allowMoveCenter && className.indexOf(klass) == -1) {
+                    console.log("adding class:", klass);
+                    this.parent.className += " " + klass;
+                } else if (!this.allowMoveCenter && className.indexOf(klass) > -1) {
+                    console.log("removing class:", klass);
+                    var pat = new RegExp("\s*" + klass);
+                    this.parent.className = className.replace(pattern, '');
+                }
+                this.lastMoveCenter = this.allowMoveCenter;
+            }
         }
     };
 
