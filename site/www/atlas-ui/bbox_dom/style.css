@@ -1,35 +1,65 @@
 
 body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 20px;
 }
 
-h1,
+h1, h2,
 p { margin: 0 0 .5em 0; }
 
+form {
+    margin: 1em 0 0 0;
+}
+
+#container {
+    overflow: auto;
+    width: 100%;
+}
+
+#preview,
 #map {
     height: 500px;
 }
 
+#preview {
+    float: right;
+    width: 30%;
+    min-width: 200px;
+    margin-left: 10px;
+    border: 1px solid #000;
+}
+
+#map {
+    border: 1px solid #000;
+}
+
+div.padding {
+    padding: 10px;
+}
+
+/**
+ * Extent selector styles
+ * NOTE: IE needs the transparent PNG background to receive mouse events.
+ */
+
 .map-extent {
     background-color: rgba(255,0,0,.1);
     background-color: transparent;
-    z-index: 1000;
 }
 
-/*
- * FIXME: IE apparently needs the transparent PNG background to
- * receive mouse events.
- */
-
 .map-extent .handles {
-    cursor: move;
     border: 1px solid red;
-    background-image: url(1px.png);
+    background-image: url(images/1px.png);
+    z-index: 2;
+}
+
+.allow-move-center .handles {
+    cursor: move;
 }
 
 .map-extent .handle {
-    background-image: url(1px.png);
+    background-image: url(images/1px.png);
 }
 
 .map-extent .handle:hover {
@@ -76,23 +106,24 @@ p { margin: 0 0 .5em 0; }
     width: 9px;
     height: 9px;
     border-radius: 5px;
+    background-color: red;
 }
 
 .map-extent .handle-northeast {
-    top: -4px;
-    right: -4px;
+    top: -5px;
+    right: -5px;
 }
 .map-extent .handle-southeast {
-    bottom: -4px;
-    right: -4px;
+    bottom: -5px;
+    right: -5px;
 }
 .map-extent .handle-southwest {
-    bottom: -4px;
-    left: -4px;
+    bottom: -5px;
+    left: -5px;
 }
 .map-extent .handle-northwest {
-    top: -4px;
-    left: -4px;
+    top: -5px;
+    left: -5px;
 }
 
 /* labels (optional) */
@@ -103,14 +134,59 @@ p { margin: 0 0 .5em 0; }
     width: 10em;
 }
 
-#nw-label {
+.map-extent .label-northwest {
     top: -1em;
     margin-top: -10px;
     left: -5em;
 }
-#se-label {
+.map-extent .label-southeast {
     top: 100%;
     margin-top: 10px;
     right: -5em;
 }
 
+/**
+ * Page display styles
+ */
+
+#pages {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#pages .page {
+    border: 1px solid #fff;
+    overflow: hidden;
+}
+
+.page .page-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(0,0,0,.4);
+
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    line-height: 100%;
+    margin-top: -.5em;
+}
+
+.page[data-size="tiny"] .page-label { display: none; }
+.page[data-size="small"] .page-label { font-size: 20px; }
+.page[data-size="medium"] .page-label { font-size: 40px; }
+.page[data-size="large"] .page-label { font-size: 96px; }
+.page[data-size="xlarge"] .page-label { font-size: 200px; }
+
+/**
+ * UI styles
+ */
+
+#page-zoom {
+    display: inline-block;
+    width: 300px;
+    margin: 0 1em;
+    vertical-align: middle;
+}
