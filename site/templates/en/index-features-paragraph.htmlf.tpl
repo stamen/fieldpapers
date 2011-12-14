@@ -19,4 +19,6 @@
     <a href="http://fieldpapers.org/~mevans/fieldpapers/site/www/atlas-ui/csv_to_maps/fixtures/">
     here</a>.
     </li>
+    <li>We are developing a multi-page <a href="atlas-ui/bbox_dom/">selection interface</a> to create custom atlases.
+    </li>
 </p>
