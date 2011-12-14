@@ -18,25 +18,27 @@
             page_zoom = 11,
             mask;
 
-        function updateExtentInputs() {
-            var len = pages.length;
-            for (var i = 0; i < len; i++) {
-                var page = pages[i],
-                    northwest = map.coordinateLocation(page.coord_top_left),
-                    southeast = map.coordinateLocation(page.coord_bottom_right);
-
-                var input = document.createElement("input");
-                input.setAttribute("type", "hidden");
-                input.name = "pages[" + i + "]";
-                input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
-                // TODO: append input to form
-            }
-        }
+        // TODO: generate these in PHP from constants in lib/data.php
+        var MMPPT = 0.352777778,
+            INPPT = 0.013888889,
+            PTPIN = 1/INPPT,
+            PTPMM = 1/MMPPT;
+        var paper_sizes = {};
+        // landscape
+        paper_sizes["A3:landscape"] = {width: 420 * PTPMM, height: 297 * PTPMM};
+        paper_sizes["A4:landscape"] = {width: 297 * PTPMM, height: 210 * PTPMM};
+        paper_sizes["letter:landscape"] = {width: 11 * PTPIN, height: 8.5 * PTPIN};
+        paper_sizes["tabloid:landscape"] = {width: 17 * PTPIN, height: 11 * PTPIN};
+        // portrait
+        paper_sizes["A3:portrait"] = {height: 420 * PTPMM, width: 297 * PTPMM};
+        paper_sizes["A4:portrait"] = {height: 297 * PTPMM, width: 210 * PTPMM};
+        paper_sizes["letter:portrait"] = {height: 11 * PTPIN, width: 8.5 * PTPIN};
+        paper_sizes["tabloid:portrait"] = {height: 17 * PTPIN, width: 11 * PTPIN};
 
         function setPageSize(width, height) {
-            page_width = width;
-            page_height = height;
-            aspect_ratio = page_width/page_height;
+            unscaled_page_width = width / 10;
+            unscaled_page_height = height / 10;
+            aspect_ratio = width / height;
             
             updatePages(selector.extent);
         }
@@ -55,7 +57,7 @@
 
             // console.log('width: ' + width, 'height: ' + height);
 
-            var page_scale = Math.pow(2,map.getZoom() - page_zoom);
+            var page_scale = Math.pow(2, map.getZoom() - page_zoom);
             // console.log('page_scale: ' + page_scale);
 
             var page_width = unscaled_page_width * page_scale;
@@ -70,7 +72,8 @@
 
             page_container.style.width = container_width + 'px';
             page_container.style.height = container_height + 'px';
-            pages_offset = new MM.Point(-(container_width - width) / 2, -(container_height - height) / 2);
+            // pages_offset = new MM.Point(-(container_width - width) / 2, -(container_height - height) / 2);
+            pages_offset = new MM.Point(0, 0);
             page_container.style.left = pages_offset.x + 'px';
             page_container.style.top = pages_offset.y + 'px';
 
@@ -160,7 +163,7 @@
             // clear
             mask.width = mask.width;
             var ctx = mask.getContext("2d");
-            ctx.fillStyle = "rgba(0,0,0,.5)";
+            ctx.fillStyle = "rgba(0,0,0,.3)";
             ctx.fillRect(0, 0, mask.width, mask.height);
             var top_left = map.coordinatePoint(pages[0].coord_top_left),
                 bottom_right = map.coordinatePoint(pages[pages.length - 1].coord_bottom_right);
@@ -175,6 +178,58 @@
         function onExtentChange(extent) {
             updatePages(extent);
         }            
+
+        /**
+         * Form submission stuff
+         */
+        var form, submit_button, extent_inputs = [];
+
+        function onSubmitClick(e) {
+            submit_button.className = "working";
+            submit_button.disabled = true;
+            console.log("updating inputs...");
+            updateExtentInputs(function(len) {
+                console.log("done updating inputs!");
+                submit_button.disabled = false;
+                form.submit();
+            });
+            return MM.cancelEvent(e);
+        }
+
+        function updateExtentInputs(callback) {
+            if (updateExtentInputs.interval) {
+                clearInterval(updateExtentInputs.interval);
+            }
+            var len = pages.length,
+                index = 0;
+            if (extent_inputs.length > len) {
+                while (extent_inputs.length > len) {
+                    form.removeChild(extent_inputs.pop());
+                }
+            }
+            function updateInput() {
+                var page = pages[index],
+                    northwest = map.coordinateLocation(page.coord_top_left),
+                    southeast = map.coordinateLocation(page.coord_bottom_right);
+
+                var input = extent_inputs[index];
+                if (!input) {
+                    input = form.appendChild(document.createElement("input"));
+                    input.setAttribute("type", "hidden");
+                    input.name = "pages[" + index + "]";
+                    extent_inputs[index] = input;
+                }
+                input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
+                // TODO: append input to form
+                if (++index == len) {
+                    clearInterval(updateExtentInputs.interval);
+                    if (callback) {
+                        callback.call(null, len);
+                    }
+                }
+            }
+            return updateExtentInputs.interval = setInterval(updateInput, 10);
+        }
 
         function initMap() {
             // the map
@@ -232,6 +287,10 @@
             map.addCallback("zoomed", updateExtent);
             map.addCallback("extentset", updateExtent);
 
+            form = document.getElementById("submit");
+            submit_button = form.elements[form.elements.length - 1];
+            MM.addEvent(submit_button, "click", onSubmitClick);
+
             $("#page-zoom").slider({
                 min: 8,
                 max: 14,
@@ -241,6 +300,31 @@
                 page_zoom = ui.value;
                 updatePages(selector.extent);
             });
+
+            MM.addEvent(document.getElementById("show-extent"), "click", function(e) {
+                map.setExtent(selector.extent, false);
+                return MM.cancelEvent(e);
+            });
+
+            MM.addEvent(document.getElementById("fit-to-view"), "click", function(e) {
+                selector.setExtent(map.getExtent());
+                return MM.cancelEvent(e);
+            });
+
+            var orient = $("#paper-orient"),
+                size = $("#paper-size");
+
+            function updatePageSize() {
+                var size_name = [size.val(), orient.val()].join(":"),
+                    actual_size = paper_sizes[size_name];
+                console.log("page size:", size_name, [actual_size.width, actual_size.height]);
+                setPageSize(actual_size.width, actual_size.height);
+            }
+
+            size.bind("change", updatePageSize);
+            orient.bind("change", updatePageSize);
+
+            updatePageSize();
         }
 
         </script>
@@ -257,8 +341,18 @@
 
         <div id="controls">
             <p>
-                Page Zoom: <span id="page-zoom"></span>
-                Page Count: <span id="page-count"></span>
+                <label for="paper-size">Paper size: <select id="paper-size">
+                    <option value="A3" selected>A3</option>
+                    <option value="A4">A4</option>
+                    <option value="letter">Letter</option>
+                    <option value="tabloid">Tabloid</option>
+                </select></label>
+                <label for="paper-orient">orientation: <select id="paper-orient">
+                    <option value="landscape" selected>landscape</option>
+                    <option value="portrait">portrait</option>
+                </select></label>
+                Page zoom: <span id="page-zoom"></span>
+                <strong id="page-count"></strong> page(s)
             </p>
         </div>
 
@@ -278,8 +372,10 @@
                 <canvas id="mask"></canvas>
             </div>
         </div>
-        <form id="submit">
-            <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"></p>
+
+        <form id="submit" method="post" action="submit.php">
+            <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"> <button id="show-extent">zoom to extent</button> <button id="fit-to-view">fit to current view</button></p>
+            <p><input type="submit" value="submit"></p>
         </form>
     </body>
 </html>
