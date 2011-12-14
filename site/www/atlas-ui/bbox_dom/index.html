@@ -18,21 +18,6 @@
             page_zoom = 11,
             mask;
 
-        function updateExtentInputs() {
-            var len = pages.length;
-            for (var i = 0; i < len; i++) {
-                var page = pages[i],
-                    northwest = map.coordinateLocation(page.coord_top_left),
-                    southeast = map.coordinateLocation(page.coord_bottom_right);
-
-                var input = document.createElement("input");
-                input.setAttribute("type", "hidden");
-                input.name = "pages[" + i + "]";
-                input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
-                // TODO: append input to form
-            }
-        }
-
         function setPageSize(width, height) {
             page_width = width;
             page_height = height;
@@ -160,7 +145,7 @@
             // clear
             mask.width = mask.width;
             var ctx = mask.getContext("2d");
-            ctx.fillStyle = "rgba(0,0,0,.5)";
+            ctx.fillStyle = "rgba(0,0,0,.3)";
             ctx.fillRect(0, 0, mask.width, mask.height);
             var top_left = map.coordinatePoint(pages[0].coord_top_left),
                 bottom_right = map.coordinatePoint(pages[pages.length - 1].coord_bottom_right);
@@ -175,6 +160,58 @@
         function onExtentChange(extent) {
             updatePages(extent);
         }            
+
+        /**
+         * Form submission stuff
+         */
+        var form, submit_button, extent_inputs = [];
+
+        function onSubmitClick(e) {
+            submit_button.className = "working";
+            submit_button.disabled = true;
+            console.log("updating inputs...");
+            updateExtentInputs(function(len) {
+                console.log("done updating inputs!");
+                submit_button.disabled = false;
+                form.submit();
+            });
+            return MM.cancelEvent(e);
+        }
+
+        function updateExtentInputs(callback) {
+            if (updateExtentInputs.interval) {
+                clearInterval(updateExtentInputs.interval);
+            }
+            var len = pages.length,
+                index = 0;
+            if (extent_inputs.length > len) {
+                while (extent_inputs.length > len) {
+                    form.removeChild(extent_inputs.pop());
+                }
+            }
+            function updateInput() {
+                var page = pages[index],
+                    northwest = map.coordinateLocation(page.coord_top_left),
+                    southeast = map.coordinateLocation(page.coord_bottom_right);
+
+                var input = extent_inputs[index];
+                if (!input) {
+                    input = form.appendChild(document.createElement("input"));
+                    input.setAttribute("type", "hidden");
+                    input.name = "pages[" + index + "]";
+                    extent_inputs[index] = input;
+                }
+                input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
+                // TODO: append input to form
+                if (++index == len) {
+                    clearInterval(updateExtentInputs.interval);
+                    if (callback) {
+                        callback.call(null, len);
+                    }
+                }
+            }
+            return updateExtentInputs.interval = setInterval(updateInput, 10);
+        }
 
         function initMap() {
             // the map
@@ -232,6 +269,10 @@
             map.addCallback("zoomed", updateExtent);
             map.addCallback("extentset", updateExtent);
 
+            form = document.getElementById("submit");
+            submit_button = form.elements[form.elements.length - 1];
+            MM.addEvent(submit_button, "click", onSubmitClick);
+
             $("#page-zoom").slider({
                 min: 8,
                 max: 14,
@@ -278,8 +319,10 @@
                 <canvas id="mask"></canvas>
             </div>
         </div>
-        <form id="submit">
+
+        <form id="submit" method="post" action="submit.php">
             <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"></p>
+            <p><input type="submit" value="submit"></p>
         </form>
     </body>
 </html>
