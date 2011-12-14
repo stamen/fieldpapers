@@ -1,0 +1,116 @@
+
+body {
+    margin: 0;
+    padding: 20px;
+}
+
+h1,
+p { margin: 0 0 .5em 0; }
+
+#map {
+    height: 500px;
+}
+
+.map-extent {
+    background-color: rgba(255,0,0,.1);
+    background-color: transparent;
+    z-index: 1000;
+}
+
+/*
+ * FIXME: IE apparently needs the transparent PNG background to
+ * receive mouse events.
+ */
+
+.map-extent .handles {
+    cursor: move;
+    border: 1px solid red;
+    background-image: url(1px.png);
+}
+
+.map-extent .handle {
+    background-image: url(1px.png);
+}
+
+.map-extent .handle:hover {
+    background-color: red;
+}
+
+.map-extent .handle-north,
+.map-extent .handle-south { cursor: ns-resize; }
+.map-extent .handle-east,
+.map-extent .handle-west { cursor: ew-resize; }
+
+.map-extent .handle-northwest,
+.map-extent .handle-southeast { cursor: nwse-resize; }
+.map-extent .handle-northeast,
+.map-extent .handle-southwest { cursor: nesw-resize; }
+
+.map-extent .handle-north {
+    height: 5px;
+    width: 100%;
+    top: -1px;
+}
+
+.map-extent .handle-south {
+    height: 5px;
+    width: 100%;
+    bottom: -1px;
+}
+
+.map-extent .handle-east {
+    width: 5px;
+    height: 100%; right: -1px;
+}
+
+.map-extent .handle-west {
+    width: 5px;
+    height: 100%;
+    left: -1px;
+}
+
+.map-extent .handle-northwest,
+.map-extent .handle-northeast,
+.map-extent .handle-southeast,
+.map-extent .handle-southwest {
+    width: 9px;
+    height: 9px;
+    border-radius: 5px;
+}
+
+.map-extent .handle-northeast {
+    top: -4px;
+    right: -4px;
+}
+.map-extent .handle-southeast {
+    bottom: -4px;
+    right: -4px;
+}
+.map-extent .handle-southwest {
+    bottom: -4px;
+    left: -4px;
+}
+.map-extent .handle-northwest {
+    top: -4px;
+    left: -4px;
+}
+
+/* labels (optional) */
+.map-extent .label {
+    position: absolute;
+    display: block;
+    text-align: center;
+    width: 10em;
+}
+
+#nw-label {
+    top: -1em;
+    margin-top: -10px;
+    left: -5em;
+}
+#se-label {
+    top: 100%;
+    margin-top: 10px;
+    right: -5em;
+}
+

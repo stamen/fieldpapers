@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ModestMaps JS: Extent Selector</title>
+        <script type="text/javascript" src="js/modestmaps.js"></script>
+        <script type="text/javascript" src="js/modestmaps.extent-selector.js"></script>
+        <script type="text/javascript">
+        var MM = com.modestmaps,
+            map, selector, pages = [],
+            rows = 0, columns = 0, aspect_ratio = 7.5/9.5,
+            unscaled_page_width=75, unscaled_page_height=95, page_container,
+            page_zoom=11;
+            
+        function setPageSize(width,height){
+            page_width = width;
+            page_height = height;
+            aspect_ratio = page_width/page_height;
+            
+            updatePages(selector.extent);
+        }
+        
+        function updatePages(extent) {
+            var northwest = extent.northWest();
+            var southeast = extent.southEast();
+            
+            var top_left = map.locationPoint(northwest);
+            var bottom_right = map.locationPoint(southeast);
+            
+            var width = bottom_right.x - top_left.x;
+            var height = bottom_right.y - top_left.y;
+            
+            console.log('width: ' + width, 'height: ' + height);
+            
+            var page_scale = Math.pow(2,map.getZoom() - page_zoom);
+            console.log('page_scale: ' + page_scale);
+            
+            var page_width = unscaled_page_width * page_scale;
+            var page_height = unscaled_page_height * page_scale;
+            
+            columns = Math.ceil(width/page_width);
+            rows = Math.ceil(height/page_height);
+            
+            
+            var container_width = columns * page_width; //quantized width
+            var container_height = rows * page_height;
+            
+            page_container.style.width = container_width + 'px';
+            page_container.style.height = container_height + 'px';
+            
+            page_container.style.left = -(container_width - width)/2 + 'px';
+            page_container.style.top = -(container_height - height)/2 + 'px';
+            
+            var num_pages= columns * rows;
+            
+            if(pages.length < num_pages) {
+                while(pages.length < num_pages) {
+                    var page = document.createElement("div");
+                    page.appendChild(document.createElement("span")).setAttribute("class","page-label");
+                    
+                    var extent_input = page.appendChild(document.createElement("input"));
+                    extent_input.setAttribute("type","hidden");
+                    extent_input.name = "pages[" + pages.length + "][extent]";
+                    page.extent_input = extent_input;
+                    
+                    var zoom_input = page.appendChild(document.createElement("input"));
+                    zoom_input.setAttribute("type","hidden");
+                    zoom_input.name = "pages[" + pages.length + "][zoom]";
+                    page.zoom_input = zoom_input;
+                    
+                
+                    page.setAttribute("class","page");
+                    page.style.position = "absolute";
+                    page_container.appendChild(page);
+                    pages.push(page);
+                }
+            } else if (pages.length> num_pages) {
+                while(pages.length > num_pages) {
+                    var page = pages.pop();
+                    page_container.removeChild(page);
+                }
+            }
+            
+            var column = 0,
+                row = 0;
+            
+            for (var i=0; i < num_pages; i++) {
+                var page = pages[i];
+                
+                var topLeft = new MM.Point(column * page_width, row * page_height),
+                    bottomRight = new MM.Point(topLeft.x + page_width, topLeft.y + page_height);
+                page.style.left = Math.floor(topLeft.x) + 'px';
+                page.style.top = Math.floor(topLeft.y) + 'px';
+                page.style.width = Math.round(page_width) + 'px';
+                page.style.height = Math.round(page_height) + 'px';
+                
+                page.firstChild.innerText = i + 1;
+                
+                var page_extent = MM.MapExtent.fromArray([map.pointLocation(topLeft), map.pointLocation(bottomRight)]);
+                console.log("page_extent[" + i + "]:", page_extent);
+                page.extent_input.value = page_extent.toString();
+                page.zoom_input.value = page_zoom;
+                
+                if (column == columns - 1) {
+                    row += 1;
+                    column = 0;       
+                } else {
+                    column += 1;
+                }
+            }
+        }
+        
+        function onExtentChange(extent) {
+            updatePages(extent);
+        }
+            
+
+        function initMap() {
+            // the map
+            var provider = new MM.TemplatedMapProvider("http://tile.openstreetmap.org/{Z}/{X}/{Y}.png");
+            map = new MM.Map("map", provider);
+
+            // the initial extent
+            var extent = new MM.MapExtent(37.837, -122.522, 37.691, -122.350);
+            map.setExtent(extent);
+
+            // the selector is a map "layer"
+            selector = new MM.ExtentSelector(document.getElementById("extent"));
+            map.addLayer(selector);
+            
+            page_container = document.getElementById("pages");
+
+            // update the northwest and south east labels when the extent
+            // changes
+            var nwLabel = document.getElementById("nw-label"),
+                seLabel = document.getElementById("se-label"),
+                extentField = document.getElementById("extent-string");
+            selector.addCallback("extentset", function(o, ext) {
+                // these setters all coerce to strings, which implicitly
+                // calls toString() on the Location and MapExtent instances
+                nwLabel.innerText = ext.northWest();
+                seLabel.innerText = ext.southEast();
+                // and update the extent string field for good measure
+                extentField.value = ext;
+                
+                onExtentChange(ext);
+            });
+            selector.setExtent(extent);
+            
+            map.addCallback("zoomed", function() {
+                    updatePages(selector.extent);
+                }
+            );
+            map.addCallback("extentset", function() {
+                    updatePages(selector.extent);
+                }
+            );
+
+        }
+
+        </script>
+
+        <style type="text/css">
+        @import url(style.css);
+        #pages {
+            position: absolute;
+        }
+        
+        #pages .page {
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0,0,0,.2);
+        }
+        
+        #pages .page-label {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            text-align: center;
+            line-height: 100%;
+            margin-top: -.5em;
+        }
+        </style>
+    </head>
+    <body onload="initMap()">
+        <h1>ModestMaps JS: Extent Selector</h1>
+        <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"></p>
+        <div id="map">
+            <div id="extent" class="map-extent">
+                <div id="pages"></div>
+                <span id="nw-label" class="label"></span>
+                <span id="se-label" class="label"></span>
+            </div>
+        </div>
+    </body>
+</html>
