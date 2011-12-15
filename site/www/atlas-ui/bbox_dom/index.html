@@ -40,6 +40,7 @@
             unscaled_page_height = height / 10;
             aspect_ratio = width / height;
             
+            setAspectRatio(width, height);
             updatePages(selector.extent);
         }
 
@@ -163,7 +164,7 @@
 
             document.getElementById("page-count").innerText = num_pages;
             
-            syncMaps();
+            updatePreviewMap();
         }
 
         function updateMask(extent) {
@@ -186,28 +187,23 @@
             updatePages(extent);
         }
         
-        function syncMaps() {
-            preview_map.setZoom(page_zoom);
-            
+        function updatePreviewMap() {
             var loc_nw = map.coordinateLocation(pages[0].coord_top_left);
             var loc_se = map.coordinateLocation(pages[0].coord_bottom_right);
             
             // var index = parseInt(pages.length * .5);
             
-            preview_map.setExtent([loc_nw,loc_se]);
-            
-            setAspectRatio();
+            preview_map.setExtent([loc_nw,loc_se], true); 
         }
         
-        function setAspectRatio() {
-            var size = $('#paper-size').val();
-            var orientation = $('#paper-orient').val();
+        function setAspectRatio(width, height) {
             var factor = .3;
             
-            var preview_width = factor * paper_sizes[size + ":" + orientation].width;
-            var preview_height = factor * paper_sizes[size + ":" + orientation].height;
+            var preview_width = factor * width;
+            var preview_height = factor * height;
             
-            $('#preview_map').css({'width' : preview_width, 'height' : preview_height});
+            preview_map.parent.style.width = preview_width + "px";
+            preview_map.parent.style.height = preview_height + "px";
         }
         
         function changePage() {
