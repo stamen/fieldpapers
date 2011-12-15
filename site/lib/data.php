@@ -37,6 +37,8 @@
     define('PAPER_LANDSCAPE_A4_HEIGHT', 210 * PTPMM);
     define('PAPER_LANDSCAPE_LTR_WIDTH', 11 * PTPIN);
     define('PAPER_LANDSCAPE_LTR_HEIGHT', 8.5 * PTPIN);
+    define('PAPER_LANDSCAPE_TAB_WIDTH', 17 * PTPIN);
+    define('PAPER_LANDSCAPE_TAB_HEIGHT', 11 * PTPIN);
 
     define('PAPER_PORTRAIT_A3_WIDTH', 297 * PTPMM);
     define('PAPER_PORTRAIT_A3_HEIGHT', 420 * PTPMM);
@@ -44,6 +46,8 @@
     define('PAPER_PORTRAIT_A4_HEIGHT', 297 * PTPMM);
     define('PAPER_PORTRAIT_LTR_WIDTH', 8.5 * PTPIN);
     define('PAPER_PORTRAIT_LTR_HEIGHT', 11 * PTPIN);
+    define('PAPER_PORTRAIT_TAB_WIDTH', 11 * PTPIN);
+    define('PAPER_PORTRAIT_TAB_HEIGHT', 17 * PTPIN);
 
     function &get_db_connection()
     {

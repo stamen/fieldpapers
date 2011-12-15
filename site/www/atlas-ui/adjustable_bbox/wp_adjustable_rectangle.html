@@ -7,213 +7,321 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
 <script type="text/javascript">
-        window.onload = function () {
-        var MM = com.modestmaps;
-    
-        var map = new MM.Map('map', 
-                          new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
-    
-        map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
-        
-        //Set Zoom levels
-        $("a#continent").click(function(event){
-            map.setZoom(2);
-        });
-        
-        $("a#country").click(function(event){
-            map.setZoom(4);
-        });
-        
-        $("a#state").click(function(event){
-            map.setZoom(6);
-        });
-        
-        $("a#city").click(function(event){
-            map.setZoom(12);
-        });
-        
-        $("a#neighborhood").click(function(event){
-            map.setZoom(14);
-        });
-        
-        $("a#street").click(function(event){
-            map.setZoom(17);
-        });
+        var paper_width = 7.5;
+        var paper_height = 9.5;
+        var aspect_ratio = 7.5/9.5;
+        var scale = .015;
 
-        var radius = 6;
-        var diameter = 12;
-        var threshold = 2;
-        var handle_size_tot = 14;
+        var vertical_lines_array = [];
+        var horizontal_lines_array = [];
         
-        //map dimensions
-        //1000x500
-        //middle third 333 to 666
-        //
-
-        paper.install(window); // global
-        paper.setup('canvas');
-        
-        //Create Rectangle
-        var rect = new Path.Rectangle(new Point(333,166), new Point(666, 333));
-        rect.strokeColor = '#000000';
-        rect.strokeWidth = 2;
-        rect.dashArray = [12,6];
-        rect.fillColor = '#e9e9ff';
-        rect.opacity = 0.5;
-        rect.closed = true;
-        
-        //Create four handles
-        var handle_tl = new Path.Circle(new Point(333,166), radius);
-        handle_tl.fillColor = '#ffffff';
-        handle_tl.strokeWidth = 2;
-        handle_tl.strokeColor = '#000000';
-        handle_tl.smooth();
-        
-        var handle_tr = new Path.Circle(new Point(666,166), radius);
-        handle_tr.fillColor = '#ffffff';
-        handle_tr.strokeWidth = 2;
-        handle_tr.strokeColor = '#000000';
-        handle_tr.smooth();
-             
-        var handle_br = new Path.Circle(new Point(666,333), radius);
-        handle_br.fillColor = '#ffffff';
-        handle_br.strokeWidth = 2;
-        handle_br.strokeColor = '#000000';
-        handle_br.smooth();
-        
-        var handle_bl = new Path.Circle(new Point(333,333), radius);
-        handle_bl.fillColor = '#ffffff';
-        handle_bl.strokeWidth = 2;
-        handle_bl.strokeColor = '#000000';
-        handle_bl.smooth();
-            
-        paper.view.draw();
-                        
-        var hitResult_tl;
-        var hitResult_tr;
-        var hitResult_br;
-        var hitResult_bl;
-        
-        var hitResult_rect;
-        
-        var hitOptions = {
-            segments: true,
-            stroke: true,
-            fill: true,
-            tolerance: 5
-        };
-        
-        var tool = new Tool();
-        var activeDrag = null;
-                
-        tool.onMouseDown = function(event) {            
-            hitResult_tl = handle_tl.hitTest(event.point, hitOptions);
-            hitResult_tr = handle_tr.hitTest(event.point, hitOptions);
-            hitResult_br = handle_br.hitTest(event.point, hitOptions);
-            hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
-            
-            if (hitResult_tl) {
-                activeDrag = handle_tl;
-                event.stopPropagation();
-            } else if (hitResult_tr) {
-                activeDrag = handle_tr;
-                event.stopPropagation();
-            } else if (hitResult_br) {
-                activeDrag  = handle_br;
-                event.stopPropagation();
-            } else if (hitResult_bl) {
-                activeDrag = handle_bl; 
-                event.stopPropagation();
+        function drawGrid(rect_obj,aspect_ratio,scale) {
+            for (var i = 0; i < vertical_lines_array.length; i++){
+	            if (vertical_lines_array[i]) {
+		            //vertical_lines_array[i].removeSegments();
+		            vertical_lines_array[i].remove();
+	            }
             }
             
-            //Handle the rectangle
-            hitResult_rect = rect.hitTest(event.point, hitOptions);
+            for (var i = 0; i < horizontal_lines_array.length; i++){
+	            if (horizontal_lines_array[i]) {
+		            //horizontal_lines_array[i].removeSegments();
+		            horizontal_lines_array[i].remove();
+	            }
+            }
+        
+            var top_left = rect_obj.bounds.topLeft;
+            var width = rect_obj.bounds.width;
+            var height = rect_obj.bounds.height;
             
-            if (hitResult_rect) {
-                event.stopPropagation();
+            //the grid; let's start out by drawing squares
+            //slider represents number of pixels
+            //this is controlled by the slider: width_gc, height_gc
+            
+            //scale 1: 1 px/cell, scale 1/2: 2 px/cell
+            
+            var vertical_line_array = [];
+            var horizontal_line_array = [];
+            
+            var width_gc = 1/scale;
+            var height_gc = width_gc/aspect_ratio;
+            
+            
+            //compute number of vertical lines
+            var num_vl = Math.floor(width*scale);
+
+            if (num_vl * width_gc >= width) {
+                num_vl = width*scale - 1;
             }
             
-            $("canvas").css({'cursor':'move'});
+            //compute number of horizontal lines
+            var num_hl = Math.floor((height * aspect_ratio)*scale);
+            
+            if (num_hl * height_gc >= height) {
+                num_hl = (height * aspect_ratio)*scale - 1;
+            }
+            
+            for (var i = 1; i <= parseInt(num_vl); i++) {
+                vertical_lines_array[i] = new Path();
+                vertical_lines_array[i].strokeWidth = 1;
+                vertical_lines_array[i].strokeColor = '#050505';
+                vertical_lines_array[i].opacity= .5;
+                //vertical_lines_array[i].dashArray = [10,4];
+            
+                vertical_lines_array[i].add(new Point(top_left.x + width_gc*i, top_left.y));
+                vertical_lines_array[i].add(new Point(top_left.x + width_gc*i, top_left.y + height));
+            }
+            
+            for (var i = 1; i <= parseInt(num_hl); i++) {
+                horizontal_lines_array[i] = new Path();
+                horizontal_lines_array[i].strokeWidth = 1;
+                horizontal_lines_array[i].strokeColor = '#050505';
+                horizontal_lines_array[i].opacity= .5;
+                //horizontal_lines_array[i].dashArray = [12,6];
+            
+                horizontal_lines_array[i].add(new Point(top_left.x, top_left.y + height_gc*i));
+                horizontal_lines_array[i].add(new Point(top_left.x + width, top_left.y + height_gc*i));
+            }
         }
-        
-        tool.onMouseDrag = function(event) {
-            if (activeDrag == handle_tl){
-                handle_tl.position.x = event.point.x;
-                handle_bl.position.x += event.delta.x;
 
-                handle_tl.position.y = event.point.y;
+        window.onload = function () {        
+            var MM = com.modestmaps;
+        
+            var map = new MM.Map('map', 
+                              new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
+        
+            map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
+            
+            //Set Zoom levels
+            $("a#continent").click(function(event){
+                map.setZoom(2);
+            });
+            
+            $("a#country").click(function(event){
+                map.setZoom(4);
+            });
+            
+            $("a#state").click(function(event){
+                map.setZoom(6);
+            });
+            
+            $("a#city").click(function(event){
+                map.setZoom(12);
+            });
+            
+            $("a#neighborhood").click(function(event){
+                map.setZoom(14);
+            });
+            
+            $("a#street").click(function(event){
+                map.setZoom(17);
+            });
+    
+            var radius = 6;
+            var diameter = 12;
+            var threshold = 2;
+            var handle_size_tot = 14;
+            
+            //map dimensions
+            //1000x500
+            //middle third 333 to 666
+            //
+    
+            paper.install(window); // global
+            paper.setup('canvas');
+            
+            //Create Rectangle
+            var rect = new Path.Rectangle(new Point(333,166), new Point(666, 333));
+            rect.strokeColor = '#000000';
+            rect.strokeWidth = 2;
+            rect.dashArray = [12,6];
+            rect.fillColor = '#e9e9ff';
+            rect.opacity = 0.5;
+            rect.closed = true;
+            
+            //Create four handles
+            var handle_tl = new Path.Circle(new Point(333,166), radius);
+            handle_tl.fillColor = '#ffffff';
+            handle_tl.strokeWidth = 2;
+            handle_tl.strokeColor = '#000000';
+            handle_tl.smooth();
+            
+            var handle_tr = new Path.Circle(new Point(666,166), radius);
+            handle_tr.fillColor = '#ffffff';
+            handle_tr.strokeWidth = 2;
+            handle_tr.strokeColor = '#000000';
+            handle_tr.smooth();
+                 
+            var handle_br = new Path.Circle(new Point(666,333), radius);
+            handle_br.fillColor = '#ffffff';
+            handle_br.strokeWidth = 2;
+            handle_br.strokeColor = '#000000';
+            handle_br.smooth();
+            
+            var handle_bl = new Path.Circle(new Point(333,333), radius);
+            handle_bl.fillColor = '#ffffff';
+            handle_bl.strokeWidth = 2;
+            handle_bl.strokeColor = '#000000';
+            handle_bl.smooth();
+                
+            paper.view.draw();
+                            
+            var hitResult_tl;
+            var hitResult_tr;
+            var hitResult_br;
+            var hitResult_bl;
+            
+            var hitResult_rect;
+            
+            var hitOptions = {
+                segments: true,
+                stroke: true,
+                fill: true,
+                tolerance: 5
+            };
+            
+            var tool = new Tool();
+            var activeDrag = null;
                     
-                handle_tr.position.y += event.delta.y;
-            } else if (activeDrag == handle_tr) {
-                handle_tr.position.x = event.point.x;
-                handle_tr.position.y = event.point.y;
+            tool.onMouseDown = function(event) {            
+                hitResult_tl = handle_tl.hitTest(event.point, hitOptions);
+                hitResult_tr = handle_tr.hitTest(event.point, hitOptions);
+                hitResult_br = handle_br.hitTest(event.point, hitOptions);
+                hitResult_bl = handle_bl.hitTest(event.point, hitOptions);
                 
-                handle_br.position.x += event.delta.x;
+                if (hitResult_tl) {
+                    activeDrag = handle_tl;
+                    event.stopPropagation();
+                } else if (hitResult_tr) {
+                    activeDrag = handle_tr;
+                    event.stopPropagation();
+                } else if (hitResult_br) {
+                    activeDrag  = handle_br;
+                    event.stopPropagation();
+                } else if (hitResult_bl) {
+                    activeDrag = handle_bl; 
+                    event.stopPropagation();
+                }
                 
-                handle_tl.position.y += event.delta.y;
-            } else if (activeDrag == handle_br) {
-                handle_br.position.x = event.point.x;
-                handle_br.position.y = event.point.y;
+                //Handle the rectangle
+                hitResult_rect = rect.hitTest(event.point, hitOptions);
                 
-                handle_tr.position.x += event.delta.x;
+                if (hitResult_rect) {
+                    event.stopPropagation();
+                }
                 
-                handle_bl.position.y += event.delta.y;
-            } else if (activeDrag == handle_bl) {
-                handle_bl.position.x = event.point.x;
-                handle_bl.position.y = event.point.y;
-                
-                handle_tl.position.x += event.delta.x;
-                
-                handle_br.position.y += event.delta.y;
+                $("canvas").css({'cursor':'move'});
             }
             
-            if (hitResult_tl || hitResult_tr || hitResult_br || hitResult_bl) {
-                rect.remove();
+            tool.onMouseDrag = function(event) {
+                if (activeDrag == handle_tl){
+                    handle_tl.position.x = event.point.x;
+                    handle_bl.position.x += event.delta.x;
+    
+                    handle_tl.position.y = event.point.y;
+                        
+                    handle_tr.position.y += event.delta.y;
+                } else if (activeDrag == handle_tr) {
+                    handle_tr.position.x = event.point.x;
+                    handle_tr.position.y = event.point.y;
+                    
+                    handle_br.position.x += event.delta.x;
+                    
+                    handle_tl.position.y += event.delta.y;
+                } else if (activeDrag == handle_br) {
+                    handle_br.position.x = event.point.x;
+                    handle_br.position.y = event.point.y;
+                    
+                    handle_tr.position.x += event.delta.x;
+                    
+                    handle_bl.position.y += event.delta.y;
+                } else if (activeDrag == handle_bl) {
+                    handle_bl.position.x = event.point.x;
+                    handle_bl.position.y = event.point.y;
+                    
+                    handle_tl.position.x += event.delta.x;
+                    
+                    handle_br.position.y += event.delta.y;
+                }
                 
-                handle_bl.position.x = handle_tl.position.x;
-                handle_bl.position.y = handle_br.position.y;
+                if (hitResult_tl || hitResult_tr || hitResult_br || hitResult_bl) {
+                    rect.remove();
+                    
+                    handle_bl.position.x = handle_tl.position.x;
+                    handle_bl.position.y = handle_br.position.y;
+                    
+                    handle_tr.position.x = handle_br.position.x;
+                    handle_tr.position.y = handle_tl.position.y;
+                    
+                    rect = new Path.Rectangle(new Point(handle_tl.position.x,handle_tl.position.y), new Point(handle_br.position.x,handle_br.position.y));
+                    rect.strokeColor = '#000000';
+                    rect.strokeWidth = 2;
+                    rect.dashArray = [12,6];
+                    rect.fillColor = '#e9e9ff';
+                    rect.opacity = 0.5;
+                    rect.closed = true;
+                    rect.selected = true;
+                    
+                    handle_tl.insertAbove(rect);
+                    handle_tr.insertAbove(rect);
+                    handle_bl.insertAbove(rect);
+                    handle_br.insertAbove(rect);
+                    
+                    drawGrid(rect,aspect_ratio,scale);
+                    
+                } else if (hitResult_rect) {
+                    handle_br.position.x += event.delta.x;
+                    handle_br.position.y += event.delta.y;
+                    
+                    handle_bl.position.x += event.delta.x;
+                    handle_bl.position.y += event.delta.y;
+                    
+                    handle_tr.position.x += event.delta.x;
+                    handle_tr.position.y += event.delta.y;
+                    
+                    handle_tl.position.x += event.delta.x;
+                    handle_tl.position.y += event.delta.y;
+                    
+                    rect.position.x += event.delta.x;
+                    rect.position.y += event.delta.y;
+                    
+                    drawGrid(rect,aspect_ratio,scale);
+                }
                 
-                handle_tr.position.x = handle_br.position.x;
-                handle_tr.position.y = handle_tl.position.y;
-                
-                rect = new Path.Rectangle(new Point(handle_tl.position.x,handle_tl.position.y), new Point(handle_br.position.x,handle_br.position.y));
-                rect.strokeColor = '#000000';
-                rect.strokeWidth = 2;
-                rect.dashArray = [12,6];
-                rect.fillColor = '#e9e9ff';
-                rect.opacity = 0.5;
-                rect.closed = true;
-                rect.selected = true;
-                
-                handle_tl.insertAbove(rect);
-                handle_tr.insertAbove(rect);
-                handle_bl.insertAbove(rect);
-                handle_br.insertAbove(rect);
-                
-            } else if (hitResult_rect) {
-                handle_br.position.x += event.delta.x;
-                handle_br.position.y += event.delta.y;
-                
-                handle_bl.position.x += event.delta.x;
-                handle_bl.position.y += event.delta.y;
-                
-                handle_tr.position.x += event.delta.x;
-                handle_tr.position.y += event.delta.y;
-                
-                handle_tl.position.x += event.delta.x;
-                handle_tl.position.y += event.delta.y;
-                
-                rect.position.x += event.delta.x;
-                rect.position.y += event.delta.y;
+                var last_point = event.point;
+            
+                $("span#location").text(map.pointLocation(new com.modestmaps.Point(rect.bounds.topLeft.x, rect.bounds.topLeft.y)).toString() + ' to ' +
+                map.pointLocation(new com.modestmaps.Point(last_point.x, last_point.y)).toString());
             }
-        }
+            
+            tool.onMouseUp = function(event) {
+                activeDrag = null;
+                $("canvas").css({'cursor':'default'});
+            }
+            
+            //Deal with changes from the paper size selection
+            $("select#paper_size").change(function(){
+                //this gets called immediately
+            
+                var value = $("select#paper_size").val();
+                
+                if (value == "Letter"){
+                    paper_width = 7.5;
+                    paper_height = 9.5;
+                } else if (value == "A4") {
+                    paper_width = 7.268;
+                    paper_height = 10.1929;      
+                } else if (value == "A3") {
+                    paper_width = 10.6929;
+                    paper_height = 15.0354;
+                }
+                
+                aspect_ratio = paper_width/paper_height;
+                
+                //drawGrid(rect,paper_width,paper_height); //not drawing
+            });
         
-        tool.onMouseUp = function(event) {
-            activeDrag = null;
-            $("canvas").css({'cursor':'default'});
         }
-        
-    }
 </script>
 <style type="text/css">
 body {
@@ -239,11 +347,10 @@ body {
 </head>
 <body>
 <h1>Walking Papers Grid</h1>
-Choose Scale: <select id="scale">
-  <option>2x2</option>
-  <option>4x4</option>
-  <option>8x8</option>
-  <option>16x16</option>
+Choose Aspect Ratio for Field Papers: <select id="paper_size">
+  <option>Letter</option>
+  <option>A4</option>
+  <option>A3</option>
 </select>
 <br /><br />
 Bounds: <span id="location">No Selection Made</span>
