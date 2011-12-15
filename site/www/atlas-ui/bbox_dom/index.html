@@ -117,7 +117,7 @@
                 size = "small";
             }
             
-            var preview_points = []; //Leaves the possibility to cycle through the preview pages
+            //var preview_points = []; //Leaves the possibility to cycle through the preview pages
 
             for (var i=0; i < num_pages; i++) {
                 var page = pages[i];
@@ -126,7 +126,7 @@
                     point_tl = map.coordinatePoint(coord_tl),
                     point_br = map.coordinatePoint(coord_br);
                     
-                preview_points.push([map.pointLocation(point_tl),map.pointLocation(point_br)]);
+                //preview_points.push([map.pointLocation(point_tl),map.pointLocation(point_br)]);
                 
                 page.style.left = (point_tl.x - top_left.x) + 'px';
                 page.style.top = (point_tl.y - top_left.y) + 'px';
@@ -163,7 +163,7 @@
 
             document.getElementById("page-count").innerText = num_pages;
             
-            syncMaps(preview_points);
+            syncMaps();
         }
 
         function updateMask(extent) {
@@ -186,21 +186,15 @@
             updatePages(extent);
         }
         
-        function syncMaps(bounds) {
+        function syncMaps() {
             preview_map.setZoom(page_zoom);
             
-            var point1, point2;
-            var index = parseInt(pages.length * .5);
+            var loc_nw = map.coordinateLocation(pages[0].coord_top_left);
+            var loc_se = map.coordinateLocation(pages[0].coord_bottom_right);
             
-            if (pages.length <= 4) {
-                point1 = bounds[0][0];
-                point2 = bounds[0][1];
-            } else {
-                point1 = bounds[index-1][0];
-                point2 = bounds[index-1][1];
-            }
+            // var index = parseInt(pages.length * .5);
             
-            preview_map.setExtent([point1,point2]);
+            preview_map.setExtent([loc_nw,loc_se]);
             
             setAspectRatio();
         }
