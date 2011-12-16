@@ -435,9 +435,51 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         
         paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
         geo_args = paper_width_pt, paper_height_pt, north, west, south, east
-
-        geotiff_bytes, geojpeg_img, img_bounds = create_geotiff(input, s2p.inverse(), *geo_args)
         
+        #
+        # What follows is a nasty, nasty hack where gdal sometimes fails
+        # completely and kills the entire decoder process without a useful
+        # exception. Here, we fork off a child process and check its exit
+        # status to determine if it worked. We use a temporary file of
+        # pickled data to communicate the results.
+        #
+        # Gdal's error -
+        # Warning 1: JPEGLib:Application transferred too many scanlines
+        # python: tif_jpeg.c:691: JPEGPreDecode: Assertion `sp->cinfo.comm.is_decompressor' failed.
+        #
+
+        import cPickle as pickle
+        from os import fork, waitpid
+
+        handle, pickle_filename = mkstemp(prefix='pickle-', suffix='.bin')
+        close(handle)
+        pid = fork()
+        
+        if pid == 0:
+            # this is the child process
+            geotiff_bytes, geojpeg_img, img_bounds = create_geotiff(input, s2p.inverse(), *geo_args)
+            gj_mode, gj_size, gj_data = geojpeg_img.mode, geojpeg_img.size, geojpeg_img.tostring()
+            
+            pickle.dump((geotiff_bytes, gj_mode, gj_size, gj_data, img_bounds), open(pickle_filename, 'w')
+            exit(0)
+
+        else:
+            # this is the parent process
+            pid, status = waitpid(pid, 0)
+
+            pickle_data = open(pickle_filename).read()
+            unlink(pickle_filename)
+            
+            if status > 0:
+                raise Exception('Child process for create_geotiff() exited status %d.' % status)
+            
+            geotiff_bytes, gj_mode, gj_size, gj_data, img_bounds = pickle.loads(pickle_data)
+            geojpeg_img = Image.fromstring(gj_mode, gj_size, gj_data)
+        
+        #
+        # End of fork hack.
+        #
+
         _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
         _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
         
