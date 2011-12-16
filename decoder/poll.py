@@ -167,6 +167,9 @@ if __name__ == '__main__':
                         # push back the message in time
                         updateQueue(apibase, password, message_id, timeout)
 
+                except KeyboardInterrupt:
+                    raise
+        
                 except Exception, e:
                     print >> sys.stderr, datetime.datetime.now(), 'Error in message id', message_id, '-', e
                     updateQueue(apibase, password, message_id, ALL_FINISHED)
