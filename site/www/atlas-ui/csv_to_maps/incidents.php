@@ -13,8 +13,6 @@
 <script type="text/javascript">
 $(document).ready(function(){
     var json_path = '<?php echo $json_path ?>';
-    //console.log(json_path);
-
     $.getJSON(json_path, createDisplay);
 });
 
@@ -38,24 +36,24 @@ function createDisplay(data) {
         markerClip.addMarker(markers[i],location);
     }
     
-    var container = document.getElementById('container');
+    //var container = document.getElementById('container');
     var maps = [];
     var markerClip2 = [];
     var markers2 = [];
     
     for (var i = 0; i < 6; i++){
-        var mapSize = new MM.Point(container.offsetWidth/3.1, container.offsetHeight/3.1);
-        maps.push(new MM.Map('map'+i,new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png'),mapSize));
+        //var mapSize = new MM.Point(container.offsetWidth/3.1, container.offsetHeight/3.1);
+        maps.push(new MM.Map('map'+i,new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')));
         
         maps[i].setCenterZoom(new MM.Location(parseFloat(data.incidents[i].latitude), parseFloat(data.incidents[i].longitude)), 12);
         
         maps[i].maxSimultaneousRequests = 1;
-        maps[i].parent.style.position = 'relative';
+        //maps[i].parent.style.position = 'relative';
         //maps[i].parent.style.left = ((i%3) * mapSize.x) + 'px';
         //maps[i].parent.style.top = Math.floor(i/3) * mapSize.y) + 'px';
-        maps[i].parent.style.height = 250 + 'px';
+        //maps[i].parent.style.height = 250 + 'px';
         //maps[i].parent.style.top = 250 + 'px';
-        maps[i].setCenterZoom(new MM.Location(37.77, -122.41),12);
+        //maps[i].setCenterZoom(new MM.Location(37.77, -122.41),12);
         
         //handle the individual dots
         markerClip2[i] = new MarkerClip(maps[i]);
@@ -69,7 +67,7 @@ function createDisplay(data) {
 </script>
 
 <style type="text/css">
-body, #container {
+body {
   background: #fff;
   color: #000;
   font-family: sans-serif;
@@ -78,44 +76,43 @@ body, #container {
   border: 0;
 }
 
-#container {
-  background: #fff;
-  color: #000;
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0px;
-  border: 0;
+.container {
+    margin-left: -10px;
 }
 
 #map {
   width: 100%;
   height: 512px;
 }
+
+.page {
+    width: 25%;
+    height: 200px;
+    border: 1px solid #000;
+    float: center;
+    margin: 10px;
+    float: left;
+}
 </style>
 </head>
-<body>
-<h1>Check your incidents</h1>
-<p>You have successfully uploaded your CSV. We have placed
-the location of each incident on separate maps.</p>
-<p>The first map displays the aggregate collection of your data. As you scroll down,
-you will see several smaller maps. Each individual incident is placed on its
-own map. Each map represents an individual field paper dedicated to a single
-incident.</p>
-<div id="map"></div>
-<div id="container">
-    <!-- let's try 6 --!>
-    <table>
-        <tr>
-            <td><div id="map0"></div></td>
-            <td><div id="map1"></div></td>
-            <td><div id="map2"></div></td>
-        </tr>
-        <tr>
-            <td><div id="map3"></div></td>
-            <td><div id="map4"></div></td>
-            <td><div id="map5"></div></td>
-        </tr>
-    </table>
-</div>
-</body>
+    <body>
+        <h1>Check your incidents</h1>
+        <p>You have successfully uploaded your CSV. We have placed
+        the location of each incident on separate maps.</p>
+        <p>The first map displays the aggregate collection of your data. As you scroll down,
+        you will see several smaller maps. Each individual incident is placed on its
+        own map. Each map represents an individual field paper dedicated to a single
+        incident.</p>
+        <div id="map"></div>
+        <!-- let's try 6  -->
+        <div class="container">
+            <div id="map0" class="page"></div>
+            <div id="map1" class="page"></div>
+            <div id="map2" class="page"></div>
+        
+            <div id="map3" class="page"></div>
+            <div id="map4" class="page"></div>
+            <div id="map5" class="page"></div>
+        </div>
+    </body>
 </html>
