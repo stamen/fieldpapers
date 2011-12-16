@@ -460,7 +460,7 @@ def main(apibase, password, scan_id, url, old_decode_markers):
             geotiff_bytes, geojpeg_img, img_bounds = create_geotiff(input, s2p.inverse(), *geo_args)
             gj_mode, gj_size, gj_data = geojpeg_img.mode, geojpeg_img.size, geojpeg_img.tostring()
             
-            pickle.dump((geotiff_bytes, gj_mode, gj_size, gj_data, img_bounds), open(pickle_filename, 'w')
+            pickle.dump((geotiff_bytes, gj_mode, gj_size, gj_data, img_bounds), open(pickle_filename, 'w'))
             exit(0)
 
         else:
