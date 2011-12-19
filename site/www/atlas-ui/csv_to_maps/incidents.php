@@ -52,17 +52,23 @@
             
             // Set up the main map
             var map = new MM.Map('map', provider); 
-            map.setCenterZoom(new MM.Location(center_lat, center_lon), 12);
+            
+            //map.setCenterZoom(new MM.Location(center_lat, center_lon), 12);
             
             var markers = [];
+            var locations = [];
             var markerClip = new MarkerClip(map);
             
             for (var i = 0; i < data.incidents.length; i++){
                 markers[i] = markerClip.createDefaultMarker();
-                var location = new MM.Location(parseFloat(data.incidents[i].latitude), parseFloat(data.incidents[i].longitude));
+                var location = new MM.Location(parseFloat(data.incidents[i].latitude),parseFloat(data.incidents[i].longitude));
                 markers[i].title = data.incidents[i].description;
                 markerClip.addMarker(markers[i],location);
+                
+                locations.push(location);
             }
+            
+            map.setExtent(locations);
             
             // Set up the individual maps
             var pages_container = document.getElementById('pages_container');
