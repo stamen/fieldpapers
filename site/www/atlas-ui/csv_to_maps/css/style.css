@@ -2,18 +2,16 @@ body {
   background: #fff;
   color: #000;
   font-family: sans-serif;
-  margin: 0;
   padding: 20px;
-  border: 0;
-}
-
-#pages_container {
-    margin-left: -10px;
 }
 
 #map {
   width: 100%;
   height: 512px;
+}
+
+#pages_container {
+    margin-left: -10px;
 }
 
 .page {
