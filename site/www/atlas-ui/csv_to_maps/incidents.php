@@ -14,9 +14,12 @@
     <script type="text/javascript" src="../modest_maps/markerclip.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript">
-        var paper_sizes = {Letter:{width: 7.5,height: 9.5}, A4: {width: 7.268,height:10.1929},A3:{width:10.6929,height:15.0354}},
-            factor = 20,
-            maps = [];
+        var paper_sizes = {Letter_Portrait:{width:7.5,height:9.5}, A4_Portrait:{width:7.268,height:10.1929},A3_Portrait:{width:10.6929,height:15.0354},
+        Letter_Landscape:{width:9.5,height:7.5},A4_Landscape:{width:10.1929,height:7.268},A3_Landscape:{width:15.0354,height:10.6929}};
+        
+        var factor = 20,
+            maps = [],
+            paper_size = "Letter_Portrait"; // default
     
         $(document).ready(function(){
             var json_path = '<?php echo $json_path ?>';
@@ -24,25 +27,27 @@
         });
     
         function changeAspectRatio() {
-            var value = $("select#paper_size").val();
-            var paper_width,
-                paper_height;
-        
-            if (value == "Letter") {
-                paper_width = 7.5;
-                paper_height = 9.5;
-            } else if (value == "A4") {
-                paper_width = 7.268;
-                paper_height = 10.1929;      
-            } else if (value == "A3") {
-                paper_width = 10.6929;
-                paper_height = 15.0354;
-            }
-                        
+            paper_size = $('select#paper_size').val() + '_' + $('select#orientation').val();
+            console.log(paper_size);
+            var paper_width = paper_sizes[paper_size].width,
+                paper_height = paper_sizes[paper_size].height;
+                    
             for (var i = 0; i < maps.length; i++) {
                 maps[i].parent.style.width = factor * paper_width + "px";
                 maps[i].parent.style.height = factor * paper_height + "px";
             }
+        }
+        
+        function updateData(data) {
+            // Data to save
+            var aspect_ratio = paper_sizes[paper_size].width/paper_sizes[paper_size].height;
+            var map_data = []; // Include map extent and location of an individual incident
+            for (i = 0; i < maps.length; i++) {
+                map_data.push([maps[i].getExtent(),[data.incidents[i].latitude,data.incidents[i].longitude]]);
+            }
+            
+            console.log("The aspect ratio is: " + aspect_ratio + ". The first map has an" + "\
+            extent of " + map_data[0][0] + " and has an incident at " + map_data[0][1] + ".");
         }
     
         function createDisplay(data) {
@@ -52,8 +57,6 @@
             
             // Set up the main map
             var map = new MM.Map('map', provider); 
-            
-            //map.setCenterZoom(new MM.Location(center_lat, center_lon), 12);
             
             var markers = [];
             var locations = [];
@@ -87,6 +90,11 @@
                 maps[i].setCenterZoom(new MM.Location(parseFloat(data.incidents[i].latitude), parseFloat(data.incidents[i].longitude)), 12);
                 maps[i].maxSimultaneousRequests = 1;
                 
+                // Resize Callback
+                maps[i].addCallback("drawn", function() {
+                    updateData(data);
+                });
+                
                 // Handle the individual dots
                 markerClip2[i] = new MarkerClip(maps[i]);
                 markers2[i] = markerClip2[i].createDefaultMarker();
@@ -94,10 +102,10 @@
                 markers2[i].title = data.incidents[i].description;
                 markerClip2[i].addMarker(markers2[i],location2);
             }
-            
-            $("select#paper_size").change(changeAspectRatio);
+            $('select#paper_size,select#orientation').change(changeAspectRatio);
+            $('#submit_button').click(function() { updateData(data); });
         }
-</script>
+    </script>
 </head>
     <body>
         <h1>Check your incidents</h1>
@@ -109,12 +117,16 @@
         incident.</p>
         <div id="map"></div>
         <div style="margin-top:20px">
-            Aspect ratio:
-            <label for="paper-size"><select id="paper_size">
+            <label for="paper-size">Aspect ratio: <select id="paper_size">
                 <option value="Letter">Letter</option>
                 <option value="A3">A3</option>
                 <option value="A4">A4</option>
             </select></label>
+            <label for="orientation">Orientation: <select id="orientation">
+                <option value="Portrait">Portrait</option>
+                <option value="Landscape">Landscape</option>
+            </select></label>
+            <input type="button" id="submit_button" value="Submit Data" />
             <div id="pages_container">
                 <div id="map_page"></div>
             </div>
