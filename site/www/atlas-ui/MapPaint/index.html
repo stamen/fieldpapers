@@ -12,29 +12,42 @@
             // Globals for drawn paths
             var paths = [];
             var draw_on = false;
-            
+            var map;
             
             function clearPaths() {
                 if (paths.length > 0) {
                     for (var i = 0; i < paths.length; i++) {
                         paths[i].remove();
                     }
-                    //empty the paths array
+                    // Empty the paths array
                     paths.length = 0;
                 }
                 
                 paper.view.draw();
            }
+           
+           /*
+           // Commented out for now
+           function scalePaths() {
+                if (paths.length > 0) {
+                    for (var i=0; i < paths.length; i++) {
+                        // Scale the paths
+                    }
+                }
+                
+                paper.view.draw();
+           }
+           */
     
             window.onload = function () {        
                 var MM = com.modestmaps;
             
-                var map = new MM.Map('map', 
+                map = new MM.Map('map', 
                                   new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
             
                 map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
                 
-                //Set Zoom levels
+                // Set Zoom levels
                 $("a#continent").click(function(event){
                     map.setZoom(2);
                 });
@@ -59,17 +72,17 @@
                     map.setZoom(17);
                 });
                 
-                //map dimensions
-                //1000x500
-                //middle third 333 to 666
+                // Map dimensions
+                // 1000x500
+                // Middle third 333 to 666
                 //
         
-                paper.install(window); // global
+                paper.install(window); // Global
                 paper.setup('canvas');
                     
                 paper.view.draw();
                 
-                $( "#draw" ).button( {
+                $("#draw").button( {
                     text: false,
                     icons: {
                         primary: "ui-icon-pencil"
@@ -86,7 +99,7 @@
                     }
                 });
                 
-                $( "#clear" ).button({
+                $("#clear").button({
                     text: false,
                     icons: {
                         primary: "ui-icon-cancel"
@@ -94,7 +107,29 @@
                 })
                 .click(function() { 
                     clearPaths();
-                });  
+                });
+                
+                $("#zoom-in").button({
+                    text: false,
+                    icons: {
+                        primary: "ui-icon-plus"
+                    }
+                })
+                .click(function() { 
+                    map.zoomIn();
+                    console.log('Zoom level: ' + map.getZoom());
+                });
+                
+                $("#zoom-out").button({
+                    text: false,
+                    icons: {
+                        primary: "ui-icon-minus"
+                    }
+                })
+                .click(function() { 
+                    map.zoomOut();
+                    console.log('Zoom level: ' + map.getZoom());
+                });
                            
                 var tool = new Tool();
                 var activeDrag = null;
@@ -131,7 +166,7 @@
                     }
                     
                     if (!draw_on && paths.length > 0) {
-                    event.stopPropagation();
+                        event.stopPropagation();
                         activeDrag.position.x += event.delta.x;
                         activeDrag.position.y += event.delta.y;                        
                     }
@@ -142,11 +177,14 @@
                         path.simplify();
                         path.closePath();
                         path.fillColor = new RgbColor(255,255,255,.3);
+                        paths.push(path);
                     }
                     
-                    paths.push(path);
                     activeDrag = null;
-                }     
+                }
+                
+                // Commented out for now
+                // map.addCallback('zoomed', scalePath);
             }
     </script>
     <style type="text/css">
@@ -188,12 +226,20 @@
             color: #444;
             text-align: center;
         }
+        
+        span#zoom-buttons {
+            padding-right: 10px;
+        }
     </style>
 </head>
     <body>
         <h1>Field Papers: Paint</h1>
         
         <div class="menu ui-widget-header ui-corner-all">
+            <span id="zoom-buttons">
+                <button id="zoom-in">Zoom In</button>
+                <button id="zoom-out">Zoom Out</button>
+            </span>
             <input type="checkbox" id="draw" /><label for="draw">Draw</label>
             <button id="clear">Clear</button>
         </div>
@@ -201,7 +247,7 @@
         | <a href="#" id="state">State</a> | <a href="#" id="city">City</a> | <a href="#" id="neighborhood">Neighborhood</a> 
         | <a href="#" id="street">Street</a>
         </p>
-        <div id = "container">
+        <div id ="container">
             <div id="map">
                 <!-- resize? -->
                 <canvas id="canvas" width= "1000px" height="500"></canvas>
