@@ -26,20 +26,33 @@
                 paper.view.draw();
            }
            
-           /*
-           // Commented out for now
-           function scalePaths() {
+           function scalePaths(orig_zooms,zoomed_in) {
+                console.log(zoomed_in);
+                
                 if (paths.length > 0) {
                     for (var i=0; i < paths.length; i++) {
                         // Scale the paths
+                        var new_zoom = map.getZoom();
+                        if (zoomed_in) {
+                            // Math.pow(2,map.getZoom()-orig_zooms[i])
+                            paths[i].scale(2);
+                            
+                            // Account for translation
+                        } else if (!zoomed_in) {                            
+                            paths[i].scale(.5);
+                            
+                            // Account for translation
+                        }
                     }
                 }
                 
                 paper.view.draw();
            }
-           */
+           
     
-            window.onload = function () {        
+            window.onload = function () {
+                var orig_zooms = [];
+                var zoomed_in = true;
                 var MM = com.modestmaps;
             
                 map = new MM.Map('map', 
@@ -116,6 +129,7 @@
                     }
                 })
                 .click(function() { 
+                    zoomed_in = true;
                     map.zoomIn();
                     console.log('Zoom level: ' + map.getZoom());
                 });
@@ -126,7 +140,8 @@
                         primary: "ui-icon-minus"
                     }
                 })
-                .click(function() { 
+                .click(function() {
+                    zoomed_in = false;
                     map.zoomOut();
                     console.log('Zoom level: ' + map.getZoom());
                 });
@@ -142,22 +157,20 @@
                         path = new Path();
                         path.strokeColor = 'black';
                         path.strokeWidth = 5;
+                        path.selected = true;
                         
                         event.stopPropagation();
                     }
                     
                     if (!draw_on && paths.length > 0) {
                         for (var i = 0; i < paths.length; i++) {
-                                hitResults[i] = event.point.isInside(paths[i].bounds);
-                        }
-                        
-                        for (var i = 0; i < paths.length; i++) {
+                            hitResults[i] = event.point.isInside(paths[i].bounds);
                             if (hitResults[i]) {
                                 activeDrag = paths[i];
                                 event.stopPropagation();
                             }
                         }
-                    }  
+                    }
                 }
                 
                 tool.onMouseDrag = function(event) {
@@ -166,9 +179,15 @@
                     }
                     
                     if (!draw_on && paths.length > 0) {
-                        event.stopPropagation();
-                        activeDrag.position.x += event.delta.x;
-                        activeDrag.position.y += event.delta.y;                        
+                    
+                        for (var i = 0; i < hitResults.length; i++) {
+                            if (hitResults[i]) {
+                                event.stopPropagation();
+                                activeDrag.position.x += event.delta.x;
+                                activeDrag.position.y += event.delta.y;
+                            }
+                        } 
+                                             
                     }
                 }
                 
@@ -178,13 +197,15 @@
                         path.closePath();
                         path.fillColor = new RgbColor(255,255,255,.3);
                         paths.push(path);
+                        orig_zooms.push(map.getZoom());
                     }
                     
                     activeDrag = null;
                 }
                 
-                // Commented out for now
-                // map.addCallback('zoomed', scalePath);
+                    map.addCallback('zoomed', function() { 
+                        scalePaths(orig_zooms, zoomed_in);
+                    });
             }
     </script>
     <style type="text/css">
