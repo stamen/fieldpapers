@@ -21,12 +21,16 @@
             var move_path = false;
                         
             var pathLocationsBeforeZoom = [];
+            
+            //draw two paths, move them, zoom them, clear them, turn off move, draw one path, turn off draw, try moving it
                         
             function findPathCenter() {
                 if (pathLocationsBeforeZoom.length > 0) {
                     // Empty the array before updating the location
                     pathLocationsBeforeZoom.length = 0;
                 }
+            
+                console.log(pathLocationsBeforeZoom.length);
             
                 for (var i = 0; i < paths.length; i++) {
                     var pathPointBeforeZoom = [paths[i].position.x, paths[i].position.y];
@@ -35,6 +39,8 @@
                 
                     pathLocationsBeforeZoom.push(pathLocationBeforeZoom);
                 }
+                
+                console.log(pathLocationsBeforeZoom.length);
             }
                         
             function clearPaths() {
@@ -76,7 +82,7 @@
     
             window.onload = function () {
                 var orig_zooms = [];
-                var zoomed_in = true;
+                var zoomed_in = null;
             
                 map = new MM.Map('map', 
                                   new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
@@ -150,10 +156,8 @@
                 .click(function() {
                     if (this.checked) {
                         move_path = true;
-                        console.log('move');
                     } else {
                         move_path = false;
-                        console.log('don\'t move');
                     }
                 });
                 
@@ -196,6 +200,10 @@
                 var hitResults = [];
                                         
                 tool.onMouseDown = function(event) {
+                    if (hitResults.length > 0) {
+                        //hitResults.length = 0;
+                    }
+                
                     if (draw_on) {
                         path = new Path();
                         path.strokeColor = 'black';
@@ -231,6 +239,8 @@
                                 event.stopPropagation();
                                 activeDrag.position.x += event.delta.x;
                                 activeDrag.position.y += event.delta.y;
+                                
+                                //activeDrag.position = new Point(activeDrag.position.x + event.delta.x, activeDrag.position.y + event.delta.y);
                                 
                                 //findPathCenter();
                             }
