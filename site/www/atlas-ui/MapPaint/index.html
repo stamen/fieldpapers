@@ -3,6 +3,7 @@
 <head>
     <title>Field Papers Paint</title>
     <script type="text/javascript" src="../js/modest_maps/modestmaps.js"></script>
+    <script type="text/javascript" src="../js/modest_maps/markerclip.js"></script>
     <script type="text/javascript" src="../js/paperjs/lib/paper_new.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     
@@ -11,10 +12,33 @@
     <script type="text/javascript">            
             // Globals for drawn paths
             var paths = [];
-            var draw_on = false;
-            var map;
             
+            var map;
+            var MM = com.modestmaps;
+            
+            // Booleans for toolbar
+            var draw_on = false;
+            var move_path = false;
+                        
+            var pathLocationsBeforeZoom = [];
+                        
+            function findPathCenter() {
+                if (pathLocationsBeforeZoom.length > 0) {
+                    // Empty the array before updating the location
+                    pathLocationsBeforeZoom.length = 0;
+                }
+            
+                for (var i = 0; i < paths.length; i++) {
+                    var pathPointBeforeZoom = [paths[i].position.x, paths[i].position.y];
+                    
+                    var pathLocationBeforeZoom = map.pointLocation(new MM.Point(pathPointBeforeZoom[0],pathPointBeforeZoom[1]));
+                
+                    pathLocationsBeforeZoom.push(pathLocationBeforeZoom);
+                }
+            }
+                        
             function clearPaths() {
+                // Add modal to clear or not?
                 if (paths.length > 0) {
                     for (var i = 0; i < paths.length; i++) {
                         paths[i].remove();
@@ -26,22 +50,22 @@
                 paper.view.draw();
            }
            
-           function scalePaths(orig_zooms,zoomed_in) {
-                console.log(zoomed_in);
-                
+           function scalePaths(zoomed_in) {
+                // lat/lon have already been locked in              
                 if (paths.length > 0) {
-                    for (var i=0; i < paths.length; i++) {
-                        // Scale the paths
-                        var new_zoom = map.getZoom();
+                    for (var i=0; i < paths.length; i++) {                    
                         if (zoomed_in) {
                             // Math.pow(2,map.getZoom()-orig_zooms[i])
+                            
                             paths[i].scale(2);
                             
-                            // Account for translation
-                        } else if (!zoomed_in) {                            
+                            var path_point = map.locationPoint(new MM.Location(pathLocationsBeforeZoom[i].lat, pathLocationsBeforeZoom[i].lon));
+                            paths[i].position = new Point(path_point.x,path_point.y);
+                        } else if (!zoomed_in) {                  
                             paths[i].scale(.5);
                             
-                            // Account for translation
+                            var path_point = map.locationPoint(new MM.Location(pathLocationsBeforeZoom[i].lat, pathLocationsBeforeZoom[i].lon));
+                            paths[i].position = new Point(path_point.x,path_point.y);
                         }
                     }
                 }
@@ -53,12 +77,17 @@
             window.onload = function () {
                 var orig_zooms = [];
                 var zoomed_in = true;
-                var MM = com.modestmaps;
             
                 map = new MM.Map('map', 
                                   new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')); 
             
-                map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
+                map.setCenterZoom(new MM.Location(37.76, -122.45), 10);
+                
+                // Add a marker for testing path scale/translate
+                var markerClip = new MarkerClip(map);
+                var marker = markerClip.createDefaultMarker();
+                var location = new MM.Location(37.76000, -122.65000);
+                markerClip.addMarker(marker,location);
                 
                 // Set Zoom levels
                 $("a#continent").click(function(event){
@@ -104,11 +133,27 @@
                 .click(function() {
                     if (this.checked) {
                         draw_on = true;
-                        
                         $('#canvas').css({cursor: 'crosshair'});
+                        //ui-state-default,ui-state-active,ui-state-hover
                     } else {
                         draw_on = false;
                         $('#canvas').css({cursor: ''});
+                    }
+                });
+                
+                $("#move").button( {
+                    text: false,
+                    icons: {
+                        primary: "ui-icon-arrow-4"
+                    }
+                })
+                .click(function() {
+                    if (this.checked) {
+                        move_path = true;
+                        console.log('move');
+                    } else {
+                        move_path = false;
+                        console.log('don\'t move');
                     }
                 });
                 
@@ -128,10 +173,9 @@
                         primary: "ui-icon-plus"
                     }
                 })
-                .click(function() { 
+                .click(function() {                    
                     zoomed_in = true;
                     map.zoomIn();
-                    console.log('Zoom level: ' + map.getZoom());
                 });
                 
                 $("#zoom-out").button({
@@ -143,7 +187,6 @@
                 .click(function() {
                     zoomed_in = false;
                     map.zoomOut();
-                    console.log('Zoom level: ' + map.getZoom());
                 });
                            
                 var tool = new Tool();
@@ -156,13 +199,13 @@
                     if (draw_on) {
                         path = new Path();
                         path.strokeColor = 'black';
-                        path.strokeWidth = 5;
+                        path.strokeWidth = 2;
                         path.selected = true;
                         
                         event.stopPropagation();
                     }
                     
-                    if (!draw_on && paths.length > 0) {
+                    if (!draw_on && paths.length > 0 && move_path) {
                         for (var i = 0; i < paths.length; i++) {
                             hitResults[i] = event.point.isInside(paths[i].bounds);
                             if (hitResults[i]) {
@@ -173,18 +216,23 @@
                     }
                 }
                 
+                var index;
+                
                 tool.onMouseDrag = function(event) {
                     if (draw_on) {
                         path.add(event.point);
                     }
                     
-                    if (!draw_on && paths.length > 0) {
-                    
+                    if (!draw_on && paths.length > 0 && move_path) {
                         for (var i = 0; i < hitResults.length; i++) {
                             if (hitResults[i]) {
+                                index = i;
+                                
                                 event.stopPropagation();
                                 activeDrag.position.x += event.delta.x;
                                 activeDrag.position.y += event.delta.y;
+                                
+                                //findPathCenter();
                             }
                         } 
                                              
@@ -192,20 +240,27 @@
                 }
                 
                 tool.onMouseUp = function(event) {
+                    if (move_path) {
+                        console.log(index); //rewrite findPathCenter
+                        findPathCenter();
+                    }
+                    
                     if (draw_on) {
                         path.simplify();
                         path.closePath();
                         path.fillColor = new RgbColor(255,255,255,.3);
                         paths.push(path);
                         orig_zooms.push(map.getZoom());
+                        
+                        findPathCenter();
                     }
                     
                     activeDrag = null;
                 }
                 
-                    map.addCallback('zoomed', function() { 
-                        scalePaths(orig_zooms, zoomed_in);
-                    });
+                map.addCallback('zoomed', function() {                        
+                    scalePaths(zoomed_in);
+                });
             }
     </script>
     <style type="text/css">
@@ -255,13 +310,13 @@
 </head>
     <body>
         <h1>Field Papers: Paint</h1>
-        
         <div class="menu ui-widget-header ui-corner-all">
             <span id="zoom-buttons">
                 <button id="zoom-in">Zoom In</button>
                 <button id="zoom-out">Zoom Out</button>
             </span>
             <input type="checkbox" id="draw" /><label for="draw">Draw</label>
+            <input type="checkbox" id="move" /><label for="move">Move Path</label>
             <button id="clear">Clear</button>
         </div>
         <p>Zoom: <a href="#" id="continent">Continent</a> | <a href="#" id="country">Country</a> 
@@ -271,7 +326,7 @@
         <div id ="container">
             <div id="map">
                 <!-- resize? -->
-                <canvas id="canvas" width= "1000px" height="500"></canvas>
+                <canvas id="canvas" width="1000px" height="500"></canvas>
             </div>
         </div>
         <p id="footer">Map imagery <a href="http://wiki.openstreetmap.org/wiki/Licence">CC-BY-SA OpenStreetMap.org contributors</a>.</p> 
