@@ -19,28 +19,37 @@
             // Booleans for toolbar
             var draw_on = false;
             var move_path = false;
-                        
             var pathLocationsBeforeZoom = [];
+                                    
+            function findPathCenter(opts) {
+                // opts = [type,index]
             
-            //draw two paths, move them, zoom them, clear them, turn off move, draw one path, turn off draw, try moving it
-                        
-            function findPathCenter() {
-                if (pathLocationsBeforeZoom.length > 0) {
-                    // Empty the array before updating the location
-                    pathLocationsBeforeZoom.length = 0;
-                }
-            
-                console.log(pathLocationsBeforeZoom.length);
-            
-                for (var i = 0; i < paths.length; i++) {
-                    var pathPointBeforeZoom = [paths[i].position.x, paths[i].position.y];
+                if (opts[0] === 'move') {
+                    var index = opts[1];
                     
+                    var pathPointBeforeZoom = [paths[index].position.x, paths[index].position.y];
                     var pathLocationBeforeZoom = map.pointLocation(new MM.Point(pathPointBeforeZoom[0],pathPointBeforeZoom[1]));
                 
-                    pathLocationsBeforeZoom.push(pathLocationBeforeZoom);
+                    pathLocationsBeforeZoom[index] = pathLocationBeforeZoom;
+                
+                    return;
                 }
                 
-                console.log(pathLocationsBeforeZoom.length);
+                if (opts[0] === 'drawn' || opts[0] === 'map-panned') {
+                    //console.log('panned1');
+                    if (pathLocationsBeforeZoom.length > 0) {
+                        // Empty the array before updating the location
+                        pathLocationsBeforeZoom.length = 0;
+                    }
+                
+                    for (var i = 0; i < paths.length; i++) {
+                        var pathPointBeforeZoom = [paths[i].position.x, paths[i].position.y];
+                        
+                        var pathLocationBeforeZoom = map.pointLocation(new MM.Point(pathPointBeforeZoom[0],pathPointBeforeZoom[1]));
+                    
+                        pathLocationsBeforeZoom.push(pathLocationBeforeZoom);
+                    }
+                }
             }
                         
             function clearPaths() {
@@ -52,7 +61,6 @@
                     // Empty the paths array
                     paths.length = 0;
                 }
-                
                 paper.view.draw();
            }
            
@@ -79,6 +87,26 @@
                 paper.view.draw();
            }
            
+           function translatePaths() {
+                var path_point;
+                for (var i=0; i < paths.length; i++) {
+                    path_point = map.locationPoint(new MM.Location(pathLocationsBeforeZoom[i].lat, pathLocationsBeforeZoom[i].lon));
+                    paths[i].position = new Point(path_point.x,path_point.y);
+                }
+                //paper.view.draw();
+           }
+           
+           function setPapers(add) {
+                // Starting to draw field papers based on drawn paths
+                for (var i=0; i < paths.length; i++) {
+                    if (add) {
+                        paths[i].children[1].strokeColor = new RgbColor(0,0,0,1);
+                    } else {
+                        paths[i].children[1].strokeColor = new RgbColor(0,0,0,0);
+                    }
+                }
+                paper.view.draw();
+           }
     
             window.onload = function () {
                 var orig_zooms = [];
@@ -139,25 +167,29 @@
                 .click(function() {
                     if (this.checked) {
                         draw_on = true;
-                        $('#canvas').css({cursor: 'crosshair'});
+                        $('#canvas').css({cursor: 'crosshair'}); // not needed?
                         //ui-state-default,ui-state-active,ui-state-hover
                     } else {
                         draw_on = false;
-                        $('#canvas').css({cursor: ''});
+                        $('#canvas').css({cursor: ''}); // not needed?
                     }
                 });
-                
-                $("#move").button( {
+                                
+                $("#papers").button( {
                     text: false,
                     icons: {
-                        primary: "ui-icon-arrow-4"
+                        primary: "ui-icon-document"
                     }
                 })
                 .click(function() {
                     if (this.checked) {
-                        move_path = true;
+                        if (paths.length > 0) {                 
+                            setPapers(true);
+                        }
                     } else {
-                        move_path = false;
+                        if (paths.length > 0) {
+                            setPapers(false);
+                        }
                     }
                 });
                 
@@ -198,6 +230,26 @@
                 
                 var path = null;
                 var hitResults = [];
+                
+                
+                tool.onMouseMove = function(event) {
+                    if (draw_on) {
+                        $('#canvas').css({cursor: 'crosshair'});
+                    } else {
+                        $('#canvas').css({cursor: ''});
+                    }
+                    
+                    if (!draw_on && paths.length > 0) {
+                        //a is not defined
+                        for (var i = 0; i < paths.length; i++) {
+                            hitResults[i] = event.point.isInside(paths[i].bounds);
+                            if (hitResults[i]) {
+                                console.log('hi');
+                                $('#canvas').css({cursor: 'move'});
+                            }
+                        }
+                    }
+                }
                                         
                 tool.onMouseDown = function(event) {
                     if (hitResults.length > 0) {
@@ -213,10 +265,12 @@
                         event.stopPropagation();
                     }
                     
-                    if (!draw_on && paths.length > 0 && move_path) {
+                    if (!draw_on && paths.length > 0) {
                         for (var i = 0; i < paths.length; i++) {
                             hitResults[i] = event.point.isInside(paths[i].bounds);
                             if (hitResults[i]) {
+                                move_path = true;
+                            
                                 activeDrag = paths[i];
                                 event.stopPropagation();
                             }
@@ -225,52 +279,108 @@
                 }
                 
                 var index;
-                
                 tool.onMouseDrag = function(event) {
                     if (draw_on) {
                         path.add(event.point);
                     }
                     
-                    if (!draw_on && paths.length > 0 && move_path) {
+                    if (!draw_on && paths.length > 0) {
                         for (var i = 0; i < hitResults.length; i++) {
                             if (hitResults[i]) {
+                                // Bug: double hit
                                 index = i;
                                 
                                 event.stopPropagation();
                                 activeDrag.position.x += event.delta.x;
                                 activeDrag.position.y += event.delta.y;
                                 
-                                //activeDrag.position = new Point(activeDrag.position.x + event.delta.x, activeDrag.position.y + event.delta.y);
-                                
+                                //activeDrag.position = new Point(activeDrag.position.x + event.delta.x, activeDrag.position.y + event.delta.y);  
                                 //findPathCenter();
                             }
-                        } 
-                                             
+                        }                     
                     }
                 }
                 
-                tool.onMouseUp = function(event) {
+                tool.onMouseUp = function(event) {                    
                     if (move_path) {
                         console.log(index); //rewrite findPathCenter
-                        findPathCenter();
+                        findPathCenter(['move',index]);
+                        move_path = false;
                     }
                     
                     if (draw_on) {
                         path.simplify();
                         path.closePath();
                         path.fillColor = new RgbColor(255,255,255,.3);
-                        paths.push(path);
+                        
+                        var rect = new Path.Rectangle(path.bounds);
+                        rect.strokeColor = new RgbColor(0,0,0,0);
+                        
+                        /*
+                        path.onMouseEnter = function() {
+                            if (!draw_on && move_path) {
+                                $('#canvas').css({cursor: 'move'});
+                            }
+                        }
+                        
+                        path.onMouseLeave = function() {
+                            if (!draw_on && move_path) {
+                                $('#canvas').css({cursor: ''});
+                            }
+                        }
+                        
+                        path.onMouseDrag = function () {
+                            if (!draw_on) {
+                                $('#canvas').css({cursor:'move'});
+                            }
+                        }
+                        */
+                        
+                        // Creating a group for the path and its bounding rectangle
+                        var group = new Group();
+                        group.addChild(path);
+                        group.addChild(rect);
+                        
+                        paths.push(group);
+
                         orig_zooms.push(map.getZoom());
                         
-                        findPathCenter();
+                        findPathCenter(['drawn']);
                     }
                     
                     activeDrag = null;
                 }
                 
-                map.addCallback('zoomed', function() {                        
+                
+                
+                /*
+                var circ = new Path.Circle(new Point(100,100),20);
+                circ.fillColor = 'red';
+                circ.onMouseEnter = function () {
+                    this.fillColor='blue';
+                    $('#canvas').css({cursor: 'move'});
+                }
+                */
+                                
+                map.addCallback('zoomed', function() {     
+                    console.log('zoomed');                   
                     scalePaths(zoomed_in);
                 });
+                
+                map.addCallback('panned', function() {
+                    console.log('panned');
+                    //findPathCenter(['map-panned']);
+                    translatePaths();
+                });
+                
+                /*
+                $('#map').dblclick(function () {
+                    console.log('dbl');
+                    //findPathCenter(['map-panned']);
+                    scalePaths(zoomed_in = true);
+                    translatePaths();
+                });
+                */
             }
     </script>
     <style type="text/css">
@@ -295,7 +405,7 @@
         }
         
         .menu {
-            width: 500px;
+            width: 200px;
             padding: 5px;
             margin: 0px 0px 10px 0px;
             font-size: 10px;
@@ -319,14 +429,14 @@
     </style>
 </head>
     <body>
-        <h1>Field Papers: Paint</h1>
+        <h2>Field Papers: Paint</h2>
         <div class="menu ui-widget-header ui-corner-all">
             <span id="zoom-buttons">
                 <button id="zoom-in">Zoom In</button>
                 <button id="zoom-out">Zoom Out</button>
             </span>
             <input type="checkbox" id="draw" /><label for="draw">Draw</label>
-            <input type="checkbox" id="move" /><label for="move">Move Path</label>
+            <input type="checkbox" id="papers" /><label for="papers">Set Field Papers</label>
             <button id="clear">Clear</button>
         </div>
         <p>Zoom: <a href="#" id="continent">Continent</a> | <a href="#" id="country">Country</a> 
