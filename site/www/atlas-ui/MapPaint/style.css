@@ -1,0 +1,42 @@
+body {
+  background: #fff;
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  margin: 0;
+  padding: 20px;
+  border: 0;
+}
+#map {
+  width: 1000px;
+  height: 500px;
+  position: absolute;
+  z-index:1;
+}
+
+#canvas {
+    position: absolute;
+    z-index: 2;
+}
+
+.menu {
+    width: 200px;
+    padding: 5px;
+    margin: 0px 0px 10px 0px;
+    font-size: 10px;
+}
+
+div#container {
+  width: 1000px;
+  height: 500px;
+}
+
+p#footer {
+    margin-top: 25px;
+    font-size: 75%;
+    color: #444;
+    text-align: center;
+}
+
+span#zoom-buttons {
+    padding-right: 10px;
+}
