@@ -4,11 +4,11 @@
     <title>Field Papers Paint</title>
     <script type="text/javascript" src="../js/modest_maps/modestmaps.js"></script>
     <script type="text/javascript" src="../js/modest_maps/markerclip.js"></script>
-    <script type="text/javascript" src="../js/paperjs/lib/paper_new.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     
+    <script type="text/javascript" src="../js/paperjs/lib/paper_new.js"></script>
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" />
     <script type="text/javascript">            
             // Globals for drawn paths
             var paths = [];
@@ -240,11 +240,9 @@
                     }
                     
                     if (!draw_on && paths.length > 0) {
-                        //a is not defined
                         for (var i = 0; i < paths.length; i++) {
                             hitResults[i] = event.point.isInside(paths[i].bounds);
                             if (hitResults[i]) {
-                                console.log('hi');
                                 $('#canvas').css({cursor: 'move'});
                             }
                         }
@@ -350,18 +348,7 @@
                     
                     activeDrag = null;
                 }
-                
-                
-                
-                /*
-                var circ = new Path.Circle(new Point(100,100),20);
-                circ.fillColor = 'red';
-                circ.onMouseEnter = function () {
-                    this.fillColor='blue';
-                    $('#canvas').css({cursor: 'move'});
-                }
-                */
-                                
+                                                
                 map.addCallback('zoomed', function() {     
                     console.log('zoomed');                   
                     scalePaths(zoomed_in);
@@ -384,48 +371,8 @@
             }
     </script>
     <style type="text/css">
-        body {
-          background: #fff;
-          color: #000;
-          font-family: Helvetica, sans-serif;
-          margin: 0;
-          padding: 20px;
-          border: 0;
-        }
-        #map {
-          width: 1000px;
-          height: 500px;
-          position: absolute;
-          z-index:1;
-        }
-        
-        #canvas {
-            position: absolute;
-            z-index: 2;
-        }
-        
-        .menu {
-            width: 200px;
-            padding: 5px;
-            margin: 0px 0px 10px 0px;
-            font-size: 10px;
-        }
-        
-        div#container {
-          width: 1000px;
-          height: 500px;
-        }
-        
-        p#footer {
-            margin-top: 25px;
-            font-size: 75%;
-            color: #444;
-            text-align: center;
-        }
-        
-        span#zoom-buttons {
-            padding-right: 10px;
-        }
+        @import url(style.css);
+        @import url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css);
     </style>
 </head>
     <body>
