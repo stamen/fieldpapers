@@ -7,11 +7,20 @@ body
     color: black;
 }
 
-h1, h2, h3, p, form, ol, ul, li, blockquote
+h1, h2, h3, p, form, ol, ul, blockquote, #news
 {
     margin: 1em auto;
     width: 408px;
 }
+
+#news
+{
+    padding: 1px 10px;
+    border-radius: 4px;
+    background: #09f;
+}
+
+    #news * { color: white; }
 
 h1
 {
@@ -44,7 +53,7 @@ h3
     font-size: 1.6em;
 }
 
-p, ol, ul, li, blockquote, table
+p, ol, ul, blockquote, table
 {
     font-size: 1.5em;
 }

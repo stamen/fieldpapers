@@ -6,28 +6,12 @@
     require_once 'data.php';
     require_once 'lib.compose.php';
     
-    $is_json = false;
-
-    foreach(getallheaders() as $header => $value)
-    {
-        if(strtolower($header) == 'content-type')
-        {
-            $is_json = preg_match('#\b(text|application)/json\b#i', $value);
-        }
-    }
-    
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
         $dbh =& get_db_connection();
         $dbh->query('START TRANSACTION');
         
-        if($is_json) {
-            $json = json_decode(file_get_contents('php://input'), true);
-            $print = compose_from_geojson($dbh, file_get_contents('php://input'));
-
-        } else {
-            $print = compose_from_postvars($dbh, $_POST);
-        }
+        $print = compose_from_fields($dbh, $_POST);
         
         $dbh->query('COMMIT');
         
