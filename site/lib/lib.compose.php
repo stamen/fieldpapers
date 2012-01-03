@@ -157,6 +157,8 @@
         //
         // Write me! Use compose_from_geojson() below as a guide.
         //
+        header('Content-Type: text/plain');
+        print_r($post);
         exit(1);
         
         return $print;
