@@ -80,6 +80,8 @@
     
    /**
     * Convert an array of form fields to an atlas composition and queue it up.
+    *
+    * This should be removed soon, along with compose-print-old.php.
     */
     function compose_from_fields(&$dbh, $form)
     {
@@ -143,6 +145,19 @@
     
         $message['print_id'] = $print['id'];
         add_message($dbh, json_encode($message));
+        
+        return $print;
+    }
+    
+   /**
+    * Convert an array of form fields to an atlas composition and queue it up.
+    */
+    function compose_from_postvars(&$dbh, $post)
+    {
+        //
+        // Write me! Use compose_from_geojson() below as a guide.
+        //
+        exit(1);
         
         return $print;
     }

@@ -26,7 +26,7 @@
             $print = compose_from_geojson($dbh, file_get_contents('php://input'));
 
         } else {
-            $print = compose_from_fields($dbh, $_POST);
+            $print = compose_from_postvars($dbh, $_POST);
         }
         
         $dbh->query('COMMIT');
