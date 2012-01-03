@@ -216,12 +216,13 @@
         var form, submit_button, extent_inputs = [];
 
         function onSubmitClick(e) {
+            console.log(pages);
             submit_button.className = "working";
             submit_button.disabled = true;
             console.log("updating inputs...");
             updateExtentInputs(function(len) {
                 console.log("done updating inputs!");
-                submit_button.disabled = false;
+                submit_button.disabled = false;                
                 form.submit();
             });
             return MM.cancelEvent(e);
@@ -253,6 +254,18 @@
                 input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
                 // TODO: append input to form
                 if (++index == len) {
+                    // Appending paper size to the form
+                    var orient = $("#paper-orient"),
+                        size = $("#paper-size");
+                        width = paper_sizes[[size.val(), orient.val()].join(":")].width,
+                        height = paper_sizes[[size.val(), orient.val()].join(":")].height;
+                
+                    var paper_size = form.appendChild(input);
+                    paper_size.setAttribute("type", "hidden");
+                    //input2.name = "pages[" + index + "]";
+                    paper_size.name = "paper_size";
+                    paper_size.value = [width,height];
+                    
                     clearInterval(updateExtentInputs.interval);
                     if (callback) {
                         callback.call(null, len);
