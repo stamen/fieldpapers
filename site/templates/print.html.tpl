@@ -46,7 +46,7 @@
             {include file="$language/print-info.htmlf.tpl"}
         
             {if $print.zoom && !$print.geotiff_url}
-                <form action="{$base_dir}/compose-print.php" method="post" name="bounds">
+                <form action="{$base_dir}/compose-print-old.php" method="post" name="bounds">
                     <p>
                         <input name="north" type="hidden" value="{$print.north|escape}" />
                         <input name="south" type="hidden" value="{$print.south|escape}" />

@@ -6,6 +6,7 @@
 		<button type="submit" class="{if $language == "en"}selected{/if}" name="language" value="en">English</button>
 		<button type="submit" class="{if $language == "es"}selected{/if}" name="language" value="es">Español</button>
 		<button type="submit" class="{if $language == "fr"}selected{/if}" name="language" value="fr">Français</button>
+		<button type="submit" class="{if $language == "id"}selected{/if}" name="language" value="id">Bahasa Indonesia</button>
 		<button type="submit" class="{if $language == "it"}selected{/if}" name="language" value="it">Italiano</button>
 		<button type="submit" class="{if $language == "ja"}selected{/if}" name="language" value="ja">日本語</button>
 		<button type="submit" class="{if $language == "nl"}selected{/if}" name="language" value="nl">Nederlands</button>
