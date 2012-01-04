@@ -154,14 +154,128 @@
     */
     function compose_from_postvars(&$dbh, $post)
     {
-        //
-        // Write me! Use compose_from_geojson() below as a guide.
-        //
         header('Content-Type: text/plain');
-        print_r($post);
-        exit(1);
+        
+        $extents = $post['pages']; // [northwest.lat, southeast.lat, southeast.lon, northwest.lon]
+        $page_zoom = $post['page_zoom']; // Set a default?
+        $paper_size = $post['paper_size'];
+        $orientation = $post['orientation'];
+        list($width,$height) = get_paper_dimensions($paper_size, $orientation);
+        $paper_aspect = $width/$height;
+        
+        // We have all of the information. Make some pages.
+        /*
+        $message = array('action' =>            'compose',
+                         'paper_size' =>        $paper_size,
+                         'orientation' =>       $orientation,
+                         'page_dimensions' =>   array($width, $height),
+                         'page_zoom' =>         $page_zoom,
+                         'pages' =>             $extents);
+                         
+        */
+        /*
+        $message = array('action' =>            'compose',
+                         'paper_size' =>        $paper_size,
+                         'orientation' =>       $orientation,
+                         'pages' =>             array('zoom' => $page_zoom,
+                                                      'number' => $page['page_number']
+                                                      'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',
+                                                      'bounds' => array($page['north'], $page['west'], $page['south'], $page['east'])
+                                                     )
+                        );
+        */
+        
+        /*
+        $message = array('action' =>            'compose',
+                         'paper_size' =>        strtolower($paper_size),
+                         'orientation' =>       $orientation,
+                         'pages' =>             array('zoom' => $page_zoom,
+                                                      'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',
+                                                      'bounds' => $extents
+                                                     )
+                        );
+        */               
+        $message = array('action' =>            'compose',
+                         'paper_size' =>        strtolower($paper_size),
+                         'orientation' =>       $orientation,
+                         'pages' =>             array()
+                        );            
+        
+                       
+        //print_r($message);
+        
+        $print = add_print(&$dbh, 'nobody');  // 'Nobody' is the user_id; site/lib/data.php
+        
+        $print['paper_size'] = $message['paper_size'];
+        $print['orientation'] = $message['orientation'];
+        
+        // Using the first page
+        $print['north'] = $extents[0][0];
+        $print['south'] = $extents[0][2];
+        $print['east'] = $extents[0][3];
+        $print['west'] = $extents[0][1];
+        
+        foreach($extents as $key => $value) {
+            //print_r($value);
+            //print_r(gettype($message['pages']));
+            $message['pages'][] = array('zoom' => intval($page_zoom),
+                                        'number' => $key + 1,
+                                        'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 
+                                        'bounds' => array_map('floatval', explode(',', $value))
+                                        );
+        }
+        
+        
+        foreach($message['pages'] as $key => $value) {
+            $number = $key + 1;
+            $page = add_print_page($dbh, $print['id'], $number);
+            
+            $page['zoom'] = $value['zoom'];
+
+            $_page = $value['bounds'];
+            
+            $page['north'] = $_page[0];
+            $page['south'] = $_page[2];
+            $page['east'] = $_page[3];
+            $page['west'] = $_page[1];
+            
+            $page['provider'] = $value['provider'];
+            
+            set_print_page($dbh, $page);
+         
+            $print['north'] = max($print['north'],$page['north']);
+            $print['south'] = max($print['south'],$page['south']);
+            $print['west'] = max($print['west'],$page['west']);
+            $print['east'] = max($print['east'],$page['east']);
+        }
+        
+        set_print($dbh, $page);
+        $message['print_id'] = $print['id'];
+        //print_r($message);
+        add_message($dbh, json_encode($message));
+        
+        //print_r(json_encode($message));
+        //exit(1);
         
         return $print;
+    }
+    
+    function get_paper_dimensions($paper_size, $orientation='portrait')
+    {
+        switch ($paper_size) {
+            case "letter":
+                $paper_size = "LTR";
+                break;
+            case "tabloid":
+                $paper_size = "TAB";
+                break;
+            default:
+                // TODO: throw an error
+                // die_with_code(500, sprintf('Invalid paper size: "%s"', $paper_size));
+        }
+        $width = constant(sprintf("PAPER_%s_%s_WIDTH", strtoupper($orientation), $paper_size));
+        $height = constant(sprintf("PAPER_%s_%s_HEIGHT", strtoupper($orientation), $paper_size));
+        return array($width, $height);
     }
     
    /**

@@ -220,6 +220,9 @@
             submit_button.className = "working";
             submit_button.disabled = true;
             console.log("updating inputs...");
+            
+            $("#page_zoom").val(page_zoom);
+            
             updateExtentInputs(function(len) {
                 console.log("done updating inputs!");
                 submit_button.disabled = false;                
@@ -240,36 +243,44 @@
                 }
             }
             function updateInput() {
-                var page = pages[index],
-                    northwest = map.coordinateLocation(page.coord_top_left),
-                    southeast = map.coordinateLocation(page.coord_bottom_right);
-
-                var input = extent_inputs[index];
-                if (!input) {
-                    input = form.appendChild(document.createElement("input"));
-                    input.setAttribute("type", "hidden");
-                    input.name = "pages[" + index + "]";
-                    extent_inputs[index] = input;
-                }
-                input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
-                // TODO: append input to form
-                if (++index == len) {
+                if (index == len) {
                     // Appending paper size to the form
+                    /*
                     var orient = $("#paper-orient"),
-                        size = $("#paper-size");
+                        size = $("#paper-size"),
                         width = paper_sizes[[size.val(), orient.val()].join(":")].width,
                         height = paper_sizes[[size.val(), orient.val()].join(":")].height;
                 
-                    var paper_size = form.appendChild(input);
-                    paper_size.setAttribute("type", "hidden");
-                    //input2.name = "pages[" + index + "]";
-                    paper_size.name = "paper_size";
-                    paper_size.value = [width,height];
+                    var paper_info = form.appendChild(input);
+                    paper_info.setAttribute("type", "hidden");
+                    paper_info.name = "paper_info";
+                    paper_info.value = [width,height,orient.val(),size.val()];
+                    */
                     
                     clearInterval(updateExtentInputs.interval);
                     if (callback) {
                         callback.call(null, len);
                     }
+                } else {
+                
+                    var page = pages[index],
+                        northwest = map.coordinateLocation(page.coord_top_left),
+                        southeast = map.coordinateLocation(page.coord_bottom_right);
+    
+                    var input = extent_inputs[index];
+                    if (!input) {
+                        input = form.appendChild(document.createElement("input"));
+                        input.setAttribute("type", "hidden");
+                        input.name = "pages[" + index + "]";
+                        extent_inputs[index] = input;
+                    }
+                    //input.value = [northwest.lat, southeast.lat, southeast.lon, northwest.lon].join(",");
+                    input.value = [northwest.lat, northwest.lon, southeast.lat, southeast.lon].join(",");
+                    
+                    // TODO: append input to form
+                    console.log('updateInput: ', index);
+                    
+                    index++;
                 }
             }
             return updateExtentInputs.interval = setInterval(updateInput, 10);
@@ -386,44 +397,51 @@
     <body onload="initMap()">
         <h1>Field Papers: Atlas Page Selector</h1>
 
-        <div id="controls">
-            <p>
-                <label for="paper-size">Paper size: <select id="paper-size">
-                    <option value="A3" selected>A3</option>
-                    <option value="A4">A4</option>
-                    <option value="letter">Letter</option>
-                    <option value="tabloid">Tabloid</option>
-                </select></label>
-                <label for="paper-orient">orientation: <select id="paper-orient">
-                    <option value="landscape" selected>landscape</option>
-                    <option value="portrait">portrait</option>
-                </select></label>
-                Page zoom: <span id="page-zoom"></span>
-                <strong id="page-count"></strong> page(s)
-            </p>
-        </div>
-
-        <div id="container">
-            <div id="preview">
-                <div class="padding">
-                    <h2 style="text-align: center">Field Papers Preview</h2>
-                    <div id="preview_map"></div>
-                </div>
-            </div>
-            <div id="map">
-                <div id="extent" class="map-extent">
-                    <div id="pages"></div>
-                    <span id="nw-label" class="label label-northwest"></span>
-                    <span id="se-label" class="label label-southeast"></span>
-                </div>
-
-                <canvas id="mask"></canvas>
-            </div>
-        </div>
-
         <form id="submit" method="post" action="../../compose-print.php">
-            <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"> <button id="show-extent">zoom to extent</button> <button id="fit-to-view">fit to current view</button></p>
-            <p><input type="submit" value="submit"></p>
+            <div id="controls">
+                <p>
+                    <input type="hidden" name="action" value="compose">
+                    <input type="hidden" id="page_zoom" name="page_zoom">
+
+                    <label for="paper-size">Paper size: <select id="paper-size" name="paper_size">
+                        <option value="A3" selected>A3</option>
+                        <option value="A4">A4</option>
+                        <option value="letter">Letter</option>
+                        <option value="tabloid">Tabloid</option>
+                    </select></label>
+
+                    <label for="paper-orient">orientation: <select id="paper-orient" name="orientation">
+                        <option value="landscape" selected>landscape</option>
+                        <option value="portrait">portrait</option>
+                    </select></label>
+
+                    Page zoom: <span id="page-zoom"></span>
+                    <strong id="page-count"></strong> page(s)
+                </p>
+            </div>
+    
+            <div id="container">
+                <div id="preview">
+                    <div class="padding">
+                        <h2 style="text-align: center">Field Papers Preview</h2>
+                        <div id="preview_map"></div>
+                    </div>
+                </div>
+                <div id="map">
+                    <div id="extent" class="map-extent">
+                        <div id="pages"></div>
+                        <span id="nw-label" class="label label-northwest"></span>
+                        <span id="se-label" class="label label-southeast"></span>
+                    </div>
+    
+                    <canvas id="mask"></canvas>
+                </div>
+            </div>
+
+            <div id="finish">
+                <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"> <button id="show-extent">zoom to extent</button> <button id="fit-to-view">fit to current view</button></p>
+                <p><input type="submit" value="submit"></p>
+            </div>
         </form>
     </body>
 </html>
