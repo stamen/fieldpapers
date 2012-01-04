@@ -8,6 +8,7 @@
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
+    require_once 'lib.auth.php';
     require_once 'Net/URL.php';
     
     $url = $_GET['url'] ? $_GET['url'] : null;
