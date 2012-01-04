@@ -156,55 +156,21 @@
     {
         header('Content-Type: text/plain');
         
-        $extents = $post['pages']; // [northwest.lat, southeast.lat, southeast.lon, northwest.lon]
+        $extents = $post['pages'];
         $page_zoom = $post['page_zoom']; // Set a default?
         $paper_size = $post['paper_size'];
         $orientation = $post['orientation'];
         list($width,$height) = get_paper_dimensions($paper_size, $orientation);
         $paper_aspect = $width/$height;
         
-        // We have all of the information. Make some pages.
-        /*
-        $message = array('action' =>            'compose',
-                         'paper_size' =>        $paper_size,
-                         'orientation' =>       $orientation,
-                         'page_dimensions' =>   array($width, $height),
-                         'page_zoom' =>         $page_zoom,
-                         'pages' =>             $extents);
-                         
-        */
-        /*
-        $message = array('action' =>            'compose',
-                         'paper_size' =>        $paper_size,
-                         'orientation' =>       $orientation,
-                         'pages' =>             array('zoom' => $page_zoom,
-                                                      'number' => $page['page_number']
-                                                      'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',
-                                                      'bounds' => array($page['north'], $page['west'], $page['south'], $page['east'])
-                                                     )
-                        );
-        */
-        
-        /*
-        $message = array('action' =>            'compose',
-                         'paper_size' =>        strtolower($paper_size),
-                         'orientation' =>       $orientation,
-                         'pages' =>             array('zoom' => $page_zoom,
-                                                      'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',
-                                                      'bounds' => $extents
-                                                     )
-                        );
-        */               
+        // We have all of the information. Make some pages.       
         $message = array('action' =>            'compose',
                          'paper_size' =>        strtolower($paper_size),
                          'orientation' =>       $orientation,
                          'pages' =>             array()
                         );            
         
-                       
-        //print_r($message);
-        
-        $print = add_print(&$dbh, 'nobody');  // 'Nobody' is the user_id; site/lib/data.php
+        $print = add_print(&$dbh, 'nobody');
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
@@ -216,15 +182,12 @@
         $print['west'] = $extents[0][1];
         
         foreach($extents as $key => $value) {
-            //print_r($value);
-            //print_r(gettype($message['pages']));
             $message['pages'][] = array('zoom' => intval($page_zoom),
                                         'number' => $key + 1,
                                         'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 
                                         'bounds' => array_map('floatval', explode(',', $value))
                                         );
         }
-        
         
         foreach($message['pages'] as $key => $value) {
             $number = $key + 1;
@@ -251,12 +214,8 @@
         
         set_print($dbh, $page);
         $message['print_id'] = $print['id'];
-        //print_r($message);
         add_message($dbh, json_encode($message));
-        
-        //print_r(json_encode($message));
-        //exit(1);
-        
+                
         return $print;
     }
     
