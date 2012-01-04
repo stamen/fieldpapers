@@ -3,7 +3,10 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 
     id          VARCHAR(8) NOT NULL,
-    `name`      VARCHAR(32) NOT NULL,
+
+    `name`      VARCHAR(32) NULL,
+    `password`  VARCHAR(40) NULL,
+    email       VARCHAR(255) NULL,
     
     created     TIMESTAMP,
     
