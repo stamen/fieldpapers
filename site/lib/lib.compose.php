@@ -34,6 +34,19 @@
         return true;
     }
     
+    function get_paper_dimensions($paper_size, $orientation)
+    {
+        $size_names = array('letter' => 'ltr', 'a3' => 'a3', 'a4' => 'a4');
+
+        $oerientation = strtoupper($orientation);
+        $paper_size = strtoupper($size_names[$paper_size]);
+    
+        $width = constant("PAPER_{$orientation}_{$paper_size}_WIDTH");
+        $height = constant("PAPER_{$orientation}_{$paper_size}_HEIGHT");
+
+        return array($width, $height);
+    }
+    
    /**
     * Return a four-element geographic bbox for a point and zoom.
     */
@@ -160,8 +173,9 @@
         $page_zoom = $post['page_zoom']; // Set a default?
         $paper_size = $post['paper_size'];
         $orientation = $post['orientation'];
-        list($width,$height) = get_paper_dimensions($paper_size, $orientation);
-        $paper_aspect = $width/$height;
+
+        list($width, $height) = get_paper_dimensions($paper_size, $orientation);
+        $paper_aspect = $width / $height;
         
         // We have all of the information. Make some pages.       
         $message = array('action' =>            'compose',
@@ -219,24 +233,6 @@
         return $print;
     }
     
-    function get_paper_dimensions($paper_size, $orientation='portrait')
-    {
-        switch ($paper_size) {
-            case "letter":
-                $paper_size = "LTR";
-                break;
-            case "tabloid":
-                $paper_size = "TAB";
-                break;
-            default:
-                // TODO: throw an error
-                // die_with_code(500, sprintf('Invalid paper size: "%s"', $paper_size));
-        }
-        $width = constant(sprintf("PAPER_%s_%s_WIDTH", strtoupper($orientation), $paper_size));
-        $height = constant(sprintf("PAPER_%s_%s_HEIGHT", strtoupper($orientation), $paper_size));
-        return array($width, $height);
-    }
-    
    /**
     * Convert a string of GeoJSON data to an atlas composition and queue it up.
     */
@@ -260,12 +256,8 @@
         $orientation = (is_array($p) && isset($p['orientation'])) ? $p['orientation'] : 'portrait';
         $paper_type = "{$orientation}, {$paper_size}";
         
-        if($paper_type == 'portrait, letter') {
-            $paper_aspect = PAPER_PORTRAIT_LTR_WIDTH / PAPER_PORTRAIT_LTR_HEIGHT;
-        
-        } else {
-            die_with_code(500, "I don't know how to do this yet, sorry.");
-        }
+        list($paper_width, $paper_height) = get_paper_dimensions($paper_size, $orientation);
+        $paper_aspect = $paper_width / $paper_height;
         
         $message = array('action' => 'compose',
                          'paper_size' => $paper_size,
