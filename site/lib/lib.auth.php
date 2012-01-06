@@ -103,7 +103,7 @@
     */
     function check_user_password(&$dbh, $user_id, $password)
     {
-        $q = sprintf('SELECT %s = SHA1(password)
+        $q = sprintf('SELECT password = SHA1(%s)
                       FROM users
                       WHERE id = %s
                       LIMIT 1',
