@@ -27,6 +27,9 @@
                 die('User name exists.');
             }
             
+            $_SESSION['user'] = $registered_user;
+            $_SESSION['logged-in'] = true;
+            
             break;
         
         case 'log in':
@@ -42,74 +45,32 @@
                 die('That\'s not the correct password!');
             }
         
+            $_SESSION['user'] = $registered_user;
+            $_SESSION['logged-in'] = true;
         
             break;
             
         case 'log out':
+            $_SESSION['user'] = false;
+            $_SESSION['logged-in'] = false;
+            
             break;
-    }
-       
-    if (false && $_POST['username'])
-    {
-        // Check to see if the user exists
-        /*
-        $q = sprintf('SELECT id FROM users WHERE name=%s;', $dbh->quoteSmart($_POST['username'])); // Do this each time
-        $res = $dbh->query($q);
-        $existing_user_id = $res->fetchRow(DB_FETCHMODE_ASSOC);
-        */
-        
-        
-        
-        if ($existing_user_id['id']) {
-            // Check the user's password
-            $correct_password = check_user_password($dbh, $existing_user_id['id'], $_POST['password']); // boolean
-            
-            if($correct_password) {
-                $_SESSION['username'] = $_POST['username'];
-                $_SESSION['user-id'] = $existing_user_id['id'];
-                
-                echo 'Welcome back, ' . $_POST['username'] . '!<br><br>';
-                
-                $user = get_user($dbh, $existing_user_id['id']);
-                $user['name'] = $_POST['username'];
-                $user['password'] = $_POST['password'];
-                $user['email'] = $_POST['email'];
-                set_user($dbh, $user);
-            } else {
-                $_SESSION['username'] = $_POST['username'];
-                echo 'Sorry ' . $_POST['username'] . ', your password is incorrect. Please try again.<br><br>';
-            }
-        } else {
-            // Register
-            $added_user = add_user($dbh);
-            
-            $user = get_user($dbh, $added_user['id']);
-            $user['name'] = $_POST['username'];
-            $user['password'] = $_POST['password'];
-            $user['email'] = $_POST['email'];
-            set_user($dbh, $user);
-            
-            $_SESSION['username'] = $_POST['username'];
-            $_SESSION['user-id'] = $added_user['id'];
-            echo 'Welcome to Field Papers, ' . $_POST['username'] . '!<br><br>';
-        }
     }
 ?>
 <html>
     <head>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script type="text/javascript">
-        /*
-            $(document).ready(function() {
-                $("#login_button").click(function() {
-                    $('form#user_form').attr({action:"login.php"});
-                    $('form#user_form').submit();
-                });
-            });
-            */
-        </script>
-    </head>
+        <title>Welcome</title>
     <body>
+    
+    <? if($_SESSION['logged-in']) { ?>
+    
+    <!-- otherwise, user is logged in -->
+    <form id='logout_form' method='POST' action='login.php'>
+        <input type='submit' id="login_button" value='Log Out'>
+        <input type='hidden' name='action' value='log out'>
+    </form>
+    
+    <? } else { ?>
     
     <!-- if the user is not logged in -->
     <form id='login_form' method='POST' action='login.php'>
@@ -128,11 +89,10 @@
         <input type='hidden' name='action' value='register'>
     </form>
     
-    <!-- otherwise, user is logged in -->
-    <form id='logout_form' method='POST' action='login.php'>
-        <input type='submit' id="login_button" value='Log Out'>
-        <input type='hidden' name='action' value='log out'>
-    </form>
+    <? } ?>
     
+    <pre>
+        <?php print_r($_SESSION); ?>
+    </pre>
     </body>
 </html>
