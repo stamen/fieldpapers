@@ -1,5 +1,7 @@
 <?php
 
+    require_once 'data.php';
+
     function add_user(&$dbh)
     {
         while(true)
@@ -75,8 +77,16 @@
     
             $res = $dbh->query($q);
             
-            if(PEAR::isError($res))
+            if(PEAR::isError($res)) 
+            {
+                if($res->getCode() == DB_ERROR_ALREADY_EXISTS)
+                {
+                    log_error('dying because of a duplicate user name');
+                    die();
+                }
+    
                 die_with_code(500, "{$res->message}\n{$q}\n");
+            }
         }
 
         return get_user($dbh, $user['id']);
