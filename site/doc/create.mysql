@@ -10,7 +10,8 @@ CREATE TABLE users (
     
     created     TIMESTAMP,
     
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE INDEX name (name)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
