@@ -45,6 +45,23 @@
         return $res->fetchRow(DB_FETCHMODE_ASSOC);
     }
     
+    function get_user_by_name(&$dbh, $user_name)
+    {
+        $q = sprintf('SELECT id, name,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
+                      FROM users
+                      WHERE name = %s',
+                     $dbh->quoteSmart($user_name));
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        return $res->fetchRow(DB_FETCHMODE_ASSOC);
+    }
+    
     function set_user(&$dbh, $user)
     {
         $old_user = get_user($dbh, $user['id']);
