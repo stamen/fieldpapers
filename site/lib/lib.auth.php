@@ -98,8 +98,7 @@
             {
                 if($res->getCode() == DB_ERROR_ALREADY_EXISTS)
                 {
-                    log_error('dying because of a duplicate user name');
-                    die();
+                    return false;
                 }
     
                 die_with_code(500, "{$res->message}\n{$q}\n");
