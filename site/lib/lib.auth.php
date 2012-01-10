@@ -146,4 +146,49 @@
         return $match[0] ? true : false;
     }
     
+   /**
+    * Functions below all assume that session_start() has already been called.
+    */
+
+   /**
+    * Return false if $_SESSION['logged-in'] is false, true otherwise.
+    */
+    function is_logged_in()
+    {
+    }
+    
+   /**
+    * Return user array from get_user() based on content
+    * of $_SESSION['user'], or false if it's empty.
+    */
+    function cookied_user(&$dbh)
+    {
+    }
+    
+   /**
+    * Set $_SESSION['logged-in'] to true and populate $_SESSION['user'] from DB.
+    */
+    function login_user(&$dbh, $user_id)
+    {
+    }
+    
+   /**
+    * Set $_SESSION['logged-in'] to false and erase $_SESSION['user'].
+    */
+    function logout_user()
+    {
+    }
+    
+   /**
+    * For a visitor who's never been seen before, make up a new user_id in the
+    * database with add_user() and track that person via $_SESSION['user'] that
+    * doesn't have name or email.
+    *
+    * For a visitor who has a $_SESSION['user'] id, just make sure
+    * it's valid and create a new one if it's not (see above).
+    */
+    function remember_user(&$dbh)
+    {
+    }
+    
 ?>
