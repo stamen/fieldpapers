@@ -11,6 +11,12 @@
     
     $dbh =& get_db_connection();
     
+    // Remember user even if they don't log in
+    if (!cookied_user($dbh))
+    {
+        remember_user($dbh);
+    }
+           
     switch($_POST['action'])
     {
         case 'register':
@@ -19,9 +25,9 @@
                 die('Passwords do not match. Please try again.');
             }
         
-            $registered_user = get_user_by_name($dbh, $_POST['username']);
+            $prev_registered_user = get_user_by_name($dbh, $_POST['username']);
             
-            if($registered_user)
+            if($prev_registered_user)
             {
                 die('Username exists.');
             }
@@ -36,7 +42,7 @@
                 die('Someone has already registered with that email address.');
             }
             
-            $new_user = add_user($dbh);
+            $new_user = get_user($dbh, $_SESSION['user']['id']);
             
             $new_user['name'] = $_POST['username'];
             $new_user['email'] = $_POST['email'];
@@ -53,8 +59,7 @@
             $q = sprintf('UPDATE users SET hash=%s WHERE name=%s', $dbh->quoteSmart($hash), $dbh->quoteSmart($_POST['username']));
             $res = $dbh->query($q);   
             
-            $_SESSION['user'] = $registered_user;
-            $_SESSION['logged-in'] = true;
+            login_user_by_id($dbh, $registered_user);
             
             $to = $_POST['email'];
             $subject = 'Field Papers Verification';
@@ -86,16 +91,13 @@
             {
                 die('That\'s not the correct password!');
             }
-        
-            $_SESSION['user'] = $registered_user;
-            $_SESSION['logged-in'] = true;
+            
+            login_user_by_name($dbh, $registered_user);
         
             break;
             
         case 'log out':
-        
-            $_SESSION['user'] = false;
-            $_SESSION['logged-in'] = false;
+            logout_user();
             
             break;
     }
@@ -105,7 +107,7 @@
         <title>Welcome</title>
     <body>
     
-    <? if($_SESSION['logged-in']) { echo $_POST['username'] . ' is logged in.';?>
+    <? if(is_logged_in()) { echo $_POST['username'] . ' is logged in.';?>
     
         <!-- otherwise, user is logged in -->
         <form id='logout_form' method='POST' action='login.php'>
