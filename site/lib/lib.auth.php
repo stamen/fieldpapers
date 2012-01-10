@@ -27,7 +27,7 @@
             return get_user($dbh, $user_id);
         }
     }
-    
+        
     function get_user(&$dbh, $user_id)
     {
         $q = sprintf('SELECT id, name,
@@ -155,6 +155,7 @@
     */
     function is_logged_in()
     {
+        return !$_SESSION['logged-in'] ? false : true;
     }
     
    /**
@@ -163,13 +164,24 @@
     */
     function cookied_user(&$dbh)
     {
+        return get_user($dbh, $_SESSION['user']['id']) ? get_user($dbh, $_SESSION['user']['id']) : false;    
     }
     
    /**
     * Set $_SESSION['logged-in'] to true and populate $_SESSION['user'] from DB.
     */
-    function login_user(&$dbh, $user_id)
+    
+    function login_user_by_id(&$dbh, $user_id)
     {
+        $_SESSION['logged-in'] = true; 
+        $_SESSION['user'] = get_user($dbh, $user_id);
+    }
+    
+    
+    function login_user_by_name(&$dbh, $user)
+    {
+        $_SESSION['logged-in'] = true;
+        $_SESSION['user'] = get_user_by_name($dbh, $user);
     }
     
    /**
@@ -177,6 +189,8 @@
     */
     function logout_user()
     {
+        $_SESSION['logged-in'] = false;
+        unset($_SESSION['user']);
     }
     
    /**
@@ -189,6 +203,17 @@
     */
     function remember_user(&$dbh)
     {
+        // Need to test $_SESSION['user']['id'] instead?
+        if ($_SESSION['user'])
+        {
+            //print_r($_SESSION['user']['id']);
+            if (!get_user($dbh, $_SESSION['user']))
+            {
+                $_SESSION['user'] = add_user($dbh);
+            }
+        } else {            
+            $_SESSION['user'] = add_user($dbh);
+        }
     }
     
 ?>
