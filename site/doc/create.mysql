@@ -7,8 +7,10 @@ CREATE TABLE users (
     `name`      VARCHAR(32) NULL,
     `password`  VARCHAR(40) NULL,
     email       VARCHAR(255) NULL,
+    hash        VARCHAR(32) NOT NULL,
     
     created     TIMESTAMP,
+    activated   TIMESTAMP DEFAULT 0,
     
     PRIMARY KEY (id),
     UNIQUE INDEX name (name)
