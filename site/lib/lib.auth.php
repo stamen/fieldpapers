@@ -155,7 +155,7 @@
     */
     function is_logged_in()
     {
-        return !$_SESSION['logged-in'] ? false : true;
+        return $_SESSION['logged-in'] ? true : false;
     }
     
    /**
@@ -174,14 +174,22 @@
     function login_user_by_id(&$dbh, $user_id)
     {
         $_SESSION['logged-in'] = true; 
-        $_SESSION['user'] = get_user($dbh, $user_id);
+        
+        
+        if (get_user($dbh, $user_id))
+        {
+            $_SESSION['user'] = get_user($dbh, $user_id);
+        }
     }
-    
     
     function login_user_by_name(&$dbh, $user)
     {
         $_SESSION['logged-in'] = true;
-        $_SESSION['user'] = get_user_by_name($dbh, $user);
+        
+        if (get_user_by_name($dbh, $user))
+        {
+            $_SESSION['user'] = get_user_by_name($dbh, $user);
+        }
     }
     
    /**
