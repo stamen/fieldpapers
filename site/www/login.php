@@ -58,13 +58,16 @@
             
             $to = $_POST['email'];
             $subject = 'Field Papers Verification';
-            $message = 'Thanks for signing up for Field Papers!
             
-            Please verify your account: 
+            $url = sprintf('http://%s%s/verify.php?email=%s&hash=%s',get_domain_name(),get_base_dir(),urlencode($_POST['email']),
+            urlencode($hash));
             
-            http://fieldpapers.org/~mevans/fieldpapers/site/www/verify.php?email='.$_POST['email'].'&hash='.$hash.'
             
-            ';
+            $message = "Thanks for signing up for Field Papers!
+            
+            Please verify your account: {$url}
+            
+            ";
             
             $headers = 'From:noreply@fieldpapers.org' . "\r\n";
             mail($to, $subject, $message, $headers);
