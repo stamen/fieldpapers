@@ -12,10 +12,7 @@
     $dbh =& get_db_connection();
     
     // Remember user even if they don't log in
-    if (!cookied_user($dbh))
-    {
-        remember_user($dbh);
-    }
+    remember_user($dbh);
            
     switch($_POST['action'])
     {
@@ -59,7 +56,7 @@
             $q = sprintf('UPDATE users SET hash=%s WHERE name=%s', $dbh->quoteSmart($hash), $dbh->quoteSmart($_POST['username']));
             $res = $dbh->query($q);   
             
-            login_user_by_id($dbh, $registered_user);
+            login_user_by_id($dbh, $registered_user['id']);
             
             $to = $_POST['email'];
             $subject = 'Field Papers Verification';
@@ -92,7 +89,7 @@
                 die('That\'s not the correct password!');
             }
             
-            login_user_by_name($dbh, $registered_user);
+            login_user_by_name($dbh, $registered_user['name']);
         
             break;
             
