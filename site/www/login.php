@@ -74,6 +74,9 @@
             $headers = 'From:noreply@fieldpapers.org' . "\r\n";
             mail($to, $subject, $message, $headers);
             
+            // redirect
+            header('Location: ' . $_POST['redirect']);
+            
             break;
         
         case 'log in':
@@ -90,11 +93,15 @@
             }
             
             login_user_by_name($dbh, $registered_user['name']);
+            
+            header('Location: ' . $_POST['redirect']);
         
             break;
             
         case 'log out':
             logout_user();
+            
+            header('Location: ' . $_POST['redirect']);
             
             break;
     }
@@ -107,20 +114,28 @@
     <? if(is_logged_in()) { echo $_POST['username'] . ' is logged in.';?>
     
         <!-- otherwise, user is logged in -->
+        <b>Log out</b><br /><br />
         <form id='logout_form' method='POST' action='login.php'>
             <input type='submit' id="login_button" value='Log Out'>
             <input type='hidden' name='action' value='log out'>
+            
+            <input type='hidden' name='redirect' value='http://fieldpapers.org/~mevans/fieldpapers/site/www/'>
         </form>
     
     <? } else { ?>
     
         <!-- if the user is not logged in -->
+        <b>Log in</b><br /><br />
         <form id='login_form' method='POST' action='login.php'>
             Username: <input type='text' name='username'><br />
             Password: <input type='password' name='password'><br />
             <input type='submit' id="login_button" value='Log In'>
             <input type='hidden' name='action' value='log in'>
+            
+            <input type='hidden' name='redirect' value='http://fieldpapers.org/~mevans/fieldpapers/site/www/'>
         </form>
+        
+        <b>Register</b><br /><br />
     
         <form id='register_form' method='POST' action='login.php'>
             Email: <input type='text' name='email'><br />
@@ -129,6 +144,8 @@
             Password Again: <input type='password' name='password2'><br />
             <input type='submit' id="login_button" value='Register'>
             <input type='hidden' name='action' value='register'>
+            
+            <input type='hidden' name='redirect' value='http://fieldpapers.org/~mevans/fieldpapers/site/www/'>
         </form>
     
     <? } ?>

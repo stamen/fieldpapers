@@ -7,12 +7,16 @@
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
+    require_once 'lib.auth.php';
 
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
     enforce_master_on_off_switch($language);
 
     /**** ... ****/
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
     
     $sm = get_smarty_instance();
     $sm->assign('language', $language);
