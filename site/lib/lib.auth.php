@@ -151,11 +151,11 @@
     */
 
    /**
-    * Return false if $_SESSION['logged-in'] is false, true otherwise.
+    * Return false if $_SESSION['logged_in'] is false, true otherwise.
     */
     function is_logged_in()
     {
-        return $_SESSION['logged-in'] ? true : false;
+        return $_SESSION['logged_in'] ? true : false;
     }
     
    /**
@@ -168,12 +168,12 @@
     }
     
    /**
-    * Set $_SESSION['logged-in'] to true and populate $_SESSION['user'] from DB.
+    * Set $_SESSION['logged_in'] to true and populate $_SESSION['user'] from DB.
     */
     
     function login_user_by_id(&$dbh, $user_id)
     {
-        $_SESSION['logged-in'] = true; 
+        $_SESSION['logged_in'] = true; 
         
         
         if ($user = get_user($dbh, $user_id))
@@ -184,7 +184,7 @@
     
     function login_user_by_name(&$dbh, $user)
     {
-        $_SESSION['logged-in'] = true;
+        $_SESSION['logged_in'] = true;
         
         if ($user = get_user_by_name($dbh, $user))
         {
@@ -193,11 +193,11 @@
     }
     
    /**
-    * Set $_SESSION['logged-in'] to false and erase $_SESSION['user'].
+    * Set $_SESSION['logged_in'] to false and erase $_SESSION['user'].
     */
     function logout_user()
     {
-        $_SESSION['logged-in'] = false;
+        $_SESSION['logged_in'] = false;
         unset($_SESSION['user']);
     }
     
