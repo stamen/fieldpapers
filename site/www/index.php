@@ -10,17 +10,22 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-    
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        
+    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     $provider = is_null($_GET['provider']) ? reset(reset(get_map_providers())) : $_GET['provider'];
     $latitude = is_numeric($_GET['lat']) ? floatval($_GET['lat']) : DEFAULT_LATITUDE;
     $longitude = is_numeric($_GET['lon']) ? floatval($_GET['lon']) : DEFAULT_LONGITUDE;
     $zoom = is_numeric($_GET['zoom']) ? intval($_GET['zoom']) : DEFAULT_ZOOM;
     
-    enforce_master_on_off_switch($language);
+    //enforce_master_on_off_switch($language);
 
     /**** ... ****/
     
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
+    
+    /*
     $dbh =& get_db_connection();
     
     if($user_id)
@@ -28,6 +33,7 @@
 
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
+    */
     
     $prints = get_prints($dbh, 3);
     $scans = get_scans($dbh, 4);
