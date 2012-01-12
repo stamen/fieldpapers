@@ -1,0 +1,71 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background: #CED2C5
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+ul, ol, dl { 
+	padding: 0;
+	margin: 0 50px;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 
+	padding-right: 15px;
+	padding-left: 15px; 
+}
+a img { 
+	border: none;
+}
+
+a:link {
+	color: #36F;
+	text-decoration: underline; 
+}
+a:visited {
+	color: #339;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { 
+	text-decoration: none;
+}
+
+.container {
+	width: 95&;
+	background: #FFF;
+	margin: 0 auto; 
+}
+
+.content {
+	padding: 10px 0;
+}
+
+/* ~~ miscellaneous float/clear classes ~~ */
+.fltrt {  
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { 
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { 
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+
+.atlasPage { margin-left: 15px; float: left; margin-bottom: 15px; }
+.atlasPageCover { margin-left: 15px; float: left; margin-bottom: 15px; }
+.atlasPageIndex { margin-left: 15px; float: left; margin-bottom: 15px; }
+.atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
+
+.atlasThumb { margin-left: 15px; float: left; width: 25%; margin-bottom: 15px; }
+.atlasName {}
+.atlasPlace {}
+.atlasMeta {}
