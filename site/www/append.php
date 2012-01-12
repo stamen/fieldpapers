@@ -19,11 +19,12 @@
     $dirname = $_GET['dirname'] ? $_GET['dirname'] : null;
     $mimetype = $_GET['mimetype'] ? $_GET['mimetype'] : null;
     
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
     /**** ... ****/
     
     $dbh =& get_db_connection();
+    remember_user($dbh);
     
     /*
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
