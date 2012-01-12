@@ -14,9 +14,18 @@
 
     /**** ... ****/
     
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
+    
+    /*
     $dbh =& get_db_connection();
     
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
+    */
+    
+    $user = get_user($dbh, $_SESSION['user']['id']);  
+    
     $scan = get_scan($dbh, $scan_id);
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')

@@ -15,12 +15,17 @@
 
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    enforce_master_on_off_switch($language);
+    //enforce_master_on_off_switch($language);
 
     /**** ... ****/
     
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
+    
+    /*
     $dbh =& get_db_connection();
     
     if($user_id)
@@ -28,6 +33,7 @@
 
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
+    */
     
     $print = get_print($dbh, $print_id);
     
