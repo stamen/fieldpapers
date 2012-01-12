@@ -12,6 +12,8 @@
     <script type="text/javascript" src="{$base_dir}/index.js"></script>
 </head>
 <body>
+    {include file="header.htmlf.tpl"}
+    
     {include file="navigation.htmlf.tpl"}
     
     {include file="$language/index-features-paragraph.htmlf.tpl"}
