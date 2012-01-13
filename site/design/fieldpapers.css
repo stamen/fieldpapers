@@ -15,8 +15,8 @@ ul, ol, dl {
 }
 h1, h2, h3, h4, h5, h6, p {
 	margin-top: 0;	 
-	padding-right: 15px;
-	padding-left: 15px; 
+	padding-right: 10px;
+	padding-left: 10px; 
 }
 a img { 
 	border: none;
@@ -47,11 +47,9 @@ a:hover, a:active, a:focus {
 /* ~~ miscellaneous float/clear classes ~~ */
 .fltrt {  
 	float: right;
-	margin-left: 8px;
 }
 .fltlft { 
 	float: left;
-	margin-right: 8px;
 }
 .clearfloat { 
 	clear:both;
@@ -60,12 +58,17 @@ a:hover, a:active, a:focus {
 	line-height: 0px;
 }
 
-.atlasPage { margin-left: 15px; float: left; margin-bottom: 15px; }
-.atlasPageCover { margin-left: 15px; float: left; margin-bottom: 15px; }
-.atlasPageIndex { margin-left: 15px; float: left; margin-bottom: 15px; }
+.atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; }
+.atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
+.atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
 
-.atlasThumb { margin-left: 15px; float: left; width: 25%; margin-bottom: 15px; }
+.atlasThumb { margin-left: 10px; float: left; width: 240px; margin-bottom: 2em; }
 .atlasName {}
 .atlasPlace {}
 .atlasMeta {}
+
+.hotSpot { width: 48%; margin-left: 10px; margin-bottom: 2em; float: left; }
+
+.AtlasList {width: 75%; background-color: #ccc}
+.FieldsetList {width: 20%; background-color: #eee; margin-right: 20px;}
