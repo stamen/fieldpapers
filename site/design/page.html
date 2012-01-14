@@ -3,19 +3,114 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Untitled Document</title>
-
 <link href="fieldpapers.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-
 <div class="container">
-  <div class="content">    <p><a href="index.html">home</a> | <a href="make-set-area.html">make</a></p><p><a href="atlas.html">Atlas</a> / A2</p>
-    <p>Be aware that the CSS for these layouts is heavily commented. If you do most of your work in Design view, have a peek at the code to get tips on working with the CSS for the fixed layouts. You can remove these comments before you launch your site. To learn more about the techniques used in these CSS Layouts, read this article at Adobe's Developer Center - <a href="http://www.adobe.com/go/adc_css_layouts">http://www.adobe.com/go/adc_css_layouts</a>.</p>
-    <h2>Layout</h2>
-    <p>Since this is a one-column layout, the .content is not floated. If you add a .footer within the .container, it will simply follow the .content div. </p>
-    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-    <!-- end .content --></div>
-  <!-- end .container --></div>
+    <div class="content">
+        <p><a href="index.html">home</a> | <a href="make-set-area.html">make</a></p>
+        <h1><a href="atlas.html">AtlasName</a> / A2</h1>
+        <div class="largePage"><img src="http://paperwalking-uploads.s3.amazonaws.com/scans/4n4fnz9l/walking-paper-4n4fnz9l.jpg" alt="" name="largePageImage" width="600" style="background-color: #f0f" id="pageImage" /></div>
+        <div class="pageFields">
+            <h3>Risk Mapping</h3>
+            <form>
+                <table cellspacing="0">
+                    <tr>
+                        <td><code>Date/Time</code></td>
+                        <td>January 10, 2012, 15:06</td>
+                    </tr>
+                    <tr>
+                        <td><code>Type of Risk</code></td>
+                        <td><select name="risktype" id="risktype">
+                                <option selected="selected">Select</option>
+                                <option>Violence</option>
+                                <option>Theft</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td><code>Lighting</code></td>
+                        <td><input type="radio" name="radio" id="lighting" value="poor" />
+                            <label for="lighting">Poor</label>
+                            <br />
+                            <input type="radio" name="radio" id="lighting" value="adequate" checked="checked" />
+                            <label for="lighting">Adequate</label>
+                            <br />
+                            <input type="radio" name="radio" id="lighting" value="good" />
+                            <label for="lighting">Good</label></td>
+                    </tr>
+                    <tr>
+                        <td><code>Activity Level</code></td>
+                        <td><input type="radio" name="radio" id="activity" value="low" />
+                            <label for="activity">Low</label>
+                            <br />
+                            <input type="radio" name="radio" id="activity" value="normal" />
+                            <label for="activity">Normal</label>
+                            <br />
+                            <input type="radio" name="radio" id="activity" value="high" checked="checked" />
+                            <label for="activity">High</label></td>
+                    </tr>
+                    <tr>
+                        <td><code>Assembly</code></td>
+                        <td><input type="checkbox" name="assembly" id="assembly" />
+                            <label for="assembly">Yes</label></td>
+                    </tr>
+                    <tr>
+                        <td><code>Gangs</code></td>
+                        <td><input type="checkbox" checked="checked" name="gangs" id="gangs" />
+                            <label for="gangs">Yes</label></td>
+                    </tr>
+                    <tr>
+                        <td><code>Police</code></td>
+                        <td><input type="checkbox" name="gangs" id="gangs" />
+                            <label for="gangs">Yes</label></td>
+                    </tr>
+                    <tr>
+                        <td><code>Homelessness</code></td>
+                        <td><input type="checkbox" name="gangs" id="gangs" />
+                            <label for="gangs">Yes</label></td>
+                    </tr>
+                    <tr>
+                        <td><code>Vehicle Accidents</code></td>
+                        <td><input type="checkbox" checked="checked" name="gangs" id="gangs" />
+                            <label for="gangs">Yes</label></td>
+                    </tr>
+                    <tr>
+                        <td><code>Public Inebriation</code></td>
+                        <td><input type="checkbox" name="gangs" id="gangs" />
+                            <label for="gangs">Yes</label></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td><code>Centerpoint Lat/Lon</code></td>
+                        <td>51°16′0″N 7°11′0″E</td>
+                    </tr>
+                    <tr>
+                        <td><code>Where On Earth ID</code></td>
+                        <td><a href="http://www.flickr.com/places/info/708228">708228</a></td>
+                    </tr>
+                    <tr>
+                        <td><code>Place</code></td>
+                        <td><a href="place.html"> Wuppertal</a>, <a href="place.html">Germany</a><br />
+                            <small>On <a href="http://en.wikipedia.org/wiki/Wuppertal">Wikipedia</a></small></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Notes</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><textarea name="notes" id="notes" cols="45" rows="5"></textarea></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <!-- end .content --></div>
+    <!-- end .container --></div>
 </body>
 </html>
