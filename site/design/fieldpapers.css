@@ -18,6 +18,10 @@ h1, h2, h3, h4, h5, h6, p {
 	padding-right: 10px;
 	padding-left: 10px; 
 }
+
+small { font-size: 0.75em; }
+code { background-color: #eee; color: #333; padding: 5px; font-family: "Lucida Console", Monaco, monospace; }
+
 a img { 
 	border: none;
 }
@@ -70,5 +74,10 @@ a:hover, a:active, a:focus {
 
 .hotSpot { width: 48%; margin-left: 10px; margin-bottom: 2em; float: left; }
 
-.AtlasList {width: 75%; background-color: #ccc}
-.FieldsetList {width: 20%; background-color: #eee; margin-right: 20px;}
+.AtlasList {width: 75%;}
+.FieldsetList {width: 20%; margin-right: 20px;}
+
+.largePage { float: left; }
+.pageFields { float: left;  margin-left: 20px; }
+.pageFields table { margin-left: 10px;  }
+.pageFields td { vertical-align: top; padding: 5px; }
