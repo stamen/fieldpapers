@@ -22,9 +22,9 @@
         function initMap() {
             var center_lat = 37.77,
                 center_lon = -122.41;
+            
             var MM = com.modestmaps;
-            //var provider = new MM.TemplatedMapProvider('http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg');
-            //var provider = new MM.TemplatedMapProvider('http://fieldpapers.org/~mevans/fieldpapers/site/www/mbtiles/mbtiles.php/control-room_d65138/{Z}/{X}/{Y}.png');
+
             var name = <?php echo json_encode($_SESSION['file']);?>;
             var provider = new MM.TemplatedMapProvider('{$base_dir}/mbtiles/mbtiles.php/'  + name + '/{Z}/{X}/{Y}.png');
             console.log(name);
