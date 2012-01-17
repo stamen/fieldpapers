@@ -119,7 +119,7 @@
             <input type='submit' id="login_button" value='Log Out'>
             <input type='hidden' name='action' value='log out'>
             
-            <input type='hidden' name='redirect' value='http://fieldpapers.org/~mevans/fieldpapers/site/www/'>
+            <input type='hidden' name='redirect' value='index.php'>
         </form>
     
     <? } else { ?>
@@ -132,7 +132,7 @@
             <input type='submit' id="login_button" value='Log In'>
             <input type='hidden' name='action' value='log in'>
             
-            <input type='hidden' name='redirect' value='http://fieldpapers.org/~mevans/fieldpapers/site/www/'>
+            <input type='hidden' name='redirect' value='index.php'>
         </form>
         
         <b>Register</b><br /><br />
@@ -145,7 +145,7 @@
             <input type='submit' id="login_button" value='Register'>
             <input type='hidden' name='action' value='register'>
             
-            <input type='hidden' name='redirect' value='http://fieldpapers.org/~mevans/fieldpapers/site/www/'>
+            <input type='hidden' name='redirect' value='index.php'>
         </form>
     
     <? } ?>
