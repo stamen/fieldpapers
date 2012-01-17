@@ -20,8 +20,11 @@
         /*Query the database for an individual tile
         An individual tile is identified by zoom_level, tile_column, tile_row   
         The following query will give us access to the tile image data.*/
+        
+        // Convert
+        $converted_row = round(pow(2,$zoom) - $row - 1);
 
-        $query = "select tile_data from tiles where zoom_level='" . $zoom . "' and tile_column='" . $column . "' and tile_row='" . $row . "'";
+        $query = "select tile_data from tiles where zoom_level='" . $zoom . "' and tile_column='" . $column . "' and tile_row='" . $converted_row . "'";
                 
         $png_data = $db_mbtiles->querySingle($query);
 
