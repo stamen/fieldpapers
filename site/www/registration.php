@@ -123,7 +123,7 @@
             <input type='submit' id="login_button" value='Register'>
             <input type='hidden' name='action' value='register'>
             
-            <input type='hidden' name='redirect' value='http://fieldpapers.org/~mevans/fieldpapers/site/www/'>
+            <input type='hidden' name='redirect' value='index.php'>
             <!-- <input type='hidden' name='redirect' value=<?php echo "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];?>> -->
         </form>
     
