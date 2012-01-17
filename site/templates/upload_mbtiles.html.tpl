@@ -2,8 +2,7 @@
     <head>
         <title>Upload mbtiles</title>
         
-        <link rel="stylesheet" href="/~mevans/fieldpapers/site/www/style.css" type="text/css" />
-        <link rel="stylesheet" href="/~mevans/fieldpapers/site/www/index.css" type="text/css" />
+        <link rel="stylesheet" href="{$base_dir}/../style.css" type="text/css" />
         <script type="text/javascript" src="../atlas-ui/modest_maps/modestmaps.min.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     </head>
