@@ -7,7 +7,7 @@
             <input type='hidden' name='redirect' value={$smarty.server.PHP_SELF}>
         </form>
     {else}
-        <form id='login_form' method='POST' action='{$base_dir}/login.php'>
+        <form id='login_form' method='POST' action='{$base_dir}/../login.php'>
             <table>
                 <tbody>
                     <tr>
@@ -36,6 +36,6 @@
         </form>
         <p style="padding-left: 10px">
             <!-- {$base_dir} -->
-            <a style="text-decoration:none" href="{$base_dir}/registration.php">Register</a>
+            <a style="text-decoration:none" href="{$base_dir}/../registration.php">Register</a>
         </p>
     {/if}
