@@ -17,6 +17,16 @@
     switch($_POST['action'])
     {
         case 'register':
+            if (!$_POST['username']) 
+            {
+                die('Please provide a user name.');
+            }
+            
+            if (!$_POST['password1'])
+            {
+                die('Please provide a password.');
+            }
+            
             if ($_POST['password1'] != $_POST['password2'])
             {
                 die('Passwords do not match. Please try again.');
