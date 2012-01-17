@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{$base_dir}/index.css" type="text/css" />
 </head>
 <body>
+    {include file="header.htmlf.tpl"}
 
     {include file="navigation.htmlf.tpl"}
     

@@ -9,6 +9,7 @@
     <meta http-equiv="refresh" content="30" />
 </head>
 <body>
+    {include file="header.htmlf.tpl"}
 
     {include file="navigation.htmlf.tpl"}
     
