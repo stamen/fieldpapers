@@ -11,19 +11,27 @@
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
+    require_once 'lib.auth.php';
     
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     enforce_master_on_off_switch($language);
 
-    /**** ... ****/
+    /**** ... ****/ 
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
     
+    /*
     $dbh =& get_db_connection();
     
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
 
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
+    */
+    
+    $user = get_user($dbh, $_SESSION['user']['id']);    
     
     $dbh->query('START TRANSACTION');
     $scan = add_scan($dbh, $user['id']);
@@ -48,5 +56,4 @@
     
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("upload.html.tpl");
-
 ?>

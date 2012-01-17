@@ -9,6 +9,7 @@
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
+    require_once 'lib.auth.php';
     
     if($_GET['password'] != API_PASSWORD)
         die_with_code(401, 'Sorry, bad password');
@@ -18,11 +19,12 @@
     $dirname = $_GET['dirname'] ? $_GET['dirname'] : null;
     $mimetype = $_GET['mimetype'] ? $_GET['mimetype'] : null;
     
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
     /**** ... ****/
     
     $dbh =& get_db_connection();
+    remember_user($dbh);
     
     /*
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
