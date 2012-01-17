@@ -1,4 +1,4 @@
-<?php    
+<?php
     //Upload mbtiles to the server.
     
     $target_mbtiles_folder = "uploaded_mbtiles/";
@@ -42,6 +42,7 @@
 
     
     #map {
+        background: #000000;
         width: 500px;
         height: 400px;
         margin: 0 auto;
@@ -56,7 +57,7 @@
                 center_lon = -122.41;
             var MM = com.modestmaps;
             var name = <?php echo json_encode($_SESSION['file']);?>;
-            var provider = new MM.TemplatedMapProvider('http://fieldpapers.org/~mevans/fieldpapers/site/www/mbtiles/mbtiles.php/'  + name + '/{Z}/{X}/{Y}.png');
+            var provider = new MM.TemplatedMapProvider('mbtiles.php/'  + name + '/{Z}/{X}/{Y}.png');
             console.log(name);
             
             // Set up the main map
