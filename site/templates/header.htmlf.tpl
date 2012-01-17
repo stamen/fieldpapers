@@ -1,13 +1,13 @@
     {if $request.session.logged_in}
         <p>Signed in as <b>{$request.session.user.name}</b></p>
         
-        <form id='logout_form' method='POST' action='/~mevans/fieldpapers/site/www/login.php'>
+        <form id='logout_form' method='POST' action='{$base_dir}/login.php'>
             <input type='submit' id="login_button" value='Log Out'>
             <input type='hidden' name='action' value='log out'>
             <input type='hidden' name='redirect' value={$smarty.server.PHP_SELF}>
         </form>
     {else}
-        <form id='login_form' method='POST' action='{$base_dir}/../login.php'>
+        <form id='login_form' method='POST' action='{$base_dir}/login.php'>
             <table>
                 <tbody>
                     <tr>
@@ -35,7 +35,6 @@
             <input type='hidden' name='redirect' value={$smarty.server.PHP_SELF} >
         </form>
         <p style="padding-left: 10px">
-            <!-- {$base_dir} -->
-            <a style="text-decoration:none" href="{$base_dir}/../registration.php">Register</a>
+            <a style="text-decoration:none" href="{$base_dir}/registration.php">Register</a>
         </p>
     {/if}
