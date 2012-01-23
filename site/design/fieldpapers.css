@@ -78,6 +78,6 @@ a:hover, a:active, a:focus {
 .FieldsetList {width: 20%; margin-right: 20px;}
 
 .largePage { float: left; }
-.pageFields { float: left;  margin-left: 20px; }
-.pageFields table { margin-left: 10px;  }
-.pageFields td { vertical-align: top; padding: 5px; }
+.fieldSet {  margin-left: 20px; }
+.fieldSet table { margin-left: 10px; border: 1px solid #000; }
+.fieldSet td { vertical-align: top; padding: 10px; }
