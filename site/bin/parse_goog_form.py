@@ -55,9 +55,10 @@ text_attrs = {}
 text_label = {}
 
 for text in texts:
+    """
     if 'id' in text:
-        print 'hi'
-    
+        print 'id key in text'
+    """
     text_name_pieces = text['name'].split('.')
     text_name_map = text_name_pieces[0] + '_' + text_name_pieces[1]
             
