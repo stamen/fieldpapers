@@ -103,7 +103,7 @@ def get_form_fields(url):
     
     form_data = json.dumps(page_data, sort_keys=True,indent=4)
     
-    print form_data
+    #print form_data
     
     return form_data
     
