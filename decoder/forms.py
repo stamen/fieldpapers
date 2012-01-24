@@ -1,5 +1,6 @@
 # placeholder module for form HTML parsing.
 
+import sys
 import urllib
 from BeautifulSoup import BeautifulSoup
 
@@ -8,7 +9,7 @@ import json
 from sys import argv
 
 def get_form_fields(url):
-    """ Gets a data structure of form fields for an HTML form URL
+    """ Gets a data structure of form fields for an HTML form URL, return a dictionary.
     """
     page = urllib.urlopen(url)
     
@@ -26,9 +27,9 @@ def get_form_fields(url):
     for label in labels:
         label_contents.append({label.attrs[1][0]: label.attrs[1][1], 'contents': label.contents[0]})
     
-    ###
+    #
     # Handle text input boxes
-    ###
+    #
     textboxes = form.findAll(['input'], {"type": "text"})
     
     textbox_description = {}
@@ -46,9 +47,9 @@ def get_form_fields(url):
         
         page_data['form_contents'].append(textbox_description)
         
-    ###
+    #
     # Handle the textareas
-    ###
+    #
     textareas = form.findAll(['textarea'])
     
     textarea_description = {}
@@ -58,7 +59,7 @@ def get_form_fields(url):
             if label_contents[index]['for'] == textarea['id']:
                 textarea_description['label'] = {'contents': label_contents[index]['contents']}
                 
-        abbreviated_attributes = dict((k,v) for (k,v) in textbox.attrs if k == "name")
+        abbreviated_attributes = dict((k,v) for (k,v) in textarea.attrs if k == "name")
         abbreviated_attributes['type'] = textarea.name
         
         textarea_description = dict(textarea_description.items() + abbreviated_attributes.items())
@@ -100,15 +101,11 @@ def get_form_fields(url):
     page_data['form_contents'].append({'checkbox_groups': checkbox_questions})
     """
     
-    form_data = json.dumps(page_data, sort_keys=True,indent=4)
-    
-    # print form_data
-    
-    return form_data
+    return page_data
     
 if __name__ == '__main__':
     #script, url = argv
-
-    url = 'https://docs.google.com/spreadsheet/viewform?formkey=dEZyMnBpUG1pbXpMMGlHLWt3SlRzS0E6MQ';
     
-    get_form_fields(url)
+    form_url = len(argv) == 2 and argv[1] or 'https://docs.google.com/spreadsheet/viewform?formkey=dEZyMnBpUG1pbXpMMGlHLWt3SlRzS0E6MQ'
+    
+    json.dump(get_form_fields(form_url), sys.stdout, indent=2)
