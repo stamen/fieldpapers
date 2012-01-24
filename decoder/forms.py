@@ -36,10 +36,15 @@ def get_form_fields(url):
     for textbox in textboxes:                
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textbox['id']:
-                textbox_description['label'] = {'for': label_contents[index]['for'], 'contents': label_contents[index]['contents']}
+                textbox_description['label'] = {'contents': label_contents[index]['contents']}
+                
+        abbreviated_attributes = dict((k,v) for (k,v) in textbox.attrs if k == "type" or k == "name")
+        # abbreviated_attributes = {k : v for k in textbox.attrs} # 2.7 and above
         
-        textbox_description['attributes'] = dict(textbox.attrs)
-        page_data['form_contents'].append({'textbox': textbox_description})
+        # Merge abbreviated attributes with textbox description
+        textbox_description = dict(textbox_description.items() + abbreviated_attributes.items())
+        
+        page_data['form_contents'].append(textbox_description)
         
     ###
     # Handle the textareas
@@ -49,14 +54,20 @@ def get_form_fields(url):
     textarea_description = {}
         
     for textarea in textareas:
-        print textarea['id']
-        
+        print textarea.name
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textarea['id']:
-                textarea_description['label'] = {'for': label_contents[index]['for'], 'contents': label_contents[index]['contents']}
-        textarea_description['attributes'] = dict(textarea.attrs)
+                textarea_description['label'] = {'contents': label_contents[index]['contents']}
+                
+        abbreviated_attributes = dict((k,v) for (k,v) in textbox.attrs if k == "name")
+        abbreviated_attributes['type'] = textarea.name
         
-        page_data['form_contents'].append({'textarea': textarea_description})
+        textarea_description = dict(textarea_description.items() + abbreviated_attributes.items())
+        
+        page_data['form_contents'].append(textarea_description)
+    
+    """
+    Ignore groups of checkboxes for now
     
     ####
     # Handle groups of checkboxes
@@ -88,6 +99,7 @@ def get_form_fields(url):
                 if label['for'] == checkbox_name_map:
                     checkbox_questions[group]['label'] = label
     page_data['form_contents'].append({'checkbox_groups': checkbox_questions})
+    """
     
     form_data = json.dumps(page_data, sort_keys=True,indent=4)
     
