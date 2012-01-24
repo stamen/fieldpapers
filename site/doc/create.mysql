@@ -174,7 +174,7 @@ CREATE TABLE form_fields (
     
     label           TEXT,
     `name`          TEXT,
-    `type`          ENUM('text', 'textarea', 'select') NOT NULL,
+    `type`          ENUM('text', 'textarea') NOT NULL,
     choices         BLOB, # a blob of JSON that represents radio or checkbox choices in some way
     
     PRIMARY KEY (id),
