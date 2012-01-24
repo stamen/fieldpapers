@@ -27,18 +27,39 @@ def get_form_fields(url):
         label_contents.append({label.attrs[1][0]: label.attrs[1][1], 'contents': label.contents[0]})
     
     ###
-    #Handle text input boxes
+    # Handle text input boxes
     ###
     textboxes = form.findAll(['input'], {"type": "text"})
+    
+    textbox_description = {}
 
     for textbox in textboxes:                
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textbox['id']:
-                textbox_label = {'for': label_contents[index]['for'], 'contents': label_contents[index]['contents']}
-        page_data['form_contents'].append({'text_attrs': dict(textbox.attrs), 'text_label': textbox_label})  
+                textbox_description['label'] = {'for': label_contents[index]['for'], 'contents': label_contents[index]['contents']}
+        
+        textbox_description['attributes'] = dict(textbox.attrs)
+        page_data['form_contents'].append({'textbox': textbox_description})
+        
+    ###
+    # Handle the textareas
+    ###
+    textareas = form.findAll(['textarea'])
+    
+    textarea_description = {}
+        
+    for textarea in textareas:
+        print textarea['id']
+        
+        for index, label in enumerate(label_contents):
+            if label_contents[index]['for'] == textarea['id']:
+                textarea_description['label'] = {'for': label_contents[index]['for'], 'contents': label_contents[index]['contents']}
+        textarea_description['attributes'] = dict(textarea.attrs)
+        
+        page_data['form_contents'].append({'textarea': textarea_description})
     
     ####
-    #Handle groups of checkboxes
+    # Handle groups of checkboxes
     ####
     
     checkboxes = form.findAll(['input'], {'type': 'checkbox'})
@@ -70,7 +91,7 @@ def get_form_fields(url):
     
     form_data = json.dumps(page_data, sort_keys=True,indent=4)
     
-    #print form_data
+    print form_data
     
     return form_data
     
