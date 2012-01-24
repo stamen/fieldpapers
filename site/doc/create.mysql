@@ -168,16 +168,14 @@ DROP TABLE IF EXISTS form_fields;
 
 CREATE TABLE form_fields (
 
-    id              VARCHAR(8) NOT NULL,
-
     form_id         VARCHAR(8) NOT NULL,
     
-    label           TEXT,
     `name`          TEXT,
-    `type`          ENUM('text', 'textarea', 'select') NOT NULL,
+    `label`         TEXT,
+    `type`          ENUM('text', 'textarea') NOT NULL,
     choices         BLOB, # a blob of JSON that represents radio or checkbox choices in some way
     
-    PRIMARY KEY (id),
+    PRIMARY KEY (form_id, `name`),
     INDEX form (form_id)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
