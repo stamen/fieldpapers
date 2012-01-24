@@ -54,7 +54,6 @@ def get_form_fields(url):
     textarea_description = {}
         
     for textarea in textareas:
-        print textarea.name
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textarea['id']:
                 textarea_description['label'] = {'contents': label_contents[index]['contents']}
@@ -103,7 +102,7 @@ def get_form_fields(url):
     
     form_data = json.dumps(page_data, sort_keys=True,indent=4)
     
-    #print form_data
+    # print form_data
     
     return form_data
     
