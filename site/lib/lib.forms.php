@@ -32,7 +32,7 @@
     function add_form_field(&$dbh, $form_id, $name)
     {
         $q = sprintf('INSERT INTO form_fields
-                      SET form_id = %s, `name` = %d',
+                      SET form_id = %s, `name` = %s',
                      $dbh->quoteSmart($form_id),
                      $dbh->quoteSmart($name));
 
@@ -159,33 +159,6 @@
         }
 
         return get_form_field($dbh, $field['form_id'], $field['name']);
-    }
-    
-    function finish_form(&$dbh, $form_id)
-    {
-        $q = sprintf('UPDATE forms SET parsed = NOW() WHERE id = %s',
-                     $dbh->quoteSmart($form_id));
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res))
-            die_with_code(500, "{$res->message}\n{$q}\n");
-    }
-    
-    function fail_form(&$dbh, $form_id, $failure=1)
-    {
-        $q = sprintf('UPDATE forms SET failed = %s WHERE id = %s',
-                     $dbh->quoteSmart($failure),
-                     $dbh->quoteSmart($form_id));
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res))
-            die_with_code(500, "{$res->message}\n{$q}\n");
     }
     
 ?>
