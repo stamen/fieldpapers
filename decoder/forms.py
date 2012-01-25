@@ -2,11 +2,10 @@
 
 import sys
 import urllib
-from BeautifulSoup import BeautifulSoup
-
 import json
 
-from sys import argv
+from BeautifulSoup import BeautifulSoup
+from apiutils import finish_form, fail_form, ALL_FINISHED
 
 def get_form_fields(url):
     """ Gets a data structure of form fields for an HTML form URL, return a dictionary.
@@ -104,9 +103,18 @@ def get_form_fields(url):
     
     return form_data
     
-if __name__ == '__main__':
-    #script, url = argv
+def main(apibase, password, form_id, url):
+    """
+    """
+    yield 30
     
-    form_url = len(argv) == 2 and argv[1] or 'https://docs.google.com/spreadsheet/viewform?formkey=dEZyMnBpUG1pbXpMMGlHLWt3SlRzS0E6MQ'
+    form_data = get_form_fields(url)
+    
+    finish_form(apibase, password, form_id, form_data['action_url'], form_data['http_method'], form_data['fields'])
+    
+    yield ALL_FINISHED
+    
+if __name__ == '__main__':
+    form_url = len(sys.argv) == 2 and sys.argv[1] or 'https://docs.google.com/spreadsheet/viewform?formkey=dEZyMnBpUG1pbXpMMGlHLWt3SlRzS0E6MQ'
     
     json.dump(get_form_fields(form_url), sys.stdout, indent=2)
