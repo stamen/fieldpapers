@@ -125,7 +125,7 @@
     
     function set_form_field(&$dbh, $field)
     {
-        $old_field = get_form_field($dbh, $field['form_id'], $field['field_number']);
+        $old_field = get_form_field($dbh, $field['form_id'], $field['name']);
         
         if(!$old_field)
             return false;
@@ -143,7 +143,7 @@
         } else {
             $update_clauses = join(', ', $update_clauses);
             
-            $q = sprintf('UPDATE fields SET %s
+            $q = sprintf('UPDATE form_fields SET %s
                           WHERE form_id = %s
                             AND `name` = %s',
                          $update_clauses,
