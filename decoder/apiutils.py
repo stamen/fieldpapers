@@ -82,6 +82,51 @@ def fail_scan(apibase, password, scan_id):
 
     return
 
+def finish_form(apibase, password, form_id, action_url, http_method, fields):
+    """
+    """
+    s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+    params = dict(password=password, action_url=action_url, http_method=http_method)
+    
+    for (index, field) in enumerate(fields):
+        params['fields[%d][name]' % index] = field['name']
+        params['fields[%d][label]' % index] = field['label']
+        params['fields[%d][type]' % index] = field['type']
+    
+    query = urlencode({'id': form_id})
+    params = urlencode(params)
+    
+    req = HTTPConnection(host, port)
+    req.request('POST', path + '/finish-form.php?' + query, params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to finish-form.php resulting in status %s instead of 200' % res.status
+
+    return
+
+def fail_form(apibase, password, form_id):
+    """
+    """
+    s, host, path, p, q, f = urlparse(apibase)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+    query = urlencode({'id': form_id})
+    params = urlencode({'password': password})
+    
+    req = HTTPConnection(host, port)
+    req.request('POST', path + '/fail-form.php?' + query, params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to fail-form.php resulting in status %s instead of 200' % res.status
+
+    return
+
 def append_print_file(print_id, file_path, file_contents, apibase, password):
     """ Upload a file via the API append.php form input provision thingie.
     """

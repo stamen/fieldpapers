@@ -10,7 +10,7 @@ import datetime
 import urlparse
 import optparse
 
-import compose2, decode2
+import compose2, decode2, forms
 from apiutils import ALL_FINISHED
 
 from decode import Marker
@@ -158,15 +158,7 @@ if __name__ == '__main__':
                     
                     elif action == 'import form':
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- importing a form.'
-                        
-                        #
-                        # We're assuming that the message contains the URL of a
-                        # form, and we need to pass it through forms.get_form_fields()
-                        # to turn it into something useful and post it back to a
-                        # URL in the PHP app that doesn't yet exist (fieldset.php?)
-                        #
-                        
-                        raise NotImplementedError("I don't know how to do that yet")
+                        progress = forms.main(apibase, password, msg['url'])
                 
                 try:
                     for timeout in progress:
