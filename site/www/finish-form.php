@@ -17,21 +17,26 @@
     require_once 'lib.auth.php';
     require_once 'lib.forms.php';
 
+    // Getting the correct form id
     $form_id = $_GET['id'] ? $_GET['id'] : null;
     
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    enforce_master_on_off_switch($language);
+    //enforce_master_on_off_switch($language);
 
     /**** ... ****/
     
+    session_start();
     $dbh =& get_db_connection();
+    remember_user($dbh);
     
+    /*
     if($user_id)
         $user = get_user($dbh, $user_id);
 
     if($user)
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
+    */
     
     $form = get_form($dbh, $form_id);
     
