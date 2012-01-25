@@ -52,7 +52,7 @@
     {
         $q = sprintf("SELECT id, http_method, action_url,
                              UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(composed) AS parsed,
+                             UNIX_TIMESTAMP(parsed) AS parsed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              user_id
                       FROM forms
