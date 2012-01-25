@@ -18,7 +18,8 @@ def get_form_fields(url):
     form = soup.form
         
     # Setting up data structure
-    page_data = {'form': dict(form.attrs), 'form_contents':[]}
+    form_data = dict(form.attrs)
+    form_data.update(dict(fields=[]))
     
     # Get a list of the entry labels
     labels = form.findAll(['label'], {"class": "ss-q-title"})
@@ -45,7 +46,7 @@ def get_form_fields(url):
         # Merge abbreviated attributes with textbox description
         textbox_description = dict(textbox_description.items() + abbreviated_attributes.items())
         
-        page_data['form_contents'].append(textbox_description)
+        form_data['fields'].append(textbox_description)
         
     #
     # Handle the textareas
@@ -57,14 +58,14 @@ def get_form_fields(url):
     for textarea in textareas:
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textarea['id']:
-                textarea_description['label'] = {'contents': label_contents[index]['contents']}
+                textarea_description['label'] = label_contents[index]['contents']
                 
         abbreviated_attributes = dict((k,v) for (k,v) in textarea.attrs if k == "name")
         abbreviated_attributes['type'] = textarea.name
         
         textarea_description = dict(textarea_description.items() + abbreviated_attributes.items())
         
-        page_data['form_contents'].append(textarea_description)
+        form_data['fields'].append(textarea_description)
     
     """
     Ignore groups of checkboxes for now
@@ -101,7 +102,7 @@ def get_form_fields(url):
     page_data['form_contents'].append({'checkbox_groups': checkbox_questions})
     """
     
-    return page_data
+    return form_data
     
 if __name__ == '__main__':
     #script, url = argv
