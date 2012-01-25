@@ -158,7 +158,7 @@ if __name__ == '__main__':
                     
                     elif action == 'import form':
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- importing a form.'
-                        progress = forms.main(apibase, password, msg['url'])
+                        progress = forms.main(apibase, password, msg['form_id'], msg['url'])
                 
                 try:
                     for timeout in progress:

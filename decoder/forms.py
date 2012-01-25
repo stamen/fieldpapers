@@ -37,7 +37,7 @@ def get_form_fields(url):
     for textbox in textboxes:                
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textbox['id']:
-                textbox_description['label'] = {'contents': label_contents[index]['contents']}
+                textbox_description['label'] = label_contents[index]['contents'].strip()
                 
         abbreviated_attributes = dict((k,v) for (k,v) in textbox.attrs if k == "type" or k == "name")
         # abbreviated_attributes = {k : v for k in textbox.attrs} # 2.7 and above
@@ -57,7 +57,7 @@ def get_form_fields(url):
     for textarea in textareas:
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textarea['id']:
-                textarea_description['label'] = label_contents[index]['contents']
+                textarea_description['label'] = label_contents[index]['contents'].strip()
                 
         abbreviated_attributes = dict((k,v) for (k,v) in textarea.attrs if k == "name")
         abbreviated_attributes['type'] = textarea.name
@@ -106,11 +106,11 @@ def get_form_fields(url):
 def main(apibase, password, form_id, url):
     """
     """
-    yield 30
+    yield 10
     
     form_data = get_form_fields(url)
     
-    finish_form(apibase, password, form_id, form_data['action_url'], form_data['http_method'], form_data['fields'])
+    finish_form(apibase, password, form_id, form_data['action'], form_data['method'], form_data['fields'])
     
     yield ALL_FINISHED
     
