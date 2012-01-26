@@ -10,7 +10,7 @@
     if ($_GET['email'] && $_GET['hash']) 
     {
         
-        $q = sprintf("SELECT email, hash, active FROM users WHERE email=%s AND hash=%s",
+        $q = sprintf("SELECT email, hash, activated FROM users WHERE email=%s AND hash=%s",
                      $dbh->quoteSmart($_GET['email']),
                      $dbh->quoteSmart($_GET['hash']));
 
