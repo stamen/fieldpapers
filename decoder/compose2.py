@@ -108,7 +108,7 @@ def get_preview_map_size(orientation, paper_size):
     paper_size = {'letter': 'ltr', 'a4': 'a4', 'a3': 'a3'}[paper_size.lower()]
     width, height = getattr(dim, 'preview_size_%(orientation)s_%(paper_size)s' % locals())
     
-    return width, height
+    return int(width), int(height)
 
 def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height):
     """
