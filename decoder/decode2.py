@@ -478,7 +478,12 @@ def main(apibase, password, scan_id, url, old_decode_markers):
         _fail_scan()
     
     else:
-        _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds)
+        if 'print_id' in locals():
+            _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds)
+
+        else:
+            print >> stderr, 'Failed, unable to find a print_id'
+            _fail_scan()
     
     yield ALL_FINISHED
 
