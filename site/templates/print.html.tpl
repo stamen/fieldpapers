@@ -38,6 +38,8 @@
         <span class="orientation">{$print.orientation|escape}</span>
     </span>
 
+    {include file="header.htmlf.tpl"}
+    
     {include file="navigation.htmlf.tpl"}
     
     {if $print}
