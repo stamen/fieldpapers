@@ -4,6 +4,7 @@
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
+    require_once 'lib.auth.php';
     
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
     $notes = is_array($_POST['notes']) ? $_POST['notes'] : array();
@@ -13,9 +14,18 @@
 
     /**** ... ****/
     
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
+    
+    /*
     $dbh =& get_db_connection();
     
     $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
+    */
+    
+    $user = get_user($dbh, $_SESSION['user']['id']);  
+    
     $scan = get_scan($dbh, $scan_id);
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')

@@ -50,6 +50,8 @@
         </span>
     {/if}
     
+    {include file="header.htmlf.tpl"}
+    
     {include file="navigation.htmlf.tpl"}
     
     {if $scan && $scan.decoded}
