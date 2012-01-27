@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 {if $s3post}
     <form action="http://{$s3post.bucket|escape}.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
         <input name="AWSAccessKeyId" type="hidden" value="{$s3post.access|escape}" />

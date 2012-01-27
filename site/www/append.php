@@ -69,6 +69,8 @@
     
     } elseif($type == 'application/paperwalking+xml') { 
         header("Content-Type: application/paperwalking+xml; charset=UTF-8");
+        header("Access-Control-Allow-Origin: *");
+        print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
         print $sm->fetch("append.xml.tpl");
     
     } else {
