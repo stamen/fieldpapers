@@ -407,11 +407,9 @@ def main(apibase, password, scan_id, url):
             
             print >> stderr, 'geotiff...',
             
-            raise Exception('blah blah blah')
-            
             paper_width_pt, paper_height_pt = get_paper_size(paper, orientation)
             geo_args = paper_width_pt, paper_height_pt, north, west, south, east
-    
+            
             geotiff_bytes, geojpeg_img, img_bounds = create_geotiff(input, s2p.inverse(), *geo_args)
             
             _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
@@ -448,6 +446,8 @@ def main(apibase, password, scan_id, url):
             
             min_coord = Coordinate(minrow, mincol, minzoom)
             max_coord = Coordinate(maxrow, maxcol, maxzoom)
+            
+            break
 
     except Exception, e:
         print >> stderr, 'Failed because:', e
