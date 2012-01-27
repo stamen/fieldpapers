@@ -149,7 +149,7 @@ if __name__ == '__main__':
                         url = msg['url']
 
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
-                        progress = decode2.main(apibase, password, msg['scan_id'], url, getMarkers())
+                        progress = decode2.main(apibase, password, msg['scan_id'], url)
                     
                     elif action == 'compose':
                         kwargs = dict(print_id=msg['print_id'],
