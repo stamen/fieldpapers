@@ -60,7 +60,20 @@
     $sm->assign('language', $language);
     $sm->assign('mimetype', $mimetype);
     
-    header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("append.html.tpl");
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = get_preferred_type($type);
+    
+    if($type == 'text/html') {
+        header("Content-Type: text/html; charset=UTF-8");
+        print $sm->fetch("append.html.tpl");
+    
+    } elseif($type == 'application/paperwalking+xml') { 
+        header("Content-Type: application/paperwalking+xml; charset=UTF-8");
+        print $sm->fetch("append.xml.tpl");
+    
+    } else {
+        header('HTTP/1.1 400');
+        die("Unknown type.\n");
+    }
 
 ?>
