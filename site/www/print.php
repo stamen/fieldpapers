@@ -1,63 +1,65 @@
 <?php
    /**
-    * Display page for a single print with a given ID.
+    * Home page with information and print form.
     *
-    * When this page receives a POST request, it's probably from compose.py
-    * (check the API_PASSWORD) with new information on print components for
-    * building into a new PDF.
+    * GET vars for prepositioning map form include bounding box and tile provider.
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-
-    $print_id = $_GET['id'] ? $_GET['id'] : null;
-    
-    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    
-    //enforce_master_on_off_switch($language);
+        
+    $provider = is_null($_GET['provider']) ? reset(reset(get_map_providers())) : $_GET['provider'];
+    $latitude = is_numeric($_GET['lat']) ? floatval($_GET['lat']) : DEFAULT_LATITUDE;
+    $longitude = is_numeric($_GET['lon']) ? floatval($_GET['lon']) : DEFAULT_LONGITUDE;
+    $zoom = is_numeric($_GET['zoom']) ? intval($_GET['zoom']) : DEFAULT_ZOOM;
 
     /**** ... ****/
     
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
+            
+    $prints = get_prints($dbh, 6);
     
-    /*
-    $dbh =& get_db_connection();
-    
-    if($user_id)
-        $user = get_user($dbh, $user_id);
+    //$scans = get_scans($dbh, 4);
 
-    if($user)
-        setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
-    */
-    
-    $print = get_print($dbh, $print_id);
-    
     $sm = get_smarty_instance();
-    $sm->assign('print', $print);
-    $sm->assign('language', $language);
-    
-    print_headers($print);
+    $sm->assign('scans', $scans);
+    //$sm->assign('language', $language);
 
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type, array('text/html', 'application/paperwalking+xml'));
+    $sm->assign('provider', $provider);
+    $sm->assign('latitude', $latitude);
+    $sm->assign('longitude', $longitude);
+    $sm->assign('zoom', $zoom);
     
-    if($type == 'text/html') {
-        header("Content-Type: text/html; charset=UTF-8");
-        print $sm->fetch("print.html.tpl");
+    $sm->assign('paper_sizes', array('Letter', 'A4', 'A3'));
     
-    } elseif($type == 'application/paperwalking+xml') { 
-        header("Content-Type: application/paperwalking+xml; charset=UTF-8");
-        print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
-        print $sm->fetch("print.xml.tpl");
-    
-    } else {
-        header('HTTP/1.1 406');
-        die("Unknown content-type.\n");
+    foreach ($prints as $key => $value) {
+        //print_r($key);
+        $prints[$key]['index'] = $key;
+        
+        $provider_list[] = $prints[$key]['provider']; 
     }
+    
+    foreach($provider_list as $value) {
+            $p_list = $p_list . ',' . $value;
+    }
+    
+    $p_list = substr($p_list,1,strlen($p_list));
+    
+    $sm->assign('providers', $p_list);
+    $sm->assign('prints', $prints);
+    
+    $print_id = $_GET["id"];
+    $print = get_print($dbh, $print_id);
+    $sm->assign('print_id', $print_id);
+    
+    $user_id = $print['user_id'];
+    $sm->assign('user_id', $user_id);
+        
+    header("Content-Type: text/html; charset=UTF-8");
+    print $sm->fetch("print.html.tpl");
 
 ?>

@@ -7,7 +7,7 @@
             <input type='hidden' name='redirect' value={$smarty.server.PHP_SELF}>
         </form>
     {else}
-        <form id='login_form' method='POST' action='{$base_dir}/login.php'>
+        <form id='login_form' method='post' action='{$base_dir}/login.php'>
             <table>
                 <tbody>
                     <tr>
@@ -20,19 +20,19 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type='text' name='username' size="20">
+                            <input type='text' name='username' size="20"/>
                         </td>
                         <td>
-                            <input type='password' name='password' size="20">
+                            <input type='password' name='password' size="20"/>
                         </td>
                         <td>
-                            <input type='submit' id="login_button" value='Log In'>
+                            <input type='submit' id="login_button" value='Log In'/>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <input type='hidden' name='action' value='log in'>
-            <input type='hidden' name='redirect' value={$smarty.server.PHP_SELF} >
+            <input type='hidden' name='action' value='log in'/>
+            <input type='hidden' name='redirect' value='{$smarty.server.PHP_SELF}' />
         </form>
         <p style="padding-left: 10px">
             <a style="text-decoration:none" href="{$base_dir}/registration.php">Register</a>
