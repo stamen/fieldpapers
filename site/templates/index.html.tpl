@@ -30,8 +30,6 @@
             {include file="title.htmlf.tpl"}
             
             {include file="hotspots.htmlf.tpl"}
-            
-            {include file="footer.htmlf.tpl"}
         <!-- end .content --></div>
     <!-- end .container --></div>
 </body>
