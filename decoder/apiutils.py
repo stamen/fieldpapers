@@ -94,12 +94,12 @@ def append_print_file(print_id, file_path, file_contents, apibase, password):
                        'mimetype': (guess_type(file_path)[0] or '')})
     
     req = HTTPConnection(host, port)
-    req.request('GET', path + '/append.php?' + query)
+    req.request('GET', path + '/append.php?' + query, headers=dict(Accept='application/paperwalking+xml'))
     res = req.getresponse()
     
-    html = ElementTree.parse(res)
+    form = ElementTree.parse(res).getroot()
     
-    for form in html.findall('*/form'):
+    if form.tag == 'form':
         form_action = form.attrib['action']
         
         inputs = form.findall('.//input')
