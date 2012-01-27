@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import math
@@ -69,6 +70,9 @@ def updateQueue(apibase, password, message_id, timeout):
     return
 
 if __name__ == '__main__':
+
+    if os.path.dirname(__file__):
+        os.chdir(os.path.dirname(__file__))
 
     (options, args) = parser.parse_args()
     
