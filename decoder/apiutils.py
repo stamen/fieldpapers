@@ -147,12 +147,12 @@ def append_scan_file(scan_id, file_path, file_contents, apibase, password):
                        'mimetype': (guess_type(file_path)[0] or '')})
     
     req = HTTPConnection(host, port)
-    req.request('GET', path + '/append.php?' + query)
+    req.request('GET', path + '/append.php?' + query, headers=dict(Accept='application/paperwalking+xml'))
     res = req.getresponse()
     
-    html = ElementTree.parse(res)
+    form = ElementTree.parse(res).getroot()
     
-    for form in html.findall('*/form'):
+    if form.tag == 'form':
         form_action = form.attrib['action']
         
         inputs = form.findall('.//input')
@@ -184,6 +184,29 @@ def append_scan_file(scan_id, file_path, file_contents, apibase, password):
             return True
         
     raise Exception('Did not find a form with a file input, why is that?')
+
+def get_print_info(print_url):
+    """
+    """
+    s, host, path, p, query, f = urlparse(print_url)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    req = HTTPConnection(host, port)
+    req.request('GET', path + '?' + query, headers=dict(Accept='application/paperwalking+xml'))
+    res = req.getresponse()
+    
+    print_ = ElementTree.parse(res).getroot()
+    
+    print_id = print_.attrib['id']
+    paper = print_.find('paper').attrib['size']
+    orientation = print_.find('paper').attrib['orientation']
+
+    north = float(print_.find('bounds').find('north').text)
+    south = float(print_.find('bounds').find('south').text)
+    east = float(print_.find('bounds').find('east').text)
+    west = float(print_.find('bounds').find('west').text)
+    
+    return print_id, north, west, south, east, paper, orientation
 
 def encode_multipart_formdata(fields, files):
     """ fields is a sequence of (name, value) elements for regular form fields.

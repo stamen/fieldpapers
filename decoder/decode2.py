@@ -3,10 +3,8 @@ from StringIO import StringIO
 from subprocess import Popen, PIPE
 from os.path import basename, dirname, join as pathjoin
 from os import close, write, unlink
-from xml.etree import ElementTree
 from urlparse import urlparse
 from tempfile import mkstemp
-from urllib import urlopen
 from random import random
 from shutil import move
 from glob import glob
@@ -23,7 +21,7 @@ else:
 from ModestMaps.Core import Point, Coordinate
 
 from geoutils import create_geotiff, generate_tiles
-from apiutils import append_scan_file, finish_scan, fail_scan, ALL_FINISHED
+from apiutils import append_scan_file, finish_scan, fail_scan, get_print_info, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from imagemath import imgblobs, extract_image, open as imageopen
 from matrixmath import Transform, quad2quad
@@ -277,28 +275,7 @@ def read_code(image):
     if not decoded.startswith('http://'):
         raise CodeReadException('Attempt to read QR code failed')
     
-    html = ElementTree.parse(urlopen(decoded))
-    
-    print_id, paper, orientation = None, None, None
-    north, west, south, east = None, None, None, None
-    
-    for span in html.findall('body/span'):
-        if span.get('id') == 'print-info':
-            for subspan in span.findall('span'):
-                if subspan.get('class') == 'print':
-                    print_id = subspan.text
-                elif subspan.get('class') == 'north':
-                    north = float(subspan.text)
-                elif subspan.get('class') == 'south':
-                    south = float(subspan.text)
-                elif subspan.get('class') == 'east':
-                    east = float(subspan.text)
-                elif subspan.get('class') == 'west':
-                    west = float(subspan.text)
-                elif subspan.get('class') == 'paper-size':
-                    paper = subspan.text
-                elif subspan.get('class') == 'orientation':
-                    orientation = subspan.text
+    print_id, north, west, south, east, paper, orientation = get_print_info(decoded)
 
     return print_id, north, west, south, east, paper, orientation
 
@@ -345,7 +322,7 @@ def draw_postblobs(postblob_img, blobs_abcde):
     draw.line((blob_D.x, blob_D.y, blob_E.x, blob_E.y), fill=(0x99, 0x00, 0x00))
     draw.line((blob_E.x, blob_E.y, blob_A.x, blob_A.y), fill=(0x99, 0x00, 0x00))
 
-def main(apibase, password, scan_id, url, old_decode_markers):
+def main(apibase, password, scan_id, url):
     """
     """
     yield 30
