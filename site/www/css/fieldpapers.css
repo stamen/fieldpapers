@@ -1,0 +1,87 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background: #CED2C5
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+ul, ol, dl { 
+	padding: 0;
+	margin: 0 50px;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 
+	padding-right: 10px;
+	padding-left: 10px; 
+}
+
+small { font-size: 0.75em; }
+code { background-color: #eee; color: #333; padding: 5px; font-family: "Lucida Console", Monaco, monospace; }
+
+a img { 
+	border: none;
+}
+
+a:link {
+	color: #36F;
+	text-decoration: underline; 
+}
+a:visited {
+	color: #339;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { 
+	text-decoration: none;
+}
+
+.container {
+	width: 95&;
+	background: #FFF;
+	margin: 0 auto; 
+}
+
+.content {
+	padding: 10px 0;
+}
+
+/* ~~ miscellaneous float/clear classes ~~ */
+.fltrt {  
+	float: right;
+}
+.fltlft { 
+	float: left;
+}
+.clearfloat { 
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+
+.atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; }
+.atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
+.atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
+.atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
+
+.atlasThumb { margin-left: 10px; float: left; width: 240px; margin-bottom: 2em; }
+.atlasName {}
+.atlasPlace {}
+.atlasMeta {}
+
+.hotSpot { width: 48%; margin-left: 10px; margin-bottom: 2em; float: left;}
+    /*#map { width: 100%; height: 300px; }*/
+    .atlas { width: 100%; height: 300px; background-color: #fff; border: 1px solid black;}
+    .overview_print { width: 100%; height: 120px; background-color: #fff; border: 1px solid black;}
+    .print { width: 100%; height: 500px; background-color: #fff; border: 1px solid black;}
+
+.AtlasList {width: 75%;}
+.FieldsetList {width: 20%; margin-right: 20px;}
+
+.largePage { float: left; }
+.fieldSet {  margin-left: 20px; }
+.fieldSet table { margin-left: 10px; border: 1px solid #000; }
+.fieldSet td { vertical-align: top; padding: 10px; }
