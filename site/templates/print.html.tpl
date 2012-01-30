@@ -5,11 +5,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Atlas - fieldpapers.org</title>    
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
-    
-    <script type="text/javascript" src="{$base_dir}/script.js"></script>
-    <script type="text/javascript" src="{$base_dir}/index.js"></script>
-    
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     
     {if $print && !$print.composed}
