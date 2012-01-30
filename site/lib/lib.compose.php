@@ -91,7 +91,7 @@
                      new MMaps_Location($maxlat, $maxlon));
     }
     
-    function guess_zoom_from_bounds($paper_size, $orientation, $north, $west, $south, $east)
+    function create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east)
     {
         list($width_pt, $height_pt) = get_paper_dimensions($paper_size, $orientation);
         $min_width_px = $width_pt * 100/72; // aim for over 100dpi
@@ -109,7 +109,47 @@
                 break;
         }
         
-        return $zoom;
+        $aspect_ratio = $width_pt / $height_pt;
+        
+        $mmap = adjust_mmap_dimensions($aspect_ratio, $mmap);
+        
+        return $mmap;
+    }
+    
+    function adjust_mmap_dimensions($aspect_ratio, $mmap)
+    {
+        //
+        // If we got this far, we know we have a meaningful zoom and extent
+        // for this page, now adjust it to the known aspect ratio of the page.
+        //
+        
+        $dim = $mmap->dimensions;
+        
+        $mmap_center = $mmap->pointLocation(new MMaps_Point($dim->x/2, $dim->y/2));
+        $mmap_aspect = $dim->x / $dim->y;
+        
+        if($aspect_ratio > $mmap_aspect) {
+            // paper is wider than the map
+            $dim->x *= ($aspect_ratio / $mmap_aspect);
+        
+        } else {
+            // paper is taller than the map
+            $dim->y *= ($mmap_aspect / $aspect_ratio);
+        }
+        
+        return MMaps_mapByCenterZoom($mmap->provider, $mmap_center, $mmap->coordinate->zoom, $dim);
+    }
+    
+   /**
+    * Return north, west, south, east array for an mmap instance.
+    */
+    function get_mmap_bounds($mmap)
+    {
+        $northwest = $mmap->pointLocation(new MMaps_Point(0, 0));
+        $southeast = $mmap->pointLocation($mmap->dimensions);
+        $bounds = array($northwest->lat, $northwest->lon, $southeast->lat, $southeast->lon);
+        
+        return $bounds;
     }
     
    /**
@@ -213,18 +253,19 @@
         foreach($extents as $key => $value)
         {
             list($north, $west, $south, $east) = array_map('floatval', explode(',', $value));
-            $zoom = guess_zoom_from_bounds($paper_size, $orientation, $north, $west, $south, $east);
+            $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east);
+            $bounds = get_mmap_bounds($mmap);
             
-            $message['pages'][] = array('zoom' => $zoom,
+            $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
                                         'number' => $key + 1,
                                         'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 
-                                        'bounds' => array($north, $west, $south, $east)
+                                        'bounds' => $bounds
                                         );
             
-            $print['north'] = $north;
-            $print['south'] = $south;
-            $print['east'] = $east;
-            $print['west'] = $west;
+            $print['north'] = $bounds[0];
+            $print['south'] = $bounds[2];
+            $print['east'] = $bounds[3];
+            $print['west'] = $bounds[1];
         }
         
         foreach($message['pages'] as $key => $value)
