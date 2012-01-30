@@ -189,21 +189,24 @@
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
         
-        // Using the first page
-        $print['north'] = $extents[0][0];
-        $print['south'] = $extents[0][2];
-        $print['east'] = $extents[0][3];
-        $print['west'] = $extents[0][1];
-        
-        foreach($extents as $key => $value) {
+        foreach($extents as $key => $value)
+        {
+            list($north, $west, $south, $east) = array_map('floatval', explode(',', $value));
+            
             $message['pages'][] = array('zoom' => intval($page_zoom),
                                         'number' => $key + 1,
                                         'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 
-                                        'bounds' => array_map('floatval', explode(',', $value))
+                                        'bounds' => array($north, $west, $south, $east)
                                         );
+            
+            $print['north'] = $north;
+            $print['south'] = $south;
+            $print['east'] = $east;
+            $print['west'] = $west;
         }
         
-        foreach($message['pages'] as $key => $value) {
+        foreach($message['pages'] as $key => $value)
+        {
             $number = $key + 1;
             $page = add_print_page($dbh, $print['id'], $number);
             
@@ -213,20 +216,20 @@
             
             $page['north'] = $_page[0];
             $page['south'] = $_page[2];
-            $page['east'] = $_page[3];
             $page['west'] = $_page[1];
+            $page['east'] = $_page[3];
             
             $page['provider'] = $value['provider'];
             
             set_print_page($dbh, $page);
          
-            $print['north'] = max($print['north'],$page['north']);
-            $print['south'] = max($print['south'],$page['south']);
-            $print['west'] = max($print['west'],$page['west']);
-            $print['east'] = max($print['east'],$page['east']);
+            $print['north'] = max($print['north'], $page['north']);
+            $print['south'] = min($print['south'], $page['south']);
+            $print['west'] = min($print['west'], $page['west']);
+            $print['east'] = max($print['east'], $page['east']);
         }
         
-        set_print($dbh, $page);
+        set_print($dbh, $print);
         $message['print_id'] = $print['id'];
         add_message($dbh, json_encode($message));
                 
