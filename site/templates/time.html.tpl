@@ -39,8 +39,6 @@
                     <div class="atlasMeta">X pages, from <a href="time.php?date={$print.created}">{$print.created|date_format}</a></div>
                 </div>
             {/foreach}
-            
-            {include file="footer.htmlf.tpl"}
         <!-- end .content --></div>
     <!-- end .container --></div>
 </body>
