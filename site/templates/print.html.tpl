@@ -6,19 +6,17 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Atlas - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
-    <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
+    
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
     <script type="text/javascript" src="{$base_dir}/index.js"></script>
     
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{$base_dir}/map.js"></script>
-    <script>
-        {literal}
-        $(document).ready(function() {
-            initMap('{/literal}{$providers}{literal}');
-        });
-        {/literal}
-    </script>
+    
+    {if $print && !$print.composed}
+        <meta http-equiv="refresh" content="5" />
+    {else}
+        <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
+    {/if}
 </head>
 <body>
     <div class="container">
@@ -28,7 +26,10 @@
             {include file="navigation.htmlf.tpl"}
             
             {include file="print.htmlf.tpl"}
+                        
+            {include file="footer.htmlf.tpl"}
         <!-- end .content --></div>
+        
     <!-- end .container --></div>
 </body>
 </html>
