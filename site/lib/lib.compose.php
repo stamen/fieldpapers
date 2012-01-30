@@ -3,6 +3,27 @@
     require_once 'output.php';
     require_once 'ModestMaps/ModestMaps.php';
     
+    // basic conversions between millimeters, points, and inches
+    define('MMPPT', 0.352777778);
+    define('INPPT', 0.013888889);
+    define('PTPIN', 1/INPPT);
+    define('PTPMM', 1/MMPPT);
+    
+    // paper sizes in printed points, with 1/2", 1" margins substracted.
+    define('PAPER_LANDSCAPE_A3_WIDTH', 420 * PTPMM - 72);
+    define('PAPER_LANDSCAPE_A3_HEIGHT', 297 * PTPMM - 108);
+    define('PAPER_LANDSCAPE_A4_WIDTH', 297 * PTPMM - 72);
+    define('PAPER_LANDSCAPE_A4_HEIGHT', 210 * PTPMM - 108);
+    define('PAPER_LANDSCAPE_LTR_WIDTH', 11 * PTPIN - 72);
+    define('PAPER_LANDSCAPE_LTR_HEIGHT', 8.5 * PTPIN - 108);
+
+    define('PAPER_PORTRAIT_A3_WIDTH', 297 * PTPMM - 72);
+    define('PAPER_PORTRAIT_A3_HEIGHT', 420 * PTPMM - 108);
+    define('PAPER_PORTRAIT_A4_WIDTH', 210 * PTPMM - 72);
+    define('PAPER_PORTRAIT_A4_HEIGHT', 297 * PTPMM - 108);
+    define('PAPER_PORTRAIT_LTR_WIDTH', 8.5 * PTPIN - 72);
+    define('PAPER_PORTRAIT_LTR_HEIGHT', 11 * PTPIN - 108);
+
    /**
     * Perform a few basic idiot-checks to verify that we're looking at GeoJSON.
     */
@@ -39,7 +60,7 @@
         $size_names = array('letter' => 'ltr', 'a3' => 'a3', 'a4' => 'a4');
 
         $orientation = strtoupper($orientation);
-        $paper_size = strtoupper($size_names[$paper_size]);
+        $paper_size = strtoupper($size_names[strtolower($paper_size)]);
     
         $width = constant("PAPER_{$orientation}_{$paper_size}_WIDTH");
         $height = constant("PAPER_{$orientation}_{$paper_size}_HEIGHT");
