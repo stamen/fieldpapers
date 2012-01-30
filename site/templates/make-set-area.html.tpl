@@ -5,20 +5,12 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Home - fieldpapers.org</title>    
-    <link rel="stylesheet" href="http://fieldpapers.org/~mevans/fieldpapers/site/www/css/fieldpapers.css" type="text/css" />
-    <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
-    <script type="text/javascript" src="{$base_dir}/script.js"></script>
-    <script type="text/javascript" src="{$base_dir}/index.js"></script>
-    
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{$base_dir}/map.js"></script>
-    
-    <script type="text/javascript" src="js/modestmaps.js"></script>
-    <script type="text/javascript" src="js/modestmaps.extent-selector.js"></script>
-        
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/style_makeset.css" type="text/css" />
+    <script type="text/javascript" src="{$base_dir}/js/modestmaps.js"></script>
+    <script type="text/javascript" src="{$base_dir}/js/modestmaps.extent-selector.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-    
     
     <script>
         {literal}
@@ -403,9 +395,6 @@
     <style type="text/css">
         {literal}
         @import url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css);
-        @import url(style.css);
-        
-
         {/literal}
     </style>
     
@@ -417,7 +406,7 @@
         
         <h1>Field Papers: Atlas Page Selector</h1>
 
-        <form id="submit" method="post" action="../../compose-print.php">
+        <form id="submit" method="post" action="{$base_dir}/compose-print.php">
             <div id="controls">
                 <p>
                     <input type="hidden" name="action" value="compose">
