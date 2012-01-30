@@ -23,14 +23,6 @@
     $prints = get_prints_by_month_year($dbh, $date);
     $sm->assign('prints', $prints);
     
-    // Get print    
-    //$print = get_print($dbh, $print_id);
-    //$sm->assign('print', $print);
-    
-    // Get pages
-    //$pages = get_print_pages($dbh, $print_id);
-    //$sm->assign('pages', $pages);
-    
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
     
