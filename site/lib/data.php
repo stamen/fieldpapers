@@ -499,6 +499,73 @@
         return $row;
     }
     
+    function get_print_pages(&$dbh, $print_id)
+    {
+        $q = sprintf("SELECT print_id, page_number,
+                     provider, preview_url,
+                     north, south, east, west, zoom,
+                     (north + south) / 2 AS latitude,
+                     (east + west) / 2 AS longitude,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                     country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                     user_id
+              FROM pages
+              WHERE print_id = %s",
+             $dbh->quoteSmart($print_id));
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+            
+            
+            
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {            
+            $rows[] = $row;
+        }
+        
+        return $rows;
+    }
+    
+    function get_prints_by_month_year(&$dbh, $date)
+    {
+       $month = $date['mon'];
+       $year = $date['year'];
+    
+       $q = sprintf("SELECT paper_size, orientation, provider,
+                     pdf_url, preview_url, geotiff_url,
+                     id, north, south, east, west, zoom,
+                     (north + south) / 2 AS latitude,
+                     (east + west) / 2 AS longitude,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(composed) AS composed,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                     country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                     user_id
+              FROM prints
+              WHERE MONTH(created)=%s AND YEAR(created)=%s
+              ORDER BY created DESC",
+             $month, $year);
+        
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+            
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            $rows[] = $row;
+        }
+        
+        return $rows;
+    }
+    
     function get_scans(&$dbh, $page, $include_private=false)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
