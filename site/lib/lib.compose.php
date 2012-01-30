@@ -38,7 +38,7 @@
     {
         $size_names = array('letter' => 'ltr', 'a3' => 'a3', 'a4' => 'a4');
 
-        $oerientation = strtoupper($orientation);
+        $orientation = strtoupper($orientation);
         $paper_size = strtoupper($size_names[$paper_size]);
     
         $width = constant("PAPER_{$orientation}_{$paper_size}_WIDTH");
@@ -89,6 +89,27 @@
         
         return array(new MMaps_Location($minlat, $minlon),
                      new MMaps_Location($maxlat, $maxlon));
+    }
+    
+    function guess_zoom_from_bounds($paper_size, $orientation, $north, $west, $south, $east)
+    {
+        list($width_pt, $height_pt) = get_paper_dimensions($paper_size, $orientation);
+        $min_width_px = $width_pt * 100/72; // aim for over 100dpi
+    
+        $nw = new MMaps_Location($north, $west);
+        $se = new MMaps_Location($south, $east);
+        $osm = new MMaps_OpenStreetMap_Provider();
+        
+        // loop over larger and larger maps until we trip over the minimum width.
+        foreach(range(0, 20) as $zoom)
+        {
+            $mmap = MMaps_mapByExtentZoom($osm, $nw, $se, $zoom);
+            
+            if($mmap->dimensions->x > $min_width_px)
+                break;
+        }
+        
+        return $zoom;
     }
     
    /**
@@ -192,8 +213,9 @@
         foreach($extents as $key => $value)
         {
             list($north, $west, $south, $east) = array_map('floatval', explode(',', $value));
+            $zoom = guess_zoom_from_bounds($paper_size, $orientation, $north, $west, $south, $east);
             
-            $message['pages'][] = array('zoom' => intval($page_zoom),
+            $message['pages'][] = array('zoom' => $zoom,
                                         'number' => $key + 1,
                                         'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 
                                         'bounds' => array($north, $west, $south, $east)
@@ -307,7 +329,7 @@
             
             //
             // If we got this far, we know we have a meaningful zoom and extent
-            // for this page, now adjust it to the known aspect ration of the page.
+            // for this page, now adjust it to the known aspect ratio of the page.
             //
     
             $_mmap = MMaps_mapByExtentZoom($provider, $extent[0], $extent[1], $zoom);
