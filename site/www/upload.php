@@ -52,7 +52,6 @@
     $sm = get_smarty_instance();
     $sm->assign('s3post', $s3post);
     $sm->assign('localpost', $localpost);
-    $sm->assign('language', $language);
     
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("upload.html.tpl");
