@@ -22,7 +22,7 @@
             {include file="navigation.htmlf.tpl"}
             
             {include file="print.htmlf.tpl"}
-                        
+            
             {include file="footer.htmlf.tpl"}
         <!-- end .content --></div>
         
