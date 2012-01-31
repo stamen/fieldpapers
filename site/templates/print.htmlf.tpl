@@ -26,39 +26,31 @@
             });
         {/literal}
     </script>
-
-    <div class="container">
-        <div class="content">
-            <h1>Title: {$print.id}</h1>
-            <p>
-                Created by {$print.user_id} on <a href="{$base_dir}/time.php?date={$print.created}">
-                {$print.created|date_format}</a>. <a href="{$print.pdf_url}">Download</a> this print as a PDF.
-            </p>
-            <div class="overview_print" id="overview_map"></div>
-            <div class="print" id="map"></div>
-            <div class="fltlft">
-            <h2>Pages</h2>
-            
-            {foreach from=$pages item="page" name="index"}
-                <div class="atlasPage"> 
-                    <a href="page.html"><img src="{$page.preview_url}" alt="printed page" 
-                    name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
-                    <br />
-                    <span class="atlasPageNumber">{$page.page_number}</span>
-                </div>
-            {/foreach}
+    
+    <h1>Title: {$print.id}</h1>
+    <p>
+        Created by {$print.user_id} on <a href="{$base_dir}/time.php?date={$print.created}">
+        {$print.created|date_format}</a>. <a href="{$print.pdf_url}">Download</a> this print as a PDF.
+    </p>
+    <div class="overview_print" id="overview_map"></div>
+    <div class="print" id="map"></div>
+    <div class="fltlft">
+        <h2>Pages</h2>
+    
+        {foreach from=$pages item="page" name="index"}
+            <div class="atlasPage"> 
+                <a href="page.html"><img src="{$page.preview_url}" alt="printed page" 
+                name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
+                <br />
+                <span class="atlasPageNumber">{$page.page_number}</span>
             </div>
-        </div>
+        {/foreach}
     </div>
 {else}
-    <div class="container">
-        <div class="content">
-            <p>Preparing your print.</p>
-            <p>
-                This may take a while, generally a few minutes. You don't need to keep this
-                window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
-                this page</a> and come back later.
-            </p>
-        </div>
-    </div>
+    <p>Preparing your print.</p>
+    <p>
+        This may take a while, generally a few minutes. You don't need to keep this
+        window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
+        this page</a> and come back later.
+    </p>
 {/if}
