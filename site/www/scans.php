@@ -4,27 +4,14 @@
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-    
-    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    
-    //enforce_master_on_off_switch($language);
 
     /**** ... ****/    
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
-    
-    /*
-    if($user_id)
-        $user = get_user($dbh, $user_id);
-
-    if($user)
-        setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
-    */
     
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
@@ -62,7 +49,6 @@
     if($type == 'text/html') {
         $sm = get_smarty_instance();
         $sm->assign('scans', $scans);
-        $sm->assign('language', $language);
     
         $sm->assign('link_next', $link_next);
         $sm->assign('link_prev', $link_prev);
