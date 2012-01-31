@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="{$language|default:"en"}">
+<html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Recent Prints (Field Papers)</title>
-    <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
+    <title>Recent Prints - fieldpapers.org</title>
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
 <body>
