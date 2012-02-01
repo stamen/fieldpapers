@@ -77,6 +77,11 @@ a:hover, a:active, a:focus {
     .atlas { width: 100%; height: 300px; background-color: #fff; border: 1px solid black;}
     .overview_print { width: 100%; height: 120px; background-color: #fff; border: 1px solid black;}
     .print { width: 100%; height: 500px; background-color: #fff; border: 1px solid black;}
+    
+.page_map { width: 690px; height: 560px; background-color: #fff; border: 1px solid black; float: left;}
+#notes_title { margin-left: 20px; }
+#notes { margin: 20px; }
+#notes_submit { margin-left: 20px; }
 
 .AtlasList {width: 75%;}
 .FieldsetList {width: 20%; margin-right: 20px;}
