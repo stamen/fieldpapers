@@ -7,6 +7,9 @@
     require_once 'lib.compose.php';
     
     $is_json = false;
+    
+    session_start();
+    $user_id = $_SESSION['user']['id'];
 
     foreach(getallheaders() as $header => $value)
     {
@@ -19,6 +22,7 @@
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
         $dbh =& get_db_connection();
+        
         $dbh->query('START TRANSACTION');
         
         if($is_json) {
@@ -26,7 +30,7 @@
             $print = compose_from_geojson($dbh, file_get_contents('php://input'));
 
         } else {
-            $print = compose_from_postvars($dbh, $_POST);
+            $print = compose_from_postvars($dbh, $_POST, $user_id);
         }
         
         $dbh->query('COMMIT');
