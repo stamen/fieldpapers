@@ -41,6 +41,9 @@
     $sm->assign('print', $print);
     $sm->assign('language', $language);
     
+    $scan_note = get_simple_scan_note($dbh, $scan_id);
+    $sm->assign('scan_note', $scan_note[0]['note']);
+    
     scan_headers($scan);
     print_headers($print);
     
