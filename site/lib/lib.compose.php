@@ -195,7 +195,6 @@
                          'pages' =>             array()
                         );            
         
-        //$print = add_print(&$dbh, 'nobody');
         $print = add_print(&$dbh, $user_id);
         
         $print['paper_size'] = $message['paper_size'];
