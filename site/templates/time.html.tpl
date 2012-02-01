@@ -31,7 +31,7 @@
                     <a href="page.html"><img src="{$print.preview_url}" alt="printed page" 
                     name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">{$print.id}</a></div>
-                    <div class="atlasOwner">by <a href="person.html">{$print.user_id}</a></div>
+                    <div class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_id}</a></div>
                     <div class="atlasPlace"><a href="place.html">Place</a></div>
                     <div class="atlasMeta">X pages, from <a href="time.php?date={$print.created}">{$print.created|date_format}</a></div>
                 </div>
