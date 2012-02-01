@@ -11,7 +11,7 @@ import datetime
 import urlparse
 import optparse
 
-import compose2, decode2
+import compose2, decode2, forms
 from apiutils import ALL_FINISHED
 
 from decode import Marker
@@ -159,6 +159,10 @@ if __name__ == '__main__':
                         
                         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
                         progress = compose2.main(apibase, password, **kwargs)
+                    
+                    elif action == 'import form':
+                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- importing a form.'
+                        progress = forms.main(apibase, password, msg['form_id'], msg['url'])
                 
                 try:
                     for timeout in progress:

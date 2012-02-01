@@ -61,6 +61,8 @@ CREATE TABLE prints (
 ALTER TABLE prints ADD COLUMN layout VARCHAR(8) NOT NULL DEFAULT '1,1' AFTER orientation;
 ALTER TABLE prints ADD COLUMN atlas_pages TEXT NULL AFTER geotiff_url;
 
+ALTER TABLE prints ADD COLUMN form_id VARCHAR(8) NULL AFTER id;
+
 
 
 DROP TABLE IF EXISTS pages;
@@ -139,6 +141,44 @@ CREATE TABLE scans (
 
 ALTER TABLE scans ADD COLUMN has_geojpeg ENUM('yes', 'no') DEFAULT 'no' AFTER has_geotiff;
 ALTER TABLE scans ADD COLUMN geojpeg_bounds TEXT AFTER uploaded_file;
+
+
+
+DROP TABLE IF EXISTS forms;
+
+CREATE TABLE forms (
+
+    id              VARCHAR(8) NOT NULL,
+
+    http_method     ENUM('GET', 'POST'),
+    action_url      TEXT,
+    
+    user_id         VARCHAR(8) NOT NULL,
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    parsed          TIMESTAMP DEFAULT 0,
+    
+    PRIMARY KEY (id),
+    INDEX `user` (user_id)
+
+) ENGINE=InnoDB, CHARACTER SET utf8;
+
+
+
+DROP TABLE IF EXISTS form_fields;
+
+CREATE TABLE form_fields (
+
+    form_id         VARCHAR(8) NOT NULL,
+    
+    `name`          VARCHAR(255),
+    `label`         TEXT,
+    `type`          ENUM('text', 'textarea') NOT NULL,
+    choices         BLOB, # a blob of JSON that represents radio or checkbox choices in some way
+    
+    PRIMARY KEY (form_id, `name`),
+    INDEX form (form_id)
+
+) ENGINE=InnoDB, CHARACTER SET utf8;
 
 
 
