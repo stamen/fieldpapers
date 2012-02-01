@@ -13,6 +13,8 @@
     $dbh =& get_db_connection();
     remember_user($dbh);
     
+    //$user = get_user($dbh, $user_id);
+    
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
     $scans = get_scans($dbh, $pagination, false);
@@ -25,6 +27,15 @@
         
         } else {
             $prints[$i] = get_print($dbh, $scan['print_id']);
+        }
+        
+        $user = get_user($dbh, $scans[$i]['user_id']);
+        
+        if ($user['name'])
+        {
+            $scans[$i]['user_name'] = $user['name'];
+        } else {
+            $scans[$i]['user_name'] = 'Anonymous';
         }
     }
 
