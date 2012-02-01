@@ -30,35 +30,12 @@
             <a href="scan.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
             name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
             <div class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">{$print.id}</a></div>
-            <div class="atlasOwner">by <a href="person.html">{$scan.user_id}</a></div>
+            <div class="atlasOwner">by <a href="person.php?id={$scan.user_id}">{$scan.user_name}</a></div>
             <div class="atlasPlace"><a href="place.html">Place</a></div>
-            <div class="atlasMeta">X pages, from <a href="time.php?date={$scan.created}">{$scan.created|date_format}</a></div>
+            <div class="atlasMeta">From <a href="time.php?date={$scan.created}">{$scan.created|date_format}</a></div>
         </div>
     {/foreach}
     
-    <!--
-    {assign var="scans_count" value=$scans|@count}
-    
-    {if $link_prev and $link_next}
-        <p class="pagination">
-            <span class="newer">← <a href="{$link_prev|escape}">Newer</a></span>
-            <span class="older"><a href="{$link_next|escape}">Older</a> →</span>
-        </p>
-    {/if}
-    
-    {include file="scans-table.htmlf.tpl"}
-    
-    <p class="pagination">
-        {if $scans_count > 0}
-            {if $link_prev}
-                <span class="newer">← <a href="{$link_prev|escape}">Newer</a></span>
-            {/if}
-            <span class="older"><a href="{$link_next|escape}">Older</a> →</span>
-        {else}
-            <span class="newer">← <a href="{$link_start|escape}">Newest</a></span>
-        {/if}
-    </p>
-    -->
     {include file="footer.htmlf.tpl"}
     
 </body>
