@@ -16,9 +16,22 @@
     remember_user($dbh);
 
     $sm = get_smarty_instance();
+    
     $prints = get_prints($dbh, 6);
     
-    $sm->assign('providers', $p_list);
+    // Get user names
+    foreach ($prints as $i => $print)
+    {
+        $user = get_user($dbh, $prints[$i]['user_id']);
+        
+        if ($user['name'])
+        {
+            $prints[$i]['user_name'] = $user['name'];
+        } else {
+            $prints[$i]['user_name'] = 'Anonymous';
+        }
+    }
+    
     $sm->assign('prints', $prints);
     
     header("Content-Type: text/html; charset=UTF-8");
