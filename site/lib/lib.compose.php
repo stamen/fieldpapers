@@ -176,7 +176,7 @@
    /**
     * Convert an array of form fields to an atlas composition and queue it up.
     */
-    function compose_from_postvars(&$dbh, $post)
+    function compose_from_postvars(&$dbh, $post, $user_id)
     {
         header('Content-Type: text/plain');
         
@@ -195,7 +195,8 @@
                          'pages' =>             array()
                         );            
         
-        $print = add_print(&$dbh, 'nobody');
+        //$print = add_print(&$dbh, 'nobody');
+        $print = add_print(&$dbh, $user_id);
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
