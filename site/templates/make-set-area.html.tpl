@@ -413,9 +413,9 @@
                     <input type="hidden" id="page_zoom" name="page_zoom">
 
                     <label for="paper-size">Paper size: <select id="paper-size" name="paper_size">
-                        <option value="A3" selected>A3</option>
+                        <option value="letter" selected>Letter</option>
+                        <option value="A3">A3</option>
                         <option value="A4">A4</option>
-                        <option value="letter">Letter</option>
                         <option value="tabloid">Tabloid</option>
                     </select></label>
 
