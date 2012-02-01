@@ -56,26 +56,7 @@
     
     {if $scan && $scan.decoded}
         {include file="$language/scan-info.htmlf.tpl"}
-        {include file="$language/scan-editor-info.htmlf.tpl"}
-        
-        <div id="editor">
-            <form onsubmit="return editInPotlatch(this.elements);" id="editor-form">
-
-                {include file="$language/scan-potlatch-info.htmlf.tpl"}
-
-                <p>
-                    <input class="mac-button" name="action" type="submit" value="Edit" />
-                    <input name="minrow" type="hidden" value="{$scan.min_row|escape}" />
-                    <input name="mincolumn" type="hidden" value="{$scan.min_column|escape}" />
-                    <input name="minzoom" type="hidden" value="{$scan.min_zoom|escape}" />
-                    <input name="maxrow" type="hidden" value="{$scan.max_row|escape}" />
-                    <input name="maxcolumn" type="hidden" value="{$scan.max_column|escape}" />
-                    <input name="maxzoom" type="hidden" value="{$scan.max_zoom|escape}" />
-                    <input name="base_url" type="hidden" value="{$scan.base_url|escape}" />
-                </p>
-            </form>
-        </div>
-
+    
     {elseif $scan}
         {include file="$language/scan-process-info.htmlf.tpl"}
     {/if}
