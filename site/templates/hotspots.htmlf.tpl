@@ -24,6 +24,6 @@
             <div class="atlas" id="map{$k}"></div>
             
             <div>Print ID: <a href="print.php?id={$print.id}">{$print.id}</a> in <a href="place.html">Null</a><a href="print.php{$print.id}"></a>, by 
-            <a href="person.html">{$print.user_id}</a></div>
+            <a href="person.php?id={$print.user_id}">{$print.user_id}</a></div>
         </div>
     {/foreach}
