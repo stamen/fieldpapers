@@ -879,6 +879,65 @@
         return $rows;
     }
     
+    function get_simple_scan_note(&$dbh, $scan_id)
+    {
+        list($count, $offset, $perpage, $page) = get_pagination($page);
+        
+        $q = sprintf('SELECT scan_id, number, note
+                      FROM scan_notes
+                      WHERE scan_id=%s',
+                     $dbh->quoteSmart($scan_id));
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            $rows[] = $row;
+        }
+        
+        return $rows;
+    }
+    
+    
+    function set_simple_scan_notes(&$dbh, $user_id, $scan_id, $notes)
+    {
+            $q = sprintf('REPLACE INTO scan_notes
+                          SET user_id = %s,
+                              scan_id = %s,
+                              note = %s',
+
+                         $dbh->quoteSmart($user_id),
+                         $dbh->quoteSmart($scan_id),
+                         $dbh->quoteSmart($notes));
+    
+            error_log(preg_replace('/\s+/', ' ', $q));
+    
+            $res = $dbh->query($q);
+            
+            if(PEAR::isError($res)) 
+                die_with_code(500, "{$res->message}\n{$q}\n");
+        
+        /*
+        $q = sprintf('DELETE FROM scan_notes
+                      WHERE scan_id = %s
+                        AND number > %d',
+                     $dbh->quoteSmart($scan_id),
+                     (is_null($number) ? '-1' : $number));
+        */
+        
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+    }
+    
     function set_scan_notes(&$dbh, $user_id, $scan_id, $notes)
     {
         foreach($notes as $number => $note)
