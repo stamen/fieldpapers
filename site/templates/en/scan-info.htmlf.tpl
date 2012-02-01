@@ -42,6 +42,17 @@
     <a href="{$base_dir}/scan-large.php?id={$scan.id}">
         <img border="1" src="{$scan.base_url}/preview.jpg" /></a>
 </p>
+
+<p style="background-color: #000; text-align: center; color: #fff">
+    <b>Notes about this scan</b>
+    <br/><br/>
+    {if $scan_note}
+        {$scan_note}
+    {else}
+        There are no notes associated with this scan! 
+        <br/><br/><a href="{$base_dir}/page.php?id={$scan.id}">Create some notes!</a>
+    {/if}
+</p>
         
 <p>
     Download a <a href="{$base_dir}/print.php?id={$scan.print_id|escape}">fresh map of this area from print #{$scan.print_id|escape}</a>.
