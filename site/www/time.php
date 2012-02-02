@@ -21,6 +21,19 @@
     $sm->assign('date', $date);
     
     $prints = get_prints_by_month_year($dbh, $date);
+    
+    foreach($prints as $i => $print)
+    {   
+        $user = get_user($dbh, $prints[$i]['user_id']);
+        
+        if ($user['name'])
+        {
+            $prints[$i]['user_name'] = $user['name'];
+        } else {
+            $prints[$i]['user_name'] = 'Anonymous';
+        }
+    }
+    
     $sm->assign('prints', $prints);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
