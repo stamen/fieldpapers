@@ -82,7 +82,7 @@ def fail_scan(apibase, password, scan_id):
 
     return
 
-def finish_form(apibase, password, form_id, action_url, http_method, fields):
+def finish_form(apibase, password, form_id, action_url, http_method, title, fields):
     """
     """
     s, host, path, p, q, f = urlparse(apibase)
@@ -90,7 +90,7 @@ def finish_form(apibase, password, form_id, action_url, http_method, fields):
     
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
-    params = dict(password=password, action_url=action_url, http_method=http_method)
+    params = dict(password=password, action_url=action_url, http_method=http_method, title=title)
     
     for (index, field) in enumerate(fields):
         params['fields[%d][name]' % index] = field['name']
