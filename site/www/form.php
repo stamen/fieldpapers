@@ -1,17 +1,42 @@
 <?php
+   /**
+    * Individual page for the print
+    */
+
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    require_once '../lib/init.php';
-    require_once '../lib/data.php';
-    require_once '../lib/lib.forms.php';
-    require_once '../lib/lib.auth.php';
-
-    /*
+    require_once 'init.php';
+    require_once 'data.php';
+    require_once 'lib.forms.php';
+    require_once 'lib.auth.php';
     
-    displays a form if finished
-    displays waiting page if not
-    give a form id, until the form exists*/
+    $form_id = $_GET["id"];
 
-    echo $_GET["id"];
+    /**** ... ****/
+    
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
 
-    //$dbh =& get_db_connection();
+    $sm = get_smarty_instance();
+    
+    // Get form    
+    $form = get_form($dbh, $form_id);
+    $sm->assign('form', $form);
+    
+    // Get pages
+    $fields = get_form_fields($dbh, $form_id);
+    $sm->assign('fields', $fields);
+    
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = get_preferred_type($type);
+    
+    if($type == 'text/html') {
+        header("Content-Type: text/html; charset=UTF-8");
+        print $sm->fetch("form.html.tpl");
+    
+    } else {
+        header('HTTP/1.1 400');
+        die("Unknown type.\n");
+    }
+
 ?>

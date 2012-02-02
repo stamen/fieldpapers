@@ -69,6 +69,26 @@
         return $row;
     }
     
+    function get_form_fields(&$dbh, $form_id)
+    {
+        $q = sprintf("SELECT form_id, `name`, label, `type`
+                      FROM form_fields
+                      WHERE form_id = %s",
+                     $dbh->quoteSmart($form_id));
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+            $rows[] = $row;
+        
+        return $rows;
+    }
+    
     function get_form_field(&$dbh, $form_id, $name)
     {
         $q = sprintf("SELECT form_id, `name`, label, `type`
