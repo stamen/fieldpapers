@@ -4,14 +4,9 @@
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-    
-    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    
-    //enforce_master_on_off_switch($language);
 
     /**** ... ****/
     
@@ -19,22 +14,26 @@
     $dbh =& get_db_connection();
     remember_user($dbh);
     
-    /*
-    if($user_id)
-        $user = get_user($dbh, $user_id);
-
-    if($user)
-        setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
-    */
-    
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
     $prints = get_prints($dbh, $pagination);
     list($count, $offset, $perpage, $page) = get_pagination($pagination);
+    
+    // Get user names
+    foreach ($prints as $i => $print)
+    {
+        $user = get_user($dbh, $prints[$i]['user_id']);
+        
+        if ($user['name'])
+        {
+            $prints[$i]['user_name'] = $user['name'];
+        } else {
+            $prints[$i]['user_name'] = 'Anonymous';
+        }
+    }
 
     $sm = get_smarty_instance();
     $sm->assign('prints', $prints);
-    $sm->assign('language', $language);
 
     $sm->assign('count', $count);
     $sm->assign('offset', $offset);

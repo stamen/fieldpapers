@@ -15,55 +15,16 @@
     
     <h2>Recent Prints</h2>
     
-    {assign var="prints_count" value=$prints|@count}
-    
-    {if $page > 1 and $prints_count > 0}
-        <p class="pagination">
-            <span class="newer">← <a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
-            <span class="older"><a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
-        </p>
-    {/if}
-    
-    <ol start="{$offset+1}">
-        {foreach from=$prints item="print"}
-            <li>
-                {if !$print.composed}
-                    <strike>
-                        <b id="print-{$print.id|escape}">{$print.age|nice_relativetime|escape}</b></strike>
-                
-                {elseif $print.place_woeid}
-                    <a href="{$base_dir}/print.php?id={$print.id|escape}">
-                        <b id="print-{$print.id|escape}">{$print.age|nice_relativetime|escape}</b>
-                        <br />
-                        {$print.place_name|escape} ({$print.paper_size|ucwords|escape})</a>
-                        <br />
-
-                {else}
-                    <a href="{$base_dir}/print.php?id={$print.id|escape}">
-                        <b id="print-{$print.id|escape}">{$print.age|nice_relativetime|escape}</b></a>
-                    <script type="text/javascript" language="javascript1.2" defer="defer">
-                    // <![CDATA[
-                    
-                        var onPlaces_{$print.id|escape} = new Function('res', "appendPlacename(res, document.getElementById('print-{$print.id|escape}'))");
-                        getPlacename({$print.latitude|escape}, {$print.longitude|escape}, '{$constants.FLICKR_KEY|escape}', 'onPlaces_{$print.id|escape}');
-                
-                    // ]]>
-                    </script>
-                {/if}
-            </li>
-        {/foreach}
-    </ol>
-    
-    <p class="pagination">
-        {if $prints_count > 0}
-            {if $page > 1}
-                <span class="newer">← <a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page-1|escape}">Newer</a></span>
-            {/if}
-            <span class="older"><a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page={$page+1|escape}">Older</a> →</span>
-        {else}
-            <span class="newer">← <a href="{$base_dir}/prints.php?perpage={$perpage|escape}&amp;page=1">Newest</a></span>
-        {/if}
-    </p>
+    {foreach from=$prints item="print" name="index"}
+        <div class="atlasThumb"> 
+            <a href="print.php?id={$print.id}"><img src="{$print.preview_url}" alt="scanned page" 
+            name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
+            <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">{$print.id}</a></div>
+            <div class="atlasOwner">by <a href="person.php?id={$print.user_id}">{$print.user_name}</a></div>
+            <div class="atlasPlace"><a href="place.html">Place</a></div>
+            <div class="atlasMeta">From <a href="time.php?date={$print.created}">{$print.created|date_format}</a></div>
+        </div>
+    {/foreach}
     
     {include file="footer.htmlf.tpl"}
     
