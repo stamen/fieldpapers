@@ -1,6 +1,7 @@
 <?php
 
     require_once 'output.php';
+    require_once 'lib.forms.php';
     require_once 'ModestMaps/ModestMaps.php';
     
     // basic conversions between millimeters, points, and inches
@@ -240,6 +241,12 @@
             $print['south'] = min($print['south'], $page['south']);
             $print['west'] = min($print['west'], $page['west']);
             $print['east'] = max($print['east'], $page['east']);
+        }
+        
+        if($post['form_id'] && $form = get_form($dbh, $post['form_id']))
+        {
+            $print['form_id'] = $form['id'];
+            $message['fields'] = get_form_fields($dbh, $form['id']);
         }
         
         set_print($dbh, $print);
