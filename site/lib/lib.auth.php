@@ -30,7 +30,7 @@
         
     function get_user(&$dbh, $user_id)
     {
-        $q = sprintf('SELECT id, name,
+        $q = sprintf('SELECT id, name, email,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
                       FROM users
