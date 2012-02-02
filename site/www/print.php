@@ -17,10 +17,20 @@
     remember_user($dbh);
 
     $sm = get_smarty_instance();
-    
+        
     // Get print    
     $print = get_print($dbh, $print_id);
     $sm->assign('print', $print);
+    
+    // Get user
+    $user = get_user($dbh, $print['user_id']);
+    
+    if ($user['name'])
+    {
+        $sm->assign('user_name', $user['name']);
+    } else {
+        $sm->assign('user_name', 'Anonymous');
+    }
     
     // Get pages
     $pages = get_print_pages($dbh, $print_id);
