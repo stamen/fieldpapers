@@ -48,6 +48,34 @@
         return get_form_field($dbh, $form_id, $name);
     }
     
+    function get_forms(&$dbh, $page)
+    {
+        list($count, $offset, $perpage, $page) = get_pagination($page);
+        
+        $q = sprintf("SELECT id, title, http_method, action_url,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(parsed) AS parsed,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             user_id
+                      FROM forms
+                      WHERE parsed
+                      ORDER BY created DESC
+                      LIMIT %d OFFSET %d",
+                     $count, $offset);
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+            $rows[] = $row;
+        
+        return $rows;
+    }
+    
     function get_form(&$dbh, $form_id)
     {
         $q = sprintf("SELECT id, title, http_method, action_url,
