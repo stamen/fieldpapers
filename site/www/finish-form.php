@@ -64,9 +64,12 @@
             set_form_field($dbh, $field);
         }
 
-        $form['title'] = $_POST['title'];
+        // manually-defined form title from add-form.php wins here
+        $form['title'] = $form['title'] ? $form['title'] : $_POST['title'];
+
         $form['http_method'] = $_POST['http_method'];
         $form['action_url'] = $_POST['action_url'];
+
         set_form($dbh, $form);
 
         finish_form($dbh, $form['id']);
