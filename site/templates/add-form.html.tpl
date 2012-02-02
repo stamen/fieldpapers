@@ -4,13 +4,9 @@
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Form - fieldpapers.org</title>    
+    <title>Add Form - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    
-    {if $form && !$form.parsed}
-        <meta http-equiv="refresh" content="5" />
-    {/if}
 </head>
 <body>
     <div class="container">
@@ -19,17 +15,10 @@
             
             {include file="navigation.htmlf.tpl"}
             
-            {if $form.parsed}
-                <pre>{$form|@print_r:1|escape}{$fields|@print_r:1|escape}</pre>
-
-            {else}
-                <p>Preparing your form.</p>
-                <p>
-                    This may take a while, generally a few minutes. You don't need to keep this
-                    window open; you can <a href="{$base_dir}/form.php?id={$form.id|escape}">bookmark 
-                    this page</a> and come back later.
-                </p>
-            {/if}
+            <form action="{$base_href}" method="POST">
+                Paste in the URL of your Google form: <input name="form_url" type="text" size="30" /><br />
+                <input type="submit" value="Submit" />
+            </form>
             
             {include file="footer.htmlf.tpl"}
         <!-- end .content --></div>

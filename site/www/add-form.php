@@ -1,13 +1,12 @@
 <?php
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    require_once '../lib/init.php';
-    require_once '../lib/data.php';
-    require_once '../lib/lib.forms.php';
-    require_once '../lib/lib.auth.php';
+    require_once 'init.php';
+    require_once 'data.php';
+    require_once 'lib.forms.php';
+    require_once 'lib.auth.php';
 
      /*asks to post a new form
     creates a new message in the messages table -- data.php -- with addmessage*/
-    
     
     session_start();
     $dbh =& get_db_connection();
@@ -16,12 +15,12 @@
     $user = cookied_user($dbh);
     $user_id = $user['id'];
     
-    if ($_POST["url_form"])
+    if($_POST['form_url'])
     {
         $added_form = add_form($dbh, $user_id);
         
         $message = array('action' => 'import form',
-                         'url' => $_POST["url_form"],
+                         'url' => $_POST['form_url'],
                          'form_id' => $added_form['id']);
             
         add_message($dbh, json_encode($message));
@@ -31,4 +30,19 @@
         
         exit();
     }
+
+    $sm = get_smarty_instance();
+    
+    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
+    $type = get_preferred_type($type);
+    
+    if($type == 'text/html') {
+        header("Content-Type: text/html; charset=UTF-8");
+        print $sm->fetch("add-form.html.tpl");
+    
+    } else {
+        header('HTTP/1.1 400');
+        die("Unknown type.\n");
+    }
+
 ?>
