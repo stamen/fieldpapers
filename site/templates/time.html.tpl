@@ -25,7 +25,7 @@
             <p><img src="" alt="map selection area" name="map" width="100%" height="600" 
             id="map" style="background-image:url(big-satellite-placeholder.jpg); 
             background-position:center" /></p>
-            
+            <h2>Atlases</h2>
             {foreach from=$prints item="print" name="index"}
                 <div class="atlasThumb"> 
                     <a href="page.html"><img src="{$print.preview_url}" alt="printed page" 
