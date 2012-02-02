@@ -15,13 +15,24 @@
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
-
+    
+    $user = get_user($dbh, $user_id);
+    
     $sm = get_smarty_instance();
     
     $sm->assign('user_id', $user_id);
     
+    
+    if ($user['name'])
+    {
+        $sm->assign('user_name', $user['name']);
+    } else {
+        $sm->assign('user_name', 'Anonymous');
+    }
+    
     // Get prints by id
     $prints = get_prints_by_user_id($dbh, $user_id);
+        
     $sm->assign('prints', $prints);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
