@@ -17,9 +17,11 @@
             
             <h1>{$user_name}</h1>
             
-            <p>
-                Email address
-            </p>
+            {if $user_email}
+                <p>
+                    {$user_email}
+                </p>
+            {/if}
             <div class="print" id="map"></div>
             <div class="fltlft">
                 <h2>Number of Atlases</h2>

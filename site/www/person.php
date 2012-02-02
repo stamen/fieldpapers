@@ -22,12 +22,16 @@
     
     $sm->assign('user_id', $user_id);
     
-    
     if ($user['name'])
     {
         $sm->assign('user_name', $user['name']);
     } else {
         $sm->assign('user_name', 'Anonymous');
+    }
+    
+    if ($user['email'])
+    {
+        $sm->assign('user_email', $user['email']);
     }
     
     // Get prints by id
