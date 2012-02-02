@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     
-    {if $form && !$form.created}
+    {if $form && !$form.parsed}
         <meta http-equiv="refresh" content="5" />
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>

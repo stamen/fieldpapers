@@ -149,6 +149,7 @@ DROP TABLE IF EXISTS forms;
 CREATE TABLE forms (
 
     id              VARCHAR(8) NOT NULL,
+    title           TEXT,
 
     http_method     ENUM('GET', 'POST'),
     action_url      TEXT,

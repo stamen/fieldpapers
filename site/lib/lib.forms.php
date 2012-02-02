@@ -50,7 +50,7 @@
     
     function get_form(&$dbh, $form_id)
     {
-        $q = sprintf("SELECT id, http_method, action_url,
+        $q = sprintf("SELECT id, title, http_method, action_url,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(parsed) AS parsed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
@@ -117,7 +117,7 @@
 
         $update_clauses = array();
 
-        foreach(array('http_method', 'action_url', 'user_id') as $field)
+        foreach(array('http_method', 'action_url', 'title', 'user_id') as $field)
             if(!is_null($form[$field]))
                 if($form[$field] != $old_form[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($form[$field]));

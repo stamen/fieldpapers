@@ -1,7 +1,8 @@
 # placeholder module for form HTML parsing.
 
 import sys
-import urllib
+from urllib import urlopen
+from urlparse import urljoin
 import json
 
 from BeautifulSoup import BeautifulSoup
@@ -10,15 +11,17 @@ from apiutils import finish_form, fail_form, ALL_FINISHED
 def get_form_fields(url):
     """ Gets a data structure of form fields for an HTML form URL, return a dictionary.
     """
-    page = urllib.urlopen(url)
-    
+    page = urlopen(url)
     soup = BeautifulSoup(page)
-    
     form = soup.form
-        
+
     # Setting up data structure
-    form_data = dict(form.attrs)
-    form_data.update(dict(fields=[]))
+    form_data = dict(fields=[])
+    form_attr = dict(form.attrs)
+
+    form_data['title'] = soup.h1 and soup.h1.text or soup.title.text
+    form_data['action'] = urljoin(url, form_attr['action'])
+    form_data['method'] = form_attr['method']
     
     # Get a list of the entry labels
     labels = form.findAll(['label'], {"class": "ss-q-title"})
@@ -110,7 +113,7 @@ def main(apibase, password, form_id, url):
     
     form_data = get_form_fields(url)
     
-    finish_form(apibase, password, form_id, form_data['action'], form_data['method'], form_data['fields'])
+    finish_form(apibase, password, form_id, form_data['action'], form_data['method'], form_data['title'], form_data['fields'])
     
     yield ALL_FINISHED
     
