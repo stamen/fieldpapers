@@ -426,13 +426,21 @@
 
                     Page zoom: <span id="page-zoom"></span>
                     <strong id="page-count"></strong> page(s)
+                    
+                    <select id="forms" name="form_id" style="margin-left: 90px;">
+                        <option value="default">Forms</option>
+                        
+                        {foreach from=$forms item="form"}
+                            <option value="{$form.id}">{$form.title} ({$form.id})</option>
+                        {/foreach}
+                    </select>
                 </p>
             </div>
     
             <div id="container">
                 <div id="preview">
                     <div class="padding">
-                        <h2 style="text-align: center">Field Papers Preview</h2>
+                        <h2 style="text-align: center;">Field Papers Preview</h2>
                         <div id="preview_map"></div>
                     </div>
                 </div>

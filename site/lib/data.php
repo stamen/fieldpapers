@@ -698,7 +698,7 @@
 
         $update_clauses = array();
 
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'layout', 'provider', 'pdf_url', 'preview_url', 'geotiff_url', 'atlas_pages', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'layout', 'provider', 'pdf_url', 'preview_url', 'geotiff_url', 'atlas_pages', 'form_id', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
             if(!is_null($print[$field]))
                 if($print[$field] != $old_print[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));
