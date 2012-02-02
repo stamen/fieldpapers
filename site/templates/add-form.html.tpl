@@ -16,7 +16,8 @@
             {include file="navigation.htmlf.tpl"}
             
             <form action="{$base_href}" method="POST">
-                Paste in the URL of your Google form: <input name="form_url" type="text" size="30" /><br />
+                Paste in the URL of your HTML form: <input name="form_url" type="text" size="30" /><br />
+                Optional title: <input name="form_title" type="text" size="30" /><br />
                 <input type="submit" value="Submit" />
             </form>
             

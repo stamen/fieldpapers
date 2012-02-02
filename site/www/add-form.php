@@ -19,6 +19,12 @@
     {
         $added_form = add_form($dbh, $user_id);
         
+        if(!empty($_POST['form_title']))
+        {
+            $added_form['title'] = $_POST['form_title'];
+            set_form($dbh, $added_form);
+        }
+        
         $message = array('action' => 'import form',
                          'url' => $_POST['form_url'],
                          'form_id' => $added_form['id']);
