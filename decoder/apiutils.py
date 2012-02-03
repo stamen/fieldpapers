@@ -55,15 +55,33 @@ def finish_print(apibase, password, print_id, print_info):
 
     return
 
+def update_scan(apibase, password, scan_id, uploaded_file, print_id, progress):
+    
+    """
+    """
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    query = urlencode({'id': scan_id})
+    
+    params = urlencode({'print_id': print_id,
+                        'password': password,
+                        'uploaded_file': uploaded_file,
+                        'progress': progress})
+    
+    print 'update scan:', scan_id, progress
+    req, path = _prepare_http_connection(apibase)
+    req.request('POST', path + '/update-scan.php?' + query, params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to update-scan.php resulting in status %s instead of 200' % res.status
+
+    return
+
 def finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
     """
     """
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
-    
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
     query = urlencode({'id': scan_id})
+    
     params = urlencode({'print_id': print_id,
                         'password': password,
                         'uploaded_file': uploaded_file,
@@ -75,7 +93,7 @@ def finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, 
                         'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom,
                         'geojpeg_bounds': '%.8f,%.8f,%.8f,%.8f' % geojpeg_bounds})
     
-    req = HTTPConnection(host, port)
+    req, path = _prepare_http_connection(apibase)
     req.request('POST', path + '/finish-scan.php?' + query, params, headers)
     res = req.getresponse()
     

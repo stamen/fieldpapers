@@ -21,24 +21,11 @@ else:
 from ModestMaps.Core import Point, Coordinate
 
 from geoutils import create_geotiff, generate_tiles
-from apiutils import append_scan_file, finish_scan, fail_scan, get_print_info, ALL_FINISHED
+from apiutils import append_scan_file, finish_scan, update_scan, fail_scan, get_print_info, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from imagemath import imgblobs, extract_image, open as imageopen
 from matrixmath import Transform, quad2quad
 from dimensions import ptpin
-
-# these must match site/lib/data.php
-STEP_UPLOADING = 0
-STEP_QUEUED = 1
-STEP_SIFTING = 2
-STEP_FINDING_NEEDLES = 3
-STEP_READING_QR_CODE = 4
-STEP_TILING_UPLOADING = 5
-STEP_FINISHED = 6
-STEP_BAD_QRCODE = 98
-STEP_ERROR = 99
-STEP_FATAL_ERROR = 100
-STEP_FATAL_QRCODE_ERROR = 101
 
 class CodeReadException(Exception):
     pass
@@ -334,6 +321,10 @@ def main(apibase, password, scan_id, url):
         if scan_id:
             finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
     
+    def _update_scan(uploaded_file, print_id, progress):
+        if scan_id:
+            update_scan(apibase, password, scan_id, uploaded_file, print_id, progress)
+    
     def _fail_scan():
         if scan_id:
             fail_scan(apibase, password, scan_id)
@@ -369,6 +360,8 @@ def main(apibase, password, scan_id, url):
     
         s, h, path, p, q, f = urlparse(url)
         uploaded_file = basename(path)
+
+        _update_scan(uploaded_file, None, 0.1)
         
         yield 10
         
@@ -379,6 +372,8 @@ def main(apibase, password, scan_id, url):
         move(highpass_filename, 'highpass.jpg')
         move(preblobs_filename, 'preblobs.jpg')
         unlink(postblob_filename)
+
+        _update_scan(uploaded_file, None, 0.2)
 
         for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
     
@@ -404,6 +399,8 @@ def main(apibase, password, scan_id, url):
             draw_postblobs(postblob_img, blobs_abcde)
             _append_image('postblob.jpg', postblob_img)
             postblob_img.save('postblob.jpg')
+    
+            _update_scan(uploaded_file, print_id, 0.3)
             
             print >> stderr, 'geotiff...',
             
@@ -414,15 +411,18 @@ def main(apibase, password, scan_id, url):
             
             _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
             _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
+    
+            _update_scan(uploaded_file, print_id, 0.4)
             
             print >> stderr, 'done.'
             print >> stderr, 'tiles...',
             
             minrow, mincol, minzoom = 2**20, 2**20, 20
             maxrow, maxcol, maxzoom = 0, 0, 0
-    
+            
             for (coord, tile_img) in generate_tiles(input, s2p, *geo_args):
-    
+                _update_scan(uploaded_file, print_id, 0.7) # TODO, make this work: 0.4 + 0.6 * float(index) / len(tiles_needed))
+
                 _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)
                 print >> stderr, coord.zoom,
                 
