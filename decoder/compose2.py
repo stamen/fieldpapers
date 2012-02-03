@@ -285,14 +285,14 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     
     print_path = 'print.php?' + urlencode({'id': print_id})
     print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
-    print_form = {}
+    print_info = {}
     
     #
     # Prepare a shorthands for pushing data.
     #
 
     _append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
-    _finish_print = lambda form: print_id and finish_print(apibase, password, print_id, form) or None
+    _finish_print = lambda print_info: print_id and finish_print(apibase, password, print_id, print_info) or None
     
     print 'Print:', print_id
     print 'Paper:', orientation, paper_size
@@ -353,7 +353,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
             out = StringIO()
             preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
             preview_url = _append_file('preview-p%(number)d.jpg' % page, out.getvalue())
-            print_form['pages[%(number)d][preview_url]' % page] = preview_url
+            print_info['pages[%(number)d][preview_url]' % page] = preview_url
     
         #
         # Complete the PDF and upload it.
@@ -363,7 +363,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         
         pdf_name = 'walking-paper-%s.pdf' % print_id
         pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
-        print_form['pdf_url'] = pdf_url
+        print_info['pdf_url'] = pdf_url
 
     except:
         raise
@@ -390,13 +390,13 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     out = StringIO()
     preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
     preview_url = _append_file('preview.jpg' % page, out.getvalue())
-    print_form['preview_url'] = preview_url
+    print_info['preview_url'] = preview_url
     
     #
     # All done, wrap it up.
     #
     
-    _finish_print(print_form)
+    _finish_print(print_info)
     
     yield ALL_FINISHED
 
