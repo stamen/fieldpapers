@@ -110,6 +110,8 @@ if __name__ == '__main__':
     else:
         due = time.time() + 60
     
+    print >> sys.stderr, 'Polling for %d seconds...' % round(due - time.time())
+    
     s, host, path, p, q, f = urlparse.urlparse(options.apibase.rstrip('/'))
     host, port = (':' in host) and host.split(':') or (host, '80')
     
