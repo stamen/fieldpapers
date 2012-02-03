@@ -197,6 +197,12 @@
         die_with_code(503, $sm->fetch("unavailable.html.tpl"));
     }
     
+    function enforce_api_password($password)
+    {
+        if($password != API_PASSWORD)
+            die_with_code(401, 'Sorry, bad password');
+    }
+    
     function die_with_code($code, $message)
     {
         if($code != 503)

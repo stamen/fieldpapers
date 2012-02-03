@@ -9,25 +9,45 @@ from mimetypes import guess_type
 # yield this value from decode and compose main() in lieu of a timeout
 ALL_FINISHED = -1
 
+def _prepare_http_connection(url):
+    """
+    """
+    s, host, path, p, q, f = urlparse(url)
+    host, port = (':' in host) and host.split(':') or (host, 80)
+    
+    return HTTPConnection(host, port), path
+
+def update_print(apibase, password, print_id, progress):
+    """
+    """
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    query = urlencode({'id': print_id})
+
+    params = urlencode(dict(progress=progress, password=password))
+    
+    req, path = _prepare_http_connection(apibase)
+    req.request('POST', path + '/update-print.php?' + query, params, headers)
+    res = req.getresponse()
+    
+    assert res.status == 200, 'POST to update-print.php resulting in status %s instead of 200' % res.status
+
+    return
+
 def finish_print(apibase, password, print_id, print_info):
     """
     """
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
-    
     #if urlparse(print_data_url)[1] == 'localhost':
     #    # just use an absolute path for preview URL if it's on localhost
     #    parts = urlparse(print_data_url)
     #    print_data_url = urlunparse((None, None, parts[2], parts[3], parts[4], parts[5]))
     
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
     query = urlencode({'id': print_id})
 
     print_info.update(dict(password=password))
     params = urlencode(print_info)
     
-    req = HTTPConnection(host, port)
+    req, path = _prepare_http_connection(apibase)
     req.request('POST', path + '/finish-print.php?' + query, params, headers)
     res = req.getresponse()
     
