@@ -5,8 +5,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Upload Scan - fieldpapers.org</title>
-    <!-- <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" /> -->
-    <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
     <meta http-equiv="refresh" content="30" />
 </head>
 <body>
@@ -27,7 +26,10 @@
             <input name="signature" type="hidden" value="{$s3post.signature|escape}" />
             
             <input name="file" type="file" />
-            <input class="mac-button" type="submit" value="Send" />
+            
+            <br/><br/><br/>
+            <input class="mac-button" type="submit" value="Upload" style='width: 60px; 
+                    font-size: 100%; margin-top: 40px; display: block;'/>
         </form>
 
     {elseif $localpost}
@@ -39,24 +41,21 @@
             <input name="signature" type="hidden" value="{$localpost.signature|escape}" />
             
             <input name="file" type="file" />
-            <input class="mac-button" type="submit" value="Send" />
+            
+            <input class="mac-button" type="submit" value="Upload" style='width: 60px; 
+                    font-size: 100%; margin-top: 40px; display: block;'/>
         </form>
     {/if}
     
-    <h3>Examples</h3>
-    
-    <p>
-        <img style="position: relative; left: -20px;" src="{$base_dir}/img/sample-input-best.jpg" width="400" height="305" />
+    <p style='margin-top: 50px;'>
+        Rules
+        <ul type="circle">
+            <li>Make sure the scan/photo/image is at least 200dpi.</li>
+            <li>Make sure you're uploading a JPG, PNG, TIF, or GIF. (PDFs won't work.)</li>
+            <li>Don't upload things that aren't Field Papers maps, please.</li>
+        </ul>
     </p>
 
-    <p>
-        <img src="{$base_dir}/img/sample-input-bad.jpg" width="380" height="285" />
-    </p>
-
-    <p>
-        <img src="{$base_dir}/img/sample-input-worst.jpg" width="380" height="285" />
-    </p>
-    
     {include file="footer.htmlf.tpl"}
     
 </body>
