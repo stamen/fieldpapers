@@ -20,7 +20,7 @@ else:
 
 from ModestMaps.Core import Point, Coordinate
 
-from geoutils import create_geotiff, generate_tiles
+from geoutils import create_geotiff, list_tiles_for_bounds, extract_tile_for_coord
 from apiutils import append_scan_file, finish_scan, update_scan, fail_scan, get_print_info, ALL_FINISHED
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from imagemath import imgblobs, extract_image, open as imageopen
@@ -420,10 +420,15 @@ def main(apibase, password, scan_id, url):
             minrow, mincol, minzoom = 2**20, 2**20, 20
             maxrow, maxcol, maxzoom = 0, 0, 0
             
-            for (coord, tile_img) in generate_tiles(input, s2p, *geo_args):
-                _update_scan(uploaded_file, print_id, 0.7) # TODO, make this work: 0.4 + 0.6 * float(index) / len(tiles_needed))
-
+            tiles_needed = list_tiles_for_bounds(input, s2p, *geo_args)
+            
+            for (index, (coord, scan2coord)) in enumerate(tiles_needed):
+                if index % 10 == 0:
+                    _update_scan(uploaded_file, print_id, 0.4 + 0.6 * float(index) / len(tiles_needed))
+                
+                tile_img = extract_tile_for_coord(input, coord, scan2coord)
                 _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)
+
                 print >> stderr, coord.zoom,
                 
                 minrow = min(minrow, coord.row)

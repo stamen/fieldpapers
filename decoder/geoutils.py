@@ -165,12 +165,13 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
 
     return geotiff_bytes, geojpeg_img, img_bounds
 
-def generate_tiles(image, s2p, paper_width_pt, paper_height_pt, north, west, south, east):
-    """ Yield a stream of coordinates and tile images for a full set of zoom levels.
+def list_tiles_for_bounds(image, s2p, paper_width_pt, paper_height_pt, north, west, south, east):
+    """ Return a list of coordinates and scan-to-coord functions for a full set of zoom levels.
     
-        Internal work is done by generate_tiles_for_zoom().
+        Internal work is done by list_tiles_for_bounds_zoom().
     """
     osm = OpenStreetMapProvider()
+    coords = []
     
     for zoom in range(19):
         #
@@ -212,12 +213,15 @@ def generate_tiles(image, s2p, paper_width_pt, paper_height_pt, north, west, sou
         p2c = triangle2triangle(ul_pt, ul_co, ur_pt, ur_co, lr_pt, lr_co)
         s2c = s2p.multiply(p2c)
         
-        for (coord, tile_img) in generate_tiles_for_zoom(image, s2c, zoom):
-            yield (coord, tile_img)
+        coords += list_tiles_for_bounds_zoom(image, s2c, zoom)
     
-def generate_tiles_for_zoom(image, scan2coord, zoom):
-    """ Yield a stream of coordinates and tile images for a given zoom level.
+    return coords
+    
+def list_tiles_for_bounds_zoom(image, scan2coord, zoom):
+    """ Return a list of coordinates and scan-to-coord functions for a given zoom level.
     """
+    coords = []
+    
     ul = scan2coord(Point(0, 0))
     ur = scan2coord(Point(image.size[0], 0))
     lr = scan2coord(Point(*image.size))
@@ -230,9 +234,15 @@ def generate_tiles_for_zoom(image, scan2coord, zoom):
     
     for row in range(int(minrow), int(maxrow) + 1):
         for col in range(int(mincol), int(maxcol) + 1):
-            
             coord = Coordinate(row, col, zoom)
-            coord_bbox = col, row, col + 1, row + 1
-            tile_img = extract_image(scan2coord, coord_bbox, image, (256, 256), 256/8)
-            
-            yield (coord, tile_img)
+            coords.append((coord, scan2coord))
+    
+    return coords
+    
+def extract_tile_for_coord(image, coord, scan2coord):
+    """ Return an image for a given coordinate.
+    """
+    coord_bbox = coord.column, coord.row, coord.column + 1, coord.row + 1
+    tile_img = extract_image(scan2coord, coord_bbox, image, (256, 256), 256/8)
+    
+    return tile_img

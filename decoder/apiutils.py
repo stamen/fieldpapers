@@ -67,7 +67,6 @@ def update_scan(apibase, password, scan_id, uploaded_file, print_id, progress):
                         'uploaded_file': uploaded_file,
                         'progress': progress})
     
-    print 'update scan:', scan_id, progress
     req, path = _prepare_http_connection(apibase)
     req.request('POST', path + '/update-scan.php?' + query, params, headers)
     res = req.getresponse()
