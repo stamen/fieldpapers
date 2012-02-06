@@ -7,13 +7,11 @@
     
     session_start();
     
-    $_SESSION['login-attempts'] += 1;
-    
     $dbh =& get_db_connection();
-    
-    // Remember user even if they don't log in
     remember_user($dbh);
-           
+    
+    $sm = get_smarty_instance();
+               
     switch($_POST['action'])
     {
         case 'register':
@@ -115,53 +113,14 @@
             
             break;
     }
+    
+    if(is_logged_in())
+    {
+        $logged_in = True;
+        $sm->assign('logged_in', $logged_in);
+        $sm->assign('username', $_SESSION['user']['name']);
+    }
+           
+    header("Content-Type: text/html; charset=UTF-8");
+    print $sm->fetch("login.html.tpl");
 ?>
-<html>
-    <head>
-        <title>Welcome</title>
-    <body>
-    
-    <? if(is_logged_in()) { echo $_POST['username'] . ' is logged in.';?>
-    
-        <!-- otherwise, user is logged in -->
-        <b>Log out</b><br /><br />
-        <form id='logout_form' method='POST' action='login.php'>
-            <input type='submit' id="login_button" value='Log Out'>
-            <input type='hidden' name='action' value='log out'>
-            
-            <input type='hidden' name='redirect' value='index.php'>
-        </form>
-    
-    <? } else { ?>
-    
-        <!-- if the user is not logged in -->
-        <b>Log in</b><br /><br />
-        <form id='login_form' method='POST' action='login.php'>
-            Username: <input type='text' name='username'><br />
-            Password: <input type='password' name='password'><br />
-            <input type='submit' id="login_button" value='Log In'>
-            <input type='hidden' name='action' value='log in'>
-            
-            <input type='hidden' name='redirect' value='index.php'>
-        </form>
-        
-        <b>Register</b><br /><br />
-    
-        <form id='register_form' method='POST' action='login.php'>
-            Email: <input type='text' name='email'><br />
-            Username: <input type='text' name='username'><br />
-            Password: <input type='password' name='password1'><br />
-            Password Again: <input type='password' name='password2'><br />
-            <input type='submit' id="login_button" value='Register'>
-            <input type='hidden' name='action' value='register'>
-            
-            <input type='hidden' name='redirect' value='index.php'>
-        </form>
-    
-    <? } ?>
-    
-    <pre>
-        <?php print_r($_SESSION); ?>
-    </pre>
-    </body>
-</html>
