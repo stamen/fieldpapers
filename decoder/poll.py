@@ -69,6 +69,31 @@ def updateQueue(apibase, password, message_id, timeout):
     
     return
 
+def decodeScan(apibase, password, message_id, msg):
+    """
+    """
+    url = msg['url']
+
+    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
+    return decode2.main(apibase, password, msg['scan_id'], url)
+
+def composePrint(apibase, password, message_id, msg):
+    """
+    """
+    kwargs = dict(print_id=msg['print_id'],
+                  paper_size=msg['paper_size'],
+                  orientation=msg['orientation'],
+                  pages=msg['pages'])
+    
+    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
+    return compose2.main(apibase, password, **kwargs)
+
+def parseForm(apibase, password, message_id, msg):
+    """
+    """
+    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- parsing a form.'
+    return forms.main(apibase, password, msg['form_id'], msg['url'])
+
 if __name__ == '__main__':
 
     if os.path.dirname(__file__):
@@ -84,6 +109,8 @@ if __name__ == '__main__':
     
     else:
         due = time.time() + 60
+    
+    print >> sys.stderr, 'Polling for %d seconds...' % round(due - time.time())
     
     s, host, path, p, q, f = urlparse.urlparse(options.apibase.rstrip('/'))
     host, port = (':' in host) and host.split(':') or (host, '80')
@@ -131,7 +158,7 @@ if __name__ == '__main__':
                     # JSON parse succeeded so we'll determine if there's a print or scan here.
                     action = msg.get('action', 'compose')
 
-                    if action == 'decode' and prints_only:
+                    if action != 'compose' and prints_only:
                         updateQueue(apibase, password, message_id, 15)
                         time.sleep(2)
                         continue
@@ -139,30 +166,13 @@ if __name__ == '__main__':
                     print >> sys.stderr, '_' * 80
         
                     if action == 'decode':
-                        if 'url' not in msg:
-                            # we're no longer set up to handle these.
-                            print >> sys.stderr, datetime.datetime.now(), 'No URL in message id', message_id, "so we'll just pretend it never happened."
-
-                            updateQueue(apibase, password, message_id, ALL_FINISHED)
-                            continue
-                        
-                        url = msg['url']
-
-                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
-                        progress = decode2.main(apibase, password, msg['scan_id'], url)
+                        progress = decodeScan(apibase, password, message_id, msg)
                     
                     elif action == 'compose':
-                        kwargs = dict(print_id=msg['print_id'],
-                                      paper_size=msg['paper_size'],
-                                      orientation=msg['orientation'],
-                                      pages=msg['pages'])
-                        
-                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
-                        progress = compose2.main(apibase, password, **kwargs)
+                        progress = composePrint(apibase, password, message_id, msg)
                     
                     elif action == 'import form':
-                        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- importing a form.'
-                        progress = forms.main(apibase, password, msg['form_id'], msg['url'])
+                        progress = parseForm(apibase, password, message_id, msg)
                 
                 try:
                     for timeout in progress:

@@ -22,7 +22,7 @@ from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
-from apiutils import append_print_file, finish_print, ALL_FINISHED
+from apiutils import append_print_file, finish_print, update_print, ALL_FINISHED
 from cairoutils import get_drawing_context
 
 def get_qrcode_image(print_href):
@@ -285,14 +285,15 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     
     print_path = 'print.php?' + urlencode({'id': print_id})
     print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
-    print_form = {}
+    print_info = {}
     
     #
     # Prepare a shorthands for pushing data.
     #
 
     _append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
-    _finish_print = lambda form: print_id and finish_print(apibase, password, print_id, form) or None
+    _finish_print = lambda print_info: print_id and finish_print(apibase, password, print_id, print_info) or None
+    _update_print = lambda progress: print_id and update_print(apibase, password, print_id, progress) or None
     
     print 'Print:', print_id
     print 'Paper:', orientation, paper_size
@@ -319,7 +320,9 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         # Add pages to the PDF one by one.
         #
     
-        for page in pages:
+        for (index, page) in enumerate(pages):
+            _update_print(float(index) / len(pages))
+
             page['number'] = int(page['number'])
         
             page_href = print_href and (print_href + '/%(number)d' % page) or None
@@ -353,7 +356,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
             out = StringIO()
             preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
             preview_url = _append_file('preview-p%(number)d.jpg' % page, out.getvalue())
-            print_form['pages[%(number)d][preview_url]' % page] = preview_url
+            print_info['pages[%(number)d][preview_url]' % page] = preview_url
     
         #
         # Complete the PDF and upload it.
@@ -363,7 +366,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         
         pdf_name = 'walking-paper-%s.pdf' % print_id
         pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
-        print_form['pdf_url'] = pdf_url
+        print_info['pdf_url'] = pdf_url
 
     except:
         raise
@@ -390,13 +393,13 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     out = StringIO()
     preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
     preview_url = _append_file('preview.jpg' % page, out.getvalue())
-    print_form['preview_url'] = preview_url
+    print_info['preview_url'] = preview_url
     
     #
     # All done, wrap it up.
     #
     
-    _finish_print(print_form)
+    _finish_print(print_info)
     
     yield ALL_FINISHED
 
