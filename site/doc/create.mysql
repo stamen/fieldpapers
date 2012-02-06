@@ -63,6 +63,8 @@ ALTER TABLE prints ADD COLUMN atlas_pages TEXT NULL AFTER geotiff_url;
 
 ALTER TABLE prints ADD COLUMN form_id VARCHAR(8) NULL AFTER id;
 
+ALTER TABLE prints ADD COLUMN progress FLOAT NULL AFTER composed;
+
 
 
 DROP TABLE IF EXISTS pages;
@@ -141,6 +143,8 @@ CREATE TABLE scans (
 
 ALTER TABLE scans ADD COLUMN has_geojpeg ENUM('yes', 'no') DEFAULT 'no' AFTER has_geotiff;
 ALTER TABLE scans ADD COLUMN geojpeg_bounds TEXT AFTER uploaded_file;
+
+ALTER TABLE scans ADD COLUMN progress FLOAT NULL AFTER failed;
 
 
 
