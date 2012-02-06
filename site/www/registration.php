@@ -7,10 +7,10 @@
     
     session_start();
     
-    $_SESSION['login-attempts'] += 1;
-    
     $dbh =& get_db_connection();
     remember_user($dbh);
+    
+    $sm = get_smarty_instance();
            
     switch($_POST['action'])
     {
@@ -104,27 +104,7 @@
             break;
         */
     }
+    
+    header("Content-Type: text/html; charset=UTF-8");
+    print $sm->fetch("registration.html.tpl");
 ?>
-<html>
-    <head>
-        <title>Register for Field Papers</title>
-    <body>
-    
-    <? if(!is_logged_in()) { ?>            
-        <b>Register</b><br /><br />
-    
-        <form id='register_form' method='POST' action='login.php'>
-            Email: <input type='text' name='email'><br />
-            Username: <input type='text' name='username'><br />
-            Password: <input type='password' name='password1'><br />
-            Password Again: <input type='password' name='password2'><br />
-            <input type='submit' id="login_button" value='Register'>
-            <input type='hidden' name='action' value='register'>
-            
-            <input type='hidden' name='redirect' value='index.php'>
-            <!-- <input type='hidden' name='redirect' value=<?php echo "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];?>> -->
-        </form>
-    
-    <? } ?>
-    </body>
-</html>
