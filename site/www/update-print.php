@@ -24,7 +24,8 @@
     {
         $dbh->query('START TRANSACTION');
         
-        error_log("Update print {$print['id']} with {$progress}");
+        $print['progress'] = $progress;
+        set_print($dbh, $print);
 
         $dbh->query('COMMIT');
     }

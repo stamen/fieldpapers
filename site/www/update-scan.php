@@ -24,7 +24,8 @@
     {
         $dbh->query('START TRANSACTION');
         
-        error_log("Update scan {$scan['id']} with {$progress}");
+        $scan['progress'] = $progress;
+        set_scan($dbh, $scan);
 
         $dbh->query('COMMIT');
     }
