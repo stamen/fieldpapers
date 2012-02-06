@@ -10,8 +10,6 @@
     $_SESSION['login-attempts'] += 1;
     
     $dbh =& get_db_connection();
-    
-    // Remember user even if they don't log in
     remember_user($dbh);
            
     switch($_POST['action'])
