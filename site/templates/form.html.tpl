@@ -20,7 +20,9 @@
             {include file="navigation.htmlf.tpl"}
             
             {if $form.parsed}
-                <pre>{$form|@print_r:1|escape}{$fields|@print_r:1|escape}</pre>
+                <h2>{$form.title}</h2>
+                <h3>Created by {$form.user_name} on {$form.created|date_format}</h3>
+                <!--<pre>{$form|@print_r:1|escape}{$fields|@print_r:1|escape}</pre>-->
 
             {else}
                 <p>Preparing your form.</p>

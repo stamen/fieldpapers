@@ -21,6 +21,16 @@
     
     // Get form    
     $form = get_form($dbh, $form_id);
+    
+    $user = get_user($dbh, $form['user_id']);
+    
+    if ($user['name'])
+    {
+        $form['user_name'] = $user['name'];
+    } else {
+        $form['user_name'] = 'Anonymous';
+    }
+    
     $sm->assign('form', $form);
     
     // Get pages
