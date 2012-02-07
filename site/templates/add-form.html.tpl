@@ -15,15 +15,25 @@
             
             {include file="navigation.htmlf.tpl"}
             
+        <h1>Add a form</h1>
+
+            <p>Field Papers can import a form that you've created elsewhere online, for example, in a site like Survey Monkey or Google Docs. All we need is a URL to the page that displays the form, and we'll do the rest.</p>
+            
             <form action="{$base_href}" method="POST">
-                Paste in the URL of your HTML form: <input name="form_url" type="text" size="30" /><br />
-                Optional title: <input name="form_title" type="text" size="30" /><br />
-                <input type="submit" value="Submit" />
+                <p>
+                    URL of your form:<br />
+                    <input name="form_url" type="text" size="60" />
+                </p>
+
+<!--                Optional title: <input name="form_title" type="text" size="30" /><br /> -->
+                <p>
+                        <input type="submit" value="Get Form" />
+                </p>
             </form>
             
             {include file="footer.htmlf.tpl"}
-        <!-- end .content --></div>
+       </div>
         
-    <!-- end .container --></div>
+    </div>
 </body>
 </html>
