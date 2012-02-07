@@ -429,9 +429,10 @@
                     
                     <select id="forms" name="form_id" style="margin-left: 90px;">
                         {if $default_form == 'none'}
-                            <option value="default">Forms</option>
+                            <option selected>Forms</option>
                         {else}
-                            <option value="default">{$default_form.title} ({$default_form.id})</option>
+                            <option>Forms</option>
+                            <option value="{$default_form.id}" selected>{$default_form.title} ({$default_form.id})</option>
                         {/if}
                         
                         {foreach from=$forms item="form"}
