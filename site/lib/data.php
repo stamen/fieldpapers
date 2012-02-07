@@ -445,7 +445,7 @@
         
         if($page_number)
         {
-            $row['page'] = get_print_page($dbh, $print_id, $page_number);
+            $row['selected_page'] = get_print_page($dbh, $print_id, $page_number);
         }
         
         return $row;

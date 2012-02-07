@@ -1,14 +1,14 @@
-<print id="{$print.id|escape}{if $print.atlas_page}/{$print.atlas_page.part|escape}{/if}" user="{$print.user_id|escape}" href="http://{$domain}{$base_dir}/print.php?id={$print.id|escape:"url"}{if $print.atlas_page}/{$print.atlas_page.part|escape:"url"}{/if}">
+<print id="{$print.id|escape}{if $print.selected_page}/{$print.selected_page.page_number|escape}{/if}" user="{$print.user_id|escape}" href="http://{$domain}{$base_dir}/print.php?id={$print.id|escape:"url"}{if $print.selected_page}/{$print.selected_page.page_number|escape:"url"}{/if}">
     <paper size="{$print.paper_size|escape}" orientation="{$print.orientation|escape}" />
     <provider>{$print.provider|escape}</provider>
-    <preview href="{if $print.atlas_page}/{$print.atlas_page.preview_href|escape}{else}{$print.preview_url|escape}{/if}" />
+    <preview href="{if $print.selected_page}{$print.selected_page.preview_url|escape}{else}{$print.preview_url|escape}{/if}" />
     <pdf href="{$print.pdf_url|escape}" />
     <bounds>
-        {if $print.atlas_page}
-            <north>{$print.atlas_page.bounds.north|escape}</north>
-            <south>{$print.atlas_page.bounds.south|escape}</south>
-            <east>{$print.atlas_page.bounds.east|escape}</east>
-            <west>{$print.atlas_page.bounds.west|escape}</west>
+        {if $print.selected_page}
+            <north>{$print.selected_page.north|escape}</north>
+            <south>{$print.selected_page.south|escape}</south>
+            <east>{$print.selected_page.east|escape}</east>
+            <west>{$print.selected_page.west|escape}</west>
         {else}
             <north>{$print.north|escape}</north>
             <south>{$print.south|escape}</south>
