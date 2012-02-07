@@ -14,6 +14,10 @@
             {include file="header.htmlf.tpl"}
             
             {include file="navigation.htmlf.tpl"}
+
+            <h1>Add a form</h1>
+
+            <p>Field Papers can import a form that you've created elsewhere online, for example, in a site like Survey Monkey or Google Docs. All we need is a URL to the page that displays the form, and we'll do the rest.</p>
             
         <h1>Add a form</h1>
 
