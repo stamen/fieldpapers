@@ -22,6 +22,22 @@
             {if $form.parsed}
                 <h2>{$form.title}</h2>
                 <h3>Created by {$form.user_name} on {$form.created|date_format}</h3>
+                
+                {foreach from=$fields item="field"}
+                    <label for="{$field.name}"><div><b>{$field.label}</b></div</label>
+                    
+                    {if $field.type eq 'text'}
+                        <div style='margin-top: 10px; margin-bottom: 10px'>
+                            <input type="text" name="{$field.name}">
+                        </div>
+                    {/if}
+                    
+                    {if $field.type eq 'textarea'}
+                        <div style='margin-top: 10px; margin-bottom: 10px'>
+                            <textarea name="{$field.name}" rows="8" cols="75""></textarea>
+                        </div>
+                    {/if}
+                {/foreach}
                 <!--<pre>{$form|@print_r:1|escape}{$fields|@print_r:1|escape}</pre>-->
 
             {else}
