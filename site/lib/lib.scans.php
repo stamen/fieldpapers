@@ -6,7 +6,7 @@
     {
         $q = sprintf("SELECT scan_id, note_number, note,
                              latitude, longitude, geometry
-                      FROM notes
+                      FROM scan_notes
                       WHERE scan_id = %s
                         AND note_number = %s",
                      $dbh->quoteSmart($scan_id),
@@ -51,7 +51,7 @@
     
     function add_scan_note(&$dbh, $scan_id, $note_number)
     {
-        $q = sprintf('INSERT INTO notes
+        $q = sprintf('INSERT INTO scan_notes
                       SET scan_id = %s, note_number = %d',
                      $dbh->quoteSmart($scan_id),
                      $dbh->quoteSmart($note_number));
@@ -88,7 +88,7 @@
         } else {
             $update_clauses = join(', ', $update_clauses);
             
-            $q = sprintf('UPDATE notes SET %s
+            $q = sprintf('UPDATE scan_notes SET %s
                           WHERE scan_id = %s
                             AND note_number = %s',
                          $update_clauses,
