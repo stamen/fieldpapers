@@ -195,11 +195,10 @@ CREATE TABLE scan_notes (
     number      INT NOT NULL,
     
     note        TEXT,
-
-    north       DOUBLE,
-    south       DOUBLE,
-    east        DOUBLE,
-    west        DOUBLE,
+    
+    latitude    DOUBLE,
+    longitude   DOUBLE,
+    geometry    TEXT,
 
     user_id     VARCHAR(8) NOT NULL,
     created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
