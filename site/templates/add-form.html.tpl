@@ -23,9 +23,12 @@
                 <p>
                     URL of your form:<br />
                     <input name="form_url" type="text" size="60" />
+                </p>
 
 <!--                Optional title: <input name="form_title" type="text" size="30" /><br /> -->
-                <input type="submit" value="Get Form" />
+                <p>
+                        <input type="submit" value="Get Form" />
+                </p>
             </form>
             
             {include file="footer.htmlf.tpl"}
