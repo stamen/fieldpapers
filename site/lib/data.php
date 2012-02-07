@@ -850,35 +850,6 @@
             die_with_code(500, "{$res->message}\n{$q}\n");
     }
     
-    function get_scan_notes(&$dbh, $page, $scan_id=false)
-    {
-        list($count, $offset, $perpage, $page) = get_pagination($page);
-        
-        $q = sprintf('SELECT scan_id, number, note,
-                             north, west, south, east
-                      FROM scan_notes
-                      WHERE %s
-                      ORDER BY created DESC
-                      LIMIT %d OFFSET %d',
-                     ($scan_id ? 'scan_id = '.$dbh->quoteSmart($scan_id) : '1'),
-                     $count,
-                     $offset);
-    
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        $rows = array();
-        
-        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
-        {
-            $rows[] = $row;
-        }
-        
-        return $rows;
-    }
-    
     function get_simple_scan_note(&$dbh, $scan_id)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
@@ -902,7 +873,6 @@
         
         return $rows;
     }
-    
     
     function set_simple_scan_notes(&$dbh, $user_id, $scan_id, $notes)
     {

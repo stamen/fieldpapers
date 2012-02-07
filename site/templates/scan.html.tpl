@@ -52,11 +52,7 @@
                 <p style="background-color: #000; text-align: center; color: #fff">
                     <b>Notes about this scan</b>
                     <br/><br/>
-                    {if $scan_note}
-                        {$scan_note}
-                    {else}
-                        There are no notes associated with this scan!
-                    {/if}
+                    <pre>{$notes|@print_r:1|escape}</pre>
                 </p>
                 <div class="fieldSet">
                     <form action="{$base_dir}/fieldset.php?id={$scan.id}" method="post">

@@ -7,6 +7,7 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
+    require_once 'lib.scans.php';
     
     $scan_id = $_GET["id"];
 
@@ -21,12 +22,12 @@
     $scan = get_scan($dbh, $scan_id);
     $sm->assign('scan', $scan);
     
+    $notes = get_scan_notes($dbh, $scan_id);
+    $sm->assign('notes', $notes);
+    
     // Needed?
     $user_id = $_SESSION['user']['id'];
     $sm->assign('user_id', $user_id);
-    
-    $scan_note = get_simple_scan_note($dbh, $scan_id);
-    $sm->assign('scan_note', $scan_note[0]['note']);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
