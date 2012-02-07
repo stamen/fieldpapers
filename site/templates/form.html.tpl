@@ -46,8 +46,7 @@
                         </ul>
                     </p>
                 {/if}
-                <!--<pre>{$form|@print_r:1|escape}{$fields|@print_r:1|escape}</pre>-->
-
+                <p><a href="{$base_dir}/make-set-area.php?id={$form.id|escape}">Make</a> an atlas with this form.</p>
             {else}
                 <p>Preparing your form.</p>
                 <p>
