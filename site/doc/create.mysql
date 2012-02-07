@@ -192,7 +192,7 @@ DROP TABLE IF EXISTS scan_notes;
 CREATE TABLE scan_notes (
 
     scan_id     VARCHAR(8) NOT NULL,
-    number      INT NOT NULL,
+    note_number INT UNSIGNED,
     
     note        TEXT,
     
@@ -203,7 +203,7 @@ CREATE TABLE scan_notes (
     user_id     VARCHAR(8) NOT NULL,
     created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    PRIMARY KEY (scan_id, number)
+    PRIMARY KEY (scan_id, note_number)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
