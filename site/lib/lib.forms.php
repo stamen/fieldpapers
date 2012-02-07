@@ -145,7 +145,7 @@
 
         $update_clauses = array();
 
-        foreach(array('http_method', 'action_url', 'title', 'user_id') as $field)
+        foreach(array('form_url', 'http_method', 'action_url', 'title', 'user_id') as $field)
             if(!is_null($form[$field]))
                 if($form[$field] != $old_form[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($form[$field]));
