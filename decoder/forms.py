@@ -111,9 +111,15 @@ def main(apibase, password, form_id, url):
     """
     yield 10
     
-    form_data = get_form_fields(url)
+    try:
+        form_data = get_form_fields(url)
     
-    finish_form(apibase, password, form_id, form_data['action'], form_data['method'], form_data['title'], form_data['fields'])
+    except Exception, e:
+        print >> stderr, 'Failed because:', e
+        fail_form(apibase, password, form_id)
+
+    else:
+        finish_form(apibase, password, form_id, form_data['action'], form_data['method'], form_data['title'], form_data['fields'])
     
     yield ALL_FINISHED
     
