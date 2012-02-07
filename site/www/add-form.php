@@ -17,13 +17,21 @@
     
     if($_POST['form_url'])
     {
+        if(empty($_POST['form_url']))
+        {
+            header('HTTP/1.1 400');
+            die("Empty or missing form_url.\n");
+        }
+    
         $added_form = add_form($dbh, $user_id);
+        $added_form['form_url'] = $_POST['form_url'];
         
         if(!empty($_POST['form_title']))
         {
             $added_form['title'] = $_POST['form_title'];
-            set_form($dbh, $added_form);
         }
+
+        set_form($dbh, $added_form);
         
         $message = array('action' => 'import form',
                          'url' => $_POST['form_url'],

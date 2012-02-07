@@ -145,7 +145,7 @@
 
         $update_clauses = array();
 
-        foreach(array('http_method', 'action_url', 'title', 'user_id') as $field)
+        foreach(array('form_url', 'http_method', 'action_url', 'title', 'user_id') as $field)
             if(!is_null($form[$field]))
                 if($form[$field] != $old_form[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($form[$field]));
@@ -212,6 +212,20 @@
     function finish_form(&$dbh, $form_id)
     {
         $q = sprintf('UPDATE forms SET parsed = NOW() WHERE id = %s',
+                     $dbh->quoteSmart($form_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+    }
+    
+    function fail_form(&$dbh, $form_id, $failure=1)
+    {
+        $q = sprintf('UPDATE forms SET failed = %s WHERE id = %s',
+                     $dbh->quoteSmart($failure),
                      $dbh->quoteSmart($form_id));
 
         error_log(preg_replace('/\s+/', ' ', $q));
