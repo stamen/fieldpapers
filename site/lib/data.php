@@ -412,7 +412,7 @@
         $q = sprintf("SELECT layout, atlas_pages,
                              paper_size, orientation, provider,
                              pdf_url, preview_url, geotiff_url,
-                             id, north, south, east, west, zoom,
+                             id, form_id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
