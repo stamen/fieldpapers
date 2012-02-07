@@ -78,7 +78,7 @@
     
     function get_form(&$dbh, $form_id)
     {
-        $q = sprintf("SELECT id, title, http_method, action_url,
+        $q = sprintf("SELECT id, form_url, title, http_method, action_url,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(parsed) AS parsed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
