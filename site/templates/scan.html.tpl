@@ -93,10 +93,14 @@
                     {/if}
                 </p>
                 <div class="fieldSet">
-                    <iframe style="margin-left: 20px; margin-top: 20px;" width="500px" 
-                    height="450px" align="middle" frameborder="0"
-                    src="{$form.form_url}">
-                    </iframe>
+                    {if $form.form_url}
+                        <iframe style="margin-left: 20px; margin-top: 20px;" width="500px" 
+                        height="450px" align="middle" frameborder="0"
+                        src="{$form.form_url}">
+                        </iframe>
+                    {else}
+                        <p>We could not find your form!</p>
+                    {/if} 
                     <form action="{$base_dir}/fieldset.php?id={$scan.id}" method="post">
                         <div><span id="notes_title">Notes</span></div><br />
                         <textarea name="notes" id="notes" cols="45" rows="5"></textarea>
