@@ -428,10 +428,17 @@
                     <strong id="page-count"></strong> page(s)
                     
                     <select id="forms" name="form_id" style="margin-left: 90px;">
-                        <option value="default">Forms</option>
+                        {if $default_form == 'none'}
+                            <option selected>Forms</option>
+                        {else}
+                            <option>Forms</option>
+                            <option value="{$default_form.id}" selected>{$default_form.title} ({$default_form.id})</option>
+                        {/if}
                         
                         {foreach from=$forms item="form"}
-                            <option value="{$form.id}">{$form.title} ({$form.id})</option>
+                            {if $form.id != $default_form.id}
+                                <option value="{$form.id}">{$form.title} ({$form.id})</option>
+                            {/if}
                         {/foreach}
                     </select>
                 </p>

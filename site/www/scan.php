@@ -8,6 +8,7 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     require_once 'lib.scans.php';
+    require_once 'lib.forms.php';
     
     $scan_id = $_GET["id"];
 
@@ -24,6 +25,10 @@
     
     $notes = get_scan_notes($dbh, $scan_id);
     $sm->assign('notes', $notes);
+
+    $print = get_print($dbh, $scan['print_id']);
+    $form = get_form($dbh, $print['form_id']);
+    $sm->assign('form', $form);
     
     // Needed?
     $user_id = $_SESSION['user']['id'];
