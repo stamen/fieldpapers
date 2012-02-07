@@ -23,21 +23,29 @@
                 <h2>{$form.title}</h2>
                 <h3>Created by {$form.user_name} on {$form.created|date_format}</h3>
                 
-                {foreach from=$fields item="field"}
-                    <label for="{$field.name}"><div><b>{$field.label}</b></div</label>
-                    
-                    {if $field.type eq 'text'}
-                        <div style='margin-top: 10px; margin-bottom: 10px'>
-                            <input type="text" name="{$field.name}">
-                        </div>
+                {if $fields|@count == 0}
+                    <p>We did not find any inputs on this form.</p>
+                {/if}
+                
+                {if $fields|@count >= 1}
+                    {if field|@count == 1}
+                        <p>There is <b>{$fields|@count}</b> input on this form:  
+                    {else}
+                        <p>There are <b>{$fields|@count}</b> inputs on this form: 
                     {/if}
-                    
-                    {if $field.type eq 'textarea'}
-                        <div style='margin-top: 10px; margin-bottom: 10px'>
-                            <textarea name="{$field.name}" rows="8" cols="75""></textarea>
-                        </div>
-                    {/if}
-                {/foreach}
+                        <ul>
+                            {foreach from=$fields item="field"}
+                                {if isset($field.type) && isset($field.label)}
+                                    <li>A {$field.type} element labeled <b>{$field.label}</b></li>
+                                {/if}
+                                
+                                {if !isset($field.label)}
+                                    <li>A {$field.type} element with no label</li>
+                                {/if}
+                            {/foreach}
+                        </ul>
+                    </p>
+                {/if}
                 <!--<pre>{$form|@print_r:1|escape}{$fields|@print_r:1|escape}</pre>-->
 
             {else}
