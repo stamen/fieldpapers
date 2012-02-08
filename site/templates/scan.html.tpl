@@ -25,10 +25,72 @@
             {if $scan && $scan.decoded}
                 <script>
                     {literal}
-                        var lat, lon;
-                        function addMarker() {
+                        var map;
                         
+                        var bounds = '{/literal}{$scan.geojpeg_bounds}{literal}';
+                        bounds = bounds.split(',');
+                        console.log(bounds);
+                        var north = parseFloat(bounds[0]);
+                        var west = parseFloat(bounds[1]);
+                        var south = parseFloat(bounds[2]);
+                        var east = parseFloat(bounds[3]);
                         
+                        var lat = .5*(north+south);
+                        var lon = .5*(west+east);
+                        
+                        var originalPoint;
+                        var newPoint;
+                        
+                        var markerNumber = 0;
+                        
+                        function addMarkerNote() {
+                            var markerClip = new MarkerClip(map);
+                            marker = markerClip.createDefaultMarker();
+                            
+                            var location = new MM.Location(lat,lon);
+                            markerClip.addMarker(marker,location);
+                            
+                            $('#map-marker-0')
+                            .append('<form action="{/literal}{$base_dir}{literal}/add-note.php?id={/literal}{$scan.id}{literal}" method="post">\
+                                    <div style="float: left; width: 200px";><textarea name="note" id="notes" cols="30" rows="5"></textarea>\
+                                    <input type="hidden" name="scan_id" value="{/literal}{$scan.id}{literal}"/>\
+                                    <input type="hidden" id="input_lat" name="lat"/>\
+                                    <input type="hidden" id ="input_lon" name="lon"/>\
+                                    <input id="notes_submit" type="submit" value="Add Note" /></div>\
+                                    </form>');
+                            
+                            var map_offset_width = .5*$('#map').width();
+                            var map_offset_height = .5*$('#map').height();
+                            
+                            $("#map-marker-0").mousedown(function(event) {
+                                event.stopPropagation();
+                                
+                                // get markerclip offset
+                                var left_mc_offset = $('#map-markerClip').offset().left;
+                                var top_mc_offset = $('#map-markerClip').offset().top;
+                                
+                                var map_left_offset = $('#map').offset().left;
+                                var map_top_offset = $('#map').offset().top;
+                                
+                                var map_pan_x = originalPoint.x - newPoint.x;
+                                var map_pan_y = originalPoint.y - newPoint.y;
+                                
+                                // 7 is the radius of the marker
+                                $('#map-markerClip').mousemove(function(e){
+                                     $('#map-marker-0').css({'left': e.pageX - left_mc_offset - map_offset_width + map_pan_x - 7 + "px", 
+                                                            'top': e.pageY - top_mc_offset - map_offset_height + map_pan_y - 7 + "px"});
+                                
+                                }).mouseup(function(e){                                    
+                                    var point = new MM.Point(e.pageX-left_mc_offset,e.pageY-top_mc_offset);
+                                    var location = map.pointLocation(point);
+                                    
+                                    $('#input_lat').val(location.lat);
+                                    $('#input_lon').val(location.lon);
+                                    $(this).unbind('mousemove');
+                                });
+                            });
+                                                        
+                            markerNumber = markerNumber + 1;
                         }
                     
                         $(document).ready(function() { 
@@ -36,62 +98,22 @@
                             
                             var provider = '{/literal}{$scan.base_url}{literal}/{Z}/{X}/{Y}.jpg';
                             
-                            var map = new MM.Map("map", new MM.TemplatedMapProvider(provider));
-                            
-                            var bounds = '{/literal}{$scan.geojpeg_bounds}{literal}';
-                            bounds = bounds.split(',');
-                            console.log(bounds);
-                            var north = parseFloat(bounds[0]);
-                            var west = parseFloat(bounds[1]);
-                            var south = parseFloat(bounds[2]);
-                            var east = parseFloat(bounds[3]);
+                            map = new MM.Map("map", new MM.TemplatedMapProvider(provider));
                             
                             var extents = [new MM.Location(north, west), new MM.Location(south, east)];
                             
                             map.setExtent(extents);
-                            
                             map.setZoom(14);
                             
-                            // marker
-                            var markerClip = new MarkerClip(map);
                             
-                            marker = markerClip.createDefaultMarker();
+                            originalPoint = map.locationPoint(new MM.Location(lat, lon));
                             
-                            lat = .5*(north+south);
-                            lon = .5*(west+east);
-                            
-                            $('#input_lat').val(lat);
-                            $('#input_lon').val(lon);
-                            
-                            var location = new MM.Location(lat,lon);
-                            markerClip.addMarker(marker,location);
-                            
-                            /*
-                            var mc_offset_width = .5*$('#map-markerClip').width();
-                            var mc_offset_height = .5*$('#map-markerClip').height();
-                            
-                            $("#map-marker-0").mousedown(function(event) {
-                                event.stopPropagation();
-                                
-                                $('#map-markerClip').mousemove(function(e){
-                                    //e.stopPropagation();
-                                    //console.log($(this).width());
-                                    $('#map-marker-0').css({'left': (e.offsetX || e.layerX) - mc_offset_width + "px", 
-                                            'top': (e.offsetY || e.layerY) - mc_offset_height + "px"});
-                                }).mouseup(function(){
-                                    //console.log(left,top);
-                                    $(this).unbind('mousemove');
-                                });
+                            map.addCallback('drawn', function(m) {
+                                // respond to new center:
+                                //document.getElementById('info').innerHTML = m.getCenter().toString();
+                                //console.log(m.getCenter().toString());
+                                newPoint = map.locationPoint(new MM.Location(lat, lon));
                             });
-                            */
-                            
-                            /*
-                            document.getElementById("map-markerClip").onmousemove = function(e) {
-                                console.log('hi');
-                                document.getElementById("map-marker-0").style.top = e.layerY*1 + 5 + "px";
-                                document.getElementById("map-marker-0").style.left = e.layerX*1 + 5 + "px";
-                            }
-                            */
                         });
                     {/literal}
                 </script>
@@ -112,7 +134,17 @@
                         </iframe>
                     {else}
                         <p>We could not find your form!</p>
-                    {/if} 
+                    {/if}
+                    
+                    <div>
+                        <button style='float: left; margin-left: 20px; 
+                                margin-top: 20px;' type="button" 
+                                onClick= "addMarkerNote()">
+                        Add Incident
+                        </button>
+                    </div>
+                    
+                    <!--
                     <form action="{$base_dir}/add-note.php?id={$scan.id}" method="post">
                         <div><span id="notes_title">Notes</span></div>
                         <div style='float: left; width: 200px';><textarea name="note" id="notes" cols="45" rows="5"></textarea>
@@ -123,6 +155,7 @@
                         
                         <input id="notes_submit" type="submit" value="Add Note" /></div>
                     </form>
+                    -->
                 </div>
                 
                 {include file="footer.htmlf.tpl"}
