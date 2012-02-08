@@ -25,6 +25,12 @@
             {if $scan && $scan.decoded}
                 <script>
                     {literal}
+                        var lat, lon;
+                        function addMarker() {
+                        
+                        
+                        }
+                    
                         $(document).ready(function() { 
                             var MM = com.modestmaps;
                             
@@ -50,9 +56,17 @@
                             var markerClip = new MarkerClip(map);
                             
                             marker = markerClip.createDefaultMarker();
-                            var location = new MM.Location(.5*(north+south),.5*(west+east));
+                            
+                            lat = .5*(north+south);
+                            lon = .5*(west+east);
+                            
+                            $('#input_lat').val(lat);
+                            $('#input_lon').val(lon);
+                            
+                            var location = new MM.Location(lat,lon);
                             markerClip.addMarker(marker,location);
                             
+                            /*
                             var mc_offset_width = .5*$('#map-markerClip').width();
                             var mc_offset_height = .5*$('#map-markerClip').height();
                             
@@ -69,7 +83,7 @@
                                     $(this).unbind('mousemove');
                                 });
                             });
-                            
+                            */
                             
                             /*
                             document.getElementById("map-markerClip").onmousemove = function(e) {
@@ -83,24 +97,31 @@
                 </script>
                 
                 <div class="page_map" id="map"></div>
+                <!--
                 <p style="background-color: #000; text-align: center; color: #fff">
                     <b>Notes about this scan</b>
                     <br/><br/>
                     <pre>{$notes|@print_r:1|escape}</pre>
                 </p>
+                -->
                 <div class="fieldSet">
                     {if $form.form_url}
-                        <iframe style="margin-left: 20px; margin-top: 20px;" width="500px" 
+                        <iframe style="margin-left: 20px;" width="500px" 
                         height="450px" align="middle" frameborder="0"
                         src="{$form.form_url}">
                         </iframe>
                     {else}
                         <p>We could not find your form!</p>
                     {/if} 
-                    <form action="{$base_dir}/fieldset.php?id={$scan.id}" method="post">
-                        <div><span id="notes_title">Notes</span></div><br />
-                        <textarea name="notes" id="notes" cols="45" rows="5"></textarea>
-                        <div><input id="notes_submit" type="submit" value="Add Note" /></div>
+                    <form action="{$base_dir}/add-note.php?id={$scan.id}" method="post">
+                        <div><span id="notes_title">Notes</span></div>
+                        <div style='float: left; width: 200px';><textarea name="note" id="notes" cols="45" rows="5"></textarea>
+                        
+                        <input type='hidden' name='scan_id' value='{$scan.id}'/>
+                        <input type='hidden' id='input_lat' name='lat'/>
+                        <input type='hidden' id ='input_lon' name='lon'/>
+                        
+                        <input id="notes_submit" type="submit" value="Add Note" /></div>
                     </form>
                 </div>
                 
