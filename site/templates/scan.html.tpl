@@ -41,30 +41,22 @@
             {if $scan && $scan.decoded}
                 <div class="page_map" id="map"></div>
 
-                <form id="scan-form" action="#" method="GET">
+                <form id="scan-form" action="{$base_dir}/save-scan-notes.php" method="POST">
+                    <!--<input id="notes_submit" type="submit" value="Submit" />-->
                 </form>
 
                 <script type="text/javascript">
                 // <![CDATA[{literal}
+                
+                    var notes = [];
+                    
+                    var markerNumber = -1;
+                    
 
                     function MarkerNote(map)
                     {
                         this.location = map.getCenter();
-                        
-                        
-                       /*
-                       
-                        <div class="marker">
-                            <img src="img/eye.png">
-                            <br>
-                            <textarea name="..."></textarea>
-                            
-                            <input type="hidden" name="...-latitude">
-                            <input type="hidden" name="...-longitude">
-                        </div>
-                       
-                        */
-                        
+                                                
                         var div = document.createElement('div');
                         div.className = 'marker';
                         
@@ -76,17 +68,29 @@
                         div.appendChild(br);
                         
                         var textarea = document.createElement('textarea');
+                        textarea.id = "notes";
+                        textarea.name = 'marker[' + markerNumber + '][note]';
                         div.appendChild(textarea);
                         
                         var input_lat = document.createElement('input');
                         input_lat.value = this.location.lat.toFixed(6);
                         input_lat.type = 'hidden';
+                        input_lat.name = 'marker[' + markerNumber + '][lat]';
                         div.appendChild(input_lat);
                         
                         var input_lon = document.createElement('input');
                         input_lon.value = this.location.lon.toFixed(6);
                         input_lon.type = 'hidden';
+                        input_lon.name = 'marker[' + markerNumber + '][lon]';
                         div.appendChild(input_lon);
+                        
+                        var scan_id = document.createElement('input');
+                        scan_id.value = {/literal}'{$scan.id}'{literal}
+                        scan_id.name = 'marker[' + markerNumber + '][scan_id]';
+                        scan_id.type = 'hidden';
+                        div.appendChild(scan_id);
+                        
+                        markerNumber--;
                         
                         // make it easy to drag
                         
@@ -139,6 +143,10 @@
                     
                     function addMarkerNote()
                     {
+                        // Remember previous note
+                        //console.log(document.getElementById('scan-form').elements['notes'][0].value);
+                        //notes.push(document.getElementById('scan-form'));
+                        
                         var markerDiv = new MarkerNote(map);
                         document.getElementById('scan-form').appendChild(markerDiv);
                     }
@@ -146,8 +154,7 @@
                     var MM = com.modestmaps,
                         provider = '{/literal}{$scan.base_url}{literal}/{Z}/{X}/{Y}.jpg',
                         map = new MM.Map("map", new MM.TemplatedMapProvider(provider)),
-                    
-                    var bounds = '{/literal}{$scan.geojpeg_bounds}{literal}'.split(','),
+                        bounds = '{/literal}{$scan.geojpeg_bounds}{literal}'.split(','),
                         north = parseFloat(bounds[0]),
                         west = parseFloat(bounds[1]),
                         south = parseFloat(bounds[2]),
@@ -160,13 +167,6 @@
                 // {/literal}]]>
                 </script>
                 
-                <!--
-                <p style="background-color: #000; text-align: center; color: #fff">
-                    <b>Notes about this scan</b>
-                    <br/><br/>
-                    <pre>{$notes|@print_r:1|escape}</pre>
-                </p>
-                -->
                 <div class="fieldSet">
                     {if $form.form_url}
                         <iframe style="margin-left: 20px;" width="500px" 
@@ -182,6 +182,14 @@
                                 margin-top: 20px;' type="button" 
                                 onClick= "addMarkerNote()">
                         Add Note
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <button style='float: left; margin-left: 20px; 
+                                margin-top: 20px;' type="button" 
+                                onClick= "document.getElementById('scan-form').submit();">
+                        Submit Notes
                         </button>
                     </div>
                     
