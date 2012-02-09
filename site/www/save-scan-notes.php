@@ -18,15 +18,12 @@
     
     /**** ... ****/
     
-    header('content-type: text/plain');
-    //print_r($_POST);
+    //header('content-type: text/plain');
     
     foreach($_POST['marker'] as $key => $marker)
     {
         if($key < 0)
-        {     
-            echo 'hi';  
-            
+        {                 
             if(($scan = get_scan($dbh, $marker['scan_id'])) && $marker['note'] && $marker['lat'] && $marker['lon'])
             {
                 $dbh->query('START TRANSACTION');
