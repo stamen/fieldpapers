@@ -28,6 +28,14 @@
             cursor: pointer;
         }
         
+        .hide {
+            display: none;
+        }
+        
+        .show {
+            display: block;
+        }
+        
     /* {/literal}]]> */
 </style>
 </head>
@@ -140,18 +148,13 @@
                     }
                     
                     function addMarkerNote()
-                    {
-                        // Remember previous note
-                        //console.log(document.getElementById('scan-form').elements['notes'][0].value);
-                        //notes.push(document.getElementById('scan-form'));
-                        
+                    {                        
                         var markerDiv = new MarkerNote(map);
                         document.getElementById('scan-form').appendChild(markerDiv);
                     }
                     
                     function SavedMarker(map,note,note_num,lat,lon)
                     {
-                        //this.location = map.getCenter();
                         this.location = new MM.Location(lat,lon);
                                               
                         var div = document.createElement('div');
@@ -170,6 +173,7 @@
                         textarea.id = "notes";
                         textarea.value = note;
                         textarea.name = 'marker[' + unsignedMarkerNumber + '][note]';
+                        textarea.className = 'hide';
                         div.appendChild(textarea);
                         
                         var input_lat = document.createElement('input');
@@ -203,17 +207,12 @@
                             var marker_start = {x: div.offsetLeft, y: div.offsetTop},
                                 mouse_start = {x: e.clientX, y: e.clientY};
                             
-                            /*
-                            if (!document.getElementsByName('marker['+ unsignedMarkerNumber + '][note]'))
-                            {
-                                var textarea = document.createElement('textarea');
-                                textarea.id = "notes";
-                                textarea.value = note;
-                                textarea.name = 'marker[' + unsignedMarkerNumber + '][note]';
-                                div.appendChild(textarea);
+                            if (textarea.className == 'hide') {
+                                textarea.className = 'show';
+                            } else if (textarea.className == 'show') {
+                                textarea.className = 'hide';
                             }
-                            */
-                            
+                                                        
                             document.onmousemove = function(e)
                             {
                                 var mouse_now = {x: e.clientX, y: e.clientY};
