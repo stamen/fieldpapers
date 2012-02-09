@@ -46,10 +46,7 @@
                 </form>
 
                 <script type="text/javascript">
-                // <![CDATA[{literal}
-                
-                    var notes = [];
-                    
+                // <![CDATA[{literal}    
                     var markerNumber = -1;
                     
                     var unsignedMarkerNumber = 1;                    
@@ -152,10 +149,11 @@
                         document.getElementById('scan-form').appendChild(markerDiv);
                     }
                     
-                    function SavedMarker(map,note,lat,lon)
+                    function SavedMarker(map,note,note_num,lat,lon)
                     {
-                        this.location = map.getCenter();
-                                                
+                        //this.location = map.getCenter();
+                        this.location = new MM.Location(lat,lon);
+                                              
                         var div = document.createElement('div');
                         div.className = 'marker';
                         
@@ -164,10 +162,95 @@
                         div.appendChild(img);
                         
                         div.title = note;
-                                                
-                        var updatePosition = function()
+                        
+                        var br = document.createElement('br');
+                        div.appendChild(br);
+                        
+                        var textarea = document.createElement('textarea');
+                        textarea.id = "notes";
+                        textarea.value = note;
+                        textarea.name = 'marker[' + unsignedMarkerNumber + '][note]';
+                        div.appendChild(textarea);
+                        
+                        var input_lat = document.createElement('input');
+                        input_lat.value = this.location.lat.toFixed(6);
+                        input_lat.type = 'hidden';
+                        input_lat.name = 'marker[' + unsignedMarkerNumber + '][lat]';
+                        div.appendChild(input_lat);
+                        
+                        var input_lon = document.createElement('input');
+                        input_lon.value = this.location.lon.toFixed(6);
+                        input_lon.type = 'hidden';
+                        input_lon.name = 'marker[' + unsignedMarkerNumber + '][lon]';
+                        div.appendChild(input_lon);
+                        
+                        var note_number = document.createElement('input');
+                        note_number.value = note_num;
+                        note_number.name = 'marker[' + unsignedMarkerNumber + '][note_number]';
+                        note_number.type = 'hidden';
+                        div.appendChild(note_number);
+                        
+                        var scan_id = document.createElement('input');
+                        scan_id.value = {/literal}'{$scan.id}'{literal};
+                        scan_id.name = 'marker[' + unsignedMarkerNumber + '][scan_id]';
+                        scan_id.type = 'hidden';
+                        div.appendChild(scan_id);
+                        
+                        unsignedMarkerNumber++;
+                        
+                        img.onmousedown = function(e)
+                        {
+                            var marker_start = {x: div.offsetLeft, y: div.offsetTop},
+                                mouse_start = {x: e.clientX, y: e.clientY};
+                            
+                            /*
+                            if (!document.getElementsByName('marker['+ unsignedMarkerNumber + '][note]'))
+                            {
+                                var textarea = document.createElement('textarea');
+                                textarea.id = "notes";
+                                textarea.value = note;
+                                textarea.name = 'marker[' + unsignedMarkerNumber + '][note]';
+                                div.appendChild(textarea);
+                            }
+                            */
+                            
+                            document.onmousemove = function(e)
+                            {
+                                var mouse_now = {x: e.clientX, y: e.clientY};
+                            
+                                div.style.left = (marker_start.x + mouse_now.x - mouse_start.x) + 'px';
+                                div.style.top = (marker_start.y + mouse_now.y - mouse_start.y) + 'px';
+                            }
+                            
+                            return false;
+                        }
+                        
+                        var marker = this;
+                        
+                        img.onmouseup = function(e)
+                        {
+                            var marker_end = {x: div.offsetLeft, y: div.offsetTop};
+                            
+                            marker.location = map.pointLocation(marker_end);
+                            input_lat.value = marker.location.lat.toFixed(6);
+                            input_lon.value = marker.location.lon.toFixed(6);
+                        
+                            document.onmousemove = null;
+                            return false;
+                        }
+                                        
+                        var initialPosition = function()
                         {
                             var point = map.locationPoint(new MM.Location(lat,lon));
+                            marker.location = new MM.Location(lat,lon);
+                            
+                            div.style.left = point.x + 'px';
+                            div.style.top = point.y + 'px';
+                        }
+                        
+                        var updatePosition = function()
+                        {
+                            var point = map.locationPoint(marker.location);
                             
                             div.style.left = point.x + 'px';
                             div.style.top = point.y + 'px';
@@ -175,27 +258,26 @@
                         
                         map.addCallback('panned', updatePosition);
                         map.addCallback('zoomed', updatePosition);
-                        updatePosition();
-                        
-                        unsignedMarkerNumber++;
+                        initialPosition();
                         
                         return div;
                     }
                     
-                    function addSavedNote(note,lat,lon)
+                    function addSavedNote(note,note_num,lat,lon)
                     {
-                        var saved_marker = new SavedMarker(map,note,lat,lon);
+                        var saved_marker = new SavedMarker(map,note,note_num,lat,lon);
                         document.getElementById('scan-form').appendChild(saved_marker);
                     }
                     
                     function displaySavedNotes() {
                         {/literal}{foreach from=$notes item="note"}{literal}
                             var note = '{/literal}{$note.note}{literal}',
-                                lat = '{/literal}{$note.latitude}{literal}',
-                                lon = '{/literal}{$note.longitude}{literal}';
-                            console.log(note,lat,lon);
+                                note_num = '{/literal}{$note.note_number}{literal}',
+                                lat = {/literal}{$note.latitude}{literal},
+                                lon = {/literal}{$note.longitude}{literal};
                             
-                            addSavedNote(note,lat,lon);
+                            console.log(note,note_num,lat,lon);
+                            addSavedNote(note,note_num,lat,lon);
                         {/literal}{/foreach}{literal}
                     }
                 

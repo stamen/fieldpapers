@@ -18,7 +18,9 @@
     
     /**** ... ****/
     
-    //header('content-type: text/plain');
+    header('content-type: text/plain');
+    print_r($_POST);
+    
     
     foreach($_POST['marker'] as $key => $marker)
     {
@@ -48,6 +50,29 @@
             }
             
         }
+        
+        if($key > 0)
+        {           
+            if(($scan = get_scan($dbh, $marker['scan_id'])) && $marker['note'] && $marker['lat'] && $marker['lon'])
+            {
+                $dbh->query('START TRANSACTION');
+                
+                $note['scan_id'] = $marker['scan_id'];                
+                $note['note_number'] = $marker['note_number'];
+                $note['note'] = $marker['note'];
+                $note['latitude'] = $marker['lat'];
+                $note['longitude'] = $marker['lon'];
+                $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+                
+                
+                print_r($note);
+                set_scan_note($dbh, $note);
+                
+                $dbh->query('COMMIT');
+                
+            }
+        }
+        
         header('Location: http://'.get_domain_name().get_base_dir().'/scan.php?id='.urlencode($scan['id']));
     }
     
