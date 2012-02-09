@@ -115,7 +115,7 @@ def main(apibase, password, form_id, url):
         form_data = get_form_fields(url)
     
     except Exception, e:
-        print >> stderr, 'Failed because:', e
+        print >> sys.stderr, 'Failed because:', e
         fail_form(apibase, password, form_id)
 
     else:
