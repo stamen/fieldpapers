@@ -52,6 +52,7 @@
                     
                     var markerNumber = -1;
                     
+                    var unsignedMarkerNumber = 1;                    
 
                     function MarkerNote(map)
                     {
@@ -150,6 +151,51 @@
                         var markerDiv = new MarkerNote(map);
                         document.getElementById('scan-form').appendChild(markerDiv);
                     }
+                    
+                    function SavedMarker(map,lat,lon)
+                    {
+                        this.location = map.getCenter();
+                                                
+                        var div = document.createElement('div');
+                        div.className = 'marker';
+                        
+                        var img = document.createElement('img');
+                        img.src = 'img/eye.png';
+                        div.appendChild(img);
+                                                
+                        var updatePosition = function()
+                        {
+                            var point = map.locationPoint(new MM.Location(lat,lon));
+                            
+                            div.style.left = point.x + 'px';
+                            div.style.top = point.y + 'px';
+                        }
+                        
+                        map.addCallback('panned', updatePosition);
+                        map.addCallback('zoomed', updatePosition);
+                        updatePosition();
+                        
+                        unsignedMarkerNumber++;
+                        
+                        return div;
+                    }
+                    
+                    function addSavedNote(lat,lon)
+                    {
+                        var saved_marker = new SavedMarker(map,lat,lon);
+                        document.getElementById('scan-form').appendChild(saved_marker);
+                    }
+                    
+                    function displaySavedNotes() {
+                        {/literal}{foreach from=$notes item="note"}{literal}
+                            var note = '{/literal}{$note.note}{literal}',
+                                lat = '{/literal}{$note.latitude}{literal}',
+                                lon = '{/literal}{$note.longitude}{literal}';
+                            console.log(note,lat,lon);
+                            
+                            addSavedNote(lat,lon);
+                        {/literal}{/foreach}{literal}
+                    }
                 
                     var MM = com.modestmaps,
                         provider = '{/literal}{$scan.base_url}{literal}/{Z}/{X}/{Y}.jpg',
@@ -163,6 +209,8 @@
                     
                     map.setExtent(extents);
                     map.zoomIn();
+                    
+                    displaySavedNotes();
                         
                 // {/literal}]]>
                 </script>
