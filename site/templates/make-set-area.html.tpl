@@ -429,7 +429,7 @@
                     
                     <select id="forms" name="form_id" style="margin-left: 90px;">
                         {if $default_form == 'none'}
-                            <option selected>Forms</option>
+                            <option selected>Select</option>
                         {else}
                             <option>Forms</option>
                             <option value="{$default_form.id}" selected>{$default_form.title} ({$default_form.id})</option>
