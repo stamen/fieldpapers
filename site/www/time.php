@@ -24,6 +24,9 @@
     
     foreach($prints as $i => $print)
     {   
+        $pages = get_print_pages($dbh, $print['id']);
+        $prints[$i]['number_of_pages'] = count($pages);
+        
         $user = get_user($dbh, $prints[$i]['user_id']);
         
         if ($user['name'])
@@ -35,6 +38,9 @@
     }
     
     $sm->assign('prints', $prints);
+    
+    
+    
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
