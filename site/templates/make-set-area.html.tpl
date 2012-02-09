@@ -427,9 +427,9 @@
                     Page zoom: <span id="page-zoom"></span>
                     <strong id="page-count"></strong> page(s)
                     
-                    <select id="forms" name="form_id" style="margin-left: 90px;">
+                    <select id="forms" name="form_id">
                         {if $default_form == 'none'}
-                            <option selected>Select</option>
+                            <option selected>Select a Form for this Atlas</option>
                         {else}
                             <option>Forms</option>
                             <option value="{$default_form.id}" selected>{$default_form.title} ({$default_form.id})</option>
