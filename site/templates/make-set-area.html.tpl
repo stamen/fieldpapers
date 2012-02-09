@@ -464,7 +464,7 @@
 
             <div id="finish">
                 <p>Extent (N,W,S,E): <input id="extent-string" type="text" size="40"> <button id="show-extent">zoom to extent</button> <button id="fit-to-view">fit to current view</button></p>
-                <p><input type="submit" value="submit"></p>
+                <p><input type="submit" value="Make Atlas"></p>
             </div>
         </form>
     </body>
