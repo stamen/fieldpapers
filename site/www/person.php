@@ -36,7 +36,13 @@
     
     // Get prints by id
     $prints = get_prints_by_user_id($dbh, $user_id);
-        
+    
+    foreach($prints as $i => $print)
+    {   
+        $pages = get_print_pages($dbh, $print['id']);
+        $prints[$i]['number_of_pages'] = count($pages);
+    }
+    
     $sm->assign('prints', $prints);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];

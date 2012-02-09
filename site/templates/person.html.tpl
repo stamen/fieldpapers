@@ -24,7 +24,14 @@
             {/if}
             <!-- <div class="print" id="map"></div> -->
             <div class="fltlft">
-                <h2>Number of Atlases</h2>
+                <h2>
+                    {if $prints|@count == 1}
+                        1 Atlas
+                    {else if $print|@count >= 1}
+                        {$prints|@count} Atlases
+                    {/if}
+                
+                </h2>
             
                 {foreach from=$prints item="print" name="index"}
                     <div class="atlasPage"> 
@@ -33,7 +40,7 @@
                         
                         <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">{$print.id}</a></div>
                         <div class="atlasPlace"><a href="place.html">Place</a></div>
-                        <div class="atlasMeta">X pages, from <a href="time.php?date={$print.created}">{$print.created|date_format}</a></div>
+                        <div class="atlasMeta">{$print.number_of_pages} page(s), from <a href="time.php?date={$print.created}">{$print.created|date_format}</a></div>
                     </div>
                 {/foreach}
             </div>
