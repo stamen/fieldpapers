@@ -22,7 +22,7 @@
                     {$user_email}
                 </p>
             {/if}
-            <div class="print" id="map"></div>
+            <!-- <div class="print" id="map"></div> -->
             <div class="fltlft">
                 <h2>Number of Atlases</h2>
             
