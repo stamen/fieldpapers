@@ -27,7 +27,7 @@
         {/literal}
     </script>
     
-    <h1>Title: {$print.id}</h1>
+    <h1>Untitled</h1>
     <p>
         Created by {$user_name} on <a href="{$base_dir}/time.php?date={$print.created}">
         {$print.created|date_format}</a>. <a href="{$print.pdf_url}">Download</a> this print as a PDF.
