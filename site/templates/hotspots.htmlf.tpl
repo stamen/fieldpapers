@@ -24,7 +24,7 @@
             <div class="atlas" id="map{$k}"></div>
             
             <div>
-            Print ID: <a href="{$base_dir}/print.php?id={$print.id}">{$print.id}</a> in <a href="{$base_dir}/place.php">
+            <a href="{$base_dir}/print.php?id={$print.id}">Untitled</a> in <a href="{$base_dir}/place.php">
             Place</a>, by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a>
             </div>
         </div>
