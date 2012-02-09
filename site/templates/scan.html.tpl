@@ -67,7 +67,7 @@
                         div.className = 'marker';
                         
                         var img = document.createElement('img');
-                        img.src = 'img/eye.png';
+                        img.src = 'img/eye_new.png';
                         div.appendChild(img);
                         
                         var br = document.createElement('br');
