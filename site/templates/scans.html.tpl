@@ -27,12 +27,12 @@
     
     {foreach from=$scans item="scan" name="index"}
         <div class="atlasThumb"> 
-            <a href="scan.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
+            <a href="{$base_dir}/scan.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
             name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
             <div class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">{$print.id}</a></div>
-            <div class="atlasOwner">by <a href="person.php?id={$scan.user_id}">{$scan.user_name}</a></div>
-            <div class="atlasPlace"><a href="place.html">Place</a></div>
-            <div class="atlasMeta">From <a href="time.php?date={$scan.created}">{$scan.created|date_format}</a></div>
+            <div class="atlasOwner">by <a href="{$base_dir}/person.php?id={$scan.user_id}">{$scan.user_name}</a></div>
+            <div class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></div>
+            <div class="atlasMeta">From <a href="{$base_dir}/time.php?date={$scan.created}">{$scan.created|date_format}</a></div>
         </div>
     {/foreach}
     

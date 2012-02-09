@@ -17,12 +17,12 @@
     
     {foreach from=$prints item="print" name="index"}
         <div class="atlasThumb"> 
-            <a href="print.php?id={$print.id}"><img src="{$print.preview_url}" alt="scanned page" 
+            <a href="{$base_dir}/print.php?id={$print.id}"><img src="{$print.preview_url}" alt="scanned page" 
             name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
             <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">{$print.id}</a></div>
-            <div class="atlasOwner">by <a href="person.php?id={$print.user_id}">{$print.user_name}</a></div>
-            <div class="atlasPlace"><a href="place.html">Place</a></div>
-            <div class="atlasMeta">From <a href="time.php?date={$print.created}">{$print.created|date_format}</a></div>
+            <div class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a></div>
+            <div class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></div>
+            <div class="atlasMeta">From <a href="{$base_dir}/time.php?date={$print.created}">{$print.created|date_format}</a></div>
         </div>
     {/foreach}
     
