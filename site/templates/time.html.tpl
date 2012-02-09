@@ -22,9 +22,9 @@
             
             <h1>{$date.month}, {$date.year}</h1>
             
-            <p><img src="" alt="map selection area" name="map" width="100%" height="600" 
+            <!--<p><img src="" alt="map selection area" name="map" width="100%" height="600" 
             id="map" style="background-image:url(big-satellite-placeholder.jpg); 
-            background-position:center" /></p>
+            background-position:center" /></p>-->
             <h2>Atlases</h2>
             {foreach from=$prints item="print" name="index"}
                 <div class="atlasThumb"> 
