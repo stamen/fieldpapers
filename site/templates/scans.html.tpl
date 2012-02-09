@@ -19,9 +19,10 @@
 
     {include file="navigation.htmlf.tpl"}
     
+    <!--
     <p><img src="" alt="map selection area" name="map" width="100%" height="600" 
     id="map" style="background-image:url(big-satellite-placeholder.jpg); 
-    background-position:center" /></p>
+    background-position:center" /></p>-->
     
     <h2>Recent Scans</h2>
     
