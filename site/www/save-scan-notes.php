@@ -19,38 +19,38 @@
     /**** ... ****/
     
     header('content-type: text/plain');
-    //print_r($_POST['marker']);
+    //print_r($_POST);
     
     foreach($_POST['marker'] as $key => $marker)
     {
-        //print_r($key);
-        //print_r($marker);
-        
-        // Add each note
-        
-        if(($scan = get_scan($dbh, $marker['scan_id'])) && $marker['note'] && $marker['lat'] && $marker['lon'])
-        {
-            $dbh->query('START TRANSACTION');
+        if($key < 0)
+        {     
+            echo 'hi';  
             
-            $note_number = 1;
-            
-            foreach(get_scan_notes($dbh, $scan['id']) as $note)
+            if(($scan = get_scan($dbh, $marker['scan_id'])) && $marker['note'] && $marker['lat'] && $marker['lon'])
             {
-                $note_number = max($note_number, $note['note_number'] + 1);
+                $dbh->query('START TRANSACTION');
+                
+                $note_number = 1;
+                
+                foreach(get_scan_notes($dbh, $scan['id']) as $note)
+                {
+                    $note_number = max($note_number, $note['note_number'] + 1);
+                }
+                
+                $note = add_scan_note($dbh, $scan['id'], $note_number);
+                
+                $note['note'] = $marker['note'];
+                $note['latitude'] = $marker['lat'];
+                $note['longitude'] = $marker['lon'];
+                $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+                
+                set_scan_note($dbh, $note);
+                
+                $dbh->query('COMMIT');
             }
             
-            $note = add_scan_note($dbh, $scan['id'], $note_number);
-            
-            $note['note'] = $marker['note'];
-            $note['latitude'] = $marker['lat'];
-            $note['longitude'] = $marker['lon'];
-            $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
-            
-            set_scan_note($dbh, $note);
-            
-            $dbh->query('COMMIT');
         }
-        
         header('Location: http://'.get_domain_name().get_base_dir().'/scan.php?id='.urlencode($scan['id']));
     }
     
