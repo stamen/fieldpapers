@@ -39,8 +39,8 @@
     
         {foreach from=$pages item="page" name="index"}
             <div class="atlasPage"> 
-                <a href="page.html"><img src="{$page.preview_url}" alt="printed page" 
-                name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
+                <img src="{$page.preview_url}" alt="printed page" 
+                name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" />
                 <br />
                 <span class="atlasPageNumber">{$page.page_number}</span>
             </div>
