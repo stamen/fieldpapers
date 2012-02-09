@@ -152,7 +152,7 @@
                         document.getElementById('scan-form').appendChild(markerDiv);
                     }
                     
-                    function SavedMarker(map,lat,lon)
+                    function SavedMarker(map,note,lat,lon)
                     {
                         this.location = map.getCenter();
                                                 
@@ -162,6 +162,8 @@
                         var img = document.createElement('img');
                         img.src = 'img/eye.png';
                         div.appendChild(img);
+                        
+                        div.title = note;
                                                 
                         var updatePosition = function()
                         {
@@ -180,9 +182,9 @@
                         return div;
                     }
                     
-                    function addSavedNote(lat,lon)
+                    function addSavedNote(note,lat,lon)
                     {
-                        var saved_marker = new SavedMarker(map,lat,lon);
+                        var saved_marker = new SavedMarker(map,note,lat,lon);
                         document.getElementById('scan-form').appendChild(saved_marker);
                     }
                     
@@ -193,7 +195,7 @@
                                 lon = '{/literal}{$note.longitude}{literal}';
                             console.log(note,lat,lon);
                             
-                            addSavedNote(lat,lon);
+                            addSavedNote(note,lat,lon);
                         {/literal}{/foreach}{literal}
                     }
                 
