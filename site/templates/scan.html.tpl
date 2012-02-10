@@ -36,6 +36,15 @@
             display: block;
         }
         
+        #notes {
+            margin: 10px;
+        
+        }
+        
+        #remove {
+            margin-left: 10px;
+        }
+        
     /* {/literal}]]> */
 </style>
 </head>
@@ -49,7 +58,7 @@
             {if $scan && $scan.decoded}
                 <div class="page_map" id="map"></div>
 
-                <form id="scan-form" action="{$base_dir}/save-scan-notes.php" method="POST">
+                <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
                     <!--<input id="notes_submit" type="submit" value="Submit" />-->
                 </form>
 
@@ -176,6 +185,30 @@
                         textarea.className = 'hide';
                         div.appendChild(textarea);
                         
+                        var removeMarkerNote = function()
+                        {                            
+                            // Remove visual elements
+                            div.removeChild(img);
+                            div.removeChild(textarea);
+                            div.removeChild(remove_button);
+                            
+                            removed.value = 1; // Removed
+                        }
+                        
+                        var remove_button = document.createElement('button');
+                        remove_button.id = 'remove';
+                        remove_button.innerHTML = 'Remove Note';
+                        remove_button.className = 'hide';
+                        remove_button.onclick = removeMarkerNote;
+                        div.appendChild(remove_button);
+                        
+                        // Add a flag that the note was removed
+                        var removed = document.createElement('input');
+                        removed.value = 0; // Not removed
+                        removed.type = 'hidden';
+                        removed.name = 'marker[' + unsignedMarkerNumber + '][removed]';
+                        div.appendChild(removed);
+                        
                         var input_lat = document.createElement('input');
                         input_lat.value = this.location.lat.toFixed(6);
                         input_lat.type = 'hidden';
@@ -202,15 +235,30 @@
                         
                         unsignedMarkerNumber++;
                         
+                        img.onmouseover = function(e)
+                        {
+                            img.src = 'img/eye_hover.png';
+                        
+                        }
+                        
+                        img.onmouseout = function(e)
+                        {
+                            img.src = 'img/eye.png';
+                        }
+                        
                         img.onmousedown = function(e)
                         {
                             var marker_start = {x: div.offsetLeft, y: div.offsetTop},
                                 mouse_start = {x: e.clientX, y: e.clientY};
                             
-                            if (textarea.className == 'hide') {
+                            if (textarea.className == 'hide' && remove_button.className == 'hide') 
+                            {
                                 textarea.className = 'show';
-                            } else if (textarea.className == 'show') {
+                                remove_button.className = 'show';
+                                remove_button.value='hi';
+                            } else if (textarea.className == 'show' && remove_button.className == 'show') {
                                 textarea.className = 'hide';
+                                remove_button.className = 'hide';
                             }
                                                         
                             document.onmousemove = function(e)
@@ -271,7 +319,7 @@
                     function displaySavedNotes() {
                         {/literal}{foreach from=$notes item="note"}{literal}
                             var note = '{/literal}{$note.note}{literal}',
-                                note_num = '{/literal}{$note.note_number}{literal}',
+                                note_num = {/literal}{$note.note_number}{literal},
                                 lat = {/literal}{$note.latitude}{literal},
                                 lon = {/literal}{$note.longitude}{literal};
                             
