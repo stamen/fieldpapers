@@ -88,12 +88,7 @@
                         div.appendChild(textarea);
                         
                         var removeMarkerNote = function()
-                        {                            
-                            // Remove visual elements
-                            //div.removeChild(img);
-                            //div.removeChild(textarea);
-                            //div.removeChild(remove_button);
-                            
+                        {                                                        
                             div.parentNode.removeChild(div);
                         }
                         
@@ -255,7 +250,6 @@
                         img.onmouseover = function(e)
                         {
                             img.src = 'img/eye_hover.png';
-                        
                         }
                         
                         img.onmouseout = function(e)
@@ -263,23 +257,22 @@
                             img.src = 'img/eye.png';
                         }
                         
+                        var mousemove = false;
+                        
                         img.onmousedown = function(e)
                         {
                             var marker_start = {x: div.offsetLeft, y: div.offsetTop},
                                 mouse_start = {x: e.clientX, y: e.clientY};
-                            
-                            if (textarea.className == 'hide' && remove_button.className == 'hide') 
-                            {
-                                textarea.className = 'show';
-                                remove_button.className = 'show';
-                                remove_button.value='hi';
-                            } else if (textarea.className == 'show' && remove_button.className == 'show') {
-                                textarea.className = 'hide';
-                                remove_button.className = 'hide';
-                            }
                                                         
+                            mousemove = false;                    
+                                    
                             document.onmousemove = function(e)
                             {
+                                if (e.type =='mousemove')
+                                {
+                                    mousemove = true;
+                                }
+                                
                                 var mouse_now = {x: e.clientX, y: e.clientY};
                             
                                 div.style.left = (marker_start.x + mouse_now.x - mouse_start.x) + 'px';
@@ -293,6 +286,20 @@
                         
                         img.onmouseup = function(e)
                         {
+                            if (!mousemove)
+                            {
+                                if (textarea.className == 'hide' && remove_button.className == 'hide') 
+                                {
+                                    textarea.className = 'show';
+                                    remove_button.className = 'show';
+                                } else if (textarea.className == 'show' && remove_button.className == 'show') {
+                                    textarea.className = 'hide';
+                                    remove_button.className = 'hide';
+                                }
+                            }
+                            
+                            mousemove = false;
+                            
                             var marker_end = {x: div.offsetLeft, y: div.offsetTop};
                             
                             marker.location = map.pointLocation(marker_end);
@@ -388,19 +395,6 @@
                         Submit Notes
                         </button>
                     </div>
-                    
-                    <!--
-                    <form action="{$base_dir}/add-note.php?id={$scan.id}" method="post">
-                        <div><span id="notes_title">Notes</span></div>
-                        <div style='float: left; width: 200px';><textarea name="note" id="notes" cols="45" rows="5"></textarea>
-                        
-                        <input type='hidden' name='scan_id' value='{$scan.id}'/>
-                        <input type='hidden' id='input_lat' name='lat'/>
-                        <input type='hidden' id ='input_lon' name='lon'/>
-                        
-                        <input id="notes_submit" type="submit" value="Add Note" /></div>
-                    </form>
-                    -->
                 </div>
                 
                 {include file="footer.htmlf.tpl"}
