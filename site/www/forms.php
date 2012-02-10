@@ -36,7 +36,6 @@
 
     $sm = get_smarty_instance();
     $sm->assign('forms', $forms);
-    $sm->assign('language', $language);
 
     $sm->assign('count', $count);
     $sm->assign('offset', $offset);
