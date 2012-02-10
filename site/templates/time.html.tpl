@@ -33,8 +33,14 @@
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
                     <div class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a></div>
                     <div class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></div>
-                    <div class="atlasMeta">{$print.number_of_pages} page(s), from <a href="{$base_dir}/time.php?date={$print.created}">
-                    {$print.created|date_format}</a></div>
+                    <div class="atlasMeta">                    
+                        {if $print.number_of_pages == 1}
+                            1 page,
+                        {else if $print.number_of_pages > 1}
+                            {$print.number_of_pages} pages,
+                        {/if}
+                        from <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
+                    </div>
                 </div>
             {/foreach}
             
