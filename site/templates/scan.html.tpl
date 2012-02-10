@@ -377,9 +377,9 @@
                         src="{$form.form_url}">
                         </iframe>
                     {else}
-                        <p>We could not find your form!</p>
+                        <div style='float: left; margin-left: 20px'>There are no forms associated with this scan.</div>
                     {/if}
-                    
+                    <br/>
                     <div>
                         <button style='float: left; margin-left: 20px; 
                                 margin-top: 20px;' type="button" 
