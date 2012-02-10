@@ -19,6 +19,7 @@
     /**** ... ****/
     
     //header('content-type: text/plain');
+    //print_r($_POST);
     
     // Set Scan ID for redirect
     //$first_element = array_shift(array_keys($_POST['marker']));

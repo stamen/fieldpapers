@@ -41,7 +41,7 @@
         
         }
         
-        #remove {
+        #remove, #remove_new {
             margin-left: 10px;
         }
         
@@ -86,6 +86,23 @@
                         textarea.id = "notes";
                         textarea.name = 'marker[' + markerNumber + '][note]';
                         div.appendChild(textarea);
+                        
+                        var removeMarkerNote = function()
+                        {                            
+                            // Remove visual elements
+                            //div.removeChild(img);
+                            //div.removeChild(textarea);
+                            //div.removeChild(remove_button);
+                            
+                            div.parentNode.removeChild(div);
+                        }
+                        
+                        var remove_button = document.createElement('button');
+                        remove_button.id = 'remove_new';
+                        remove_button.innerHTML = 'Remove New Note';
+                        remove_button.className = 'show';
+                        remove_button.onclick = removeMarkerNote;
+                        div.appendChild(remove_button);
                         
                         var input_lat = document.createElement('input');
                         input_lat.value = this.location.lat.toFixed(6);
