@@ -214,7 +214,7 @@
                         
                         var remove_button = document.createElement('button');
                         remove_button.id = 'remove';
-                        remove_button.innerHTML = 'Remove Note';
+                        remove_button.innerHTML = 'Remove Saved Note';
                         remove_button.className = 'hide';
                         remove_button.onclick = removeMarkerNote;
                         div.appendChild(remove_button);
