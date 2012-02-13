@@ -4,9 +4,8 @@
     require_once 'data.php';
     require_once 'lib.forms.php';
     require_once 'lib.auth.php';
-
-     /*asks to post a new form
-    creates a new message in the messages table -- data.php -- with addmessage*/
+    
+    enforce_master_on_off_switch($language);
     
     session_start();
     $dbh =& get_db_connection();
