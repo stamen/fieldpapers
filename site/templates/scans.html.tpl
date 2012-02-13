@@ -33,7 +33,7 @@
             <div class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">{$print.id}</a></div>
             <div class="atlasOwner">by <a href="{$base_dir}/person.php?id={$scan.user_id}">{$scan.user_name}</a></div>
             <div class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></div>
-            <div class="atlasMeta">From <a href="{$base_dir}/time.php?date={$scan.created}">{$scan.created|date_format}</a></div>
+            <div class="atlasMeta">From <a href="{$base_dir}/time.php?date={$scan.created}">{$scan.age|nice_relativetime|escape}</a></div>
         </div>
     {/foreach}
     

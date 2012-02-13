@@ -33,6 +33,12 @@
                 
                 {else}
                     <a href="{$base_dir}/form.php?id={$form.id|escape}">
+                        {if $form.title}
+                            {$form.title}
+                        {else}
+                            Untitled form
+                        {/if}
+                        by {$form.user} from
                         <b id="form-{$form.id|escape}">{$form.age|nice_relativetime|escape}</b></a>
                     <script type="text/javascript" language="javascript1.2" defer="defer">
                     // <![CDATA[
