@@ -3,7 +3,7 @@ from math import log
 from copy import copy
 from itertools import product
 from urllib import urlopen, urlencode
-from os.path import join as pathjoin, dirname
+from os.path import join as pathjoin, dirname, realpath
 from urlparse import urljoin, urlparse, parse_qs
 from os import close, write, unlink
 from json import dumps as json_encode
@@ -24,6 +24,8 @@ from svgutils import create_cairo_font_face_for_file, place_image, draw_box, dra
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print, update_print, ALL_FINISHED
 from cairoutils import get_drawing_context
+
+cached_fonts = dict()
 
 def get_qrcode_image(print_href):
     """ Render a QR code to an ImageSurface.
@@ -207,7 +209,12 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     place_image(ctx, img, 0, -29.13, 19.2, 25.6)
     
     try:
-        font = create_cairo_font_face_for_file('fonts/Helvetica-Bold.ttf')
+        font_file = realpath('fonts/Helvetica-Bold.ttf')
+    
+        if font_file not in cached_fonts:
+            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
+        
+        font = cached_fonts[font_file]
     except:
         # no text for us.
         pass
@@ -219,7 +226,12 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
         ctx.show_text('Walking Papers')
     
     try:
-        font = create_cairo_font_face_for_file('fonts/Helvetica.ttf')
+        font_file = realpath('fonts/Helvetica.ttf')
+    
+        if font_file not in cached_fonts:
+            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
+        
+        font = cached_fonts[font_file]
     except:
         # no text for us.
         pass
