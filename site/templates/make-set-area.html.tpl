@@ -303,7 +303,7 @@
             map.setExtent(extent);
             
             // Initialize the preview map
-            preview_map = new MM.Map("preview_map", provider);
+            preview_map = new MM.Map("preview_map", provider, null, []);
             preview_map.setExtent(extent);
 
             // the selector is a map "layer"

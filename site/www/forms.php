@@ -18,11 +18,24 @@
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
     $forms = get_forms($dbh, $pagination);
+    
+    foreach ($forms as $i => $form)
+    {
+        $user = get_user($dbh, $form['user_id']);
+        
+        if ($user['name'])
+        {
+            $forms[$i]['user'] = $user['name'];
+        } else {
+            $forms[$i]['user'] = 'Anonymous';
+        }
+    
+    }
+    
     list($count, $offset, $perpage, $page) = get_pagination($pagination);
 
     $sm = get_smarty_instance();
     $sm->assign('forms', $forms);
-    $sm->assign('language', $language);
 
     $sm->assign('count', $count);
     $sm->assign('offset', $offset);

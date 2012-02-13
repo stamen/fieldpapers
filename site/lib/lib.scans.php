@@ -106,4 +106,21 @@
         return get_scan_note($dbh, $note['scan_id'], $note['note_number']);
     }
     
+    function remove_scan_note($dbh, $scan_id, $note_number)
+    {
+        $q = sprintf('DELETE FROM scan_notes
+              WHERE scan_id = %s AND note_number = %s',
+             $dbh->quoteSmart($scan_id),
+             $dbh->quoteSmart($note_number));
+             
+        error_log(preg_replace('/\s+/', ' ', $q));
+        
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+        {
+            die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+    }
+    
 ?>
