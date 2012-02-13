@@ -85,6 +85,7 @@
                         var textarea = document.createElement('textarea');
                         textarea.id = "notes";
                         textarea.name = 'marker[' + markerNumber + '][note]';
+                        textarea.className = 'show';
                         div.appendChild(textarea);
                         
                         var removeMarkerNote = function()
@@ -121,13 +122,22 @@
                         
                         // make it easy to drag
                         
+                        var mousemove = false;
+                        
                         img.onmousedown = function(e)
                         {
                             var marker_start = {x: div.offsetLeft, y: div.offsetTop},
                                 mouse_start = {x: e.clientX, y: e.clientY};
                             
+                            mousemove = false;
+                            
                             document.onmousemove = function(e)
                             {
+                                if (e.type =='mousemove')
+                                {
+                                    mousemove = true;
+                                }
+                                
                                 var mouse_now = {x: e.clientX, y: e.clientY};
                             
                                 div.style.left = (marker_start.x + mouse_now.x - mouse_start.x) + 'px';
@@ -141,6 +151,20 @@
                         
                         img.onmouseup = function(e)
                         {
+                            if (!mousemove)
+                            {
+                                if (textarea.className == 'hide' && remove_button.className == 'hide') 
+                                {
+                                    textarea.className = 'show';
+                                    remove_button.className = 'show';
+                                } else if (textarea.className == 'show' && remove_button.className == 'show') {
+                                    textarea.className = 'hide';
+                                    remove_button.className = 'hide';
+                                }
+                            }
+                            
+                            mousemove = false;
+                        
                             var marker_end = {x: div.offsetLeft, y: div.offsetTop};
                             
                             marker.location = map.pointLocation(marker_end);
