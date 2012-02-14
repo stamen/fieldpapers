@@ -7,6 +7,7 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
+    require_once 'lib.forms.php';
 
     $form_id = $_GET['id'] ? $_GET['id'] : null;
     
