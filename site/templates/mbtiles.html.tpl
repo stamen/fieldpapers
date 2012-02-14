@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Show MBTiles</title>
+    {literal}
     <style type="text/css">
     html,body {
         width: 700px;
@@ -15,18 +16,19 @@
         height: 512px;
     }
     </style>
-    <script type="text/javascript" src="../atlas-ui/modest_maps/modestmaps.min.js"></script>
-    <link rel="stylesheet" href="{$base_dir}/style.css" type="text/css" />
+    {/literal}
+    <script type="text/javascript" src="{$base_dir}/js/modestmaps.min.js"></script>
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript">
+        {literal}
         function initMap() {
             var center_lat = 37.77,
                 center_lon = -122.41;
             
             var MM = com.modestmaps;
 
-            var name = <?php echo json_encode($_SESSION['file']);?>;
-            var provider = new MM.TemplatedMapProvider('{$base_dir}/mbtiles/mbtiles.php/'  + name + '/{Z}/{X}/{Y}.png');
+            var provider = new MM.TemplatedMapProvider('{/literal}{$base_dir}{literal}/mbtiles.php/'  + {/literal}'{$filename}'{literal} + '/{Z}/{X}/{Y}.png');
             console.log(name);
             
             // Set up the main map
@@ -34,6 +36,7 @@
             
             map.setCenterZoom(new MM.Location(39.23, -101.42), 3);
         }
+        {/literal}
     </script>
 </head>
     <body onload="initMap()">
