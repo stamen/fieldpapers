@@ -5,8 +5,13 @@
     require_once 'lib.auth.php';
     require_once 'output.php';
     
-    session_start();
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+      
+    enforce_master_on_off_switch($language);
     
+    /**** ... ****/
+    
+    session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
     
@@ -76,33 +81,6 @@
             header('Location: ' . $_POST['redirect']);
             
             break;
-        /*
-        case 'log in':
-            $registered_user = get_user_by_name($dbh, $_POST['username']);
-            
-            if (!$registered_user)
-            {
-                die('You are not registered.');
-            }
-            
-            if (!check_user_password($dbh, $registered_user['id'], $_POST['password']))
-            {
-                die('That\'s not the correct password!');
-            }
-            
-            login_user_by_name($dbh, $registered_user['name']);
-            
-            header('Location: ' . $_POST['redirect']);
-        
-            break;
-            
-        case 'log out':
-            logout_user();
-            
-            header('Location: ' . $_POST['redirect']);
-            
-            break;
-        */
     }
     
     header("Content-Type: text/html; charset=UTF-8");

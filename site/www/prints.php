@@ -7,6 +7,10 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
+    
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+      
+    enforce_master_on_off_switch($language);
 
     /**** ... ****/
     
@@ -19,7 +23,6 @@
     $prints = get_prints($dbh, $pagination);
     list($count, $offset, $perpage, $page) = get_pagination($pagination);
     
-    // Get user names
     foreach ($prints as $i => $print)
     {
         $user = get_user($dbh, $prints[$i]['user_id']);

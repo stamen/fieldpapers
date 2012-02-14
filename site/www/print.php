@@ -8,6 +8,10 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+      
+    enforce_master_on_off_switch($language);
+    
     $print_id = $_GET["id"];
 
     /**** ... ****/
@@ -17,12 +21,10 @@
     remember_user($dbh);
 
     $sm = get_smarty_instance();
-        
-    // Get print    
+           
     $print = get_print($dbh, $print_id);
     $sm->assign('print', $print);
     
-    // Get user
     $user = get_user($dbh, $print['user_id']);
     
     if ($user['name'])
@@ -32,7 +34,6 @@
         $sm->assign('user_name', 'Anonymous');
     }
     
-    // Get pages
     $pages = get_print_pages($dbh, $print_id);
     $sm->assign('pages', $pages);
     
