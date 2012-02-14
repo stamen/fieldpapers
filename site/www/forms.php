@@ -8,6 +8,8 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     require_once 'lib.forms.php';
+    
+    enforce_master_on_off_switch($language);
 
     /**** ... ****/
     
