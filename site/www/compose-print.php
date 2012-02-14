@@ -5,6 +5,8 @@
     require_once 'data.php';
     require_once 'lib.compose.php';
     
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    
     enforce_master_on_off_switch($language);
     
     session_start();

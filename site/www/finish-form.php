@@ -16,12 +16,14 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     require_once 'lib.forms.php';
+    
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    
+    enforce_master_on_off_switch($language);
 
     // Getting the correct form id
     $form_id = $_GET['id'] ? $_GET['id'] : null;
     
-    enforce_master_on_off_switch($language);
-
     /**** ... ****/
     
     session_start();

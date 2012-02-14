@@ -9,6 +9,8 @@
     require_once 'init.php';
     require_once 'data.php';
     
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    
     enforce_master_on_off_switch('');
 
     if($_POST['password'] != API_PASSWORD)
