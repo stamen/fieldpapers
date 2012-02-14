@@ -1,6 +1,6 @@
 <?php
    /**
-    * Individual page for the print
+    * Individual page for the form
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
