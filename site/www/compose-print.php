@@ -1,17 +1,16 @@
 <?php
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).'/../lib');
-
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.compose.php';
     
     enforce_master_on_off_switch($language);
     
-    $is_json = false;
-    
     session_start();
     $user_id = $_SESSION['user']['id'];
+    
+    $is_json = false;
 
     foreach(getallheaders() as $header => $value)
     {
