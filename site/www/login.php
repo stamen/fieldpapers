@@ -5,8 +5,11 @@
     require_once 'lib.auth.php';
     require_once 'output.php';
     
-    session_start();
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+      
+    enforce_master_on_off_switch($language);
     
+    session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
     
@@ -82,7 +85,6 @@
             $headers = 'From:noreply@fieldpapers.org' . "\r\n";
             mail($to, $subject, $message, $headers);
             
-            // redirect
             header('Location: ' . $_POST['redirect']);
             
             break;
