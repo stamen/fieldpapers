@@ -22,6 +22,7 @@
     
     /**** ... ****/
     
+    session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
         
