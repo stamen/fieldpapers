@@ -1,28 +1,20 @@
 <?php
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
     
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    enforce_master_on_off_switch($language);
+    
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
     $notes = is_array($_POST['notes']) ? $_POST['notes'] : array();
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    
-    enforce_master_on_off_switch($language);
-
     /**** ... ****/
     
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
-    
-    /*
-    $dbh =& get_db_connection();
-    
-    $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
-    */
     
     $user = get_user($dbh, $_SESSION['user']['id']);  
     
