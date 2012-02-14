@@ -1,7 +1,7 @@
 <?php
 
     require_once '../lib/lib.everything.php';
-    require_once '../lib/qrcode.php';
+    require_once '../lib/lib.qrcode.php';
     
     $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     
