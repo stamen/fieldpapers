@@ -9,20 +9,17 @@
     require_once 'init.php';
     require_once 'data.php';
     
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    
-    enforce_master_on_off_switch('');
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
-    if($_POST['password'] != API_PASSWORD)
-        die_with_code(401, 'Sorry, bad password');
+    enforce_api_password($_POST['password']);
+    
+    $dbh =& get_db_connection();
     
     $delete = ($_POST['delete'] == 'yes') ? true : false;
     $timeout = is_numeric($_POST['timeout']) ? $_POST['timeout'] : null;
     $message_id = is_numeric($_POST['id']) ? $_POST['id'] : null;
     
     /**** ... ****/
-    
-    $dbh =& get_db_connection();
     
     if($message_id && $delete) {
         add_log($dbh, "Deleting message {$message_id}");

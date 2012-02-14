@@ -11,10 +11,14 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-    
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
         
-    enforce_master_on_off_switch($language);
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
+    
+    /**** ... ****/
 
     $source = $_POST['source'];
     
@@ -33,10 +37,6 @@
         case 'mgrs':
             $provider .= sprintf(",http://tiles.teczno.com/%s/{Z}/{X}/{Y}.png", strtolower($_POST['grid']));
     }
-    
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
 
     if($source == 'upload' && ADVANCED_COMPOSE_FORM)
     {
