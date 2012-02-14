@@ -6,18 +6,19 @@
 
     require_once '../lib/lib.everything.php';
     
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    enforce_master_on_off_switch($language);
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
+    
+    /**** ... ****/
     
     $url = $_GET['url'] ? $_GET['url'] : null;
     $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
     $object_id = $_GET['key'] ? $_GET['key'] : null;
     $expected_etag = $_GET['etag'] ? $_GET['etag'] : null;
-    /**** ... ****/
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
-    
+
     if($scan_id)
         $scan = get_scan($dbh, $scan_id);
 
