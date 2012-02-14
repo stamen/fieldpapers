@@ -8,19 +8,11 @@
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).'/../lib');
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-    
-    /*
-    header('Content-Type: text/plain');
-    print_r($_POST);
-    print_r($_FILES);
-    die();
-    */
-    
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        
+    enforce_master_on_off_switch($language);
 
     $source = $_POST['source'];
     
@@ -40,12 +32,9 @@
             $provider .= sprintf(",http://tiles.teczno.com/%s/{Z}/{X}/{Y}.png", strtolower($_POST['grid']));
     }
     
+    session_start();
     $dbh =& get_db_connection();
-    
-    $user = $user_id ? get_user($dbh, $user_id) : add_user($dbh);
-
-    if($user)
-        setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
+    remember_user($dbh);
 
     if($source == 'upload' && ADVANCED_COMPOSE_FORM)
     {
