@@ -8,15 +8,15 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    enforce_master_on_off_switch($language);
-    
-    $timestamp = $_GET["date"];
-    /**** ... ****/
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
+    
+    /**** ... ****/
+    
+    $timestamp = $_GET["date"];
 
     $sm = get_smarty_instance();
     
