@@ -5,16 +5,16 @@
 
     require_once '../lib/lib.everything.php';
     
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    enforce_master_on_off_switch($language);
-    
-    $scan_id = $_GET['id'] ? $_GET['id'] : null;
-    /**** ... ****/
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
-        
+
+    /**** ... ****/
+            
+    $scan_id = $_GET['id'] ? $_GET['id'] : null;
+    
     $scan = get_scan($dbh, $scan_id);
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
