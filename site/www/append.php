@@ -10,12 +10,13 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE'];);
     
-    enforce_master_on_off_switch($language);
+    enforce_api_password($_GET['password']);
     
-    if($_GET['password'] != API_PASSWORD)
-        die_with_code(401, 'Sorry, bad password');
+    session_start();
+    $dbh =& get_db_connection();
+    remember_user($dbh);
     
     $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
     $print_id = $_GET['print'] ? $_GET['print'] : null;
@@ -23,10 +24,6 @@
     $mimetype = $_GET['mimetype'] ? $_GET['mimetype'] : null;
     
     /**** ... ****/
-    
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
         
     if($scan_id) {
         $scan = get_scan($dbh, $scan_id);
