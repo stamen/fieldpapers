@@ -9,6 +9,8 @@
     require_once 'lib.forms.php';
     require_once 'lib.auth.php';
     
+    enforce_master_on_off_switch($language);
+    
     $form_id = $_GET["id"];
 
     /**** ... ****/
