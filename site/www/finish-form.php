@@ -24,11 +24,11 @@
     $dbh =& get_db_connection();
     remember_user($dbh);
     
-
+    /**** ... ****/
+    
     // Getting the correct form id
     $form_id = $_GET['id'] ? $_GET['id'] : null;
     
-    /**** ... ****/
     $form = get_form($dbh, $form_id);
     
     if(!$form)
