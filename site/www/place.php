@@ -7,17 +7,15 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-    
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
       
-    enforce_master_on_off_switch($language);
-
-    /**** ... ****/
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
-    
+
+    /**** ... ****/
+        
     $sm = get_smarty_instance();
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
