@@ -12,9 +12,8 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     
-    //list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    
-    //enforce_master_on_off_switch($language);
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    enforce_master_on_off_switch($language);
 
     /**** ... ****/ 
     session_start();

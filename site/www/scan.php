@@ -1,6 +1,6 @@
 <?php
    /**
-    * Individual page for the print
+    * Individual page for the scan
     */
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
@@ -9,6 +9,9 @@
     require_once 'lib.auth.php';
     require_once 'lib.scans.php';
     require_once 'lib.forms.php';
+    
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    enforce_master_on_off_switch($language);
     
     $scan_id = $_GET["id"];
 

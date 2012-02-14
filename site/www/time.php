@@ -8,6 +8,9 @@
     require_once 'data.php';
     require_once 'lib.auth.php';
     
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    enforce_master_on_off_switch($language);
+    
     $timestamp = $_GET["date"];
     /**** ... ****/
     
@@ -38,9 +41,6 @@
     }
     
     $sm->assign('prints', $prints);
-    
-    
-    
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);

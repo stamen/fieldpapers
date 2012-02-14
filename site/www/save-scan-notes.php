@@ -1,12 +1,12 @@
 <?php
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
     require_once 'lib.scans.php';
     
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     enforce_master_on_off_switch($language);
 
     session_start();
@@ -17,14 +17,7 @@
     $user_id = $user['id'];
     
     /**** ... ****/
-    
-    //header('content-type: text/plain');
-    //print_r($_POST);
-    
-    // Set Scan ID for redirect
-    //$first_element = array_shift(array_keys($_POST['marker']));
-    //$scan_id = $_POST['marker'][$first_element]['scan_id'];
-    
+        
     $scan_id = $_GET['scan_id'];
     
         
