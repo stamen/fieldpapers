@@ -1,8 +1,8 @@
 <?php
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    require_once '../../lib/init.php';
-    require_once '../../lib/data.php';
-    require_once '../../lib/lib.auth.php';
+    require_once 'init.php';
+    require_once 'data.php';
+    require_once 'lib.auth.php';
 
     session_start();
     $dbh =& get_db_connection();
