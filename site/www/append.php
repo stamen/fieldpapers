@@ -18,12 +18,12 @@
     $dbh =& get_db_connection();
     remember_user($dbh);
     
+    /**** ... ****/
+    
     $scan_id = $_GET['scan'] ? $_GET['scan'] : null;
     $print_id = $_GET['print'] ? $_GET['print'] : null;
     $dirname = $_GET['dirname'] ? $_GET['dirname'] : null;
     $mimetype = $_GET['mimetype'] ? $_GET['mimetype'] : null;
-    
-    /**** ... ****/
         
     if($scan_id) {
         $scan = get_scan($dbh, $scan_id);
