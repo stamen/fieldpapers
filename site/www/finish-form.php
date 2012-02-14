@@ -13,18 +13,17 @@
 
     require_once '../lib/lib.everything.php';
     
-    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    
-    enforce_master_on_off_switch($language);
-
-    // Getting the correct form id
-    $form_id = $_GET['id'] ? $_GET['id'] : null;
-    
-    /**** ... ****/
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    enforce_api_password($_POST['password']);
     
     session_start();
     $dbh =& get_db_connection();
     remember_user($dbh);
+    
+    /**** ... ****/
+    
+    // Getting the correct form id
+    $form_id = $_GET['id'] ? $_GET['id'] : null;
     
     $form = get_form($dbh, $form_id);
     
@@ -35,9 +34,6 @@
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
-        if($_POST['password'] != API_PASSWORD)
-            die_with_code(401, 'Sorry, bad password');
-        
         $dbh->query('START TRANSACTION');
         
         foreach($_POST['fields'] as $_field)
