@@ -1,0 +1,24 @@
+body {
+  background: #fff;
+  color: #000;
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+#map {
+  width: 100%;
+  height: 512px;
+}
+
+#pages_container {
+    margin-left: -10px;
+}
+
+.page {
+    width: 150px;
+    height: 190px;
+    border: 1px solid #000;
+    float: center;
+    margin: 10px;
+    float: left;
+}
