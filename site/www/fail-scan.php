@@ -5,6 +5,7 @@
     require_once 'lib.auth.php';
     
     enforce_master_on_off_switch( $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    enforce_api_password($_POST['password']);
     
     session_start();
     $dbh =& get_db_connection();
@@ -22,9 +23,7 @@
     }
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
-    {
-        enforce_api_password($_POST['password']);
-        
+    {   
         $dbh->query('START TRANSACTION');
         
         add_log($dbh, "Failing scan {$scan['id']}");
