@@ -11,10 +11,12 @@
     require_once 'init.php';
     require_once 'data.php';
     require_once 'lib.auth.php';
-
-    $print_id = $_GET['id'] ? $_GET['id'] : null;
+    
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     
     enforce_master_on_off_switch($language);
+
+    $print_id = $_GET['id'] ? $_GET['id'] : null;
 
     /**** ... ****/
     

@@ -6,6 +6,8 @@
     require_once 'lib.auth.php';
     require_once 'lib.scans.php';
     
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    
     enforce_master_on_off_switch($language);
 
     session_start();
