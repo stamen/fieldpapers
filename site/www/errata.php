@@ -3,10 +3,7 @@
     * Old location of zeitgeist.
     */
 
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    require_once 'init.php';
-    require_once 'data.php';
-    require_once 'lib.auth.php';
+    require_once '../lib/lib.everything.php';
     
     $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 

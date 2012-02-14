@@ -4,12 +4,7 @@
     * form after a scan image has been successfully uploaded.
     */
 
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'/usr/home/migurski/pear/lib');
-    require_once 'init.php';
-    require_once 'data.php';
-    require_once 'lib.auth.php';
-    require_once 'Net/URL.php';
+    require_once '../lib/lib.everything.php';
     
     $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     enforce_master_on_off_switch($language);

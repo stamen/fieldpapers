@@ -1,8 +1,7 @@
 <?php
 
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    require_once 'qrcode.php';
-    require_once 'output.php';
+    require_once '../lib/lib.everything.php';
+    require_once '../lib/qrcode.php';
     
     $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     
