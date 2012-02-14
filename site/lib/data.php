@@ -12,6 +12,9 @@
     if(!function_exists('imagecreatefromstring'))
         die_with_code(500, "Missing function imagecreatefromstring from PHP image processing and GD library");
     
+    // suppress PHP notices, they are annoying.
+    error_reporting(error_reporting() & ~E_NOTICE);
+    
     define('STEP_UPLOADING', 0);
     define('STEP_QUEUED', 1);
     define('STEP_SIFTING', 2);
@@ -86,7 +89,7 @@
     * If the single argument is one of "html" or "xml", just return
     * what's appropriate without pretending it's a full header.
     */
-    function get_preferred_type($accept_type_header, $acceptable_types)
+    function get_preferred_type($accept_type_header, $acceptable_types=null)
     {
         $acceptable_types = is_array($acceptable_types)
             ? $acceptable_types

@@ -186,7 +186,7 @@
         return compact('type', 'id', 'geometry', 'properties');
     }
     
-    function enforce_master_on_off_switch($language)
+    function enforce_master_on_off_switch($language='en')
     {
         if(defined('MASTER_ON_OFF_SWITCH') and MASTER_ON_OFF_SWITCH)
             return;
