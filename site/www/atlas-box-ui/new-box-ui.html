@@ -92,12 +92,12 @@
             scaleControl.drag(
             
             function(dx, dy, mouseX, mouseY, e) {
-                //console.log(initialY);
+                console.log(dragControl.attr("cx"));
                 
                 this.attr({
-                    cx: Math.max(x + aspect_ratio*dx, 145.909),
-                    cy: Math.max(y + dx, 180)
-                    //cx: x + dx,
+                    cx: Math.max(x + aspect_ratio*dx, dragControl.attr("cx") + aspect_ratio*20),
+                    cy: Math.max(y + dx, dragControl.attr("cy") + 20)
+                    //cx: x + aspect_ratio*dx,
                     //cy: y + dx
                 });                
                 
@@ -106,8 +106,6 @@
                 rect.remove();
                 var rect_width = this.attr("cx");
                 var rect_height = this.attr("cy");
-                //aspect_ratio*rect_width+30  --> some ratio
-                //http://stackoverflow.com/questions/7297356/raphael-js-drag-with-scale-causes-weird-jumping-behavoir
                 rect = canvas.rect(prev_rect_bbox.x,prev_rect_bbox.y,rect_width-30,rect_height-30);
                 rect.attr("stroke", "#050505");
                 rect.attr("fill", "#fff");
