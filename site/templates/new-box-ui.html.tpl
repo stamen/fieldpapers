@@ -27,19 +27,22 @@
             
             // Page Information
             // TODO: Make this dynamic
-            var aspect_ratio = 11/8.5; // Sample aspect_ratio for now // Portrait size
+            
+            var num_rows = 1;
+            var num_columns = 1;
+            var page_aspect_ratio = 11/8.5; // Sample aspect_ratio for now // Portrait size
+            var aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
+            
             document.getElementById('paper_size').value = 'letter';
             document.getElementById('orientation').value = 'landscape';
             
             // Initialize Coordinate Objects
-            var scaleControlCoordinates = {x: 150*aspect_ratio + 30, y:180};
-            var dragControlCoordinates = {x:30, y:30};
+            var scaleControlCoordinates = {x: 150*aspect_ratio + 60, y:180};
+            var dragControlCoordinates = {x:60, y:60};
             
             var updateDragControlCoordinates = function (dx, dy) {
                 dragControlCoordinates.x = dragControlCoordinates.x + dx;
                 dragControlCoordinates.y = dragControlCoordinates.y + dy;
-                
-                console.log('dragcontrolcoords:', dragControlCoordinates);
             }
             
             var updateScaleControlCoordinates = function(dx, dy) {
@@ -47,17 +50,16 @@
                 scaleControlCoordinates.y = scaleControlCoordinates.y + dy;
             }
             
-            // What's the current page height?
-            var page_dimensions = {x: 30, y:30, width: 150*aspect_ratio, height: 150};
+            // Initializing page_dimensions
+            // TODO: Make this dynamic
+            var page_dimensions = {x: 60, y:60, width: 150*aspect_ratio, height: 150};
             
-            var setPageDimensions = function(rect_obj, scale_position_x, scale_position_y) {
-                var rect_obj_bounds = rect_obj.getBBox();
+            var setPageDimensions = function(drag_position_x, drag_position_y, scale_position_x, scale_position_y) {
+                page_dimensions.x = drag_position_x;
+                page_dimensions.y = drag_position_y;
                 
-                page_dimensions.x = rect_obj_bounds.x;
-                page_dimensions.y = rect_obj_bounds.y;
-                
-                page_dimensions.width = scale_position_x;
-                page_dimensions.height = scale_position_y;
+                page_dimensions.width = scale_position_x - drag_position_x;
+                page_dimensions.height = scale_position_y - drag_position_y;
             }
             
             // Remember the pages
@@ -71,9 +73,7 @@
             
             // Get geographic extent
             
-            var setExtent = function(topLeftPoints, bottomRightPoints) {
-                console.log('dragControlCoordinates', dragControlCoordinates);
-            
+            var setExtent = function(topLeftPoints, bottomRightPoints) {            
                 var topLeftCoords = map.pointLocation(new MM.Point(topLeftPoints[0], topLeftPoints[1]));
                 var bottomRightCoords = map.pointLocation(new MM.Point(bottomRightPoints[0], bottomRightPoints[1]));
                                 
@@ -94,8 +94,6 @@
                     page_extent.name = "pages[0]";
                     page_extent.value = atlas_pages;
                 }
-                
-                console.log(page_extent);
             }
             
             ///
@@ -104,7 +102,7 @@
 
             var dragSet = canvas.set();
             
-            var rect = canvas.rect(30,30,150*aspect_ratio,150);
+            var rect = canvas.rect(60,60,150*aspect_ratio,150);
             rect.attr("stroke", "#050505");
             rect.attr("fill", "#fff");
             rect.attr("fill-opacity", .33);
@@ -113,25 +111,36 @@
                       [scaleControlCoordinates.x, scaleControlCoordinates.y]);
             addPage(rect);
             
-            var horizontal_add = canvas.rect(30+150*aspect_ratio-.5*15,30+.5*150-.5*25,15,25);
+            var horizontal_add = canvas.rect(60+150*aspect_ratio-.5*15,60+.5*150-.5*25,15,25);
             horizontal_add.attr("stroke", "#050505");
             horizontal_add.attr("fill", "#fff");
             horizontal_add.attr("fill-opacity", 1);
             dragSet.push(horizontal_add);
             
-            var vertical_add = canvas.rect(30+.5*150*aspect_ratio-.5*15,30+150-.5*25,15,25);
+            var horizontal_remove = canvas.rect(5,5,15,25);
+            horizontal_remove.attr("stroke", "#050505");
+            horizontal_remove.attr("fill", "#00ff00");
+            horizontal_remove.attr("fill-opacity", 1);
+            //dragSet.push(horizontal_remove);
+            
+            var vertical_add = canvas.rect(60+.5*150*aspect_ratio-.5*15,60+150-.5*25,15,25);
             vertical_add.attr("stroke", "#050505");
             vertical_add.attr("fill", "#fff");
             vertical_add.attr("fill-opacity", 1);
             dragSet.push(vertical_add);
             
+            var vertical_remove = canvas.rect(25,5,15,25);
+            vertical_remove.attr("stroke", "#050505");
+            vertical_remove.attr("fill", "#ff0000");
+            vertical_remove.attr("fill-opacity", 1);
+            //dragSet.push(vertical_remove);
             
-            var dragControl = canvas.circle(30,30,15);
+            var dragControl = canvas.circle(60,60,15);
             dragControl.attr("fill", "#050505");
             dragControl.attr("fill-opacity", 1);
             dragSet.push(dragControl);
             
-            var scaleControl = canvas.circle(150*aspect_ratio + 30,180,15);
+            var scaleControl = canvas.circle(150*aspect_ratio + 60,210,15);
             scaleControl.attr("fill", "#fff");
             
             /*
@@ -142,16 +151,20 @@
             plusIcon.scale(.6,.6,0,0);
             */
             
-            var dragDeltaOrigX;
-            var dragDeltaOrigY;
             
+            /////
+            // dragSet drag handler: start, move, end
+            /////
+            var initialX, initialY; // These are used by the dragSet handler and the scaleControl handler
+                        
             var delta = {dx: 0, dy: 0};
             
-            var start = function(x,y,e) {
-                console.log(dragControlCoordinates);
-                                
+            var start = function(x,y,e) {                                
                 e.stopPropagation();
-                dragSet.oBB = dragSet.getBBox();
+                //dragSet.oBB = dragSet.getBBox();
+                
+                initialX = dragControl.attr("cx");
+                initialY = dragControl.attr("cy");
                 
                 setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
                           [scaleControlCoordinates.x, scaleControlCoordinates.y]);
@@ -160,124 +173,159 @@
             },
             move = function (dx,dy,x,y,event) {
                 event.stopPropagation();
-                var bbox = dragSet.getBBox();
-                dragSet.translate(dragSet.oBB.x - bbox.x + dx, dragSet.oBB.y - bbox.y + dy);
-                                
-                scaleControl.translate(dragSet.oBB.x - bbox.x + dx, dragSet.oBB.y - bbox.y + dy);
                 
-                delta.dx = dx;
-                delta.dy = dy;
+                dragControlCoordinates.x = initialX + dx;
+                dragControlCoordinates.y = initialY + dy;
+                
+                scaleControlCoordinates.x = dragControlCoordinates.x + page_dimensions.width;
+                scaleControlCoordinates.y = dragControlCoordinates.y + page_dimensions.height;
+                
+                setPageDimensions(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
+                
+                dragControl.attr({
+                        cx: dragControlCoordinates.x,
+                        cy: dragControlCoordinates.y
+                });
+                
+                scaleControl.attr({
+                        cx: scaleControlCoordinates.x,
+                        cy: scaleControlCoordinates.y
+                });
+                
+                rect.attr({
+                    x: dragControlCoordinates.x,
+                    y: dragControlCoordinates.y
+                });
+                
+                horizontal_add.attr({
+                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width"),
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
+                });
+                
+                vertical_add.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
+                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
                 
                 return false;
             },
-            up = function () {                                
-                dragDeltaOrigX = dragSet.getBBox().x - 15;
-                dragDeltaOrigY = dragSet.getBBox().y - 15;
-                
-                // Update drag control coordinates
-                updateDragControlCoordinates(delta.dx, delta.dy);
-                updateScaleControlCoordinates(delta.dx, delta.dy);
-                
+            up = function () {                                                
                 setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
                           [scaleControlCoordinates.x, scaleControlCoordinates.y]);
             }
             
             dragSet.drag(move, start, up);
             
+            /////
+            // scaleControl drag handler: move, start, end
+            /////
+            
             var x,y;
-            var initialX, initialY;
             scaleControl.drag(
             
-            function(dx, dy, mouseX, mouseY, e) {
-                setPageDimensions(rect,this.attr("cx"), this.attr("cy"));
-                
-                this.attr({
-                    cx: Math.max(x + aspect_ratio*dx, 30),
-                    cy: Math.max(y + dx, 30)
+                function(dx, dy, mouseX, mouseY, e) {
+                    var curX = initialX + dx;
+                    var curY = initialY + dy;
                     
-                    //cx: x + aspect_ratio*dx,
-                    //cy: y + dx
-                });                
-                
-                var prev_rect_bbox = rect.getBBox();
-                
-                
-                for (var page in pages) {
-                    //console.log(page);
-                    var page_object = pages[page];
-                    console.log(page_object);
-                    //page_object.remove();
+                    var mouse_width_dx = curX - page_dimensions.x;
+                    var mouse_height_dy = curY - page_dimensions.y;
                     
-                    //page_object = canvas.rect(page_dimensions.x,page_dimensions.y,page_dimensions.width-30,page_dimensions.height-30);
+                    if (mouse_width_dx <= 0 || mouse_height_dy <= 0) 
+                    {
+                        return;
+                    }
                     
+                    var new_width,
+                        new_height;
+                        
+                    if ((mouse_width_dx/mouse_height_dy) >= aspect_ratio)
+                    {
+                        // Change X to track mouse
+                        new_width = mouse_width_dx;
+                        new_height = mouse_width_dx/aspect_ratio;
+                    } else {
+                        // Change Y to track mouse
+                        new_width = mouse_height_dy * aspect_ratio;
+                        new_height = mouse_height_dy;
+                    }
+                    
+                    this.attr({
+                        cx: page_dimensions.x + new_width,
+                        cy: page_dimensions.y + new_height
+                    });           
+                    
+                    scaleControlCoordinates.x = this.attr("cx");
+                    scaleControlCoordinates.y = this.attr("cy");
+                    
+                    setPageDimensions(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x, scaleControlCoordinates.y);     
+                    
+                    var prev_rect_bbox = rect.getBBox();
+                    
+                    for (var page in pages) {
+                        //console.log(page);
+                        var page_object = pages[page];
+                        console.log(page_object);
+                        //page_object.remove();
+                        
+                        //page_object = canvas.rect(page_dimensions.x,page_dimensions.y,page_dimensions.width-30,page_dimensions.height-30);
+                    }
+                    
+                    rect.remove();
+                    rect = canvas.rect(dragControlCoordinates.x, 
+                                       dragControlCoordinates.y,
+                                       scaleControlCoordinates.x - dragControlCoordinates.x,
+                                       scaleControlCoordinates.y - dragControlCoordinates.y);
+                                       
+                    rect.attr("stroke", "#050505");
+                    rect.attr("fill", "#fff");
+                    rect.attr("fill-opacity", .33);
+                    rect.insertBefore(this);
+                    rect.insertBefore(dragControl);
+                    rect.insertBefore(horizontal_add);
+                    //rect.insertBefore(vertical_add); // removing this fixes insertion order?
+                                             
+                horizontal_add.attr({
+                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width"),
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
+                });
+                
+                vertical_add.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
+                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
+                    
+                    dragSet.clear();
+                    createNewDragSet();
+                    
+                    return false;
+                },
+                
+                function(mouseX,mouseY,e) {
+                    setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
+                              [scaleControlCoordinates.x, scaleControlCoordinates.y]);
+                
+                    scaleControlCoordinates.x = this.attr("cx");
+                    scaleControlCoordinates.y = this.attr("cy");
+                
+                    e.stopPropagation();
+                    x = this.attr("cx"),
+                    y = this.attr("cy")
+                    
+                    initialX = x;
+                    initialY = y;
+                                              
+                    return false;
+                },
+                
+                function(e) {
+                    scaleControlCoordinates.x = this.attr("cx");
+                    scaleControlCoordinates.y = this.attr("cy");
+                    
+                    setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
+                              [scaleControlCoordinates.x, scaleControlCoordinates.y]);
+                    
+                    return false;
                 }
-                
-                
-                rect.remove();
-                
-                // The rect should be dependent on position of both circles.
-                
-                rect = canvas.rect(page_dimensions.x,page_dimensions.y,page_dimensions.width-30,page_dimensions.height-30);
-                rect.attr("stroke", "#050505");
-                rect.attr("fill", "#fff");
-                rect.attr("fill-opacity", .33);
-                rect.insertBefore(this);
-                rect.insertBefore(dragControl);
-                rect.insertBefore(horizontal_add);
-                //rect.insertBefore(vertical_add); // removing this fixes insertion order?
-                
-                
-                setPageDimensions(rect,this.attr("cx"), this.attr("cy"));
-                
-                var new_rect_bbox = rect.getBBox();
-                
-                var dragOffsetX = dragDeltaOrigX || 0;
-                var dragOffsetY = dragDeltaOrigY || 0;
-                
-                horizontal_add.attr({x: new_rect_bbox.x + new_rect_bbox.width - .5 * 15 - dragOffsetX, 
-                                     y: new_rect_bbox.y + .5 * new_rect_bbox.height - .5*25 - dragOffsetY});
-                
-                   
-                vertical_add.attr({x: new_rect_bbox.x + .5 * new_rect_bbox.width - .5*15 - dragOffsetX, 
-                                   y: new_rect_bbox.y + new_rect_bbox.height - .5*25 - dragOffsetY});
-                
-                dragSet.clear();
-                createNewDragSet();
-                
-                return false;
-            },
-            
-            function(mouseX,mouseY,e) {
-                setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
-                          [scaleControlCoordinates.x, scaleControlCoordinates.y]);
-            
-                scaleControlCoordinates.x = this.attr("cx");
-                scaleControlCoordinates.y = this.attr("cy");
-                
-                //console.log(scaleControlCoordinates);
-            
-                e.stopPropagation();
-                x = this.attr("cx"),
-                y = this.attr("cy")
-                
-                initialX = x;
-                initialY = y;
-                                          
-                return false;
-            },
-            
-            function(e) {
-                this.attr("fill", "#fff");
-                
-                //updateScaleControlCoordinates(this.attr("cx"), this.attr("cy"));
-                scaleControlCoordinates.x = this.attr("cx");
-                scaleControlCoordinates.y = this.attr("cy");
-                
-                setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
-                          [scaleControlCoordinates.x, scaleControlCoordinates.y]);
-                
-                return false;
-            }
             );
             
             var createNewDragSet = function () {
@@ -287,49 +335,123 @@
                 dragSet.push(vertical_add);
             };
             
-            var rect_bounds = rect.getBBox();
-            
             var addHorizontalPage = function() {
-                // TODO: account for the last rect
-                // Check for number of rows
-                // Do a bounds check
-                //rect_bounds = rect.getBBox();
+                num_columns++;
                 
+                aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
                 
-                var x = rect_bounds.x + rect_bounds.width,
-                    y = rect_bounds.y,
-                    width = rect_bounds.width,
-                    height = rect_bounds.height;
-            
-                var new_rect = canvas.rect(x,y,width,height);
-                new_rect.attr("stroke", "#050505");
-                new_rect.attr("fill", "#fff");
-                new_rect.attr("fill-opacity", .33);
+                page_dimensions.width = page_dimensions.width * (num_columns/(num_columns - 1))
                 
-                new_rect.insertBefore(horizontal_add);
-                //new_rect.insertBefore(scaleControl); //?
-                
-                addPage(new_rect);
-                dragSet.push(new_rect);
-                
-                // Move the Horizontal Button and the Scale Control to the correct position
-                var new_rect_bounds = new_rect.getBBox();
-                scaleControl.attr({                    
-                    cx: scaleControl.attr("cx") + new_rect_bounds.width
+                scaleControlCoordinates.x = page_dimensions.x + page_dimensions.width;
+                scaleControl.attr({
+                    cx: scaleControlCoordinates.x
+                });
+                                
+                rect.attr({
+                    // This is really atlas dimensions at this point.
+                    width:  page_dimensions.width
                 });
                 
                 horizontal_add.attr({
-                    x: horizontal_add.attr("x") + new_rect_bounds.width,
-                    fill: "#fff"
+                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width")
                 });
                 
-                rect_bounds = new_rect.getBBox();
+                vertical_add.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
+                });
+            }
+            
+            var removeHorizontalPage = function() {
+                if (num_columns === 1)
+                {
+                    return;
+                }
+            
+                num_columns--;
+                
+                aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
+                
+                page_dimensions.width = page_dimensions.width * (num_columns/(num_columns + 1))
+                
+                scaleControlCoordinates.x = page_dimensions.x + page_dimensions.width;
+                scaleControl.attr({
+                    cx: scaleControlCoordinates.x
+                });
+                                
+                rect.attr({
+                    // This is really atlas dimensions at this point.
+                    width:  page_dimensions.width
+                });
+                
+                horizontal_add.attr({
+                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width")
+                });
+                
+                vertical_add.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
+                });
+            }
+            
+            var addVerticalPage = function() {
+                num_rows++;
+                
+                aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
+                
+                page_dimensions.height = page_dimensions.height * (num_rows/(num_rows - 1))
+                
+                scaleControlCoordinates.y = page_dimensions.y + page_dimensions.height;
+                scaleControl.attr({
+                    cy: scaleControlCoordinates.y
+                });
+                                
+                rect.attr({
+                    // This is really atlas dimensions at this point.
+                    height:  page_dimensions.height
+                });
+                
+                horizontal_add.attr({
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
+                });
+                
+                vertical_add.attr({
+                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
+            }
+            
+            var removeVerticalPage = function() {
+                if (num_rows === 1)
+                {
+                    return;
+                }
+                
+                num_rows--;
+                
+                aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
+                
+                page_dimensions.height = page_dimensions.height * (num_rows/(num_rows + 1))
+                
+                scaleControlCoordinates.y = page_dimensions.y + page_dimensions.height;
+                scaleControl.attr({
+                    cy: scaleControlCoordinates.y
+                });
+                                
+                rect.attr({
+                    // This is really atlas dimensions at this point.
+                    height:  page_dimensions.height
+                });
+                
+                horizontal_add.attr({
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
+                });
+                
+                vertical_add.attr({
+                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
             }
             
             // Add Pages
             horizontal_add.mousedown(function () {
                 this.attr("fill", "#000");
-                //addHorizontalPage();
             });
             
             horizontal_add.mouseup(function () {
@@ -337,12 +459,27 @@
                 this.attr("fill", "#fff");
             });
             
+            horizontal_remove.mouseup(function () {
+                removeHorizontalPage();
+                this.attr("fill", "#00ff00");
+            });
+            
             vertical_add.mousedown(function () {
                 this.attr("fill", "#000");
             });
             
             vertical_add.mouseup(function () {
+                addVerticalPage();
                 this.attr("fill", "#fff");
+            });
+            
+            vertical_remove.mousedown(function () {
+                this.attr("fill", "#000");
+            });
+            
+            vertical_remove.mouseup(function () {
+                removeVerticalPage();
+                this.attr("fill", "#ff0000");
             });
             
             // Map Callbacks
