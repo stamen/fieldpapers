@@ -72,7 +72,6 @@
             }
             
             // Get geographic extent
-            
             var setExtent = function(topLeftPoints, bottomRightPoints) {            
                 var topLeftCoords = map.pointLocation(new MM.Point(topLeftPoints[0], topLeftPoints[1]));
                 var bottomRightCoords = map.pointLocation(new MM.Point(bottomRightPoints[0], bottomRightPoints[1]));
@@ -96,7 +95,9 @@
                 }
             }
             
-            ///
+            /////
+            /// Set up the display objects
+            /////
             
             var canvas = Raphael("canvas",1000,500);
 
@@ -151,7 +152,6 @@
             plusIcon.scale(.6,.6,0,0);
             */
             
-            
             /////
             // dragSet drag handler: start, move, end
             /////
@@ -161,7 +161,6 @@
             
             var start = function(x,y,e) {                                
                 e.stopPropagation();
-                //dragSet.oBB = dragSet.getBBox();
                 
                 initialX = dragControl.attr("cx");
                 initialY = dragControl.attr("cy");
@@ -171,8 +170,8 @@
                                 
                 return false;
             },
-            move = function (dx,dy,x,y,event) {
-                event.stopPropagation();
+            move = function (dx,dy,x,y,e) {
+                e.stopPropagation();
                 
                 dragControlCoordinates.x = initialX + dx;
                 dragControlCoordinates.y = initialY + dy;
@@ -259,16 +258,14 @@
                     
                     setPageDimensions(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x, scaleControlCoordinates.y);     
                     
-                    var prev_rect_bbox = rect.getBBox();
-                    
+                    /*
                     for (var page in pages) {
                         //console.log(page);
                         var page_object = pages[page];
                         console.log(page_object);
                         //page_object.remove();
-                        
-                        //page_object = canvas.rect(page_dimensions.x,page_dimensions.y,page_dimensions.width-30,page_dimensions.height-30);
                     }
+                    */
                     
                     rect.remove();
                     rect = canvas.rect(dragControlCoordinates.x, 
@@ -301,13 +298,14 @@
                 },
                 
                 function(mouseX,mouseY,e) {
+                    e.stopPropagation();
+                    
                     setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
                               [scaleControlCoordinates.x, scaleControlCoordinates.y]);
                 
                     scaleControlCoordinates.x = this.attr("cx");
                     scaleControlCoordinates.y = this.attr("cy");
                 
-                    e.stopPropagation();
                     x = this.attr("cx"),
                     y = this.attr("cy")
                     
