@@ -7,6 +7,7 @@
     <script type="text/javascript" src="raphael-min.js"></script>
     
     <script type="text/javascript">
+        {literal}
         function initUI () {
             ////
             // Map
@@ -27,8 +28,8 @@
             
             // Page Information
             // TODO: Make this dynamic
-            var aspect_ratio = 8.5/11; // Sample aspect_ratio for now // Portrait size
-            document.getElementById('paper_size').value = 'letter';
+            var aspect_ratio = 11/8.5; // Sample aspect_ratio for now // Portrait size
+            document.getElementById('paper_size').value = 'landscape';
             document.getElementById('orientation').value = 'portrait';
             
             // Initialize Coordinate Objects
@@ -326,9 +327,10 @@
             });
             
         }
-        
+        {/literal}
     </script>
     <style type="text/css">
+        {literal}
         body {
           background: #fff;
           color: #000;
@@ -349,7 +351,7 @@
          position: absolute;
          z-index: 2;
         }
-        
+        {/literal}
     </style>
 </head>
     <body onload="initUI()">
@@ -360,19 +362,18 @@
         </div>
         </div>
         <p>
-            <form id="submit" method="post" action="{$base_dir}/compose-print.php">
+            <form id="submit" method="post" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/compose-print.php">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
-                <input type="hidden" id="form_id" name="form_id" value="0">
+                <input type="hidden" id="form_id" name="form_id" value="Select a Form for this Atlas">
                 
                 
-                <input type="hidden" id="atlas_pages">
+                <input type="hidden" id="atlas_pages" name="pages[]">
                 <!-- <input type="hidden" name="extent" id ="extent"> -->
                 <input type="submit" value="Make Atlas" />
             </form>
         </p>
     </body>
 </html>
-    
