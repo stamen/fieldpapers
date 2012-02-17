@@ -192,8 +192,11 @@
                 setPageDimensions(rect,this.attr("cx"), this.attr("cy"));
                 
                 this.attr({
-                    cx: Math.max(x + aspect_ratio*dx, dragControlCoordinates.x + aspect_ratio*20),
-                    cy: Math.max(y + dx, dragControlCoordinates.y + 20)
+                    cx: Math.max(x + aspect_ratio*dx, 30),
+                    cy: Math.max(y + dx, 30)
+                    
+                    //cx: x + aspect_ratio*dx,
+                    //cy: y + dx
                 });                
                 
                 var prev_rect_bbox = rect.getBBox();
