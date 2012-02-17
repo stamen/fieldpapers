@@ -29,8 +29,8 @@
             // Page Information
             // TODO: Make this dynamic
             var aspect_ratio = 11/8.5; // Sample aspect_ratio for now // Portrait size
-            document.getElementById('paper_size').value = 'landscape';
-            document.getElementById('orientation').value = 'portrait';
+            document.getElementById('paper_size').value = 'letter';
+            document.getElementById('orientation').value = 'landscape';
             
             // Initialize Coordinate Objects
             var scaleControlCoordinates = {x: 150*aspect_ratio + 30, y:180};
