@@ -7,7 +7,7 @@
 
     require_once '../lib/lib.everything.php';
     
-    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE'];);
+    enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     enforce_api_password($_GET['password']);
     
