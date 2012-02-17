@@ -118,9 +118,9 @@
             horizontal_add.attr("fill-opacity", 1);
             dragSet.push(horizontal_add);
             
-            var horizontal_remove = canvas.rect(5,5,15,25);
+            var horizontal_remove = canvas.rect(60+150*aspect_ratio-1.5*15,60+.5*150-.5*25,15,25);
             horizontal_remove.attr("stroke", "#050505");
-            horizontal_remove.attr("fill", "#00ff00");
+            horizontal_remove.attr("fill", "#050505");
             horizontal_remove.attr("fill-opacity", 1);
             //dragSet.push(horizontal_remove);
             
@@ -130,9 +130,9 @@
             vertical_add.attr("fill-opacity", 1);
             dragSet.push(vertical_add);
             
-            var vertical_remove = canvas.rect(25,5,15,25);
+            var vertical_remove = canvas.rect(60+.5*150*aspect_ratio-.5*15,60+150-1.5*25,15,25);
             vertical_remove.attr("stroke", "#050505");
-            vertical_remove.attr("fill", "#ff0000");
+            vertical_remove.attr("fill", "#050505");
             vertical_remove.attr("fill-opacity", 1);
             //dragSet.push(vertical_remove);
             
@@ -201,9 +201,19 @@
                     y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
                 });
                 
+                horizontal_remove.attr({
+                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_remove.attr("width"),
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_remove.attr("height")
+                });
+                
                 vertical_add.attr({
                     x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
                     y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
+                
+                vertical_remove.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
+                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_add.attr("height")
                 });
                 
                 return false;
@@ -219,7 +229,7 @@
             // scaleControl drag handler: move, start, end
             /////
             
-            var x,y;
+            var x,y; // ***These are dangling. Fix this. Use the previously set scaleControlCoordinates defined in the start handler.***
             scaleControl.drag(
             
                 function(dx, dy, mouseX, mouseY, e) {
@@ -279,6 +289,7 @@
                     rect.insertBefore(this);
                     rect.insertBefore(dragControl);
                     rect.insertBefore(horizontal_add);
+                    //rect.insertBefore(horizontal_remove);
                     //rect.insertBefore(vertical_add); // removing this fixes insertion order?
                                              
                 horizontal_add.attr({
@@ -286,9 +297,19 @@
                     y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
                 });
                 
+                horizontal_remove.attr({
+                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_add.attr("width"),
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
+                });
+                
                 vertical_add.attr({
                     x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
                     y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
+                
+                vertical_remove.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
+                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_add.attr("height")
                 });
                     
                     dragSet.clear();
@@ -330,7 +351,9 @@
                 dragSet.push(rect);
                 dragSet.push(dragControl);
                 dragSet.push(horizontal_add);
+                dragSet.push(horizontal_remove);
                 dragSet.push(vertical_add);
+                dragSet.push(vertical_remove);
             };
             
             var addHorizontalPage = function() {
@@ -350,12 +373,22 @@
                     width:  page_dimensions.width
                 });
                 
+                // This can probably be more concise.
+                                
                 horizontal_add.attr({
                     x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width")
                 });
                 
+                horizontal_remove.attr({
+                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_remove.attr("width")
+                });
+                
                 vertical_add.attr({
                     x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
+                });
+                
+                vertical_remove.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_remove.attr("width")
                 });
             }
             
@@ -385,7 +418,15 @@
                     x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width")
                 });
                 
+                horizontal_remove.attr({
+                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_remove.attr("width")
+                });
+                
                 vertical_add.attr({
+                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
+                });
+                
+                vertical_remove.attr({
                     x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
                 });
             }
@@ -411,8 +452,16 @@
                     y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
                 });
                 
+                horizontal_remove.attr({
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_remove.attr("height")
+                });
+                
                 vertical_add.attr({
                     y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
+                
+                vertical_remove.attr({
+                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_remove.attr("height")
                 });
             }
             
@@ -442,14 +491,22 @@
                     y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
                 });
                 
+                horizontal_remove.attr({
+                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_remove.attr("height")
+                });
+                
                 vertical_add.attr({
                     y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
+                });
+                
+                vertical_remove.attr({
+                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_remove.attr("height")
                 });
             }
             
             // Add Pages
             horizontal_add.mousedown(function () {
-                this.attr("fill", "#000");
+                this.attr("fill", "#fff");
             });
             
             horizontal_add.mouseup(function () {
@@ -457,9 +514,13 @@
                 this.attr("fill", "#fff");
             });
             
+            horizontal_remove.mousedown(function () {
+                this.attr("fill", "#fff");
+            });
+            
             horizontal_remove.mouseup(function () {
                 removeHorizontalPage();
-                this.attr("fill", "#00ff00");
+                this.attr("fill", "#050505");
             });
             
             vertical_add.mousedown(function () {
@@ -472,12 +533,12 @@
             });
             
             vertical_remove.mousedown(function () {
-                this.attr("fill", "#000");
+                this.attr("fill", "#fff");
             });
             
             vertical_remove.mouseup(function () {
                 removeVerticalPage();
-                this.attr("fill", "#ff0000");
+                this.attr("fill", "#050505");
             });
             
             // Map Callbacks
@@ -521,6 +582,18 @@
         </div>
         </div>
         <p>
+            <label for="paper-size">Paper size: <select id="paper-size" name="paper_size">
+                <option value="letter" selected>Letter</option>
+                <option value="A3">A3</option>
+                <option value="A4">A4</option>
+                <option value="tabloid">Tabloid</option>
+            </select></label>
+            
+            <label for="paper-orient">orientation: <select id="paper-orient" name="orientation">
+                <option value="landscape" selected>landscape</option>
+                <option value="portrait">portrait</option>
+            </select></label>
+                    
             <form id="submit" method="post" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/compose-print.php">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
