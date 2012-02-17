@@ -19,7 +19,6 @@
             map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
             
             // Initialize value of page_zoom input
-            
             document.getElementById('page_zoom').value = 12;
             
             ////
@@ -36,9 +35,16 @@
             var scaleControlCoordinates = {x: 150*aspect_ratio + 30, y:180};
             var dragControlCoordinates = {x:30, y:30};
             
-            var updateDragControlCoordinates = function (x, y) {
-                dragControlCoordinates.x = x;
-                dragControlCoordinates.y = y;
+            var updateDragControlCoordinates = function (dx, dy) {
+                dragControlCoordinates.x = dragControlCoordinates.x + dx;
+                dragControlCoordinates.y = dragControlCoordinates.y + dy;
+                
+                console.log('dragcontrolcoords:', dragControlCoordinates);
+            }
+            
+            var updateScaleControlCoordinates = function(dx, dy) {
+                scaleControlCoordinates.x = scaleControlCoordinates.x + dx;
+                scaleControlCoordinates.y = scaleControlCoordinates.y + dy;
             }
             
             // What's the current page height?
@@ -52,8 +58,6 @@
                 
                 page_dimensions.width = scale_position_x;
                 page_dimensions.height = scale_position_y;
-            
-                //console.log(page_dimensions);
             }
             
             // Remember the pages
@@ -68,6 +72,8 @@
             // Get geographic extent
             
             var setExtent = function(topLeftPoints, bottomRightPoints) {
+                console.log('dragControlCoordinates', dragControlCoordinates);
+            
                 var topLeftCoords = map.pointLocation(new MM.Point(topLeftPoints[0], topLeftPoints[1]));
                 var bottomRightCoords = map.pointLocation(new MM.Point(bottomRightPoints[0], bottomRightPoints[1]));
                                 
@@ -103,6 +109,8 @@
             rect.attr("fill", "#fff");
             rect.attr("fill-opacity", .33);
             dragSet.push(rect);
+            setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
+                      [scaleControlCoordinates.x, scaleControlCoordinates.y]);
             addPage(rect);
             
             var horizontal_add = canvas.rect(30+150*aspect_ratio-.5*15,30+.5*150-.5*25,15,25);
@@ -137,12 +145,16 @@
             var dragDeltaOrigX;
             var dragDeltaOrigY;
             
+            var delta = {dx: 0, dy: 0};
+            
             var start = function(x,y,e) {
+                console.log(dragControlCoordinates);
+                                
                 e.stopPropagation();
                 dragSet.oBB = dragSet.getBBox();
                 
-                setExtent([rect.getBBox().x, rect.getBBox().y],
-                          [rect.getBBox().x + rect.getBBox().width, rect.getBBox().x + rect.getBBox().height]);
+                setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
+                          [scaleControlCoordinates.x, scaleControlCoordinates.y]);
                                 
                 return false;
             },
@@ -150,8 +162,12 @@
                 event.stopPropagation();
                 var bbox = dragSet.getBBox();
                 dragSet.translate(dragSet.oBB.x - bbox.x + dx, dragSet.oBB.y - bbox.y + dy);
-                
+                                
                 scaleControl.translate(dragSet.oBB.x - bbox.x + dx, dragSet.oBB.y - bbox.y + dy);
+                
+                delta.dx = dx;
+                delta.dy = dy;
+                
                 return false;
             },
             up = function () {                                
@@ -159,10 +175,11 @@
                 dragDeltaOrigY = dragSet.getBBox().y - 15;
                 
                 // Update drag control coordinates
-                updateDragControlCoordinates(dragControl.attr("cx"), dragControl.attr("cy"));
+                updateDragControlCoordinates(delta.dx, delta.dy);
+                updateScaleControlCoordinates(delta.dx, delta.dy);
                 
-                setExtent([rect.getBBox().x, rect.getBBox().y],
-                          [rect.getBBox().x + rect.getBBox().width, rect.getBBox().x + rect.getBBox().height]);
+                setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
+                          [scaleControlCoordinates.x, scaleControlCoordinates.y]);
             }
             
             dragSet.drag(move, start, up);
@@ -228,8 +245,8 @@
             },
             
             function(mouseX,mouseY,e) {
-                setExtent([rect.getBBox().x, rect.getBBox().y],
-                          [rect.getBBox().x + rect.getBBox().width, rect.getBBox().x + rect.getBBox().height]);
+                setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
+                          [scaleControlCoordinates.x, scaleControlCoordinates.y]);
             
                 scaleControlCoordinates.x = this.attr("cx");
                 scaleControlCoordinates.y = this.attr("cy");
@@ -249,8 +266,12 @@
             function(e) {
                 this.attr("fill", "#fff");
                 
-                setExtent([rect.getBBox().x, rect.getBBox().y],
-                          [rect.getBBox().x + rect.getBBox().width, rect.getBBox().x + rect.getBBox().height]);
+                //updateScaleControlCoordinates(this.attr("cx"), this.attr("cy"));
+                scaleControlCoordinates.x = this.attr("cx");
+                scaleControlCoordinates.y = this.attr("cy");
+                
+                setExtent([dragControlCoordinates.x, dragControlCoordinates.y],
+                          [scaleControlCoordinates.x, scaleControlCoordinates.y]);
                 
                 return false;
             }
