@@ -8,13 +8,187 @@
     
     <script type="text/javascript">
         {literal}
+        
+        var map = null;
+        
+        var paper_orientations = {'landscape': 11/8.5, 'portrait': 8.5/11},
+            page_aspect_ratio = paper_orientations['landscape'], // Sample atlas_aspect_ratio for now // Portrait size
+            atlas_aspect_ratio;
+        
+        var rect = null,
+            canvas = null,
+            lines = null;
+        
+        var num_rows,
+            num_columns;
+        
+        var scaleControl,
+            dragControl,
+            dragControlCoordinates,
+            scaleControlCoordinates;
+        
+        var horizontal_add,
+            vertical_add,
+            horizontal_remove,
+            vertical_remove,
+            page_dimensions;
+        
+        var page_button_width = 15,
+            page_button_height = 25;
+        
+        function changeOrientation(orientation) {
+            if (document.getElementById('orientation').value === orientation)
+            {
+                return;
+            }
+            
+            document.getElementById('orientation').value = orientation;
+        
+            var prev_page_width = (scaleControlCoordinates.x - dragControlCoordinates.x)/num_columns;
+            var prev_page_height = (scaleControlCoordinates.y - dragControlCoordinates.y)/num_rows;
+        
+            page_aspect_ratio = paper_orientations[orientation];
+            
+            atlas_aspect_ratio = (num_columns/num_rows) * page_aspect_ratio;
+            console.log(atlas_aspect_ratio);
+            
+            scaleControlCoordinates.x = dragControlCoordinates.x + num_columns * prev_page_height;
+            scaleControlCoordinates.y = dragControlCoordinates.y + num_rows * prev_page_width;
+                        
+            scaleControl.attr({
+                    cx: scaleControlCoordinates.x,
+                    cy: scaleControlCoordinates.y
+            });
+            
+            resetAtlasAttributes();
+                        
+            rect.remove();
+            setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y, scaleControlCoordinates.x, scaleControlCoordinates.y);
+            drawAtlas();
+        }
+        
+        function resetAtlasAttributes()
+        {
+            var pathString = drawPages(dragControlCoordinates, scaleControlCoordinates,num_rows,num_columns);
+            
+            lines.attr({
+                path: pathString
+            });
+                            
+            horizontal_add.attr({
+                x: scaleControlCoordinates.x - .5 * page_button_width,
+                y: dragControlCoordinates.y + .5 * (scaleControlCoordinates.y - dragControlCoordinates.y) - .5 * page_button_height
+            });
+            
+            
+            horizontal_remove.attr({
+                x: scaleControlCoordinates.x - 1.5 * page_button_width,
+                y: dragControlCoordinates.y + .5 * (scaleControlCoordinates.y - dragControlCoordinates.y) - .5 * page_button_height
+            });
+            
+            vertical_add.attr({
+                x: dragControlCoordinates.x + .5 * (scaleControlCoordinates.x - dragControlCoordinates.x) - .5 * page_button_width,
+                y: scaleControlCoordinates.y - .5 * page_button_height
+            });
+            
+            vertical_remove.attr({
+                x: dragControlCoordinates.x + .5 * (scaleControlCoordinates.x - dragControlCoordinates.x) - .5 * page_button_width,
+                y: scaleControlCoordinates.y - 1.5 * page_button_height
+            });
+        }
+        
+        function setAtlasBounds(drag_position_x, drag_position_y, scale_position_x, scale_position_y)
+        {
+            page_dimensions.x = drag_position_x;
+            page_dimensions.y = drag_position_y;
+            
+            page_dimensions.width = scale_position_x - drag_position_x;
+            page_dimensions.height = scale_position_y - drag_position_y;
+        }
+        
+        function drawPages(dragControlCoordinates, scaleControlCoordinates,num_rows,num_columns)
+        {
+            var width = scaleControlCoordinates.x - dragControlCoordinates.x;
+            var increment = width/num_columns;
+            
+            var pathString = '';
+            for (var i = 0; i < num_columns - 1; i++) {
+                // Creating string
+                var verticalLineX = dragControlCoordinates.x + (i+1) * increment;
+                
+                pathString = pathString + 'M' + verticalLineX + ',' + dragControlCoordinates.y +
+                             'L' + verticalLineX + ',' + scaleControlCoordinates.y;
+            }
+            
+            var height = scaleControlCoordinates.y - dragControlCoordinates.y;
+            increment = height/num_rows;
+            
+            for (var i = 0; i < num_rows - 1; i++) {
+                var horizontalLineY = dragControlCoordinates.y + (i+1) * increment;
+                
+                pathString = pathString + 'M' + dragControlCoordinates.x + ',' + horizontalLineY +
+                            'L' + scaleControlCoordinates.x + ',' + horizontalLineY;
+            }
+            
+            return pathString;
+        }
+        
+        function drawAtlas() {
+            rect = canvas.rect(dragControlCoordinates.x, 
+                               dragControlCoordinates.y,
+                               scaleControlCoordinates.x - dragControlCoordinates.x,
+                               scaleControlCoordinates.y - dragControlCoordinates.y);
+                               
+            rect.attr("stroke", "#050505");
+            rect.insertBefore(scaleControl);
+            rect.insertBefore(dragControl);
+            rect.insertBefore(horizontal_add);
+        }
+        
+        function setAndSubmitData()
+        {
+            updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
+            document.forms['compose_print'].submit();
+        }
+        
+        function updatePageExtents(topLeftPoint, bottomRightPoint)
+        {            
+            var width_increment = (bottomRightPoint.x - topLeftPoint.x)/num_columns;
+            var height_increment = (bottomRightPoint.y -topLeftPoint.y)/num_rows;
+            
+            var pages = [];
+            for (var i = 0; i < num_rows; i++) {
+                for (var j = 0; j < num_columns; j++) {
+                    var topLeftLocation = map.pointLocation(new MM.Point(topLeftPoint.x + j*width_increment, topLeftPoint.y + i*height_increment));
+                    var bottomRightLocation = map.pointLocation(new MM.Point(topLeftPoint.x + (j+1)*width_increment, topLeftPoint.y + (i+1)*height_increment));
+                    var page = [topLeftLocation.lat, topLeftLocation.lon, bottomRightLocation.lat, bottomRightLocation.lon];
+                    pages.push(page.join(','));
+                }
+            }
+            
+            updateAtlasFormFields(pages);
+        }
+                
+        function updateAtlasFormFields(pages)
+        {            
+            for (var i = 0; i < pages.length; i++)
+            {
+                var page_extent = document.createElement('input');
+                page_extent.name = "pages[" + i + "]";
+                page_extent.type = 'hidden';
+                page_extent.value = pages[i];
+                document.getElementById('compose_print').appendChild(page_extent);
+                //console.log(document.getElementById('compose_print'))
+            }
+        }
+        
         function initUI () {
             ////
             // Map
             ////
             var MM = com.modestmaps;
             
-            var map = new MM.Map('map', new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png'));
+            map = new MM.Map('map', new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png'));
                                 
             map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
             
@@ -25,165 +199,55 @@
             // UI
             ////
             
-            // Page Information
-            // TODO: Make this dynamic
+            // Atlas Information            
+            num_rows = 1;
+            num_columns = 1;
             
-            var num_rows = 1;
-            var num_columns = 1;
-            var page_aspect_ratio = 11/8.5; // Sample atlas_aspect_ratio for now // Portrait size
-            var atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
+            //Initialize
+            atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
+            document.getElementById('radio_landscape').checked = true; // Initially landscape
             
             document.getElementById('paper_size').value = 'letter';
             document.getElementById('orientation').value = 'landscape';
-            
-            // Initialize Coordinate Objects
-            var scaleControlCoordinates = {x: 150*atlas_aspect_ratio + 60, y:180};
-            var dragControlCoordinates = {x:60, y:60};
-            
+                        
             function updateDragControlCoordinates(dx, dy)
             {
+                // Make this more general
                 dragControlCoordinates.x = dragControlCoordinates.x + dx;
                 dragControlCoordinates.y = dragControlCoordinates.y + dy;
             }
             
             function updateScaleControlCoordinates(dx, dy)
             {
+                // Make this more general
                 scaleControlCoordinates.x = scaleControlCoordinates.x + dx;
                 scaleControlCoordinates.y = scaleControlCoordinates.y + dy;
             }
-            
-            // Initializing page_dimensions
-            // TODO: Make this dynamic
-            var page_dimensions = {x: 60, y:60, width: 150*atlas_aspect_ratio, height: 150};
-            
-            function setAtlasBounds(drag_position_x, drag_position_y, scale_position_x, scale_position_y)
+                        
+            function checkAtlasOverflow(topLeftPoint, bottomRightPoint)
             {
-                page_dimensions.x = drag_position_x;
-                page_dimensions.y = drag_position_y;
-                
-                page_dimensions.width = scale_position_x - drag_position_x;
-                page_dimensions.height = scale_position_y - drag_position_y;
-            }
-            
-            // Remember the pages
-            var pages = {};
-            var page_count = 0;
-            
-            function addPage(rect_obj)
-            {
-                pages[page_count] = rect_obj;
-                page_count++;
-            }
-            
-            // update geographic extent
-            function updateAtlasExtent(topLeftPoint, bottomRightPoint)
-            {            
-                var topLeftLocation = map.pointLocation(topLeftPoint);
-                var bottomRightLocation = map.pointLocation(bottomRightPoint);
+                var map_extent = map.getExtent();
+                var map_top_left_point = map.locationPoint(map_extent[0]);
+                var map_bottom_right_point = map.locationPoint(map_extent[1]);
                                 
-                var extent = [topLeftLocation.lat, topLeftLocation.lon, bottomRightLocation.lat, bottomRightLocation.lon];
-                
-                updateAtlasFormFields(extent);
-            }
-            
-            function updateAtlasFormFields(extent)
-            {
-                //var input_extent = document.getElementById('extent');
-                //input_extent.value = extent.join(',');
-                var atlas_pages = [];
-                atlas_pages.push(extent.join(','));
-                
-                for (page in pages)
+                if (topLeftPoint.x < map_top_left_point.x || topLeftPoint.y < map_top_left_point.y ||
+                    bottomRightPoint.x > map_bottom_right_point.x || bottomRightPoint.y > map_bottom_right_point.y)
                 {
-                    var page_extent = document.getElementById('atlas_pages');
-                    //input.name = "pages[" + index + "]";
-                    page_extent.name = "pages[0]";
-                    page_extent.value = atlas_pages;
+                    //return true;
+                    var dragControlLocation = map.pointLocation(dragControlCoordinates);
+                    var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
+                    
+                    map.zoomOut();
+                    
+                    dragControlCoordinates = map.locationPoint(dragControlLocation);
+                    scaleControlCoordinates = map.locationPoint(scaleControlLocation);
+                    
+                    resetAtlas();
                 }
             }
             
-            /////
-            /// Set up the display objects
-            /////
-            
-            var canvas = Raphael("canvas",1000,500);
-
-            var dragSet = canvas.set();
-            
-            var rect = canvas.rect(60,60,150*atlas_aspect_ratio,150);
-            rect.attr("stroke", "#050505");
-            rect.attr("fill", "#fff");
-            rect.attr("fill-opacity", .33);
-            dragSet.push(rect);
-            updateAtlasExtent(dragControlCoordinates, scaleControlCoordinates);
-            addPage(rect);
-            
-            var horizontal_add = canvas.rect(60+150*atlas_aspect_ratio-.5*15,60+.5*150-.5*25,15,25);
-            horizontal_add.attr("stroke", "#050505");
-            horizontal_add.attr("fill", "#fff");
-            horizontal_add.attr("fill-opacity", 1);
-            dragSet.push(horizontal_add);
-            
-            var horizontal_remove = canvas.rect(60+150*atlas_aspect_ratio-1.5*15,60+.5*150-.5*25,15,25);
-            horizontal_remove.attr("stroke", "#050505");
-            horizontal_remove.attr("fill", "#050505");
-            horizontal_remove.attr("fill-opacity", 1);
-            //dragSet.push(horizontal_remove);
-            
-            var vertical_add = canvas.rect(60+.5*150*atlas_aspect_ratio-.5*15,60+150-.5*25,15,25);
-            vertical_add.attr("stroke", "#050505");
-            vertical_add.attr("fill", "#fff");
-            vertical_add.attr("fill-opacity", 1);
-            dragSet.push(vertical_add);
-            
-            var vertical_remove = canvas.rect(60+.5*150*atlas_aspect_ratio-.5*15,60+150-1.5*25,15,25);
-            vertical_remove.attr("stroke", "#050505");
-            vertical_remove.attr("fill", "#050505");
-            vertical_remove.attr("fill-opacity", 1);
-            //dragSet.push(vertical_remove);
-            
-            var dragControl = canvas.circle(60,60,15);
-            dragControl.attr("fill", "#050505");
-            dragControl.attr("fill-opacity", 1);
-            dragSet.push(dragControl);
-            
-            var scaleControl = canvas.circle(150*atlas_aspect_ratio + 60,210,15);
-            scaleControl.attr("fill", "#fff");
-            
-            /*
-            var plusIcon = canvas.path('M25.979,12.896 19.312,12.896 19.312,6.229 12.647,6.229 12.647,\
-                            12.896 5.979,12.896 5.979,19.562 12.647,19.562 12.647,26.229 19.312,\
-                            26.229 19.312,19.562 25.979,19.562z');
-            plusIcon.attr("fill", "#050505");
-            plusIcon.scale(.6,.6,0,0);
-            */
-            
-            /////
-            // dragSet drag handler: start, move, end
-            /////
-            var initialX, initialY; // These are used by the dragSet handler and the scaleControl handler
-                        
-            var delta = {dx: 0, dy: 0};
-            
-            var start = function(x,y,e) {                                
-                e.stopPropagation();
-                
-                initialX = dragControl.attr("cx");
-                initialY = dragControl.attr("cy");
-                
-                updateAtlasExtent(dragControlCoordinates, scaleControlCoordinates);
-                                
-                return false;
-            },
-            move = function (dx,dy,x,y,e) {
-                e.stopPropagation();
-                
-                dragControlCoordinates.x = initialX + dx;
-                dragControlCoordinates.y = initialY + dy;
-                
-                scaleControlCoordinates.x = dragControlCoordinates.x + page_dimensions.width;
-                scaleControlCoordinates.y = dragControlCoordinates.y + page_dimensions.height;
-                
+            function resetAtlas()
+            {
                 setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
                 
                 dragControl.attr({
@@ -196,44 +260,135 @@
                         cy: scaleControlCoordinates.y
                 });
                 
+                
                 rect.attr({
                     x: dragControlCoordinates.x,
-                    y: dragControlCoordinates.y
+                    y: dragControlCoordinates.y,
+                    width: scaleControlCoordinates.x - dragControlCoordinates.x,
+                    height: scaleControlCoordinates.y - dragControlCoordinates.y
                 });
                 
-                horizontal_add.attr({
-                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width"),
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
-                });
-                
-                horizontal_remove.attr({
-                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_remove.attr("width"),
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_remove.attr("height")
-                });
-                
-                vertical_add.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
-                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
-                });
-                
-                vertical_remove.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
-                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_add.attr("height")
-                });
-                
-                return false;
-            },
-            up = function () {                                                
-                updateAtlasExtent(dragControlCoordinates, scaleControlCoordinates);
+                resetAtlasAttributes();
             }
+                        
+            /////
+            /// Set up the display objects
+            /////
             
-            dragSet.drag(move, start, up);
+            canvas = Raphael("canvas");
+            
+            var canvasOriginX = 60,
+                canvasOriginY = 60,
+                page_height = 150,
+                controlRadius = 15;
+                
+            // Initialize Coordinate Objects
+            scaleControlCoordinates = {x: page_height*atlas_aspect_ratio + canvasOriginX, y: page_height + canvasOriginY};
+            dragControlCoordinates = {x: canvasOriginX, y: canvasOriginY};
+                        
+            horizontal_add = canvas.rect(canvasOriginX+page_height*atlas_aspect_ratio-.5*page_button_width,
+                                         canvasOriginY + .5 * page_height - .5 * page_button_height,
+                                         page_button_width,
+                                         page_button_height);
+            horizontal_add.attr("stroke", "#050505");
+            horizontal_add.attr("fill", "#fff");
+            horizontal_add.attr("fill-opacity", 1);
+            
+            horizontal_remove = canvas.rect(canvasOriginX + page_height * atlas_aspect_ratio - 1.5 * page_button_width,
+                                            canvasOriginY + .5 * page_height - .5 * page_button_height,
+                                            page_button_width,
+                                            page_button_height);
+            horizontal_remove.attr("stroke", "#050505");
+            horizontal_remove.attr("fill", "#050505");
+            horizontal_remove.attr("fill-opacity", 1);
+            
+            vertical_add = canvas.rect(canvasOriginX + .5 * page_height * atlas_aspect_ratio - .5 * page_button_width,
+                                       canvasOriginY + page_height - .5 * page_button_height,
+                                       page_button_width,
+                                       page_button_height);
+            vertical_add.attr("stroke", "#050505");
+            vertical_add.attr("fill", "#fff");
+            vertical_add.attr("fill-opacity", 1);
+            
+            vertical_remove = canvas.rect(canvasOriginX + .5 * page_height * atlas_aspect_ratio - .5 * page_button_width,
+                                          canvasOriginY + page_height - 1.5 * page_button_height,
+                                          page_button_width,
+                                          page_button_height);
+            vertical_remove.attr("stroke", "#050505");
+            vertical_remove.attr("fill", "#050505");
+            vertical_remove.attr("fill-opacity", 1);
+            
+            dragControl = canvas.circle(canvasOriginX,canvasOriginY,controlRadius);
+            dragControl.attr("fill", "#050505");
+            dragControl.attr("fill-opacity", 1);
+            
+            scaleControl = canvas.circle(canvasOriginX + page_height * atlas_aspect_ratio, canvasOriginY + page_height,controlRadius);
+            scaleControl.attr("fill", "#fff");
+            
+            drawAtlas(scaleControl,dragControl,horizontal_add);
+            
+            var pathString = drawPages(dragControlCoordinates, scaleControlCoordinates,num_rows,num_columns);
+            
+            lines = canvas.path(pathString);
+            lines.attr("stroke", "#050505");
+            lines.insertBefore(rect);
+            
+            page_dimensions = {x: canvasOriginX, y: canvasOriginY, width: page_height*atlas_aspect_ratio, height: page_height};
+            
+            /////
+            // Drag Control drag handler: move, start, end
+            /////
+            var initialX, initialY; // These are used by the dragControl handler and the scaleControl handler
+                        
+            var delta = {dx: 0, dy: 0};
+            
+            dragControl.drag(
+            
+                function (dx,dy,x,y,e) {
+                    e.stopPropagation();
+                    
+                    dragControlCoordinates.x = initialX + dx;
+                    dragControlCoordinates.y = initialY + dy;
+                    
+                    scaleControlCoordinates.x = dragControlCoordinates.x + page_dimensions.width;
+                    scaleControlCoordinates.y = dragControlCoordinates.y + page_dimensions.height;
+                    
+                    setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
+                    
+                    dragControl.attr({
+                            cx: dragControlCoordinates.x,
+                            cy: dragControlCoordinates.y
+                    });
+                    
+                    scaleControl.attr({
+                            cx: scaleControlCoordinates.x,
+                            cy: scaleControlCoordinates.y
+                    });
+                    
+                    rect.attr({
+                        x: dragControlCoordinates.x,
+                        y: dragControlCoordinates.y
+                    });
+                    
+                    resetAtlasAttributes();
+                },
+            
+                function(x,y,e) {                                
+                    e.stopPropagation();
+                    
+                    initialX = dragControl.attr("cx");
+                    initialY = dragControl.attr("cy");
+                },
+            
+                function () {                                                
+                    checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+                }
+            );
             
             /////
             // scaleControl drag handler: move, start, end
             /////
             
-            var x,y; // ***These are dangling. Fix this. Use the previously set scaleControlCoordinates defined in the start handler.***
             scaleControl.drag(
             
                 function(dx, dy, mouseX, mouseY, e) {
@@ -271,93 +426,31 @@
                     scaleControlCoordinates.y = this.attr("cy");
                     
                     setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x, scaleControlCoordinates.y);     
-                    
-                    /*
-                    for (var page in pages) {
-                        //console.log(page);
-                        var page_object = pages[page];
-                        console.log(page_object);
-                        //page_object.remove();
-                    }
-                    */
-                    
+                                                           
                     rect.remove();
-                    rect = canvas.rect(dragControlCoordinates.x, 
-                                       dragControlCoordinates.y,
-                                       scaleControlCoordinates.x - dragControlCoordinates.x,
-                                       scaleControlCoordinates.y - dragControlCoordinates.y);
-                                       
-                    rect.attr("stroke", "#050505");
-                    rect.attr("fill", "#fff");
-                    rect.attr("fill-opacity", .33);
-                    rect.insertBefore(this);
-                    rect.insertBefore(dragControl);
-                    rect.insertBefore(horizontal_add);
-                    //rect.insertBefore(horizontal_remove);
-                    //rect.insertBefore(vertical_add); // removing this fixes insertion order?
-                                             
-                horizontal_add.attr({
-                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width"),
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
-                });
-                
-                horizontal_remove.attr({
-                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_add.attr("width"),
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
-                });
-                
-                vertical_add.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
-                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
-                });
-                
-                vertical_remove.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width"),
-                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_add.attr("height")
-                });
+                    drawAtlas(scaleControl,dragControl,horizontal_add);
                     
-                    dragSet.clear();
-                    createNewDragSet();
-                    
-                    return false;
+                    resetAtlasAttributes();
                 },
                 
                 function(mouseX,mouseY,e) {
                     e.stopPropagation();
-                    
-                    updateAtlasExtent(dragControlCoordinates, scaleControlCoordinates);
                 
                     scaleControlCoordinates.x = this.attr("cx");
                     scaleControlCoordinates.y = this.attr("cy");
-                
-                    x = this.attr("cx"),
-                    y = this.attr("cy")
-                    
-                    initialX = x;
-                    initialY = y;
-                                              
-                    return false;
+                                    
+                    initialX = scaleControlCoordinates.x;
+                    initialY = scaleControlCoordinates.y;
                 },
                 
                 function(e) {
                     scaleControlCoordinates.x = this.attr("cx");
                     scaleControlCoordinates.y = this.attr("cy");
                     
-                    updateAtlasExtent(dragControlCoordinates, scaleControlCoordinates);
-                    
-                    return false;
+                    checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
                 }
             );
-            
-            var createNewDragSet = function () {
-                dragSet.push(rect);
-                dragSet.push(dragControl);
-                dragSet.push(horizontal_add);
-                dragSet.push(horizontal_remove);
-                dragSet.push(vertical_add);
-                dragSet.push(vertical_remove);
-            };
-            
+
             var addHorizontalPage = function() {
                 num_columns++;
                 
@@ -369,29 +462,15 @@
                 scaleControl.attr({
                     cx: scaleControlCoordinates.x
                 });
+                
+                checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
                                 
                 rect.attr({
                     // This is really atlas dimensions at this point.
                     width:  page_dimensions.width
                 });
                 
-                // This can probably be more concise.
-                                
-                horizontal_add.attr({
-                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width")
-                });
-                
-                horizontal_remove.attr({
-                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_remove.attr("width")
-                });
-                
-                vertical_add.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
-                });
-                
-                vertical_remove.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_remove.attr("width")
-                });
+                resetAtlasAttributes();
             }
             
             var removeHorizontalPage = function() {
@@ -410,27 +489,14 @@
                 scaleControl.attr({
                     cx: scaleControlCoordinates.x
                 });
+                
+                //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); Needed?
                                 
                 rect.attr({
-                    // This is really atlas dimensions at this point.
                     width:  page_dimensions.width
                 });
                 
-                horizontal_add.attr({
-                    x: page_dimensions.x + page_dimensions.width - .5 * horizontal_add.attr("width")
-                });
-                
-                horizontal_remove.attr({
-                    x: page_dimensions.x + page_dimensions.width - 1.5 * horizontal_remove.attr("width")
-                });
-                
-                vertical_add.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
-                });
-                
-                vertical_remove.attr({
-                    x: page_dimensions.x + .5 * page_dimensions.width - .5 * vertical_add.attr("width")
-                });
+                resetAtlasAttributes();
             }
             
             var addVerticalPage = function() {
@@ -444,27 +510,14 @@
                 scaleControl.attr({
                     cy: scaleControlCoordinates.y
                 });
+                
+                checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
                                 
                 rect.attr({
-                    // This is really atlas dimensions at this point.
                     height:  page_dimensions.height
                 });
                 
-                horizontal_add.attr({
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
-                });
-                
-                horizontal_remove.attr({
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_remove.attr("height")
-                });
-                
-                vertical_add.attr({
-                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
-                });
-                
-                vertical_remove.attr({
-                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_remove.attr("height")
-                });
+                resetAtlasAttributes();
             }
             
             var removeVerticalPage = function() {
@@ -483,39 +536,25 @@
                 scaleControl.attr({
                     cy: scaleControlCoordinates.y
                 });
+                
+                //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); // Needed?
                                 
                 rect.attr({
-                    // This is really atlas dimensions at this point.
                     height:  page_dimensions.height
                 });
                 
-                horizontal_add.attr({
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_add.attr("height")
-                });
-                
-                horizontal_remove.attr({
-                    y: page_dimensions.y + .5 * page_dimensions.height - .5 * horizontal_remove.attr("height")
-                });
-                
-                vertical_add.attr({
-                    y: page_dimensions.y + page_dimensions.height - .5 * vertical_add.attr("height")
-                });
-                
-                vertical_remove.attr({
-                    y: page_dimensions.y + page_dimensions.height - 1.5 * vertical_remove.attr("height")
-                });
+                resetAtlasAttributes();
             }
-            
-            // Add Pages
+                        
             horizontal_add.mousedown(function () {
-                this.attr("fill", "#fff");
+                this.attr("fill", "#050505");
             });
             
             horizontal_add.click(function () {
                 addHorizontalPage();
                 this.attr("fill", "#fff");
             });
-            
+                        
             horizontal_remove.mousedown(function () {
                 this.attr("fill", "#fff");
             });
@@ -547,31 +586,52 @@
             map.addCallback('zoomed', function(m) {
                 document.getElementById('page_zoom').value = map.getZoom();
             });
-            
         }
         {/literal}
     </script>
     <style type="text/css">
         {literal}
+        h1 {
+           margin-left: 20px;
+        }
+        
         body {
-          background: #fff;
-          color: #000;
-          font-family: Helvetica, sans-serif;
-          margin: 0;
-          padding: 20px;
-          border: 0;
+           background: #fff;
+           color: #000;
+           font-family: Helvetica, sans-serif;
+           margin: 0;
+           padding: 0px;
+           border: 0;
         }
         #map {
-          width: 1000px;
-          height: 500px;
-          position: relative;
-          overflow: hidden;
-          z-index: 1;
+           width: 100%;
+           height: 500px;
+           position: relative;
+           overflow: hidden;
+           z-index: 1;
         }
         
         #canvas {
-         position: absolute;
-         z-index: 2;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 2;
+        }
+        
+        #zoom-container {
+            width: 64px;
+            height: 30px;
+            position: absolute;
+            padding: 8px 0px 0px 20px;
+            z-index: 3;
+        }
+        
+        #zoom-in, #zoom-out {
+            cursor: pointer;
+        }
+        
+        .atlas_inputs {
+            margin-left: 20px;
         }
         {/literal}
     </style>
@@ -579,34 +639,29 @@
     <body onload="initUI()">
         <h1>New Box UI</h1>
         <div id="container">
+
         <div id="map">
+            <span id="zoom-container">
+                <img src='http://fieldpapers.org/~mevans/fieldpapers/site/www/img/plus.png' id="zoom-in"
+                          width="30" height="30" onclick="map.zoomIn()" />
+                <img src='http://fieldpapers.org/~mevans/fieldpapers/site/www/img/minus.png' id="zoom-out"
+                          width="30" height="30" onclick="map.zoomOut()" />
+            </span>
             <div id="canvas"></div>
         </div>
         </div>
-        <p>
-            <label for="paper-size">Paper size: <select id="paper-size" name="paper_size">
-                <option value="letter" selected>Letter</option>
-                <option value="A3">A3</option>
-                <option value="A4">A4</option>
-                <option value="tabloid">Tabloid</option>
-            </select></label>
-            
-            <label for="paper-orient">orientation: <select id="paper-orient" name="orientation">
-                <option value="landscape" selected>landscape</option>
-                <option value="portrait">portrait</option>
-            </select></label>
+        <p class="atlas_inputs">                        
+            <input type="radio" id="radio_landscape" name="orientation" value="landscape" onclick="changeOrientation(this.value)"> Landscape
+            <input type="radio" id="radio_portrait" name="orientation" value="portrait" onclick="changeOrientation(this.value)"> Portrait
                     
-            <form id="submit" method="post" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/compose-print.php">
+            <form id="compose_print" method="post" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/compose-print.php">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
                 <input type="hidden" id="form_id" name="form_id" value="Select a Form for this Atlas">
                 
-                
-                <input type="hidden" id="atlas_pages" name="pages[]">
-                <!-- <input type="hidden" name="extent" id ="extent"> -->
-                <input type="submit" value="Make Atlas" />
+                <input class="atlas_inputs" type="button" onclick="setAndSubmitData()" value="Make Atlas" />
             </form>
         </p>
     </body>
