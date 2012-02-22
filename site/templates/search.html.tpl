@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Search</title>
+    <title>Search - fieldpapers.org</title>
+    <link rel="stylesheet" href="../css/fieldpapers.css" type="text/css" />
     <script type="text/javascript" src="modestmaps.min.js"></script>
     <script type="text/javascript">
         {literal}
@@ -52,10 +53,6 @@
     </script>
     <style type="text/css">
         {literal}
-        h1 {
-           margin-left: 20px;
-        }
-        
         body {
            background: #fff;
            color: #000;
@@ -66,23 +63,28 @@
         }
         
         #search-form {
-            margin-left: 20px;
+            margin-left: 10px;
         }
-        
         {/literal}
     </style>
 </head>
     <body>
-        <h1>Where would you like to center your atlas?</h1>
-
-        <p>                                            
-            <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="new-box-ui.php" method="get">
-                <input type="text" name="query" size="24" />
-                <input type="hidden" id="ne_point" name="ne" />
-                <input type="hidden" id="sw_point" name="sw" />
-                <input type="hidden" id="center_point" name="center" />
-                <input type="submit" name="action" value="Find" />
-            </form>
-        </p>
+        <div class="content">
+            {include file="header.htmlf.tpl"}
+            
+            {include file="navigation.htmlf.tpl"}
+            <h1>Where would you like to center your atlas?</h1>
+    
+            <p>                                            
+                <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="new-box-ui.php" method="get">
+                    <input type="text" name="query" size="24" />
+                    <input type="hidden" id="ne_point" name="ne" />
+                    <input type="hidden" id="sw_point" name="sw" />
+                    <input type="hidden" id="center_point" name="center" />
+                    <input type="submit" name="action" value="Find" />
+                </form>
+            </p>
+            {include file="footer.htmlf.tpl"}
+        </div>
     </body>
 </html>

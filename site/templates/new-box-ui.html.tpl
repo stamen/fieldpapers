@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Make- fieldpapers.org</title>
+    <title>Make - fieldpapers.org</title>
+    <link rel="stylesheet" href="../css/fieldpapers.css" type="text/css" />
     <script type="text/javascript" src="modestmaps.min.js"></script>
     <script type="text/javascript" src="raphael-min.js"></script>
     
@@ -709,6 +710,9 @@
     </style>
 </head>
     <body onload="initUI()">
+        {include file="header.htmlf.tpl"}
+        {include file="navigation.htmlf.tpl"}
+        
         <h1>Create Your Atlas</h1>
         <div id="container">
 
