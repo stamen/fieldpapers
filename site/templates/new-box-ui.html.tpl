@@ -499,6 +499,8 @@
             var addHorizontalPage = function() {
                 num_columns++;
                 
+                document.getElementById("page-count").innerHTML = num_rows * num_columns;
+                
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
                 
                 page_dimensions.width = page_dimensions.width * (num_columns/(num_columns - 1))
@@ -526,6 +528,8 @@
             
                 num_columns--;
                 
+                document.getElementById("page-count").innerHTML = num_rows * num_columns;
+                
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
                 
                 page_dimensions.width = page_dimensions.width * (num_columns/(num_columns + 1))
@@ -546,6 +550,8 @@
             
             var addVerticalPage = function() {
                 num_rows++;
+                
+                document.getElementById("page-count").innerHTML = num_rows * num_columns;
                 
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
                 
@@ -572,6 +578,8 @@
                 }
                 
                 num_rows--;
+                
+                document.getElementById("page-count").innerHTML = num_rows * num_columns;
                 
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
                 
@@ -703,6 +711,7 @@
                 <option>Bing Aerial</option>
                 <option>Open Street Map</option>
             </select>
+            <span style="margin-left:10px"><span id="page-count">1</span> Page(s)</span>
                     
             <form id="compose_print" method="post" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/compose-print.php">
                 <input type="hidden" name="action" value="compose">
