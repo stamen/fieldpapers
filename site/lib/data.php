@@ -93,7 +93,7 @@
     {
         $acceptable_types = is_array($acceptable_types)
             ? $acceptable_types
-            : array('application/paperwalking+xml', 'application/json', 'text/html');
+            : array('application/paperwalking+xml', 'application/json', 'application/geo+json', 'text/html');
         
         if($accept_type_header == 'xml')
             return 'application/paperwalking+xml';
