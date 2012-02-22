@@ -45,6 +45,10 @@
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
         print $sm->fetch("print.xml.tpl");
     
+    } elseif($type == 'application/geo+json') { 
+        header("Content-Type: application/geo+json; charset=UTF-8");
+        echo print_to_geojson($print, $pages)."\n";
+        
     } else {
         header('HTTP/1.1 400');
         die("Unknown type.\n");

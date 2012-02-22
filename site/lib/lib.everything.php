@@ -13,6 +13,7 @@
 
     require_once 'lib.auth.php';
     require_once 'lib.forms.php';
+    require_once 'lib.prints.php';
     require_once 'lib.scans.php';
 
 ?>
