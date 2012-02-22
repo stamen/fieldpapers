@@ -12,16 +12,10 @@
             function getPlaces(query)
             {
                 var app_id = {/literal}'{$app_id}'{literal}
-                //console.log('get places');
                 var script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.src = 'http://where.yahooapis.com/v1/places.q(' + escape(query) + ');count=1?format=json&callback=onPlaces&select=long&appid='+escape(app_id);
                 document.body.appendChild(script);
-                
-                
-                //var form = document.forms['bounds'];
-                
-                console.log(app_id);
                 
                 return false;
             }
@@ -32,7 +26,6 @@
                 {
                     var place = result['places']['place'][0];
                     
-                    //console.log(place);
                     var bbox = place['boundingBox'];
                     var centroid = place['centroid'];
                     
@@ -40,10 +33,7 @@
                     var ne = new MM.Location(bbox['northEast']['latitude'], bbox['northEast']['longitude']);
                     var center = new MM.Location(centroid['latitude'], centroid['longitude']);
                     
-                    //console.log(sw,ne);
-                    
                     var ne_point = document.getElementById("ne_point");
-                    //console.log(ne);
                     ne_point.value = [ne.lat,ne.lon];
                     
                     var sw_point = document.getElementById("sw_point");
@@ -56,7 +46,7 @@
                     
                     document.forms['search-form'].submit();
                 } else {
-                    alert("Could not find.");
+                    alert("We could not find that location.");
                 }
             }
         
@@ -89,16 +79,12 @@
 
         <p>                                            
             <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/atlas-box-ui/new-box-ui.php" method="get">
-                <!-- Place into init.php -->
                 <input type="text" name="query" size="24" />
                 <input type="hidden" id="ne_point" name="ne" />
                 <input type="hidden" id="sw_point" name="sw" />
                 <input type="hidden" id="center_point" name="center" />
                 <input type="submit" name="action" value="Find" />
             </form>
-        </p>
-        <p>
-            <a href="#" id="permalink"></a>
         </p>
     </body>
 </html>
