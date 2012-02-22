@@ -3,8 +3,6 @@
 <head>
     <title>Search</title>
     <script type="text/javascript" src="modestmaps.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    
     <script type="text/javascript">
         {literal}
             var MM = com.modestmaps;
@@ -78,7 +76,7 @@
         <h1>Where would you like to center your atlas?</h1>
 
         <p>                                            
-            <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/atlas-box-ui/new-box-ui.php" method="get">
+            <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="new-box-ui.php" method="get">
                 <input type="text" name="query" size="24" />
                 <input type="hidden" id="ne_point" name="ne" />
                 <input type="hidden" id="sw_point" name="sw" />

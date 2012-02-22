@@ -714,9 +714,9 @@
 
         <div id="map">
             <span id="zoom-container">
-                <img src='http://fieldpapers.org/~mevans/fieldpapers/site/www/img/plus.png' id="zoom-in"
+                <img src='../img/plus.png' id="zoom-in"
                           width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()+1)" />
-                <img src='http://fieldpapers.org/~mevans/fieldpapers/site/www/img/minus.png' id="zoom-out"
+                <img src='../img/minus.png' id="zoom-out"
                           width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()-1)" />
             </span>
             <div id="canvas"></div>
@@ -732,7 +732,7 @@
             </select>
             <span style="margin-left:10px"><span id="page-count">1 Page</span>
                     
-            <form id="compose_print" method="post" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/compose-print.php">
+            <form id="compose_print" method="post" action="../compose-print.php">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
