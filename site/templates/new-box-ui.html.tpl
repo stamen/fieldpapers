@@ -9,7 +9,8 @@
     <script type="text/javascript">
         {literal}
         
-        var map = null;
+        var map = null,
+            map_layer;
         
         var paper_orientations = {'landscape': 11/8.5, 'portrait': 8.5/11},
             page_aspect_ratio = paper_orientations['landscape'], // Sample atlas_aspect_ratio for now // Portrait size
@@ -35,6 +36,25 @@
         
         var page_button_width = 15,
             page_button_height = 25;
+            
+        function setProvider(provider)
+        {        
+            if (provider === "Toner")
+            {
+                var tileURL = 'http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png';
+            } else if (provider === "Bing Aerial") {
+                var tileURL = 'http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg';
+            } else if (provider === "Open Street Map") {
+                var tileURL = 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
+            }
+            
+            document.getElementById('provider').value = tileURL;
+            
+            map_layer.setProvider(new MM.TemplatedMapProvider(tileURL));
+            //console.log(tileURL);
+            //map.setProvider(new MM.TemplatedMapProvider(tileURL));
+            //onMapChanged(map);
+        }
         
         function changeOrientation(orientation) {
             if (document.getElementById('orientation').value === orientation)
@@ -138,7 +158,9 @@
                                dragControlCoordinates.y,
                                scaleControlCoordinates.x - dragControlCoordinates.x,
                                scaleControlCoordinates.y - dragControlCoordinates.y);
-                               
+            
+            rect.attr("fill", "#ccc");
+            rect.attr("fill-opacity", .3);
             rect.attr("stroke", "#050505");
             rect.insertBefore(scaleControl);
             rect.insertBefore(dragControl);
@@ -178,7 +200,6 @@
                 page_extent.type = 'hidden';
                 page_extent.value = pages[i];
                 document.getElementById('compose_print').appendChild(page_extent);
-                //console.log(document.getElementById('compose_print'))
             }
         }
         
@@ -188,12 +209,21 @@
             ////
             var MM = com.modestmaps;
             
-            map = new MM.Map('map', new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png'));
+            var toner_provider = new MM.TemplatedMapProvider('http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png');
+            map_layer = new MM.Layer(toner_provider);
+            
+            //map = new MM.Map('map', new MM.TemplatedMapProvider('http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png'));
+            map = new MM.Map('map', map_layer);
                                 
-            map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
+            //map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
+            map.setCenterZoom(new MM.Location({/literal}{$center}{literal}), 10); // Set a default case
+            
+            var locations = [new MM.Location({/literal}{$extent.ne}{literal}),
+                             new MM.Location({/literal}{$extent.sw}{literal})];
             
             // Initialize value of page_zoom input
             document.getElementById('page_zoom').value = 12;
+            document.getElementById('provider').value = 'http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png';
             
             ////
             // UI
@@ -276,11 +306,26 @@
             /////
             
             canvas = Raphael("canvas");
+                        
+            var ne_location = new MM.Location({/literal}{$extent.ne}{literal});
+            var sw_location = new MM.Location({/literal}{$extent.sw}{literal});
             
-            var canvasOriginX = 60,
-                canvasOriginY = 60,
-                page_height = 150,
+            var nw_point = map.locationPoint(new MM.Location(ne_location.lat,sw_location.lon));
+            var se_point = map.locationPoint(new MM.Location(sw_location.lat,ne_location.lon));
+            
+            var center_point = map.locationPoint(new MM.Location({/literal}{$center}{literal}));
+            
+            var page_height = 200,
+                canvasOriginX = (center_point.x - .5 * page_height * atlas_aspect_ratio) || 160,
+                canvasOriginY = (center_point.y - .5 * page_height) || 160,
                 controlRadius = 15;
+            
+            /*
+            var canvasOriginX = nw_point.x || 160,
+                canvasOriginY = nw_point.y || 160,
+                page_height = .8 * (se_point.y - nw_point.y) || 250,
+                controlRadius = 15;
+            */
                 
             // Initialize Coordinate Objects
             scaleControlCoordinates = {x: page_height*atlas_aspect_ratio + canvasOriginX, y: page_height + canvasOriginY};
@@ -637,7 +682,7 @@
     </style>
 </head>
     <body onload="initUI()">
-        <h1>New Box UI</h1>
+        <h1>Create Your Atlas</h1>
         <div id="container">
 
         <div id="map">
@@ -653,12 +698,18 @@
         <p class="atlas_inputs">                        
             <input type="radio" id="radio_landscape" name="orientation" value="landscape" onclick="changeOrientation(this.value)"> Landscape
             <input type="radio" id="radio_portrait" name="orientation" value="portrait" onclick="changeOrientation(this.value)"> Portrait
+            <select style="margin-left:10px" name="provider" onchange="setProvider(this.value);">
+                <option>Toner</option>
+                <option>Bing Aerial</option>
+                <option>Open Street Map</option>
+            </select>
                     
             <form id="compose_print" method="post" action="http://fieldpapers.org/~mevans/fieldpapers/site/www/compose-print.php">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
+                <input type="hidden" id="provider" name="provider">
                 <input type="hidden" id="form_id" name="form_id" value="Select a Form for this Atlas">
                 
                 <input class="atlas_inputs" type="button" onclick="setAndSubmitData()" value="Make Atlas" />
