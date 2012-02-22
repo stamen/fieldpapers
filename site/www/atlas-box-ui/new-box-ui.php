@@ -9,10 +9,15 @@
     remember_user($dbh);
     
     /**** ... ****/
+    
+    $extent = array('ne' => $_GET['ne'], 'sw' => $_GET['sw']);
+    $center = $_GET['center'];
         
     $sm = get_smarty_instance();
     $sm->assign('forms', $forms);
     $sm->assign('default_form', $default_form);
+    $sm-> assign('extent', $extent);
+    $sm-> assign('center', $center);
     
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("new-box-ui.html.tpl");
