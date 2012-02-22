@@ -715,9 +715,9 @@
         <div id="map">
             <span id="zoom-container">
                 <img src='http://fieldpapers.org/~mevans/fieldpapers/site/www/img/plus.png' id="zoom-in"
-                          width="30" height="30" onclick="map.zoomIn()" />
+                          width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()+1)" />
                 <img src='http://fieldpapers.org/~mevans/fieldpapers/site/www/img/minus.png' id="zoom-out"
-                          width="30" height="30" onclick="map.zoomOut()" />
+                          width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()-1)" />
             </span>
             <div id="canvas"></div>
         </div>
