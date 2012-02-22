@@ -51,9 +51,6 @@
             document.getElementById('provider').value = tileURL;
             
             map_layer.setProvider(new MM.TemplatedMapProvider(tileURL));
-            //console.log(tileURL);
-            //map.setProvider(new MM.TemplatedMapProvider(tileURL));
-            //onMapChanged(map);
         }
         
         function changeOrientation(orientation) {
@@ -319,14 +316,7 @@
                 canvasOriginX = (center_point.x - .5 * page_height * atlas_aspect_ratio) || 160,
                 canvasOriginY = (center_point.y - .5 * page_height) || 160,
                 controlRadius = 15;
-            
-            /*
-            var canvasOriginX = nw_point.x || 160,
-                canvasOriginY = nw_point.y || 160,
-                page_height = .8 * (se_point.y - nw_point.y) || 250,
-                controlRadius = 15;
-            */
-                
+                            
             // Initialize Coordinate Objects
             scaleControlCoordinates = {x: page_height*atlas_aspect_ratio + canvasOriginX, y: page_height + canvasOriginY};
             dragControlCoordinates = {x: canvasOriginX, y: canvasOriginY};
