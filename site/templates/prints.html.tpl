@@ -9,8 +9,6 @@
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
 <body>
-    {include file="header.htmlf.tpl"}
-
     {include file="navigation.htmlf.tpl"}
     
     <h2>Recent Prints</h2>

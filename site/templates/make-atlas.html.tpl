@@ -716,7 +716,6 @@
     </style>
 </head>
     <body onload="initUI()">
-        {include file="header.htmlf.tpl"}
         {include file="navigation.htmlf.tpl"}
         
         <h1>Create Your Atlas</h1>
