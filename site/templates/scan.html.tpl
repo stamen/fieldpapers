@@ -366,7 +366,8 @@
                     
                     function displaySavedNotes() {
                         {/literal}{foreach from=$notes item="note"}{literal}
-                            var note = '{/literal}{$note.note|@addslashes}{literal}',
+                            var note = '{/literal}{$note.note|escape}{literal}',
+                            //var note = {/literal}{$note.note|@json_encode}{literal},
                                 note_num = {/literal}{$note.note_number}{literal},
                                 lat = {/literal}{$note.latitude}{literal},
                                 lon = {/literal}{$note.longitude}{literal};
