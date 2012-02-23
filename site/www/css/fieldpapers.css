@@ -34,13 +34,14 @@ a:hover, a:active, a:focus {
 	text-decoration: none;
 }
 
+/*
 .container {
 	width: 95%;
 	background: #FFF;
 	margin: 0 auto; 
 }
-
-.new_container { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both;}
+*/
+.container { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both;}
 
 .content {
 	padding: 10px 0;
