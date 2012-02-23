@@ -1,18 +1,14 @@
 @charset "UTF-8";
 /* CSS Document */
 
-body {
-	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-	background: #CED2C5
-	margin: 0;
-	padding: 0;
-	color: #000;
-}
+body { margin-top: 0; font-size: 1em; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 
+/*
 ul, ol, dl { 
 	padding: 0;
 	margin: 0 50px;
 }
+*/
 h1, h2, h3, h4, h5, h6, p {
 	margin-top: 0;	 
 	padding-right: 10px;
@@ -39,10 +35,12 @@ a:hover, a:active, a:focus {
 }
 
 .container {
-	width: 95&;
+	width: 95%;
 	background: #FFF;
 	margin: 0 auto; 
 }
+
+.new_container { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both;}
 
 .content {
 	padding: 10px 0;
@@ -61,6 +59,18 @@ a:hover, a:active, a:focus {
 	font-size: 1px;
 	line-height: 0px;
 }
+
+.navbar {width: 960px; padding-top: 20px; margin-right:auto; margin-left:auto; height: 100px; vertical-align: center; }
+.logo {width: 300px; margin-left: 10px; margin-right: 10px; float: left; text-align: center; padding-top: 5px;}
+
+.navbar ul {list-style:none; float: left;}
+.navbar li {width: 140px; margin-left: 10px; display: block; float: left; padding-bottom: 20px;}
+.navbar li.in { border-bottom: 2px solid black;}
+
+.navbar .section {font-weight: bold; font-style:italic; font-size: 0.875em;}
+.navbar .desc { font-size: 0.675em; line-height:1.5em; color: #666; }
+.navbar a:link, .navbar a:visited, .navbar a:visited { text-decoration: none; color: #000; }
+.navbar a:hover { text-decoration: none; color: #09F; }
 
 .atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
