@@ -11,8 +11,6 @@
 <body>
     <div class="container">
         <div class="content">
-            {include file="header.htmlf.tpl"}
-            
             {include file="navigation.htmlf.tpl"}
             
             <p>This page is coming soon!</p>
