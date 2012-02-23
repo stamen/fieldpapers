@@ -27,7 +27,8 @@
                 <form id='logout_form' name='logout_form' method='POST' action='{$base_dir}/login.php'>
                     <a href="#" onClick="document.logout_form.submit();"><span class="desc">log out</span></a>
                     <input type='hidden' name='action' value='log out'>
-                    <input type='hidden' name='redirect' value={$smarty.server.PHP_SELF}>
+                    <!--<input type='hidden' name='redirect' value={$smarty.server.PHP_SELF}>-->
+                    <input type='hidden' name='redirect' value="{$base_dir}/">
                 </form>
             </li>
         {else}
