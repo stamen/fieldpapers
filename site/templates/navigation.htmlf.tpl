@@ -21,10 +21,21 @@
                 <span class="desc">recent activity</span>
             </a>
         </li>
-        <li>
-            <span class="section"><a href="{$base_dir}/login.php">LOG IN</a></span><br />
-            <span class="desc">or <a href="{$base_dir}/registration.php">create an account</a></span>
-        </li>
+        {if $request.session.logged_in}
+        	<li>
+                <span class="section"><a href="{$base_dir}/prints.php?id={$request.session.user.id}">{$request.session.user.name}'s prints</a></span><br />
+                <form id='logout_form' name='logout_form' method='POST' action='{$base_dir}/login.php'>
+                    <a href="#" onClick="document.logout_form.submit();"><span class="desc">log out</span></a>
+                    <input type='hidden' name='action' value='log out'>
+                    <input type='hidden' name='redirect' value={$smarty.server.PHP_SELF}>
+                </form>
+            </li>
+        {else}
+            <li>
+                <span class="section"><a href="{$base_dir}/login.php">LOG IN</a></span><br />
+                <span class="desc">or <a href="{$base_dir}/registration.php">create an account</a></span>
+            </li>
+        {/if}
     </ul>
 </div>
             

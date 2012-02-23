@@ -11,9 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="content">
-            {include file="header.htmlf.tpl"}
-            
+        <div class="content">            
             {include file="navigation.htmlf.tpl"}
             
             <h1>fieldpapers.org</h1>
