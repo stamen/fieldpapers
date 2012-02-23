@@ -261,11 +261,11 @@
                     bottomRightPoint.x > map_bottom_right_point.x || bottomRightPoint.y > map_bottom_right_point.y)
                 { 
                     if (resize === true)
-                    {
-                        //var dragControlLocation = map.pointLocation(dragControlCoordinates);
-                        //var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
+                    {                        
+                        var center_point = map.locationPoint(map.getCenter());
                         
-                        dragControlCoordinates = map.locationPoint(map.getCenter());
+                        dragControlCoordinates.x = center_point.x - .5 * page_dimensions.width;
+                        dragControlCoordinates.y = center_point.y - .5 * page_dimensions.height;
 
                         scaleControlCoordinates = {x: dragControlCoordinates.x + page_dimensions.width,
                                                    y: dragControlCoordinates.y + page_dimensions.height};
@@ -663,9 +663,6 @@
             });
             
             map.addCallback('resized', function(m) {
-                console.log('resize');
-                // Check bounds
-                // Move to center of the map
                 checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates,true);
             });
         }
