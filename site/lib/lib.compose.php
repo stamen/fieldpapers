@@ -185,6 +185,7 @@
         $page_zoom = $post['page_zoom']; // Set a default?
         $paper_size = $post['paper_size'];
         $orientation = $post['orientation'];
+        $provider = $post['provider'];
 
         list($width, $height) = get_paper_dimensions($paper_size, $orientation);
         $paper_aspect = $width / $height;
@@ -193,6 +194,7 @@
         $message = array('action' =>            'compose',
                          'paper_size' =>        strtolower($paper_size),
                          'orientation' =>       $orientation,
+                         'provider' =>          $provider,
                          'pages' =>             array()
                         );            
         
@@ -209,7 +211,7 @@
             
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
                                         'number' => $key + 1,
-                                        'provider' => 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 
+                                        'provider' => $provider, 
                                         'bounds' => $bounds
                                         );
             
