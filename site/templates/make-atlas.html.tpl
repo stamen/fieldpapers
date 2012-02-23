@@ -251,7 +251,7 @@
                 scaleControlCoordinates.y = scaleControlCoordinates.y + dy;
             }
                         
-            function checkAtlasOverflow(topLeftPoint, bottomRightPoint)
+            function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
             {
                 var map_extent = map.getExtent();
                 var map_top_left_point = map.locationPoint(map_extent[0]);
@@ -259,17 +259,29 @@
                                 
                 if (topLeftPoint.x < map_top_left_point.x || topLeftPoint.y < map_top_left_point.y ||
                     bottomRightPoint.x > map_bottom_right_point.x || bottomRightPoint.y > map_bottom_right_point.y)
-                {
-                    //return true;
-                    var dragControlLocation = map.pointLocation(dragControlCoordinates);
-                    var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
-                    
-                    map.zoomOut();
-                    
-                    dragControlCoordinates = map.locationPoint(dragControlLocation);
-                    scaleControlCoordinates = map.locationPoint(scaleControlLocation);
-                    
-                    resetAtlas();
+                { 
+                    if (resize === true)
+                    {
+                        //var dragControlLocation = map.pointLocation(dragControlCoordinates);
+                        //var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
+                        
+                        dragControlCoordinates = map.locationPoint(map.getCenter());
+
+                        scaleControlCoordinates = {x: dragControlCoordinates.x + page_dimensions.width,
+                                                   y: dragControlCoordinates.y + page_dimensions.height};
+                        
+                        resetAtlas();
+                    } else {
+                        var dragControlLocation = map.pointLocation(dragControlCoordinates);
+                        var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
+                        
+                        map.setCenterZoom(map.getCenter(),map.getZoom()-1);
+                        
+                        dragControlCoordinates = map.locationPoint(dragControlLocation);
+                        scaleControlCoordinates = map.locationPoint(scaleControlLocation);
+                        
+                        resetAtlas();
+                    }
                 }
             }
             
@@ -649,6 +661,13 @@
             map.addCallback('zoomed', function(m) {
                 document.getElementById('page_zoom').value = map.getZoom();
             });
+            
+            map.addCallback('resized', function(m) {
+                console.log('resize');
+                // Check bounds
+                // Move to center of the map
+                checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates,true);
+            });
         }
         {/literal}
     </script>
@@ -725,6 +744,8 @@
                 <option>Open Street Map</option>
             </select>
             <span style="margin-left:10px"><span id="page-count">1 Page</span>
+            
+
                     
             <form id="compose_print" method="post" action="{$base_dir}/compose-print.php">
                 <input type="hidden" name="action" value="compose">
@@ -732,7 +753,22 @@
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
                 <input type="hidden" id="provider" name="provider">
-                <input type="hidden" id="form_id" name="form_id" value="Select a Form for this Atlas">
+                <!-- <input type="hidden" id="form_id" name="form_id"> -->
+                
+                <select id="forms" name="form_id" style="margin-left: 30px">
+                    {if $default_form == 'none'}
+                        <option selected>Select a Form for this Atlas</option>
+                    {else}
+                        <option>Forms</option>
+                        <option value="{$default_form.id}" selected>{$default_form.title} ({$default_form.id})</option>
+                    {/if}
+                    
+                    {foreach from=$forms item="form"}
+                        {if $form.id != $default_form.id}
+                            <option value="{$form.id}">{$form.title} ({$form.id})</option>
+                        {/if}
+                    {/foreach}
+                </select>
                 
                 <input class="atlas_inputs" type="button" onclick="setAndSubmitData()" value="Make Atlas" />
             </form>

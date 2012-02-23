@@ -10,6 +10,16 @@
     
     /**** ... ****/
     
+    $forms = get_forms($dbh); //forms
+    
+    if ($_GET["form_id"])
+    {
+        $default_form_id = $_GET["form_id"];
+        $default_form = get_form($dbh, $default_form_id);
+    } else {
+        $default_form = 'none';
+    }
+    
     $extent = array('ne' => $_GET['ne'], 'sw' => $_GET['sw']);
     $center = $_GET['center'];
         
