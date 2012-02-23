@@ -48,7 +48,7 @@
         {/foreach}
     </div>
 {else}
-    <p>Preparing your print.</p>
+    <p>Preparing your print. ({$print.progress*100|string_format:"%d"}% complete)</p>
     <p>
         This may take a while, generally a few minutes. You don't need to keep this
         window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
