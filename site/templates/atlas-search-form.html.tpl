@@ -70,7 +70,7 @@
 </head>
     <body>
         {include file="navigation.htmlf.tpl"}
-        <div class="new_container">
+        <div class="container">
             <h1>Where would you like to center your atlas?</h1>
     
             <p>                                            
