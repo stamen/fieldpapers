@@ -71,7 +71,7 @@
     <body>
         {include file="navigation.htmlf.tpl"}
         <div class="container">
-            <h1>Where would you like to center your atlas?</h1>
+            <h2>Where in the world is your atlas?</h2>
     
             <p>                                            
                 <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="{$base_dir}/make-atlas.php" method="get">
@@ -79,7 +79,7 @@
                     <input type="hidden" id="ne_point" name="ne" />
                     <input type="hidden" id="sw_point" name="sw" />
                     <input type="hidden" id="center_point" name="center" />
-                    <input type="submit" name="action" value="Find" />
+                    <input type="submit" name="action" value="Go" />
                 </form>
             </p>
             {include file="footer.htmlf.tpl"}
