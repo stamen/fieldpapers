@@ -371,7 +371,7 @@
                              UNIX_TIMESTAMP(composed) AS composed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id
+                             user_id, progress
                       FROM prints
                       WHERE composed
                       ORDER BY created DESC
@@ -422,7 +422,7 @@
                              UNIX_TIMESTAMP(composed) AS composed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id
+                             user_id, progress
                       FROM prints
                       WHERE id = %s",
                      $dbh->quoteSmart($print_id));
@@ -527,7 +527,7 @@
                      UNIX_TIMESTAMP(composed) AS composed,
                      UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                      country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                     user_id
+                     user_id, progress
               FROM prints
               WHERE MONTH(created)=%s AND YEAR(created)=%s
               ORDER BY created DESC",
@@ -559,7 +559,7 @@
                      UNIX_TIMESTAMP(composed) AS composed,
                      UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                      country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                     user_id
+                     user_id, progress
               FROM prints
               WHERE user_id=%s
               ORDER BY created DESC",
