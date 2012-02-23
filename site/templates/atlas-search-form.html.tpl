@@ -69,10 +69,8 @@
     </style>
 </head>
     <body>
-        <div class="content">
-            {include file="header.htmlf.tpl"}
-            
-            {include file="navigation.htmlf.tpl"}
+        {include file="navigation.htmlf.tpl"}
+        <div class="new_container">
             <h1>Where would you like to center your atlas?</h1>
     
             <p>                                            
