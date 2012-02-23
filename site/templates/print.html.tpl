@@ -17,8 +17,6 @@
 <body>
     <div class="container">
         <div class="content">
-            {include file="header.htmlf.tpl"}
-            
             {include file="navigation.htmlf.tpl"}
             
             {include file="print.htmlf.tpl"}

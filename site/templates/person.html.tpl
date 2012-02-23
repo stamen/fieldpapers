@@ -11,8 +11,6 @@
 <body>
     <div class="container">
         <div class="content">
-            {include file="header.htmlf.tpl"}
-            
             {include file="navigation.htmlf.tpl"}
             
             <h1>{$user_name}</h1>
@@ -39,7 +37,7 @@
                         name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
                         
                         <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
-                        <div class="atlasPlace"><a href="place.html">Place</a></div>
+                        <div class="atlasPlace"><a href="place.php">Place</a></div>
                         <div class="atlasMeta">
                         {if $print.number_of_pages == 1}
                             1 page,

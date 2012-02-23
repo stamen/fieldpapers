@@ -16,8 +16,6 @@
 <body>
     <div class="container">
         <div class="content">
-            {include file="header.htmlf.tpl"}
-            
             {include file="navigation.htmlf.tpl"}
             
             <h1>{$date.month}, {$date.year}</h1>
