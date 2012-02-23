@@ -206,8 +206,8 @@
             ////
             var MM = com.modestmaps;
             
-            var toner_provider = new MM.TemplatedMapProvider('http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png');
-            map_layer = new MM.Layer(toner_provider);
+            var bing_provider = new MM.TemplatedMapProvider('http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg');
+            map_layer = new MM.Layer(bing_provider);
             
             //map = new MM.Map('map', new MM.TemplatedMapProvider('http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png'));
             map = new MM.Map('map', map_layer);
@@ -735,8 +735,8 @@
             <input type="radio" id="radio_landscape" name="orientation" value="landscape" onclick="changeOrientation(this.value)"> Landscape
             <input type="radio" id="radio_portrait" name="orientation" value="portrait" onclick="changeOrientation(this.value)"> Portrait
             <select style="margin-left:10px" name="provider" onchange="setProvider(this.value);">
-                <option>Toner</option>
                 <option>Bing Aerial</option>
+                <option>Toner</option>
                 <option>Open Street Map</option>
             </select>
             <span style="margin-left:10px"><span id="page-count">1 Page</span>
