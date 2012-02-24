@@ -9,17 +9,14 @@
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>    
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
-<body>
-    <div class="container">
-        <div class="content">            
-            {include file="navigation.htmlf.tpl"}
-            
-            <h1>fieldpapers.org</h1>
-            
-            {include file="hotspots.htmlf.tpl"}
-            
-            {include file="footer.htmlf.tpl"}
-        <!-- end .content --></div>
-    <!-- end .container --></div>
+<body>         
+    {include file="navigation.htmlf.tpl"}
+    <div class="container">  
+        <h1>fieldpapers.org</h1>
+        
+        {include file="hotspots.htmlf.tpl"}
+        
+        {include file="footer.htmlf.tpl"}
+    </div>
 </body>
 </html>
