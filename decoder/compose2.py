@@ -220,22 +220,13 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
         pass
     else:
         ctx.set_font_face(font)
-        ctx.set_font_size(8)
+        ctx.set_font_size(12)
         
-        lines = ['OSM data ©2011 CC-BY-SA Openstreetmap.org contributors.',
-                 'Help improve OpenStreetMap by drawing on this map, then visit',
-                 href or '']
+        line = href
+        text_width = ctx.text_extents(line)[2]
         
-        text_width = max([ctx.text_extents(line)[2] for line in lines])
-        
-        ctx.move_to(well_width_pt - text_width, -25)
-        ctx.show_text(lines[0])
-
-        ctx.move_to(well_width_pt - text_width, -15)
-        ctx.show_text(lines[1])
-
-        ctx.move_to(well_width_pt - text_width, -5)
-        ctx.show_text(lines[2])
+        ctx.move_to(well_width_pt - text_width, -6)
+        ctx.show_text(line)
     
     ctx.show_page()
 
