@@ -16,14 +16,14 @@
             </a>
         </li>
         <li>
-            <a href="{$base_dir}/prints.php">
+            <a href="{$base_dir}/watch.php">
                 <span class="section">WATCH</span><br />
                 <span class="desc">recent activity</span>
             </a>
         </li>
         {if $request.session.logged_in}
         	<li>
-                <span class="section"><a href="{$base_dir}/prints.php?id={$request.session.user.id}">{$request.session.user.name}</a></span><br />
+                <span class="section"><a href="{$base_dir}/person.php?id={$request.session.user.id}">{$request.session.user.name}</a></span><br />
                 <form id='logout_form' name='logout_form' method='POST' action='{$base_dir}/login.php'>
                     <a href="#" onClick="document.logout_form.submit();"><span class="desc">log out</span></a>
                     <input type='hidden' name='action' value='log out'>
