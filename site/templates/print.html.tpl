@@ -15,15 +15,12 @@
     {/if}
 </head>
 <body>
+    {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <div class="content">
-            {include file="navigation.htmlf.tpl"}
-            
-            {include file="print.htmlf.tpl"}
-            
-            {include file="footer.htmlf.tpl"}
-        <!-- end .content --></div>
+        {include file="print.htmlf.tpl"}
         
-    <!-- end .container --></div>
+        {include file="footer.htmlf.tpl"}
+    
+    </div>
 </body>
 </html>
