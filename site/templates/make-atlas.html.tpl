@@ -710,28 +710,16 @@
         }
         
         .atlas_inputs {
-            margin-left: 20px;
+            margin-left: 10px;
         }
         {/literal}
     </style>
 </head>
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
-        
-        <h1>Create Your Atlas</h1>
         <div id="container">
-
-        <div id="map">
-            <span id="zoom-container">
-                <img src='{$base_dir}/img/plus.png' id="zoom-in"
-                          width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()+1)" />
-                <img src='{$base_dir}/img/minus.png' id="zoom-out"
-                          width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()-1)" />
-            </span>
-            <div id="canvas"></div>
-        </div>
-        </div>
-        <p class="atlas_inputs">                        
+        <h2>Create Your Atlas</h2>
+        <div class="atlas_inputs">                        
             <input type="radio" id="radio_landscape" name="orientation" value="landscape" onclick="changeOrientation(this.value)"> Landscape
             <input type="radio" id="radio_portrait" name="orientation" value="portrait" onclick="changeOrientation(this.value)"> Portrait
             <select style="margin-left:10px" name="provider" onchange="setProvider(this.value);">
@@ -739,17 +727,12 @@
                 <option>Toner</option>
                 <option>Open Street Map</option>
             </select>
-            <span style="margin-left:10px"><span id="page-count">1 Page</span>
-            
-
-                    
-            <form id="compose_print" method="post" action="{$base_dir}/compose-print.php">
+            <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 960px;">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
                 <input type="hidden" id="provider" name="provider">
-                <!-- <input type="hidden" id="form_id" name="form_id"> -->
                 
                 <select id="forms" name="form_id" style="margin-left: 30px">
                     {if $default_form == 'none'}
@@ -765,9 +748,21 @@
                         {/if}
                     {/foreach}
                 </select>
-                
+                <span style="margin-left:10px"><span id="page-count">1 Page</span>
                 <input class="atlas_inputs" type="button" onclick="setAndSubmitData()" value="Make Atlas" />
             </form>
-        </p>
+        </div>
+        
+            <div id="map">
+                <span id="zoom-container">
+                    <img src='{$base_dir}/img/plus.png' id="zoom-in"
+                              width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()+1)" />
+                    <img src='{$base_dir}/img/minus.png' id="zoom-out"
+                              width="30" height="30" onclick="map.setCenterZoom(map.getCenter(),map.getZoom()-1)" />
+                </span>
+                <div id="canvas"></div>
+            </div>
+            {include file="footer.htmlf.tpl"}
+        </div>
     </body>
 </html>
