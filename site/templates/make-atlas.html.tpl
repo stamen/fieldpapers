@@ -41,7 +41,7 @@
         {        
             if (provider === "Toner")
             {
-                var tileURL = 'http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png';
+                var tileURL = 'http://tilefarm.stamen.com/toner/{Z}/{X}/{Y}.png';
             } else if (provider === "Bing Aerial") {
                 var tileURL = 'http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg';
             } else if (provider === "Open Street Map") {
@@ -209,7 +209,7 @@
             var bing_provider = new MM.TemplatedMapProvider('http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg');
             map_layer = new MM.Layer(bing_provider);
             
-            //map = new MM.Map('map', new MM.TemplatedMapProvider('http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png'));
+            //map = new MM.Map('map', new MM.TemplatedMapProvider('http://tilefarm.stamen.com/toner/{Z}/{X}/{Y}.png'));
             map = new MM.Map('map', map_layer);
                                 
             //map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
@@ -220,7 +220,7 @@
             
             // Initialize value of page_zoom input
             document.getElementById('page_zoom').value = 12;
-            document.getElementById('provider').value = 'http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png';
+            document.getElementById('provider').value = 'http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg';
             
             ////
             // UI
