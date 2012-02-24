@@ -8,13 +8,9 @@
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
-<body>
+<body>      
+    {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <div class="content">
-            {include file="header.htmlf.tpl"}
-            
-            {include file="navigation.htmlf.tpl"}
-
         <h1>Add a form</h1>
 
             <p>Field Papers can import a form that you've created elsewhere online, for example, in a site like Survey Monkey or Google Docs. All we need is a URL to the page that displays the form, and we'll do the rest.</p>
@@ -32,8 +28,6 @@
             </form>
             
             {include file="footer.htmlf.tpl"}
-       </div>
-        
     </div>
 </body>
 </html>
