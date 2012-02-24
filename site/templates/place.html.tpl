@@ -9,15 +9,10 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
 <body>
+        {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <div class="content">
-            {include file="navigation.htmlf.tpl"}
-            
-            <p>This page is coming soon!</p>
-            
-            {include file="footer.htmlf.tpl"}
-        <!-- end .content --></div>
-        
-    <!-- end .container --></div>
+        <p>This page is coming soon!</p>
+        {include file="footer.htmlf.tpl"}
+    </div>
 </body>
 </html>
