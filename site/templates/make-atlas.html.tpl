@@ -206,11 +206,11 @@
             ////
             var MM = com.modestmaps;
             
-            var bing_provider = new MM.TemplatedMapProvider('http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg');
-            map_layer = new MM.Layer(bing_provider);
+            var osm_provider = new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png');
+            map_layer = new MM.Layer(osm_provider);
             
             //map = new MM.Map('map', new MM.TemplatedMapProvider('http://tilefarm.stamen.com/toner/{Z}/{X}/{Y}.png'));
-            map = new MM.Map('map', map_layer);
+            map = new MM.Map('map', map_layer,null,[new MM.DragHandler(), new MM.DoubleClickHandler()]);
                                 
             //map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
             map.setCenterZoom(new MM.Location({/literal}{$center}{literal}), 10); // Set a default case
@@ -220,7 +220,7 @@
             
             // Initialize value of page_zoom input
             document.getElementById('page_zoom').value = 12;
-            document.getElementById('provider').value = 'http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg';
+            document.getElementById('provider').value = 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
             
             ////
             // UI
@@ -718,14 +718,13 @@
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
         <div id="container">
-        <h2>Create Your Atlas</h2>
         <div class="atlas_inputs">                        
             <input type="radio" id="radio_landscape" name="orientation" value="landscape" onclick="changeOrientation(this.value)"> Landscape
             <input type="radio" id="radio_portrait" name="orientation" value="portrait" onclick="changeOrientation(this.value)"> Portrait
             <select style="margin-left:10px" name="provider" onchange="setProvider(this.value);">
+                <option>Open Street Map</option>
                 <option>Bing Aerial</option>
                 <option>Toner</option>
-                <option>Open Street Map</option>
             </select>
             <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 940px; position: absolute;">
                 <input type="hidden" name="action" value="compose">
