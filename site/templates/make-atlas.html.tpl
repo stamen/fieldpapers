@@ -727,7 +727,7 @@
                 <option>Toner</option>
                 <option>Open Street Map</option>
             </select>
-            <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 960px;">
+            <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 940px; position: absolute;">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
