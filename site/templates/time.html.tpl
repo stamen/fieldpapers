@@ -14,37 +14,33 @@
     </script>
 </head>
 <body>
+    {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <div class="content">
-            {include file="navigation.htmlf.tpl"}
-            
-            <h1>{$date.month}, {$date.year}</h1>
-            
-            <!--<p><img src="" alt="map selection area" name="map" width="100%" height="600" 
-            id="map" style="background-image:url(big-satellite-placeholder.jpg); 
-            background-position:center" /></p>-->
-            <h2>Atlases</h2>
-            {foreach from=$prints item="print" name="index"}
-                <div class="atlasThumb">
-                    <a href="{$base_dir}/print.php?id={$print.id}">
-                    <img src="{$print.preview_url}" alt="printed page" 
-                    name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
-                    <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
-                    <div class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a></div>
-                    <div class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></div>
-                    <div class="atlasMeta">                    
-                        {if $print.number_of_pages == 1}
-                            1 page,
-                        {else if $print.number_of_pages > 1}
-                            {$print.number_of_pages} pages,
-                        {/if}
-                        from <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
-                    </div>
-                </div>
-            {/foreach}
-            
-            {include file="footer.htmlf.tpl"}
-        <!-- end .content --></div>
-    <!-- end .container --></div>
+        <h1>{$date.month}, {$date.year}</h1>
+        <!--<p><img src="" alt="map selection area" name="map" width="100%" height="600" 
+        id="map" style="background-image:url(big-satellite-placeholder.jpg); 
+        background-position:center" /></p>-->
+        <h2>Atlases</h2>
+        {foreach from=$prints item="print" name="index"}
+            <div class="atlasThumb">
+                <a href="{$base_dir}/print.php?id={$print.id}">
+                <img src="{$print.preview_url}" alt="printed page" 
+                name="atlasPage" width="100%" id="atlasPage" /></a>
+                <span class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></span>
+                <span class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a></span>,
+                <span class="atlasPlace">in <a href="{$base_dir}/place.php">Place</a></span><br />
+                <span class="atlasMeta">                    
+                    {if $print.number_of_pages == 1}
+                        1 page,
+                    {else if $print.number_of_pages > 1}
+                        {$print.number_of_pages} pages,
+                    {/if}
+                    <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
+                </span>
+            </div>
+        {/foreach}
+        
+        {include file="footer.htmlf.tpl"}
+    </div>
 </body>
 </html>

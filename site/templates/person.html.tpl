@@ -9,49 +9,45 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
 <body>
+    {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <div class="content">
-            {include file="navigation.htmlf.tpl"}
-            
-            <h1>{$user_name}</h1>
-            
-            {if $user_email}
-                <p>
-                    {$user_email}
-                </p>
-            {/if}
-            <!-- <div class="print" id="map"></div> -->
-            <div class="fltlft">
-                <h2>
-                    {if $prints|@count == 1}
-                        1 Atlas
-                    {else if $print|@count >= 1}
-                        {$prints|@count} Atlases
-                    {/if}
-                
-                </h2>
-            
-                {foreach from=$prints item="print" name="index"}
-                    <div class="atlasPage"> 
-                        <a href="print.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" 
-                        name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
-                        
-                        <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
-                        <div class="atlasPlace"><a href="place.php">Place</a></div>
-                        <div class="atlasMeta">
-                        {if $print.number_of_pages == 1}
-                            1 page,
-                        {else if $print.number_of_pages > 1}
-                            {$print.number_of_pages} pages,
-                        {/if}
-                        from <a href="time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a></div>
-                    </div>
-                {/foreach}
-            </div>
-            
-            {include file="footer.htmlf.tpl"}
-        <!-- end .content --></div>
+        <h1>{$user_name}</h1>
         
-    <!-- end .container --></div>
+        {if $user_email}
+            <p>
+                {$user_email}
+            </p>
+        {/if}
+        <!-- <div class="print" id="map"></div> -->
+        <div class="fltlft">
+            <h2>
+                {if $prints|@count == 1}
+                    1 Atlas
+                {else if $print|@count >= 1}
+                    {$prints|@count} Atlases
+                {/if}
+            
+            </h2>
+        
+            {foreach from=$prints item="print" name="index"}
+                <div class="atlasThumb"> 
+                    <a href="print.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" 
+                    name="atlasPage" width="100%" id="atlasPage" /></a>
+                    
+                    <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
+                    <div class="atlasPlace"><a href="place.php">Place</a></div>
+                    <div class="atlasMeta">
+                    {if $print.number_of_pages == 1}
+                        1 page,
+                    {else if $print.number_of_pages > 1}
+                        {$print.number_of_pages} pages,
+                    {/if}
+                    from <a href="time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a></div>
+                </div>
+            {/foreach}
+        </div>
+        
+        {include file="footer.htmlf.tpl"}
+    </div>
 </body>
 </html>
