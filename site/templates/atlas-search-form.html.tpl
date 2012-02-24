@@ -41,8 +41,6 @@
                     var center_point = document.getElementById("center_point");
                     center_point.value = [center.lat,center.lon];
                     
-                    console.log(center);
-                    
                     document.forms['search-form'].submit();
                 } else {
                     alert("We could not find that location.");
