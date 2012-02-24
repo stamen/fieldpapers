@@ -1,5 +1,6 @@
 {if $print.composed}
     <script>
+        var map = null;
         {literal}
             $(document).ready(function() { 
                 var MM = com.modestmaps;
@@ -8,7 +9,7 @@
                 var provider = 'http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png';
                 
                 // Map 1
-                var overview_map = new MM.Map("overview_map", new MM.TemplatedMapProvider(overview_provider),null,[]);
+                var overview_map = new MM.Map("overview_map", new MM.TemplatedMapProvider(provider),null,[]);
                 
                 
                 // Map 2
@@ -21,34 +22,45 @@
                 
                 var extents = [new MM.Location(north, west), new MM.Location(south, east)];
                 
-                overview_map.setExtent(extents);
+                //overview_map.setExtent(extents);
                 map.setExtent(extents);
+                overview_map.setCenterZoom(map.getCenter(),5);
             });
         {/literal}
     </script>
-    
-    <h1>Untitled</h1>
-    <p>
-        Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
-        <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>. 
-        <a href="{$print.pdf_url}">Download</a> this print as a PDF.
-    </p>
+
     <div class="overview_print" id="overview_map"></div>
+
+    <h1>
+        Untitled
+    </h1>
+    <p>
+        <b>City, Country</b><br />
+        Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
+        <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
+        <br />
+        {$pages|@count} page(s)
+        <br />
+        <a href="{$print.pdf_url}"><b>Download PDF</b></a>
+    </p>
     <div class="print" id="map"></div>
-    <div class="fltlft">
-        <h2>Pages</h2>
+    
+    
+        <h2>{$pages|@count} pages</h2>
     
         {foreach from=$pages item="page" name="index"}
             <div class="atlasPage"> 
-                <img src="{$page.preview_url}" alt="printed page" 
-                name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" />
+                <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
                 <br />
                 <span class="atlasPageNumber">{$page.page_number}</span>
             </div>
         {/foreach}
-    </div>
+
 {else}
-    <p>Preparing your print. ({$print.progress*100|string_format:"%d"}% complete)</p>
+    <p>Preparing your atlas... ({$print.progress*100|string_format:"%d"}% complete)</p>
+    <div class="progressBarCase">
+        <div class="progressBar" style="width: {$print.progress*100}%;"></div>
+    </div>
     <p>
         This may take a while, generally a few minutes. You don't need to keep this
         window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 

@@ -51,37 +51,23 @@
         
         {/literal}
     </script>
-    <style type="text/css">
-        {literal}
-        body {
-           background: #fff;
-           color: #000;
-           font-family: Helvetica, sans-serif;
-           margin: 0;
-           padding: 0px;
-           border: 0;
-        }
-        
-        #search-form {
-            margin-left: 10px;
-        }
-        {/literal}
-    </style>
 </head>
     <body>
         {include file="navigation.htmlf.tpl"}
         <div class="container">
-            <h2>Where in the world is your atlas?</h2>
-    
-            <p>                                            
-                <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="{$base_dir}/make-atlas.php" method="get">
-                    <input type="text" name="query" size="24" />
-                    <input type="hidden" id="ne_point" name="ne" />
-                    <input type="hidden" id="sw_point" name="sw" />
-                    <input type="hidden" id="center_point" name="center" />
-                    <input type="submit" name="action" value="Go" />
-                </form>
-            </p>
+            <div class="smallContainer">   
+                <h2>Where in the world is your atlas?</h2>
+                <p>                                            
+                    <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="{$base_dir}/make-atlas.php" method="get">
+                        <input type="text" name="query" size="50" style="padding: 5px; color: grey;" 
+                               value="Type in a location" onFocus="this.value=''"/>
+                        <input type="hidden" id="ne_point" name="ne" />
+                        <input type="hidden" id="sw_point" name="sw" />
+                        <input type="hidden" id="center_point" name="center" />
+                        <input type="submit" name="action" value="Start There" />
+                    </form>
+                </p>
+                </div>
             {include file="footer.htmlf.tpl"}
         </div>
     </body>

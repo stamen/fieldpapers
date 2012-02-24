@@ -15,6 +15,8 @@ h1, h2, h3, h4, h5, h6, p {
 	padding-left: 10px; 
 }
 
+.subHead { font-size: 0.5em; color: #666; font-weight: normal;}
+
 small { font-size: 0.75em; }
 code { background-color: #eee; color: #333; padding: 5px; font-family: "Lucida Console", Monaco, monospace; }
 
@@ -34,14 +36,8 @@ a:hover, a:active, a:focus {
 	text-decoration: none;
 }
 
-/*
-.container {
-	width: 95%;
-	background: #FFF;
-	margin: 0 auto; 
-}
-*/
 .container { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both;}
+.smallContainer { width: 620px; margin-right: auto; margin-left: auto; text-align: left; clear: both; padding-top: 100px; padding-bottom: 50px;}
 
 .content {
 	padding: 10px 0;
@@ -78,18 +74,18 @@ a:hover, a:active, a:focus {
 .atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
 
-.atlasThumb { margin-left: 10px; float: left; width: 240px; margin-bottom: 2em; }
+.atlasThumb { margin-left: 10px; float: left; width: 300px; margin-bottom: 2em; }
 .atlasName {}
 .atlasPlace {}
 .atlasMeta {}
 
 .hotSpot { width: 48%; margin-left: 10px; margin-bottom: 2em; float: left;}
     /*#map { width: 100%; height: 300px; }*/
-    .atlas { width: 100%; height: 300px; background-color: #fff; border: 1px solid black;}
-    .overview_print { width: 100%; height: 120px; background-color: #fff; border: 1px solid black;}
-    .print { width: 100%; height: 500px; background-color: #fff; border: 1px solid black;}
+    .atlas { width: 100%; height: 300px; }
+    .overview_print { width: 60%; float: right; height: 150px; margin-left: 10px; margin-bottom: 10px;}
+    .print { width: 100%; height: 600px; }
     
-.page_map { width: 690px; height: 560px; background-color: #fff; border: 1px solid black; float: left;}
+.page_map { width: 690px; height: 560px; float: left;}
 #notes_title { margin-left: 20px; }
 #notes { margin: 20px; }
 #notes_submit { margin-left: 20px; }
@@ -102,4 +98,9 @@ a:hover, a:active, a:focus {
 .fieldSet table { margin-left: 10px; border: 1px solid #000; }
 .fieldSet td { vertical-align: top; padding: 10px; }
 
-#footer { clear: left; }
+.progressBarCase {background-color:#f5f5f5; border-bottom: 1px solid #000; height: 20px; width:100%; margin: 20px; }
+.progressBar {background-color:#000; height: 20px; }
+
+#search-form { margin-left: 10px; padding: 20px;}
+
+#footer { clear: left; margin-top: 50px;}
