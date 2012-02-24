@@ -48,13 +48,9 @@
     /* {/literal}]]> */
 </style>
 </head>
-<body>
-    <div class="container">
-        <div class="content">
-            {include file="header.htmlf.tpl"}
-            
-            {include file="navigation.htmlf.tpl"}
-            
+<body>      
+        {include file="navigation.htmlf.tpl"}
+        <div class="container">
             {if $scan && $scan.decoded}
                 <div class="page_map" id="map"></div>
 
@@ -421,13 +417,10 @@
                         </button>
                     </div>
                 </div>
-                
-                {include file="footer.htmlf.tpl"}
-            <!-- end .content --></div>
-            
-        <!-- end .container --></div>
     {elseif $scan}
         {include file="en/scan-process-info.htmlf.tpl"}
     {/if}
+        {include file="footer.htmlf.tpl"}
+    </div>
 </body>
 </html>
