@@ -26,7 +26,7 @@
                 <input name="file" type="file" />
                 
                 <br/><br/><br/>
-                <input class="mac-button" type="submit" value="Upload" style='width: 60px; 
+                <input class="mac-button" type="submit" value="Upload" style='width: 80px; 
                         font-size: 100%; margin-top: 40px; display: block;'/>
             </form>
     
@@ -40,7 +40,7 @@
                 
                 <input name="file" type="file" />
                 
-                <input class="mac-button" type="submit" value="Upload" style='width: 60px; 
+                <input class="mac-button" type="submit" value="Upload" style='width: 80px; 
                         font-size: 100%; margin-top: 40px; display: block;'/>
             </form>
         {/if}
