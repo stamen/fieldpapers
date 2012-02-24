@@ -204,26 +204,9 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     #
     # Draw top-left icon
     #
-    icon = pathjoin(dirname(__file__), '../site/lib/print/icon.png')
+    icon = pathjoin(dirname(__file__), 'images/logo.png')
     img = ImageSurface.create_from_png(icon)
-    place_image(ctx, img, 0, -29.13, 19.2, 25.6)
-    
-    try:
-        font_file = realpath('fonts/Helvetica-Bold.ttf')
-    
-        if font_file not in cached_fonts:
-            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
-        
-        font = cached_fonts[font_file]
-    except:
-        # no text for us.
-        pass
-    else:
-        # draw some text.
-        ctx.set_font_face(font)
-        ctx.set_font_size(24)
-        ctx.move_to(0 + 19.2 + 8, -29.13 + 25.6 - 1)
-        ctx.show_text('Walking Papers')
+    place_image(ctx, img, 0, -36, 129.1, 36)
     
     try:
         font_file = realpath('fonts/Helvetica.ttf')
