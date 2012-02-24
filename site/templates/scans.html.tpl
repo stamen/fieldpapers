@@ -15,29 +15,28 @@
     <script type="text/javascript" src="{$base_dir}/script.js"></script>
 </head>
 <body>
-    {include file="header.htmlf.tpl"}
-
     {include file="navigation.htmlf.tpl"}
     
-    <!--
-    <p><img src="" alt="map selection area" name="map" width="100%" height="600" 
-    id="map" style="background-image:url(big-satellite-placeholder.jpg); 
-    background-position:center" /></p>-->
+    <div class="container">    
+    <h2><a href="{$base_dir}/watch.php">Atlases</a> | Uploads</h2>
     
-    <h2>Recent Scans</h2>
-    
-    {foreach from=$scans item="scan" name="index"}
-        <div class="atlasThumb"> 
-            <a href="{$base_dir}/scan.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
-            name="atlasPage" width="180" height="240" id="atlasPage" style="background-color: #000" /></a>
-            <div class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">{$print.id}</a></div>
-            <div class="atlasOwner">by <a href="{$base_dir}/person.php?id={$scan.user_id}">{$scan.user_name}</a></div>
-            <div class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></div>
-            <div class="atlasMeta">From <a href="{$base_dir}/time.php?date={$scan.created}">{$scan.age|nice_relativetime|escape}</a></div>
-        </div>
-    {/foreach}
-    
-    {include file="footer.htmlf.tpl"}
-    
+        {foreach from=$scans item="scan" name="index"}
+            <div class="atlasThumb"> 
+                <a href="{$base_dir}/scan.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
+                name="atlasPage" width="100%" id="atlasPage" /></a>
+                Page x of Y Atlas, 
+                uploaded by <a href="{$base_dir}/person.php?id={$scan.user_id}">{$scan.user_name}</a>,
+                <a href="{$base_dir}/time.php?date={$scan.created}">{$scan.age|nice_relativetime|escape}</a>
+                
+<!--                <span class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">{$print.id}</a></span>
+                <span class="atlasOwner">by <a href="{$base_dir}/person.php?id={$scan.user_id}">{$scan.user_name}</a></span>
+                <span class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></span>
+                <span class="atlasMeta">uploaded <a href="{$base_dir}/time.php?date={$scan.created}">{$scan.age|nice_relativetime|escape}</a></span>
+ -->
+             </div>
+        {/foreach}
+        
+        {include file="footer.htmlf.tpl"}
+    </div>
 </body>
 </html>
