@@ -20,27 +20,22 @@
         {/if}
         <div class="fltlft">
             <h2>
-                {if $prints|@count == 1}
-                    1 Atlas
-                {else if $print|@count >= 1}
-                    {$prints|@count} Atlases
+                <a href="{$base_dir}/person.php?id={$user_id}">Atlases</a> | 
+                {if $scans|@count == 1}
+                    1 Upload
+                {else if $scans|@count >= 1}
+                    {$scans|@count} Uploads
                 {/if}
-                | <a href="{$base_dir}/person-scans.php?id={$user_id}">Uploads</a></h2>
             </h2>
-            {foreach from=$prints item="print" name="index"}
+            {foreach from=$scans item="scan"}
                 <div class="atlasThumb"> 
-                    <a href="print.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" 
+                    <a href="scan.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scan page" 
                     name="atlasPage" width="100%" id="atlasPage" /></a>
                     
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
                     <div class="atlasPlace"><a href="place.php">Place</a></div>
                     <div class="atlasMeta">
-                    {if $print.number_of_pages == 1}
-                        1 page,
-                    {else if $print.number_of_pages > 1}
-                        {$print.number_of_pages} pages,
-                    {/if}
-                    from <a href="time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a></div>
+                    Created<a href="time.php?date={$print.created}">{$scan.age|nice_relativetime|escape}</a></div>
                 </div>
             {/foreach}
         </div>
