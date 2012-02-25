@@ -30,17 +30,22 @@ def get_form_fields(url):
     for label in labels:
         label_contents.append({label.attrs[1][0]: label.attrs[1][1], 'contents': label.contents[0]})
     
+    #print label_contents
+    
     #
     # Handle text input boxes
     #
     textboxes = form.findAll(['input'], {"type": "text"})
     
-    textbox_description = {}
+    #textbox_description = {}
 
-    for textbox in textboxes:                
+    for textbox in textboxes: 
+        textbox_description = {}               
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textbox['id']:
+                #print label_contents[index]['contents'].strip()
                 textbox_description['label'] = label_contents[index]['contents'].strip()
+                break
                 
         abbreviated_attributes = dict((k,v) for (k,v) in textbox.attrs if k == "type" or k == "name")
         # abbreviated_attributes = {k : v for k in textbox.attrs} # 2.7 and above
@@ -49,18 +54,20 @@ def get_form_fields(url):
         textbox_description = dict(textbox_description.items() + abbreviated_attributes.items())
         
         form_data['fields'].append(textbox_description)
+    
+    print form_data
         
     #
     # Handle the textareas
     #
     textareas = form.findAll(['textarea'])
-    
-    textarea_description = {}
         
     for textarea in textareas:
+        textarea_description = {}
         for index, label in enumerate(label_contents):
             if label_contents[index]['for'] == textarea['id']:
                 textarea_description['label'] = label_contents[index]['contents'].strip()
+                break
                 
         abbreviated_attributes = dict((k,v) for (k,v) in textarea.attrs if k == "name")
         abbreviated_attributes['type'] = textarea.name
@@ -124,6 +131,7 @@ def main(apibase, password, form_id, url):
     yield ALL_FINISHED
     
 if __name__ == '__main__':
-    form_url = len(sys.argv) == 2 and sys.argv[1] or 'https://docs.google.com/spreadsheet/viewform?formkey=dEZyMnBpUG1pbXpMMGlHLWt3SlRzS0E6MQ'
+    form_url = len(sys.argv) == 2 and sys.argv[1] or 'https://docs.google.com/spreadsheet/viewform?formkey=dFZsNVprWDY3REM3MnpjbW9rTGkzQUE6MQ'
     
+    #get_form_fields(form_url)
     json.dump(get_form_fields(form_url), sys.stdout, indent=2)
