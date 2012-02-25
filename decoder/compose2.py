@@ -140,10 +140,6 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, cove
     #
     # Build up map area
     #
-    draw_box(ctx, 0, 0, well_width_pt, well_height_pt)
-    ctx.set_source_rgb(.9, .9, .9)
-    ctx.fill()
-    
     img = get_mmap_image(mmap)
     
     if coverage == 'half' and well_aspect_ratio > 1:
