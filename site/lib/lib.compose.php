@@ -56,7 +56,7 @@
         return true;
     }
     
-    function get_paper_dimensions($paper_size, $orientation, $coverage='full')
+    function get_printed_dimensions($paper_size, $orientation, $coverage='full')
     {
         $size_names = array('letter' => 'ltr', 'a3' => 'a3', 'a4' => 'a4');
 
@@ -126,8 +126,8 @@
     
     function create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, $coverage='full')
     {
-        list($width_pt, $height_pt) = get_paper_dimensions($paper_size, $orientation, $coverage);
-        $min_width_px = $width_pt * 100/72; // aim for over 100dpi
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, $coverage);
+        $min_width_px = $printed_width * 100/72; // aim for over 100dpi
     
         $nw = new MMaps_Location($north, $west);
         $se = new MMaps_Location($south, $east);
@@ -142,7 +142,7 @@
                 break;
         }
         
-        $aspect_ratio = $width_pt / $height_pt;
+        $aspect_ratio = $printed_width / $printed_height;
         
         $mmap = adjust_mmap_dimensions($aspect_ratio, $mmap);
         
@@ -209,7 +209,7 @@
             $orientation = 'landscape';
         }
         
-        list($printed_width, $printed_height) = get_paper_dimensions($paper_size, $orientation, 'half');
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, 'half');
         $printed_aspect = $printed_width / $printed_height;
         
         // We have all of the information. Make some pages.       
@@ -315,7 +315,7 @@
             $orientation = 'landscape';
         }
         
-        list($printed_width, $printed_height) = get_paper_dimensions($paper_size, $orientation, 'half');
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, 'half');
 
         $printed_aspect = $printed_width / $printed_height;
         $paper_type = "{$orientation}, {$paper_size}";
