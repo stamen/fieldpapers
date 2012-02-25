@@ -12,7 +12,7 @@
         var map = null,
             map_layer;
         
-        var paper_orientations = {'landscape': 11/8.5, 'portrait': 8.5/11},
+        var paper_orientations = {'landscape': 1.50, 'portrait': .75},
             page_aspect_ratio = paper_orientations['landscape'],
             atlas_aspect_ratio;
         
@@ -39,11 +39,13 @@
             
         function setProvider(provider)
         {        
-            if (provider === "Toner")
+            if (provider === "Bing/Toner")
             {
-                var tileURL = 'http://tilefarm.stamen.com/toner/{Z}/{X}/{Y}.png';
+                var tileURL = 'http://tilefarm.stamen.com/boner/{Z}/{X}/{Y}.jpg';
             } else if (provider === "Bing Aerial") {
-                var tileURL = 'http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg';
+                var tileURL = 'http://tilefarm.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg';
+            } else if (provider === "Toner") {
+                var tileURL = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
             } else if (provider === "Open Street Map") {
                 var tileURL = 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
             }
@@ -67,7 +69,6 @@
             page_aspect_ratio = paper_orientations[orientation];
             
             atlas_aspect_ratio = (num_columns/num_rows) * page_aspect_ratio;
-            console.log(atlas_aspect_ratio);
             
             scaleControlCoordinates.x = dragControlCoordinates.x + num_columns * prev_page_height;
             scaleControlCoordinates.y = dragControlCoordinates.y + num_rows * prev_page_width;
@@ -209,10 +210,8 @@
             var osm_provider = new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png');
             map_layer = new MM.Layer(osm_provider);
             
-            //map = new MM.Map('map', new MM.TemplatedMapProvider('http://tilefarm.stamen.com/toner/{Z}/{X}/{Y}.png'));
             map = new MM.Map('map', map_layer,null,[new MM.DragHandler(), new MM.DoubleClickHandler()]);
                                 
-            //map.setCenterZoom(new MM.Location(37.76, -122.45), 12);
             map.setCenterZoom(new MM.Location({/literal}{$center}{literal}), 10); // Set a default case
             
             var locations = [new MM.Location({/literal}{$extent.ne}{literal}),
@@ -725,6 +724,7 @@
                 <option>Open Street Map</option>
                 <option>Bing Aerial</option>
                 <option>Toner</option>
+                <option>Bing/Toner</option>
             </select>
             <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 940px; position: absolute;">
                 <input type="hidden" name="action" value="compose">
