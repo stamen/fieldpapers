@@ -123,13 +123,14 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, coverage='full'):
     """
     """
     print 'Adding print page:', href
     
     well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
     well_width_pt, well_height_pt = well_xmax_pt - well_xmin_pt, well_ymax_pt - well_ymin_pt
+    well_aspect_ratio = well_width_pt / well_height_pt
     
     #
     # Offset drawing area to top-left of map area
@@ -144,7 +145,15 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     ctx.fill()
     
     img = get_mmap_image(mmap)
-    place_image(ctx, img, 0, 0, well_width_pt, well_height_pt)
+    
+    if coverage == 'half' and well_aspect_ratio > 1:
+        place_image(ctx, img, 0, 0, well_width_pt/2, well_height_pt)
+
+    elif coverage == 'half' and well_aspect_ratio < 1:
+        place_image(ctx, img, 0, 0, well_width_pt, well_height_pt/2)
+
+    else:
+        place_image(ctx, img, 0, 0, well_width_pt, well_height_pt)
     
     #
     # Calculate positions of registration points
@@ -324,7 +333,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
             
             yield 60
             
-            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio)
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, 'half')
             
             #
             # Now make a smaller preview map for the page,

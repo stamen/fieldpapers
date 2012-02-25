@@ -56,7 +56,7 @@
         return true;
     }
     
-    function get_paper_dimensions($paper_size, $orientation)
+    function get_paper_dimensions($paper_size, $orientation, $coverage='full')
     {
         $size_names = array('letter' => 'ltr', 'a3' => 'a3', 'a4' => 'a4');
 
@@ -65,7 +65,18 @@
     
         $width = constant("PAPER_{$orientation}_{$paper_size}_WIDTH");
         $height = constant("PAPER_{$orientation}_{$paper_size}_HEIGHT");
-
+        
+        //
+        // Modify the dimensions of the map to cover half the available area.
+        //
+        
+        if($orientation == 'LANDSCAPE' && $coverage == 'half') {
+            $width /= 2;
+        
+        } elseif($orientation == 'PORTRAIT' && $coverage == 'half') {
+            $height /= 2;
+        }
+        
         return array($width, $height);
     }
     
@@ -115,7 +126,7 @@
     
     function create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east)
     {
-        list($width_pt, $height_pt) = get_paper_dimensions($paper_size, $orientation);
+        list($width_pt, $height_pt) = get_paper_dimensions($paper_size, $orientation, 'half');
         $min_width_px = $width_pt * 100/72; // aim for over 100dpi
     
         $nw = new MMaps_Location($north, $west);
@@ -187,7 +198,7 @@
         $orientation = $post['orientation'];
         $provider = $post['provider'];
 
-        list($width, $height) = get_paper_dimensions($paper_size, $orientation);
+        list($width, $height) = get_paper_dimensions($paper_size, $orientation, 'half');
         $paper_aspect = $width / $height;
         
         // We have all of the information. Make some pages.       
@@ -202,6 +213,7 @@
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
+        $print['coverage'] = 'half';
         
         foreach($extents as $key => $value)
         {
@@ -279,10 +291,23 @@
     
         $paper_size = (is_array($p) && isset($p['paper_size'])) ? $p['paper_size'] : 'letter';
         $orientation = (is_array($p) && isset($p['orientation'])) ? $p['orientation'] : 'portrait';
-        $paper_type = "{$orientation}, {$paper_size}";
         
-        list($paper_width, $paper_height) = get_paper_dimensions($paper_size, $orientation);
+        //
+        // "orientation" above refers to the *map*, so if we want half-size
+        // we'll need to flip the orientation of the overall printed sheet
+        // to accommodate it.
+        //
+        if($orientation == 'landscape' && 'half' == 'half') {
+            $orientation = 'portrait';
+        
+        } elseif($orientation == 'portrait' && 'half' == 'half') {
+            $orientation = 'landscape';
+        }
+        
+        list($paper_width, $paper_height) = get_paper_dimensions($paper_size, $orientation, 'half');
+
         $paper_aspect = $paper_width / $paper_height;
+        $paper_type = "{$orientation}, {$paper_size}";
         
         $message = array('action' => 'compose',
                          'paper_size' => $paper_size,
