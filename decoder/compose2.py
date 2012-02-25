@@ -204,26 +204,9 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     #
     # Draw top-left icon
     #
-    icon = pathjoin(dirname(__file__), '../site/lib/print/icon.png')
+    icon = pathjoin(dirname(__file__), 'images/logo.png')
     img = ImageSurface.create_from_png(icon)
-    place_image(ctx, img, 0, -29.13, 19.2, 25.6)
-    
-    try:
-        font_file = realpath('fonts/Helvetica-Bold.ttf')
-    
-        if font_file not in cached_fonts:
-            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
-        
-        font = cached_fonts[font_file]
-    except:
-        # no text for us.
-        pass
-    else:
-        # draw some text.
-        ctx.set_font_face(font)
-        ctx.set_font_size(24)
-        ctx.move_to(0 + 19.2 + 8, -29.13 + 25.6 - 1)
-        ctx.show_text('Walking Papers')
+    place_image(ctx, img, 0, -36, 129.1, 36)
     
     try:
         font_file = realpath('fonts/Helvetica.ttf')
@@ -237,22 +220,13 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
         pass
     else:
         ctx.set_font_face(font)
-        ctx.set_font_size(8)
+        ctx.set_font_size(12)
         
-        lines = ['OSM data ©2011 CC-BY-SA Openstreetmap.org contributors.',
-                 'Help improve OpenStreetMap by drawing on this map, then visit',
-                 href or '']
+        line = href
+        text_width = ctx.text_extents(line)[2]
         
-        text_width = max([ctx.text_extents(line)[2] for line in lines])
-        
-        ctx.move_to(well_width_pt - text_width, -25)
-        ctx.show_text(lines[0])
-
-        ctx.move_to(well_width_pt - text_width, -15)
-        ctx.show_text(lines[1])
-
-        ctx.move_to(well_width_pt - text_width, -5)
-        ctx.show_text(lines[2])
+        ctx.move_to(well_width_pt - text_width, -6)
+        ctx.show_text(line)
     
     ctx.show_page()
 
