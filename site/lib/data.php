@@ -627,6 +627,32 @@
         return $rows;
     }
     
+    function get_scans_by_user_id(&$dbh, $user_id)
+    {
+       $q = sprintf("SELECT id, print_id, description,
+                            base_url, uploaded_file, geojpeg_bounds,
+                            user_id, UNIX_TIMESTAMP(created) AS created,
+                            UNIX_TIMESTAMP(decoded) AS decoded
+              FROM scans
+              WHERE user_id=%s
+              ORDER BY created DESC",
+             $dbh->quoteSmart($user_id));
+        
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+            
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            $rows[] = $row;
+        }
+        
+        return $rows;
+    }
+    
     function get_scan(&$dbh, $scan_id)
     {
         $q = sprintf("SELECT id, print_id,
