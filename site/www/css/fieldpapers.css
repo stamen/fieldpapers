@@ -37,11 +37,7 @@ a:hover, a:active, a:focus {
 }
 
 .container { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both;}
-.smallContainer { width: 620px; margin-right: auto; margin-left: auto; text-align: left; clear: both; padding-top: 100px; padding-bottom: 50px;}
-
-.content {
-	padding: 10px 0;
-}
+.smallContainer { width: 620px; margin-right: auto; margin-left: auto; text-align: left; clear: both; padding-top: 60px; padding-bottom: 50px;}
 
 /* ~~ miscellaneous float/clear classes ~~ */
 .fltrt {  
@@ -69,7 +65,7 @@ a:hover, a:active, a:focus {
 .navbar a:link, .navbar a:visited, .navbar a:visited { text-decoration: none; color: #000; }
 .navbar a:hover { text-decoration: none; color: #09F; }
 
-.homeThird { float: left; width: 320px; text-align: center; font-size: 1.5em;}
+.homeThird { float: left; width: 320px; text-align: center;}
 
 
 .atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; }
@@ -106,4 +102,4 @@ a:hover, a:active, a:focus {
 
 #search-form { margin-left: 10px; padding: 20px;}
 
-#footer { clear: left; margin-top: 50px; padding: 10px; font-size: 0.825em; }
+#footer { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both; margin-top: 50px; padding: 10px; font-size: 0.825em; }
