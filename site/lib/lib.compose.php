@@ -1,5 +1,6 @@
 <?php
 
+    require_once 'data.php';
     require_once 'output.php';
     require_once 'lib.forms.php';
     require_once 'ModestMaps/ModestMaps.php';
@@ -56,7 +57,7 @@
         return true;
     }
     
-    function get_paper_dimensions($paper_size, $orientation)
+    function get_printed_dimensions($paper_size, $orientation, $layout)
     {
         $size_names = array('letter' => 'ltr', 'a3' => 'a3', 'a4' => 'a4');
 
@@ -65,7 +66,18 @@
     
         $width = constant("PAPER_{$orientation}_{$paper_size}_WIDTH");
         $height = constant("PAPER_{$orientation}_{$paper_size}_HEIGHT");
-
+        
+        //
+        // Modify the dimensions of the map to cover half the available area.
+        //
+        
+        if($orientation == 'LANDSCAPE' && $layout == 'half-page') {
+            $width /= 2;
+        
+        } elseif($orientation == 'PORTRAIT' && $layout == 'half-page') {
+            $height /= 2;
+        }
+        
         return array($width, $height);
     }
     
@@ -113,10 +125,10 @@
                      new MMaps_Location($maxlat, $maxlon));
     }
     
-    function create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east)
+    function create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, $coverage='full')
     {
-        list($width_pt, $height_pt) = get_paper_dimensions($paper_size, $orientation);
-        $min_width_px = $width_pt * 100/72; // aim for over 100dpi
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, $coverage);
+        $min_width_px = $printed_width * 100/72; // aim for over 100dpi
     
         $nw = new MMaps_Location($north, $west);
         $se = new MMaps_Location($south, $east);
@@ -131,7 +143,7 @@
                 break;
         }
         
-        $aspect_ratio = $width_pt / $height_pt;
+        $aspect_ratio = $printed_width / $printed_height;
         
         $mmap = adjust_mmap_dimensions($aspect_ratio, $mmap);
         
@@ -182,31 +194,45 @@
         header('Content-Type: text/plain');
         
         $extents = $post['pages'];
-        $page_zoom = $post['page_zoom']; // Set a default?
-        $paper_size = $post['paper_size'];
-        $orientation = $post['orientation'];
+        $paper_size = isset($post['paper_size']) ? $post['paper_size'] : 'letter';
+        $orientation = isset($post['orientation']) ? $post['orientation'] : 'portrait';
+        $layout = isset($post['layout']) ? $post['layout'] : 'full-page';
         $provider = $post['provider'];
 
-        list($width, $height) = get_paper_dimensions($paper_size, $orientation);
-        $paper_aspect = $width / $height;
+        //
+        // "orientation" above refers to the *map*, so if we want half-size
+        // we'll need to flip the orientation of the overall printed sheet
+        // to accommodate it.
+        //
+        if($orientation == 'landscape' && $layout == 'half-page') {
+            $orientation = 'portrait';
+        
+        } elseif($orientation == 'portrait' && $layout == 'half-page') {
+            $orientation = 'landscape';
+        }
+        
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, $layout);
+        $printed_aspect = $printed_width / $printed_height;
         
         // We have all of the information. Make some pages.       
         $message = array('action' =>            'compose',
                          'paper_size' =>        strtolower($paper_size),
                          'orientation' =>       $orientation,
                          'provider' =>          $provider,
+                         'layout' =>            $layout,
                          'pages' =>             array()
-                        );            
-        
+                        );       
+                
         $print = add_print(&$dbh, $user_id);
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
+        $print['layout'] = $message['layout'];
         
         foreach($extents as $key => $value)
         {
             list($north, $west, $south, $east) = array_map('floatval', explode(',', $value));
-            $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east);
+            $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, $layout);
             $bounds = get_mmap_bounds($mmap);
             
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
@@ -220,7 +246,7 @@
             $print['east'] = $bounds[3];
             $print['west'] = $bounds[1];
         }
-        
+                
         foreach($message['pages'] as $key => $value)
         {
             $number = $key + 1;
@@ -244,6 +270,15 @@
             $print['west'] = min($print['west'], $page['west']);
             $print['east'] = max($print['east'], $page['east']);
         }
+        
+        // Deal with WOEIDs   
+        $place = latlon_placeinfo($print['north'], $print['west'], $post['page_zoom']);
+        $print['country_name'] = $place[0];
+        $print['country_woeid'] = $place[1];
+        $print['region_name'] = $place[2];
+        $print['region_woeid'] = $place[3];
+        $print['place_name'] = $place[4];
+        $print['place_woeid'] = $place[5];
         
         if($post['form_id'] && $form = get_form($dbh, $post['form_id']))
         {
@@ -279,14 +314,29 @@
     
         $paper_size = (is_array($p) && isset($p['paper_size'])) ? $p['paper_size'] : 'letter';
         $orientation = (is_array($p) && isset($p['orientation'])) ? $p['orientation'] : 'portrait';
-        $paper_type = "{$orientation}, {$paper_size}";
+        $layout = (is_array($p) && isset($p['layout'])) ? $p['layout'] : 'full-page';
         
-        list($paper_width, $paper_height) = get_paper_dimensions($paper_size, $orientation);
-        $paper_aspect = $paper_width / $paper_height;
+        //
+        // "orientation" above refers to the *map*, so if we want half-size
+        // we'll need to flip the orientation of the overall printed sheet
+        // to accommodate it.
+        //
+        if($orientation == 'landscape' && $layout == 'half-page') {
+            $orientation = 'portrait';
+        
+        } elseif($orientation == 'portrait' && $layout == 'half-page') {
+            $orientation = 'landscape';
+        }
+        
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, $layout);
+
+        $printed_aspect = $printed_width / $printed_height;
+        $paper_type = "{$orientation}, {$paper_size}";
         
         $message = array('action' => 'compose',
                          'paper_size' => $paper_size,
                          'orientation' => $orientation,
+                         'layout' => $layout,
                          'pages' => array());
         
         //
@@ -310,6 +360,9 @@
             
             $explicit_zoom = is_array($p) && is_numeric($p['zoom']);
             $zoom = $explicit_zoom ? intval($p['zoom']) : 16;
+
+            $mark = is_array($p['mark']) ? $p['mark'] : null;
+            $text = isset($p['text']) ? $p['text'] : null;
             
             //
             // Determine extent based on geometry type and zoom level.
@@ -338,13 +391,13 @@
             $_mmap_center = $_mmap->pointLocation(new MMaps_Point($dim->x/2, $dim->y/2));
             $_mmap_aspect = $dim->x / $dim->y;
             
-            if($paper_aspect > $_mmap_aspect) {
+            if($printed_aspect > $_mmap_aspect) {
                 // paper is wider than the map
-                $dim->x *= ($paper_aspect / $_mmap_aspect);
+                $dim->x *= ($printed_aspect / $_mmap_aspect);
             
             } else {
                 // paper is taller than the map
-                $dim->y *= ($_mmap_aspect / $paper_aspect);
+                $dim->y *= ($_mmap_aspect / $printed_aspect);
             }
             
             $mmap = MMaps_mapByCenterZoom($provider, $_mmap_center, $zoom, $dim);
@@ -355,7 +408,7 @@
             $southeast = $mmap->pointLocation($mmap->dimensions);
             $bounds = array($northwest->lat, $northwest->lon, $southeast->lat, $southeast->lon);
             
-            $message['pages'][] = compact('number', 'provider', 'bounds', 'zoom');
+            $message['pages'][] = compact('number', 'provider', 'bounds', 'zoom', 'text', 'mark');
         }
         
         //
@@ -366,6 +419,7 @@
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
+        $print['layout'] = $message['layout'];
     
         $print['north'] = $message['pages'][0]['bounds'][0];
         $print['south'] = $message['pages'][0]['bounds'][2];
@@ -375,6 +429,7 @@
         foreach($message['pages'] as $_page)
         {
             $page = add_print_page($dbh, $print['id'], $_page['number']);
+            $page['text'] = $_page['text'];
             
             $page['provider'] = $_page['provider'];
             $page['zoom'] = $_page['zoom'];
