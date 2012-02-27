@@ -83,6 +83,7 @@ def composePrint(apibase, password, message_id, msg):
     kwargs = dict(print_id=msg['print_id'],
                   paper_size=msg['paper_size'],
                   orientation=msg['orientation'],
+                  layout=msg['layout'],
                   pages=msg['pages'])
     
     print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
