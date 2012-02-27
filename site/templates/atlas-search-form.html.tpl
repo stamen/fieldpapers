@@ -53,7 +53,7 @@
     <body>
         {include file="navigation.htmlf.tpl"}
         <div class="container">
-            <div class="smallContainer">   
+            <div class="smallContainer" style="text-align: center;">   
                 <h2>Where in the world is your atlas?</h2>
                 <p>                                            
                     <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="{$base_dir}/make-atlas.php" method="get">
