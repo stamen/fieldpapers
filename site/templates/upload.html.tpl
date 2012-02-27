@@ -10,8 +10,11 @@
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
-    <div class="container">
-        {include file="en/upload-instructions.htmlf.tpl"}
+    <div class="smallContainer">
+    
+    	<h1>Upload</h1>
+        
+        <p>Choose which file to upload. We'll work out which atlas it belongs to.</p>
         
         {if $s3post}
             <form action="http://{$s3post.bucket|escape}.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
@@ -25,9 +28,8 @@
                 
                 <input name="file" type="file" />
                 
-                <br/><br/><br/>
-                <input class="mac-button" type="submit" value="Upload" style='width: 80px; 
-                        font-size: 100%; margin-top: 40px; display: block;'/>
+                <br/><br/>
+                <input type="submit" value="Upload" />
             </form>
     
         {elseif $localpost}
@@ -39,20 +41,18 @@
                 <input name="signature" type="hidden" value="{$localpost.signature|escape}" />
                 
                 <input name="file" type="file" />
-                
-                <input class="mac-button" type="submit" value="Upload" style='width: 80px; 
-                        font-size: 100%; margin-top: 40px; display: block;'/>
+                <input type="submit" value="Upload" />
             </form>
         {/if}
         
-        <p style='margin-top: 50px;'>
-            Rules
+        <div style='margin-top: 50px;'>
+            <h4>Rules</h4>
             <ul type="circle">
                 <li>Make sure the scan/photo/image is at least 200dpi.</li>
                 <li>Make sure you're uploading a JPG, PNG, TIF, or GIF. (PDFs won't work.)</li>
                 <li>Don't upload things that aren't Field Papers maps, please.</li>
             </ul>
-        </p>
+        </div>
     
         {include file="footer.htmlf.tpl"}
     </div>

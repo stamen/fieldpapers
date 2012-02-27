@@ -1,4 +1,3 @@
-<div style='margin-top: 30px; margin-bottom: 30px;'>Choose which file to upload. We'll work out where it belongs.</div>
 
 <!--
 <p>
