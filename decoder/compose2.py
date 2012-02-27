@@ -123,6 +123,46 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
+def add_camproberts_questions(ctx, x, y, width, height):
+    """
+    """
+    ctx.save()
+    ctx.translate(x, y)
+    
+    try:
+        font_file = realpath('fonts/Helvetica.ttf')
+    
+        if font_file not in cached_fonts:
+            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
+        
+        font = cached_fonts[font_file]
+
+    except:
+        # hm.
+        pass
+
+    else:
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_font_face(font)
+        ctx.set_font_size(10)
+        
+        ctx.move_to(0, 10)
+        ctx.show_text('How many buildings are present?')
+        
+        ctx.move_to(0, 10 + 50)
+        ctx.show_text('What is the percentage of tree coverage?')
+        
+        ctx.move_to(0, 10 + 100)
+        ctx.show_text('What is the percentage of grass coverage?')
+        
+        ctx.move_to(0, 10 + 150)
+        ctx.show_text('Are the roads paved, gravel, or dirt?')
+        
+        ctx.move_to(0, 10 + 200)
+        ctx.show_text('List any signs indicating location names.')
+    
+    ctx.restore()
+
 def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout):
     """
     """
@@ -144,9 +184,11 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
     
     if layout == 'half-page' and well_aspect_ratio > 1:
         place_image(ctx, img, 0, 0, well_width_pt/2, well_height_pt)
+        add_camproberts_questions(ctx, well_width_pt/2 + 24, 24, well_width_pt/2 - 48, well_height_pt - 48)
 
     elif layout == 'half-page' and well_aspect_ratio < 1:
         place_image(ctx, img, 0, 0, well_width_pt, well_height_pt/2)
+        add_camproberts_questions(ctx, 32, well_height_pt/2 + 16, well_width_pt - 64, well_height_pt/2 - 32)
 
     else:
         place_image(ctx, img, 0, 0, well_width_pt, well_height_pt)
