@@ -123,11 +123,12 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def add_camproberts_questions(ctx, x, y, width, height):
+def add_page_text(ctx, text, x, y, width, height):
     """
     """
     ctx.save()
     ctx.translate(x, y)
+    ctx.move_to(0, 12)
     
     try:
         font_file = realpath('fonts/Helvetica.ttf')
@@ -146,28 +147,11 @@ def add_camproberts_questions(ctx, x, y, width, height):
         ctx.set_font_face(font)
         ctx.set_font_size(10)
         
-        ctx.move_to(0, 12)
-        
-        flow_text(ctx, width, 12, "[TODO: add Ushahidi data here]")
-        ctx.move_to(0, ctx.get_current_point()[1] + 24)
-        
-        ctx.show_text('How many buildings are present?')
-        ctx.move_to(0, ctx.get_current_point()[1] + 48)
-        
-        ctx.show_text('What is the percentage of tree coverage?')
-        ctx.move_to(0, ctx.get_current_point()[1] + 48)
-        
-        ctx.show_text('What is the percentage of grass coverage?')
-        ctx.move_to(0, ctx.get_current_point()[1] + 48)
-        
-        ctx.show_text('Are the roads paved, gravel, or dirt?')
-        ctx.move_to(0, ctx.get_current_point()[1] + 48)
-        
-        ctx.show_text('List any signs indicating location names.')
+        flow_text(ctx, width, 12, text)
     
     ctx.restore()
 
-def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout):
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text):
     """
     """
     print 'Adding print page:', href
@@ -188,11 +172,11 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
     
     if layout == 'half-page' and well_aspect_ratio > 1:
         place_image(ctx, img, 0, 0, well_width_pt/2, well_height_pt)
-        add_camproberts_questions(ctx, well_width_pt/2 + 24, 24, well_width_pt/2 - 48, well_height_pt - 48)
+        add_page_text(ctx, text, well_width_pt/2 + 24, 24, well_width_pt/2 - 48, well_height_pt - 48)
 
     elif layout == 'half-page' and well_aspect_ratio < 1:
         place_image(ctx, img, 0, 0, well_width_pt, well_height_pt/2)
-        add_camproberts_questions(ctx, 32, well_height_pt/2 + 16, well_width_pt - 64, well_height_pt/2 - 32)
+        add_page_text(ctx, text, 32, well_height_pt/2 + 16, well_width_pt - 64, well_height_pt/2 - 32)
 
     else:
         place_image(ctx, img, 0, 0, well_width_pt, well_height_pt)
@@ -360,6 +344,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
         
             provider = TemplatedMercatorProvider(page['provider'])
             zoom = page['zoom']
+            text = str(page['text'] or '')
             
             north, west, south, east = page['bounds']
             northwest = Location(north, west)
@@ -369,7 +354,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             
             yield 60
             
-            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout)
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text)
             
             #
             # Now make a smaller preview map for the page,
