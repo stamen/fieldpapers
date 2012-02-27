@@ -106,4 +106,4 @@ a:hover, a:active, a:focus {
 
 #search-form { margin-left: 10px; padding: 20px;}
 
-#footer { clear: left; margin-top: 50px;}
+#footer { clear: left; margin-top: 50px; padding: 10px; font-size: 0.825em; }
