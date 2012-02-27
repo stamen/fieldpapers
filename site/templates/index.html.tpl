@@ -12,9 +12,28 @@
 <body>         
     {include file="navigation.htmlf.tpl"}
     <div class="container">  
-        <h1>fieldpapers.org</h1>
+        <h1>Welcome to Field Papers</h1>
         
-        {include file="hotspots.htmlf.tpl"}
+        <div class="homeThird">
+            <a href="{$base_dir}/atlas-search-form.php"><img src="{$base_dir}/img/graphic-make-large.gif" alt="Hand-drawn graphic to represent making a Field Papers atlas" /></a>
+            <h3><a href="{$base_dir}/atlas-search-form.php">Make yourself an Atlas.</a></h3>
+            <p>Print out anywhere in the world.</p>  
+        </div>
+        <div class="homeThird">
+            <a href="{$base_dir}/atlas-search-form.php"><img src="{$base_dir}/img/graphic-in-the-field-large.gif" alt="Hand-drawn graphic a Field Papers atlas out in the wild" /></a>
+            <h3><a href="{$base_dir}/atlas-search-form.php">Take it into the field.</a></h3>
+            <p>Scribble on it, draw things, make notes. </p>  
+        </div>
+        <div class="homeThird">
+            <a href="{$base_dir}/atlas-search-form.php"><img src="{$base_dir}/img/graphic-scan-atlas-large.gif" alt="Hand-drawn graphic to photographing a page in a Field Papers atlas" /></a>
+            <h3><a href="{$base_dir}/atlas-search-form.php">Take pictures of your notes.</a></h3>
+            <p><b><a href="{$base_dir}/upload.php">Upload</a></b> pages you've photographed or scanned. Here are some recent uploads.</p>  
+        </div>
+        
+        <div class="clearfloat"></div>
+        
+        
+<!--        {include file="hotspots.htmlf.tpl"} -->
         
         {include file="footer.htmlf.tpl"}
     </div>
