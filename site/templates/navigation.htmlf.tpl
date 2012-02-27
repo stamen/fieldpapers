@@ -1,4 +1,4 @@
-<div class="navbar">
+<div class="navbar" id="nav">
     <div class="logo">
         <a href="{$base_dir}/"><img src="{$base_dir}/img/logo-header.png" height="58" width=200" /></a>
     </div>
