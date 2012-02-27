@@ -4,7 +4,7 @@
     <title>Make - fieldpapers.org</title>
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
-    <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
+    <script type="text/javascript" src="{$base_dir}/raphael.js"></script>
     
     <script type="text/javascript">
         {literal}
@@ -27,6 +27,8 @@
             dragControl,
             dragControlCoordinates,
             scaleControlCoordinates;
+        
+        var canvas_fill;
         
         var horizontal_add,
             vertical_add,
@@ -55,6 +57,22 @@
             map_layer.setProvider(new MM.TemplatedMapProvider(tileURL));
         }
         
+        function setMapHeight()
+        {   
+            var map_height = window.innerHeight - document.getElementById('nav').offsetHeight - 
+                             document.getElementsByClassName('atlas_inputs')[0].offsetHeight;
+            
+            document.getElementById('map').style.height = map_height + 'px';
+            
+            // Reset Canvas
+            if (canvas)
+            {                
+                canvas.setSize(window.innerWidth, map_height);
+                
+                changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+            }
+        }
+        
         function changeOrientation(orientation) {
             if (document.getElementById('orientation').value === orientation)
             {
@@ -62,21 +80,31 @@
             }
             
             document.getElementById('orientation').value = orientation;
-        
-            var prev_page_width = (scaleControlCoordinates.x - dragControlCoordinates.x)/num_columns;
-            var prev_page_height = (scaleControlCoordinates.y - dragControlCoordinates.y)/num_rows;
-        
-            page_aspect_ratio = paper_orientations[orientation];
+            
+            if (page_aspect_ratio > 1)
+            {
+                var new_page_height = (scaleControlCoordinates.x - dragControlCoordinates.x)/num_columns;
+                page_aspect_ratio = paper_orientations[orientation];
+                
+                var new_page_width = page_aspect_ratio * new_page_height;
+            } else {
+                var new_page_width = (scaleControlCoordinates.y - dragControlCoordinates.y)/num_rows;
+                page_aspect_ratio = paper_orientations[orientation];
+                
+                var new_page_height = new_page_width/page_aspect_ratio; 
+            }
             
             atlas_aspect_ratio = (num_columns/num_rows) * page_aspect_ratio;
             
-            scaleControlCoordinates.x = dragControlCoordinates.x + num_columns * prev_page_height;
-            scaleControlCoordinates.y = dragControlCoordinates.y + num_rows * prev_page_width;
+            scaleControlCoordinates.x = dragControlCoordinates.x + num_columns * new_page_width;
+            scaleControlCoordinates.y = dragControlCoordinates.y + num_rows * new_page_height;
                         
             scaleControl.attr({
                     cx: scaleControlCoordinates.x,
                     cy: scaleControlCoordinates.y
             });
+            
+            changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
             
             resetAtlasAttributes();
                         
@@ -157,22 +185,48 @@
                                scaleControlCoordinates.x - dragControlCoordinates.x,
                                scaleControlCoordinates.y - dragControlCoordinates.y);
             
-            rect.attr("fill", "#ccc");
-            rect.attr("fill-opacity", .3);
             rect.attr("stroke", "#050505");
             rect.insertBefore(scaleControl);
             rect.insertBefore(dragControl);
             rect.insertBefore(horizontal_add);
         }
         
+        function createCanvasFillPath(topLeftPoint, bottomRightPoint)
+        {   
+            // ** Note: fill-rule attribute is not currently supported by Raphael.
+            // By default, the fill-rule is nonzero. To achieve the correct fill,
+            // we draw the outer path counter-clockwise to the clockwise inner path.
+            
+            var pathString = 'M0,0L0,' + canvas.height + 'L' + canvas.width + ',' + canvas.height + 'L' +
+                             canvas.width + ',0L0,0M' + topLeftPoint.x + ',' + topLeftPoint.y + 'L' +
+                             bottomRightPoint.x + ',' + topLeftPoint.y +
+                             'L' + bottomRightPoint.x + ',' + bottomRightPoint.y + 'L' +
+                             topLeftPoint.x + ',' + bottomRightPoint.y + 'L' + topLeftPoint.x +
+                             topLeftPoint.y + 'Z';
+            
+            return pathString;
+        }
+        
+        
+        function changeCanvasFillPath(topLeftPoint, bottomRightPoint)
+        {
+            var pathString = createCanvasFillPath(topLeftPoint, bottomRightPoint)
+            canvas_fill.attr({
+                path: pathString
+            });
+        }
+        
         function setAndSubmitData()
         {
             updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
+            
             document.forms['compose_print'].submit();
+            //return true;
         }
         
         function updatePageExtents(topLeftPoint, bottomRightPoint)
-        {            
+        {   
+            console.log('update');
             var width_increment = (bottomRightPoint.x - topLeftPoint.x)/num_columns;
             var height_increment = (bottomRightPoint.y -topLeftPoint.y)/num_rows;
             
@@ -190,7 +244,8 @@
         }
                 
         function updateAtlasFormFields(pages)
-        {            
+        {   
+            // TODO: Empty fields
             for (var i = 0; i < pages.length; i++)
             {
                 var page_extent = document.createElement('input');
@@ -210,12 +265,11 @@
             var osm_provider = new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png');
             map_layer = new MM.Layer(osm_provider);
             
+            setMapHeight();
+            
             map = new MM.Map('map', map_layer,null,[new MM.DragHandler(), new MM.DoubleClickHandler()]);
                                 
             map.setCenterZoom(new MM.Location({/literal}{$center}{literal}), 10); // Set a default case
-            
-            var locations = [new MM.Location({/literal}{$extent.ne}{literal}),
-                             new MM.Location({/literal}{$extent.sw}{literal})];
             
             // Initialize value of page_zoom input
             document.getElementById('page_zoom').value = 12;
@@ -251,7 +305,7 @@
             }
                         
             function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
-            {
+            {   
                 var map_extent = map.getExtent();
                 var map_top_left_point = map.locationPoint(map_extent[0]);
                 var map_bottom_right_point = map.locationPoint(map_extent[1]);
@@ -269,6 +323,8 @@
                         scaleControlCoordinates = {x: dragControlCoordinates.x + page_dimensions.width,
                                                    y: dragControlCoordinates.y + page_dimensions.height};
                         
+                        changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+                        
                         resetAtlas();
                     } else {
                         var dragControlLocation = map.pointLocation(dragControlCoordinates);
@@ -278,6 +334,8 @@
                         
                         dragControlCoordinates = map.locationPoint(dragControlLocation);
                         scaleControlCoordinates = map.locationPoint(scaleControlLocation);
+                        
+                        changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
                         
                         resetAtlas();
                     }
@@ -308,13 +366,13 @@
                 
                 resetAtlasAttributes();
             }
-                        
+                          
             /////
             /// Set up the display objects
             /////
             
             canvas = Raphael("canvas");
-                        
+                                    
             var ne_location = new MM.Location({/literal}{$extent.ne}{literal});
             var sw_location = new MM.Location({/literal}{$extent.sw}{literal});
             
@@ -322,11 +380,14 @@
             var se_point = map.locationPoint(new MM.Location(sw_location.lat,ne_location.lon));
             
             var center_point = map.locationPoint(new MM.Location({/literal}{$center}{literal}));
+            console.log('center_point', center_point);
             
             var page_height = 200,
                 canvasOriginX = (center_point.x - .5 * page_height * atlas_aspect_ratio) || 160,
                 canvasOriginY = (center_point.y - .5 * page_height) || 160,
                 controlRadius = 15;
+            
+            page_dimensions = {x: canvasOriginX, y: canvasOriginY, width: page_height*atlas_aspect_ratio, height: page_height};
                             
             // Initialize Coordinate Objects
             scaleControlCoordinates = {x: page_height*atlas_aspect_ratio + canvasOriginX, y: page_height + canvasOriginY};
@@ -364,22 +425,36 @@
             vertical_remove.attr("fill", "#050505");
             vertical_remove.attr("fill-opacity", 1);
             
+            
             dragControl = canvas.circle(canvasOriginX,canvasOriginY,controlRadius);
             dragControl.attr("fill", "#050505");
             dragControl.attr("fill-opacity", 1);
+            
+            /*
+            dragControl = canvas.image("button-move-atlas-off.png",
+                                        dragControlCoordinates.x-23,
+                                        dragControlCoordinates.y-23,
+                                        46,
+                                        46);
+            */
             
             scaleControl = canvas.circle(canvasOriginX + page_height * atlas_aspect_ratio, canvasOriginY + page_height,controlRadius);
             scaleControl.attr("fill", "#fff");
             
             drawAtlas(scaleControl,dragControl,horizontal_add);
             
+            // Filling the canvas outside
+            var fill_path = createCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+            canvas_fill = canvas.path(fill_path);
+            canvas_fill.attr("fill", "#050505");
+            canvas_fill.attr("opacity", .3);
+            canvas_fill.insertBefore(rect);
+            
             var pathString = drawPages(dragControlCoordinates, scaleControlCoordinates,num_rows,num_columns);
             
             lines = canvas.path(pathString);
             lines.attr("stroke", "#050505");
             lines.insertBefore(rect);
-            
-            page_dimensions = {x: canvasOriginX, y: canvasOriginY, width: page_height*atlas_aspect_ratio, height: page_height};
             
             /////
             // Drag Control drag handler: move, start, end
@@ -398,6 +473,8 @@
                     
                     scaleControlCoordinates.x = dragControlCoordinates.x + page_dimensions.width;
                     scaleControlCoordinates.y = dragControlCoordinates.y + page_dimensions.height;
+                    
+                    changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
                     
                     setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
                     
@@ -428,6 +505,7 @@
             
                 function () {                                                
                     checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+                    //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
                 }
             );
             
@@ -470,6 +548,8 @@
                     
                     scaleControlCoordinates.x = this.attr("cx");
                     scaleControlCoordinates.y = this.attr("cy");
+                    
+                    changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
                     
                     setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x, scaleControlCoordinates.y);     
                                                            
@@ -516,6 +596,8 @@
                     cx: scaleControlCoordinates.x
                 });
                 
+                changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+                
                 checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
                                 
                 rect.attr({
@@ -524,6 +606,7 @@
                 });
                 
                 resetAtlasAttributes();
+                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
             
             var removeHorizontalPage = function() {
@@ -550,6 +633,8 @@
                     cx: scaleControlCoordinates.x
                 });
                 
+                changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+                
                 //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); Needed?
                                 
                 rect.attr({
@@ -557,6 +642,7 @@
                 });
                 
                 resetAtlasAttributes();
+                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
             
             var addVerticalPage = function() {
@@ -578,6 +664,8 @@
                     cy: scaleControlCoordinates.y
                 });
                 
+                changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+                
                 checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
                                 
                 rect.attr({
@@ -585,6 +673,7 @@
                 });
                 
                 resetAtlasAttributes();
+                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
             
             var removeVerticalPage = function() {
@@ -611,6 +700,8 @@
                     cy: scaleControlCoordinates.y
                 });
                 
+                changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+                
                 //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); // Needed?
                                 
                 rect.attr({
@@ -618,6 +709,7 @@
                 });
                 
                 resetAtlasAttributes();
+                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
                         
             horizontal_add.mousedown(function () {
@@ -664,6 +756,9 @@
             map.addCallback('resized', function(m) {
                 checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates,true);
             });
+            
+            // Window Callbacks
+            window.onresize = setMapHeight;
         }
         {/literal}
     </script>
@@ -683,7 +778,6 @@
         }
         #map {
            width: 100%;
-           height: 500px;
            position: relative;
            overflow: hidden;
            z-index: 1;
@@ -751,7 +845,6 @@
                 <input class="atlas_inputs" type="button" onclick="setAndSubmitData()" value="Make Atlas" />
             </form>
         </div>
-        
             <div id="map">
                 <span id="zoom-container">
                     <img src='{$base_dir}/img/plus.png' id="zoom-in"
@@ -761,7 +854,6 @@
                 </span>
                 <div id="canvas"></div>
             </div>
-            {include file="footer.htmlf.tpl"}
         </div>
     </body>
 </html>
