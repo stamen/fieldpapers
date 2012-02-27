@@ -40,5 +40,6 @@
                 </form>
                 {/if}
             </div>
+            {include file="footer.htmlf.tpl"}
         </body>
 </html>
