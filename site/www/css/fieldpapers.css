@@ -69,6 +69,9 @@ a:hover, a:active, a:focus {
 .navbar a:link, .navbar a:visited, .navbar a:visited { text-decoration: none; color: #000; }
 .navbar a:hover { text-decoration: none; color: #09F; }
 
+.homeThird { float: left; width: 320px; text-align: center; font-size: 1.5em;}
+
+
 .atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
