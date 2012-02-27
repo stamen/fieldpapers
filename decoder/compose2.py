@@ -20,7 +20,7 @@ from ModestMaps.Core import Point
 from cairo import ImageSurface
 from PIL import Image
 
-from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle, flow_text
+from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle, draw_cross, flow_text
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print, update_print, ALL_FINISHED
 from cairoutils import get_drawing_context
@@ -151,7 +151,7 @@ def add_page_text(ctx, text, x, y, width, height):
     
     ctx.restore()
 
-def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text):
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark):
     """
     """
     print 'Adding print page:', href
@@ -171,15 +171,35 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
     img = get_mmap_image(mmap)
     
     if layout == 'half-page' and well_aspect_ratio > 1:
-        place_image(ctx, img, 0, 0, well_width_pt/2, well_height_pt)
-        add_page_text(ctx, text, well_width_pt/2 + 24, 24, well_width_pt/2 - 48, well_height_pt - 48)
+        map_width_pt, map_height_pt = well_width_pt/2, well_height_pt
+        add_page_text(ctx, text, map_width_pt + 24, 24, map_width_pt - 48, map_height_pt - 48)
 
     elif layout == 'half-page' and well_aspect_ratio < 1:
-        place_image(ctx, img, 0, 0, well_width_pt, well_height_pt/2)
-        add_page_text(ctx, text, 32, well_height_pt/2 + 16, well_width_pt - 64, well_height_pt/2 - 32)
+        map_width_pt, map_height_pt = well_width_pt, well_height_pt/2
+        add_page_text(ctx, text, 32, map_height_pt + 16, map_width_pt - 64, map_height_pt - 32)
 
     else:
-        place_image(ctx, img, 0, 0, well_width_pt, well_height_pt)
+        map_width_pt, map_height_pt = well_width_pt, well_height_pt
+
+    place_image(ctx, img, 0, 0, map_width_pt, map_height_pt)
+    
+    #
+    # X marks the spot, if needed
+    #
+    if mark is not None:
+        loc = Location(mark[1], mark[0])
+        pt = mmap.locationPoint(loc)
+
+        x = map_width_pt * float(pt.x) / mmap.dimensions.x
+        y = map_height_pt * float(pt.y) / mmap.dimensions.y
+        
+        draw_cross(ctx, x, y, 8, 6)
+        ctx.set_source_rgb(1, 1, 1)
+        ctx.fill()
+        
+        draw_cross(ctx, x, y, 8, 4)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.fill()
     
     #
     # Calculate positions of registration points
@@ -344,7 +364,9 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
         
             provider = TemplatedMercatorProvider(page['provider'])
             zoom = page['zoom']
-            text = str(page['text'] or '')
+
+            mark = page.get('mark', None) or None
+            text = str(page.get('text', None) or '')
             
             north, west, south, east = page['bounds']
             northwest = Location(north, west)
@@ -354,7 +376,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             
             yield 60
             
-            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text)
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark)
             
             #
             # Now make a smaller preview map for the page,

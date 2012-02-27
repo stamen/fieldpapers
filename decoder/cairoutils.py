@@ -124,6 +124,10 @@ class FakeContext:
         self.point = Point(x, y)
         self.command('%.3f %.3f m' % (x, y))
 
+    def line_to(self, x, y):
+        self.point = Point(x, y)
+        self.command('%.3f %.3f l' % (x, y))
+
     def rel_move_to(self, x, y):
         end = Point(x, y).add(self.point)
         self.point = end

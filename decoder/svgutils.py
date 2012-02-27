@@ -42,6 +42,22 @@ def draw_circle(context, x, y, radius):
     context.rel_curve_to(-bezier, 0, -radius, -bezier, -radius, -radius)
     context.rel_curve_to(0, -bezier, bezier, -radius, radius, -radius)
 
+def draw_cross(context, x, y, radius, weight):
+    """
+    """
+    context.move_to(x + weight, y)
+    context.line_to(x + radius + weight, y + radius)
+    context.line_to(x + radius, y + radius + weight)
+    context.line_to(x, y + weight)
+    context.line_to(x - radius, y + radius + weight)
+    context.line_to(x - radius - weight, y + radius)
+    context.line_to(x - weight, y)
+    context.line_to(x - radius - weight, y - radius)
+    context.line_to(x - radius, y - radius - weight)
+    context.line_to(x, y - weight)
+    context.line_to(x + radius, y - radius - weight)
+    context.line_to(x + radius + weight, y - radius)
+
 def flow_text(context, width, line_height, text):
     """ Flow a block of text into the given width, returning when needed.
     """
