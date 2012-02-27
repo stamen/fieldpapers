@@ -282,13 +282,14 @@ def get_print_info(print_url):
     print_id = print_.attrib['id']
     paper = print_.find('paper').attrib['size']
     orientation = print_.find('paper').attrib['orientation']
+    layout = print_.find('paper').attrib.get('layout', 'full-page')
 
     north = float(print_.find('bounds').find('north').text)
     south = float(print_.find('bounds').find('south').text)
     east = float(print_.find('bounds').find('east').text)
     west = float(print_.find('bounds').find('west').text)
     
-    return print_id, north, west, south, east, paper, orientation
+    return print_id, north, west, south, east, paper, orientation, layout
 
 def encode_multipart_formdata(fields, files):
     """ fields is a sequence of (name, value) elements for regular form fields.
