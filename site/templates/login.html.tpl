@@ -7,7 +7,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>Login - fieldpapers.org</title>    
+        <title>Log In - fieldpapers.org</title>    
         <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
     </head>
         <body>
@@ -34,9 +34,12 @@
                     
                     <p><input type='submit' id="login_button" value='Log In'/></p>
                     
-                    <input type='hidden' name='action' value='log in'/>
-                    <!--<input type='hidden' name='redirect' value='{$smarty.server.PHP_SELF}' />-->
-                    <input type='hidden' name='redirect' value='{$base_dir}/index.php' />
+                    <p>
+                        <input type='hidden' name='action' value='log in'/>
+                        <!--<input type='hidden' name='redirect' value='{$smarty.server.PHP_SELF}' />-->
+                        <input type='hidden' name='redirect' value='{$base_dir}/index.php' />
+                    </p>
+                    <p>Or, <a href="register.php">create an account</a>.</p>
                 </form>
                 {/if}
             </div>
