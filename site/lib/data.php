@@ -456,7 +456,7 @@
     
     function get_print_page(&$dbh, $print_id, $page_number)
     {
-        $q = sprintf("SELECT print_id, page_number,
+        $q = sprintf("SELECT print_id, page_number, text,
                              provider, preview_url,
                              north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
@@ -483,7 +483,7 @@
     
     function get_print_pages(&$dbh, $print_id)
     {
-        $q = sprintf("SELECT print_id, page_number,
+        $q = sprintf("SELECT print_id, page_number, text,
                      provider, preview_url,
                      north, south, east, west, zoom,
                      (north + south) / 2 AS latitude,
@@ -532,6 +532,71 @@
               WHERE MONTH(created)=%s AND YEAR(created)=%s
               ORDER BY created DESC",
              $dbh->quoteSmart($month), $dbh->quoteSmart($year));
+        
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+            
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            $rows[] = $row;
+        }
+        
+        return $rows;
+    }
+    
+    
+    function get_prints_by_place_woeid(&$dbh, $woeid)
+    {    
+       $q = sprintf("SELECT paper_size, orientation, provider,
+                     pdf_url, preview_url, geotiff_url,
+                     id, north, south, east, west, zoom,
+                     (north + south) / 2 AS latitude,
+                     (east + west) / 2 AS longitude,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(composed) AS composed,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                     country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                     user_id, progress
+              FROM prints
+              WHERE place_woeid=%s
+              ORDER BY created DESC",
+             $dbh->quoteSmart($woeid));
+        
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+            
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+        {
+            $rows[] = $row;
+        }
+        
+        return $rows;
+    }
+    
+    function get_prints_by_country_woeid(&$dbh, $woeid)
+    {    
+       $q = sprintf("SELECT paper_size, orientation, provider,
+                     pdf_url, preview_url, geotiff_url,
+                     id, north, south, east, west, zoom,
+                     (north + south) / 2 AS latitude,
+                     (east + west) / 2 AS longitude,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(composed) AS composed,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                     country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                     user_id, progress
+              FROM prints
+              WHERE country_woeid=%s
+              ORDER BY created DESC",
+             $dbh->quoteSmart($woeid));
         
         $res = $dbh->query($q);
         
@@ -762,7 +827,7 @@
 
         $update_clauses = array();
 
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'provider', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid') as $field)
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'provider', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid', 'text') as $field)
             if(!is_null($page[$field]))
                 if($page[$field] != $old_page[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($page[$field]));
