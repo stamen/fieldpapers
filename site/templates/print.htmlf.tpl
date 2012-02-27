@@ -39,16 +39,17 @@
         <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
         <br />
         {$pages|@count} page(s)
-        <br />
-        <a href="{$print.pdf_url}"><b>Download PDF</b></a>
     </p>
+    <ul><li><a href="{$print.pdf_url}"><b>Download PDF</b></a></li></ul>
+    
     <div class="print" id="map"></div>
     
+    <div class="clearfloat"></div>
     
         <h2>{$pages|@count} pages</h2>
     
         {foreach from=$pages item="page" name="index"}
-            <div class="atlasPage"> 
+            <div class="atlasThumb"> 
                 <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
                 <br />
                 <span class="atlasPageNumber">{$page.page_number}</span>
@@ -56,13 +57,16 @@
         {/foreach}
 
 {else}
-    <p>Preparing your atlas... ({$print.progress*100|string_format:"%d"}% complete)</p>
-    <div class="progressBarCase">
-        <div class="progressBar" style="width: {$print.progress*100}%;"></div>
-    </div>
-    <p>
-        This may take a while, generally a few minutes. You don't need to keep this
-        window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
-        this page</a> and come back later.
-    </p>
+
+	<div class="smallContainer">
+        <p>Preparing your atlas... ({$print.progress*100|string_format:"%d"}% complete)</p>
+        <div class="progressBarCase">
+            <div class="progressBar" style="width: {$print.progress*100}%;"></div>
+        </div>
+        <p>
+            This may take a while, generally a few minutes. You don't need to keep this
+            window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
+            this page</a> and come back later.
+        </p>
+	</div>
 {/if}

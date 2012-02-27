@@ -98,7 +98,7 @@ a:hover, a:active, a:focus {
 .fieldSet table { margin-left: 10px; border: 1px solid #000; }
 .fieldSet td { vertical-align: top; padding: 10px; }
 
-.progressBarCase {background-color:#f5f5f5; border-bottom: 1px solid #000; height: 20px; width:100%; margin: 20px; }
+.progressBarCase {background-color:#f5f5f5; border-bottom: 1px solid #000; height: 20px; width:100%; margin: 40px; }
 .progressBar {background-color:#000; height: 20px; }
 
 #search-form { margin-left: 10px; padding: 20px;}
