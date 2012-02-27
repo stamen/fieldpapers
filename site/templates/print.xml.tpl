@@ -1,5 +1,5 @@
 <print id="{$print.id|escape}{if $print.selected_page}/{$print.selected_page.page_number|escape}{/if}" user="{$print.user_id|escape}" href="http://{$domain}{$base_dir}/print.php?id={$print.id|escape:"url"}{if $print.selected_page}/{$print.selected_page.page_number|escape:"url"}{/if}">
-    <paper size="{$print.paper_size|escape}" orientation="{$print.orientation|escape}" />
+    <paper size="{$print.paper_size|escape}" orientation="{$print.orientation|escape}" layout="{$print.layout|escape}" />
     <provider>{$print.provider|escape}</provider>
     <preview href="{if $print.selected_page}{$print.selected_page.preview_url|escape}{else}{$print.preview_url|escape}{/if}" />
     <pdf href="{$print.pdf_url|escape}" />
