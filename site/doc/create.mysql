@@ -106,6 +106,8 @@ CREATE TABLE pages (
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
+ALTER TABLE pages ADD COLUMN `text` TEXT NULL AFTER page_number;
+
 
 
 DROP TABLE IF EXISTS scans;

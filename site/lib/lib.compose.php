@@ -350,6 +350,7 @@
             
             $explicit_zoom = is_array($p) && is_numeric($p['zoom']);
             $zoom = $explicit_zoom ? intval($p['zoom']) : 16;
+            $text = isset($p['text']) ? $p['text'] : null;
             
             //
             // Determine extent based on geometry type and zoom level.
@@ -395,7 +396,7 @@
             $southeast = $mmap->pointLocation($mmap->dimensions);
             $bounds = array($northwest->lat, $northwest->lon, $southeast->lat, $southeast->lon);
             
-            $message['pages'][] = compact('number', 'provider', 'bounds', 'zoom');
+            $message['pages'][] = compact('number', 'provider', 'bounds', 'zoom', 'text');
         }
         
         //
@@ -416,6 +417,7 @@
         foreach($message['pages'] as $_page)
         {
             $page = add_print_page($dbh, $print['id'], $_page['number']);
+            $page['text'] = $_page['text'];
             
             $page['provider'] = $_page['provider'];
             $page['zoom'] = $_page['zoom'];
