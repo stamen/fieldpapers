@@ -25,9 +25,9 @@
             <p>Scribble on it, draw things, make notes. </p>  
         </div>
         <div class="homeThird">
-            <a href="{$base_dir}/atlas-search-form.php"><img src="{$base_dir}/img/graphic-scan-atlas-large.gif" alt="Hand-drawn graphic to photographing a page in a Field Papers atlas" /></a>
-            <h3><a href="{$base_dir}/atlas-search-form.php">Take pictures of your notes.</a></h3>
-            <p><b><a href="{$base_dir}/upload.php">Upload</a></b> pages you've photographed or scanned. Here are some recent uploads.</p>  
+            <a href="{$base_dir}/scans.php"><img src="{$base_dir}/img/graphic-scan-atlas-large.gif" alt="Hand-drawn graphic to photographing a page in a Field Papers atlas" /></a>
+            <h3><a href="{$base_dir}/scans.php">Take pictures of your notes.</a></h3>
+            <p><b><a href="{$base_dir}/upload.php">Upload</a></b> pages you've photographed or scanned. Here are some <a href="{$base_dir}/scans.php">recent uploads from around the world</a>.</p>  
         </div>
         
         <div class="clearfloat"></div>
