@@ -20,7 +20,7 @@ from ModestMaps.Core import Point
 from cairo import ImageSurface
 from PIL import Image
 
-from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
+from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle, flow_text
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print, update_print, ALL_FINISHED
 from cairoutils import get_drawing_context
@@ -146,19 +146,23 @@ def add_camproberts_questions(ctx, x, y, width, height):
         ctx.set_font_face(font)
         ctx.set_font_size(10)
         
-        ctx.move_to(0, 10)
+        ctx.move_to(0, 12)
+        
+        flow_text(ctx, width, 12, "[TODO: add Ushahidi data here]")
+        ctx.move_to(0, ctx.get_current_point()[1] + 24)
+        
         ctx.show_text('How many buildings are present?')
+        ctx.move_to(0, ctx.get_current_point()[1] + 48)
         
-        ctx.move_to(0, 10 + 50)
         ctx.show_text('What is the percentage of tree coverage?')
+        ctx.move_to(0, ctx.get_current_point()[1] + 48)
         
-        ctx.move_to(0, 10 + 100)
         ctx.show_text('What is the percentage of grass coverage?')
+        ctx.move_to(0, ctx.get_current_point()[1] + 48)
         
-        ctx.move_to(0, 10 + 150)
         ctx.show_text('Are the roads paved, gravel, or dirt?')
+        ctx.move_to(0, ctx.get_current_point()[1] + 48)
         
-        ctx.move_to(0, 10 + 200)
         ctx.show_text('List any signs indicating location names.')
     
     ctx.restore()
