@@ -65,6 +65,9 @@ ALTER TABLE prints ADD COLUMN form_id VARCHAR(8) NULL AFTER id;
 
 ALTER TABLE prints ADD COLUMN progress FLOAT NULL AFTER composed;
 
+ALTER TABLE prints DROP COLUMN layout;
+ALTER TABLE prints ADD COLUMN layout ENUM('half-page', 'full-page') DEFAULT 'full-page' AFTER orientation;
+
 
 
 DROP TABLE IF EXISTS pages;
