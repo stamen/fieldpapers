@@ -5,15 +5,15 @@
             $(document).ready(function() { 
                 var MM = com.modestmaps;
                 
-                var overview_provider = 'http://tiles.teczno.com/bing-lite/{Z}/{X}/{Y}.jpg';
-                var provider = 'http://spaceclaw.stamen.com/toner/{Z}/{X}/{Y}.png';
+                var overview_provider = '{/literal}{$pages[0].provider}{literal}';
+                var main_provider = '{/literal}{$pages[0].provider}{literal}';
                 
                 // Map 1
-                var overview_map = new MM.Map("overview_map", new MM.TemplatedMapProvider(provider),null,[]);
+                var overview_map = new MM.Map("overview_map", new MM.TemplatedMapProvider(overview_provider),null,[]);
                 
                 
                 // Map 2
-                var map = new MM.Map("map", new MM.TemplatedMapProvider(provider),null,[]);
+                var map = new MM.Map("map", new MM.TemplatedMapProvider(main_provider),null,[]);
                 
                 var north = '{/literal}{$print.north}{literal}';
                 var west = '{/literal}{$print.west}{literal}';
@@ -22,7 +22,6 @@
                 
                 var extents = [new MM.Location(north, west), new MM.Location(south, east)];
                 
-                //overview_map.setExtent(extents);
                 map.setExtent(extents);
                 overview_map.setCenterZoom(map.getCenter(),5);
             });
