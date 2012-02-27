@@ -237,14 +237,12 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, cove
 
 parser = OptionParser()
 
-parser.set_defaults(layout='1,1',
-                    bounds=(37.81211263, -122.26755482, 37.80641650, -122.25725514),
+parser.set_defaults(bounds=(37.81211263, -122.26755482, 37.80641650, -122.25725514),
                     zoom=16, paper_size='letter', orientation='landscape',
                     provider='http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')
 
 papers = 'a3 a4 letter'.split()
 orientations = 'landscape portrait'.split()
-layouts = '1,1 2,2 4,4'.split()
 
 parser.add_option('-s', '--paper-size', dest='paper_size',
                   help='Choice of papers: %s.' % ', '.join(papers),
@@ -253,10 +251,6 @@ parser.add_option('-s', '--paper-size', dest='paper_size',
 parser.add_option('-o', '--orientation', dest='orientation',
                   help='Choice of orientations: %s.' % ', '.join(orientations),
                   choices=orientations)
-
-parser.add_option('-l', '--layout', dest='layout',
-                  help='Choice of layouts: %s.' % ', '.join(layouts),
-                  choices=layouts)
 
 parser.add_option('-b', '--bounds', dest='bounds',
                   help='Choice of bounds: north, west, south, east.',
@@ -398,5 +392,5 @@ if __name__ == '__main__':
 
     opts, args = parser.parse_args()
     
-    for d in main(None, None, None, opts.paper_size, opts.orientation, opts.layout, opts.provider, opts.bounds, opts.zoom):
+    for d in main(None, None, None, opts.paper_size, opts.orientation, None, opts.provider, opts.bounds, opts.zoom):
         pass
