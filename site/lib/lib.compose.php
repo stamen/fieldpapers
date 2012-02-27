@@ -56,7 +56,7 @@
         return true;
     }
     
-    function get_printed_dimensions($paper_size, $orientation, $coverage='full')
+    function get_printed_dimensions($paper_size, $orientation, $layout)
     {
         $size_names = array('letter' => 'ltr', 'a3' => 'a3', 'a4' => 'a4');
 
@@ -70,10 +70,10 @@
         // Modify the dimensions of the map to cover half the available area.
         //
         
-        if($orientation == 'LANDSCAPE' && $coverage == 'half') {
+        if($orientation == 'LANDSCAPE' && $layout == 'half-page') {
             $width /= 2;
         
-        } elseif($orientation == 'PORTRAIT' && $coverage == 'half') {
+        } elseif($orientation == 'PORTRAIT' && $layout == 'half-page') {
             $height /= 2;
         }
         
@@ -193,8 +193,9 @@
         header('Content-Type: text/plain');
         
         $extents = $post['pages'];
-        $paper_size = $post['paper_size'];
-        $orientation = $post['orientation'];
+        $paper_size = isset($post['paper_size']) ? $post['paper_size'] : 'letter';
+        $orientation = isset($post['orientation']) ? $post['orientation'] : 'portrait';
+        $layout = isset($post['layout']) ? $post['layout'] : 'full-page';
         $provider = $post['provider'];
 
         //
@@ -202,14 +203,14 @@
         // we'll need to flip the orientation of the overall printed sheet
         // to accommodate it.
         //
-        if($orientation == 'landscape' && 'half' == 'half') {
+        if($orientation == 'landscape' && $layout == 'half-page') {
             $orientation = 'portrait';
         
-        } elseif($orientation == 'portrait' && 'half' == 'half') {
+        } elseif($orientation == 'portrait' && $layout == 'half-page') {
             $orientation = 'landscape';
         }
         
-        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, 'half');
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, $layout);
         $printed_aspect = $printed_width / $printed_height;
         
         // We have all of the information. Make some pages.       
@@ -217,6 +218,7 @@
                          'paper_size' =>        strtolower($paper_size),
                          'orientation' =>       $orientation,
                          'provider' =>          $provider,
+                         'layout' =>            $layout,
                          'pages' =>             array()
                         );            
         
@@ -224,12 +226,12 @@
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
-        $print['coverage'] = 'half';
+        $print['layout'] = $message['layout'];
         
         foreach($extents as $key => $value)
         {
             list($north, $west, $south, $east) = array_map('floatval', explode(',', $value));
-            $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, 'half');
+            $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, $layout);
             $bounds = get_mmap_bounds($mmap);
             
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
@@ -302,20 +304,21 @@
     
         $paper_size = (is_array($p) && isset($p['paper_size'])) ? $p['paper_size'] : 'letter';
         $orientation = (is_array($p) && isset($p['orientation'])) ? $p['orientation'] : 'portrait';
+        $layout = (is_array($p) && isset($p['layout'])) ? $p['layout'] : 'full-page';
         
         //
         // "orientation" above refers to the *map*, so if we want half-size
         // we'll need to flip the orientation of the overall printed sheet
         // to accommodate it.
         //
-        if($orientation == 'landscape' && 'half' == 'half') {
+        if($orientation == 'landscape' && $layout == 'half-page') {
             $orientation = 'portrait';
         
-        } elseif($orientation == 'portrait' && 'half' == 'half') {
+        } elseif($orientation == 'portrait' && $layout == 'half-page') {
             $orientation = 'landscape';
         }
         
-        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, 'half');
+        list($printed_width, $printed_height) = get_printed_dimensions($paper_size, $orientation, $layout);
 
         $printed_aspect = $printed_width / $printed_height;
         $paper_type = "{$orientation}, {$paper_size}";
@@ -323,6 +326,7 @@
         $message = array('action' => 'compose',
                          'paper_size' => $paper_size,
                          'orientation' => $orientation,
+                         'layout' => $layout,
                          'pages' => array());
         
         //
@@ -402,6 +406,7 @@
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
+        $print['layout'] = $message['layout'];
     
         $print['north'] = $message['pages'][0]['bounds'][0];
         $print['south'] = $message['pages'][0]['bounds'][2];

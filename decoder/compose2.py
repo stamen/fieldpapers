@@ -123,7 +123,7 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, coverage='full'):
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout):
     """
     """
     print 'Adding print page:', href
@@ -142,10 +142,10 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, cove
     #
     img = get_mmap_image(mmap)
     
-    if coverage == 'half' and well_aspect_ratio > 1:
+    if layout == 'half-page' and well_aspect_ratio > 1:
         place_image(ctx, img, 0, 0, well_width_pt/2, well_height_pt)
 
-    elif coverage == 'half' and well_aspect_ratio < 1:
+    elif layout == 'half-page' and well_aspect_ratio < 1:
         place_image(ctx, img, 0, 0, well_width_pt, well_height_pt/2)
 
     else:
@@ -263,7 +263,7 @@ parser.add_option('-z', '--zoom', dest='zoom',
 parser.add_option('-p', '--provider', dest='provider',
                   help='Map provider in URL template form.')
 
-def main(apibase, password, print_id, pages, paper_size, orientation):
+def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     """
     """
     yield 5
@@ -281,7 +281,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     _update_print = lambda progress: print_id and update_print(apibase, password, print_id, progress) or None
     
     print 'Print:', print_id
-    print 'Paper:', orientation, paper_size
+    print 'Paper:', orientation, paper_size, layout
     
     #
     # Prepare output context.
@@ -323,7 +323,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
             
             yield 60
             
-            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, 'half')
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout)
             
             #
             # Now make a smaller preview map for the page,
