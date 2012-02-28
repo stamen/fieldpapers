@@ -373,11 +373,12 @@
                         <div class="fieldSet">
                             <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
                         </div>
+                    {/if}
     
                     <div class="page_map" id="map"></div>
                 
                 </div>
-
+                
             {elseif $scan}
                 {include file="en/scan-process-info.htmlf.tpl"}
             {/if}
