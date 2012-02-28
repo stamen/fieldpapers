@@ -6,9 +6,6 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Time - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
-    <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
-    <script type="text/javascript" src="{$base_dir}/script.js"></script>
-    <script type="text/javascript" src="{$base_dir}/index.js"></script>
     <script>
 
     </script>
