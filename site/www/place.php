@@ -12,8 +12,47 @@
     remember_user($dbh);
 
     /**** ... ****/
-        
+    
     $sm = get_smarty_instance();
+    if ($_GET[place_id])
+    {
+        $woeid = $_GET[place_id];
+        $sm->assign('woeid', $woeid);
+        $prints = get_prints_by_place_woeid($dbh, $woeid);
+        
+        $place_name = $prints[0]['place_name'];
+        $country_name = $prints[0]['country_name'];
+        
+        $sm->assign('place_name', $place_name);
+        $sm->assign('country_name', $country_name);
+    }
+    
+    if ($_GET[country_id])
+    {
+        $woeid = $_GET[country_id];
+        $sm->assign('woeid', $woeid);
+        $prints = get_prints_by_country_woeid($dbh, $woeid);
+        
+        $country_name = $prints[0]['country_name'];
+        $sm->assign('country_name', $country_name);
+    }
+            
+    foreach($prints as $i => $print)
+    {   
+        $pages = get_print_pages($dbh, $print['id']);
+        $prints[$i]['number_of_pages'] = count($pages);
+        
+        $user = get_user($dbh, $prints[$i]['user_id']);
+        
+        if ($user['name'])
+        {
+            $prints[$i]['user_name'] = $user['name'];
+        } else {
+            $prints[$i]['user_name'] = 'Anonymous';
+        }
+    }
+    
+    $sm->assign('prints', $prints);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
