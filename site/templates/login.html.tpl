@@ -39,7 +39,7 @@
                         <!--<input type='hidden' name='redirect' value='{$smarty.server.PHP_SELF}' />-->
                         <input type='hidden' name='redirect' value='{$base_dir}/index.php' />
                     </p>
-                    <p>Or, <a href="register.php">create an account</a>.</p>
+                    <p>Or, <a href="registration.php">create an account</a>.</p>
                 </form>
                 {/if}
             </div>
