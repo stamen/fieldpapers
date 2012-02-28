@@ -39,7 +39,8 @@ a:hover, a:active, a:focus { text-decoration: none;}
 
 .homeThird { float: left; width: 320px; text-align: center; }
 
-.atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; border: 1px solid black;}
+.atlasPage { margin-right: 10px; float: left; margin-bottom: 2em; border: 1px solid black;}
+.atlasPage img { width: 300px;}
 .atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
@@ -53,7 +54,7 @@ a:hover, a:active, a:focus { text-decoration: none;}
     /*#map { width: 100%; height: 300px; }*/
     .atlas { width: 100%; height: 300px; }
     .overview_print { width: 60%; float: right; height: 150px; margin-left: 10px; margin-bottom: 10px;}
-    .print { width: 100%; height: 600px; clear: left;}
+    .print { width: 100%; height: 600px; }
     
 .page_map { width: 690px; height: 560px; float: left;}
 #notes_title { margin-left: 20px; }
