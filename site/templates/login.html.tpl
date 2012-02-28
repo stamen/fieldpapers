@@ -24,11 +24,11 @@
                 <form id='login_form' method='post' action='{$base_dir}/login.php'>
                     <h1>Log In</h1>
                     	<p>
-                        	Username:<br />
+                        	Username<br />
                         	<input type='text' name='username' size="30"/>
                         </p>
                         <p>
-                        	Password:<br />
+                        	Password<br />
                            	<input type='password' name='password' size="30"/>
                     	</p>
                     
