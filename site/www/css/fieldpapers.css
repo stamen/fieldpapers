@@ -9,57 +9,28 @@ ul, ol, dl {
 	margin: 0 50px;
 }
 */
-h1, h2, h3, h4, h5, h6, p {
-	margin-top: 0;	 
-	padding-right: 10px;
-	padding-left: 10px; 
-}
-
+h1, h2, h3, h4, h5, h6, p { margin-top: 0; padding-right: 10px; padding-left: 10px; }
 .subHead { font-size: 0.5em; color: #666; font-weight: normal;}
 
 small { font-size: 0.75em; }
 code { background-color: #eee; color: #333; padding: 5px; font-family: "Lucida Console", Monaco, monospace; }
 
-a img { 
-	border: none;
-}
-
-a:link {
-	color: #36F;
-	text-decoration: underline; 
-}
-a:visited {
-	color: #339;
-	text-decoration: underline;
-}
-a:hover, a:active, a:focus { 
-	text-decoration: none;
-}
-
+a img { border: none;}
+a:link {color: #36F;text-decoration: underline; }
+a:visited {color: #339;text-decoration: underline;}
+a:hover, a:active, a:focus { text-decoration: none;}
 .container { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both;}
 .smallContainer { width: 620px; margin-right: auto; margin-left: auto; text-align: left; clear: both; padding-top: 60px; padding-bottom: 50px;}
 
-/* ~~ miscellaneous float/clear classes ~~ */
-.fltrt {  
-	float: right;
-}
-.fltlft { 
-	float: left;
-}
-.clearfloat { 
-	clear:both;
-	height:0;
-	font-size: 1px;
-	line-height: 0px;
-}
+.fltrt { float: right;}
+.fltlft { float: left;}
+.clearfloat { clear:both;height:0;font-size: 1px;line-height: 0px;}
 
 .navbar {width: 960px; padding-top: 20px; margin-right:auto; margin-left:auto; height: 100px; vertical-align: center; }
 .logo {width: 300px; margin-left: 10px; margin-right: 10px; float: left; text-align: center; padding-top: 5px;}
-
 .navbar ul {list-style:none; float: left;}
 .navbar li {width: 140px; margin-left: 10px; display: block; float: left; padding-bottom: 20px;}
 .navbar li.in { border-bottom: 2px solid black;}
-
 .navbar .section {font-weight: bold; font-style:italic; font-size: 0.875em;}
 .navbar .desc { font-size: 0.675em; line-height:1.5em; color: #666; }
 .navbar a:link, .navbar a:visited, .navbar a:visited { text-decoration: none; color: #000; }
@@ -81,7 +52,7 @@ a:hover, a:active, a:focus {
     /*#map { width: 100%; height: 300px; }*/
     .atlas { width: 100%; height: 300px; }
     .overview_print { width: 60%; float: right; height: 150px; margin-left: 10px; margin-bottom: 10px;}
-    .print { width: 100%; height: 600px; }
+    .print { width: 100%; height: 600px; clear: left;}
     
 .page_map { width: 690px; height: 560px; float: left;}
 #notes_title { margin-left: 20px; }
@@ -101,4 +72,4 @@ a:hover, a:active, a:focus {
 
 #search-form { margin-left: 10px; padding: 20px;}
 
-#footer { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both; margin-top: 50px; padding: 10px; font-size: 0.825em; }
+#footer { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both; padding-top: 50px; padding: 10px; font-size: 0.825em; }
