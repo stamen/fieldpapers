@@ -16,9 +16,16 @@
     $print_id = $_GET["id"];
 
     $sm = get_smarty_instance();
-           
+    $sm->assign('flickr_key', FLICKR_KEY);
+               
     $print = get_print($dbh, $print_id);
     $sm->assign('print', $print);
+    
+    $zoom = 12; //Zoom should be in the database
+    
+    $place = latlon_placeinfo($print['north'], $print['west'], $zoom);
+    //$place --> $country_name, $country_woeid, $region_name, $region_woeid, $place_name, $place_woeid
+    $sm->assign('place', $place);
     
     $user = get_user($dbh, $print['user_id']);
     
