@@ -39,8 +39,8 @@ a:hover, a:active, a:focus { text-decoration: none;}
 
 .homeThird { float: left; width: 320px; text-align: center; }
 
-.atlasPage { margin-right: 10px; float: left; margin-bottom: 2em; border: 1px solid black;}
-.atlasPage img { width: 300px;}
+.atlasPage { margin-right: 10px; float: left; margin-bottom: 2em; }
+.atlasPage img { width: 300px; border: 1px solid black; }
 .atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
