@@ -100,8 +100,8 @@
             <div class="progressBar" style="width: {$print.progress*100}%;"></div>
         </div>
         <p>
-            This may take a while, generally a few minutes. You don't need to keep this
-            window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
+            This may take a while, generally a few minutes. <br /><br />
+			You don't need to keep this window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
             this page</a> and come back later.
         </p>
 	</div>
