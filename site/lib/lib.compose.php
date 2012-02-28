@@ -221,8 +221,8 @@
                          'provider' =>          $provider,
                          'layout' =>            $layout,
                          'pages' =>             array()
-                        );       
-                
+                        );            
+        
         $print = add_print(&$dbh, $user_id);
         
         $print['paper_size'] = $message['paper_size'];
@@ -246,7 +246,7 @@
             $print['east'] = $bounds[3];
             $print['west'] = $bounds[1];
         }
-                
+
         foreach($message['pages'] as $key => $value)
         {
             $number = $key + 1;
@@ -272,7 +272,7 @@
         }
         
         // Deal with WOEIDs   
-        $place = latlon_placeinfo($print['north'], $print['west'], $post['page_zoom']);
+        $place = latlon_placeinfo(.5 * ($print['north'] + $print['south']), .5 * ($print['west'] + $print['east']), $post['page_zoom']);
         $print['country_name'] = $place[0];
         $print['country_woeid'] = $place[1];
         $print['region_name'] = $place[2];
