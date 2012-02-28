@@ -28,21 +28,28 @@
                 	<div class="buttonBar">
                         <button type="button" onClick= "addMarkerNote()">Add Note</button>
                     </div>
-                    <h4>
+                    <p>
                         Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
                         <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
-                    </h4>
+                    </p>
                 </p>
             
-                <div class="mapFormHolder">
-    
-                    {if $form.form_url}
+                {if $form.form_url}
+
+                    <div class="mapFormHolder">
                         <div class="fieldSet">
                             <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
                         </div>
-                    {/if}
+                        <div class="page_map small" id="map"></div>
+                    </div>
+                    
+				{else}
+
+                    <div class="page_map large" id="map"></div>
+                                
+                {/if}
+
     
-                    <div class="page_map" id="map"></div>
                     
                 <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
                     <input id="notes_submit" type="submit" value="Submit" />
@@ -390,41 +397,6 @@
             {/if}
             {include file="footer.htmlf.tpl"}
         </div>
-
-
-
-
-<!-- Hide for a secondo                    
-        
-            {if $scan && $scan.decoded}
-                <p>
-                	<div class="buttonBar">
-                        <div>
-                            <button type="button" onClick= "addMarkerNote()">Add Note</button>
-                        </div>                    
-                    </div>
-                
-                    <small>
-                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
-                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
-                    </small>
-                </p>
-                <div class="fieldSet">
-                    {if $form.form_url}
-                        <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
-                    {else}
-                        <div style="float: left; margin-left: 20px">There are no forms associated with this scan.</div>
-                    {/if}
-                </div>            
-            
-                <div class="page_map" id="map"></div>
-                
-    {elseif $scan}
-        {include file="en/scan-process-info.htmlf.tpl"}
-    {/if}
-        {include file="footer.htmlf.tpl"}
-    </div>
--->
     
 </body>
 </html>

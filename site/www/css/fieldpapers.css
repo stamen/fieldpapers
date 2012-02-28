@@ -61,15 +61,15 @@ a:hover, a:active, a:focus { text-decoration: none;}
 /* SCAN.PHP */
 	
 .buttonBar {float: right; text-align: right; padding: 10px; }
-.buttonBar button { margin-left: 20px; margin-top: 20px; font-size: 1.25em;}
+.buttonBar button { margin-left: 20px; font-size: 1.25em;}
 
-.fieldSet {  margin-left: 20px; float: right; }
-.fieldSet iframe { margin-left: 20px; width: 100%; height: 600px}
-.fieldSet table { margin-left: 10px; border: 1px solid #000; }
-.fieldSet td { vertical-align: top; padding: 10px; }
+.fieldSet { background-color: #444; float: right; }
+.fieldSet iframe { }
 
-.page_map { width: 600px; height: 400px; float: right; }
+.page_map { float: right; }
 .page_map img { }
+.large { width: 960px; height: 500px; }
+.small { width: 600px; height: 400px;}
 
 #notes_title { margin-left: 20px; }
 #notes { margin: 20px; }
