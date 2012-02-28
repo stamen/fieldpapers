@@ -25,7 +25,13 @@
                 name="atlasPage" width="100%" id="atlasPage" /></a>
                 <span class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></span>
                 <span class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a></span>,
-                <span class="atlasPlace">in <a href="{$base_dir}/place.php">Place</a></span><br />
+                <span class="atlasPlace">in <a href="{$base_dir}/place.php">
+                {if $print.country_name}
+                    {$print.country_name}
+                {else}
+                    Unknown Place
+                {/if}
+                </a></span>
                 <span class="atlasMeta">                    
                     {if $print.number_of_pages == 1}
                         1 page,
