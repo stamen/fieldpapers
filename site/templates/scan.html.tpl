@@ -19,40 +19,6 @@
 </head>
 <body> 
 
-	{include file="navigation.htmlf.tpl"}
-        <div class="container">
-        
-            {if $scan && $scan.decoded}
-            
-                <p>
-                	<div class="buttonBar">
-                        <button type="button" onClick= "addMarkerNote()">Add Note</button>
-                    </div>
-                    <h4>
-                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
-                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
-                    </h4>
-                </p>
-            
-                <div class="mapFormHolder">
-    
-                    {if $form.form_url}
-                        <div class="fieldSet">
-                            <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
-                        </div>
-                    {/if}
-    
-                    <div class="page_map" id="map"></div>
-                
-                </div>
-                
-            {elseif $scan}
-                {include file="en/scan-process-info.htmlf.tpl"}
-            {/if}
-            {include file="footer.htmlf.tpl"}
-        </div>
-
-
                 <script type="text/javascript">
                 // <![CDATA[{literal}    
                     var markerNumber = -1;
@@ -379,12 +345,48 @@
                         extents = [new MM.Location(north, west), new MM.Location(south, east)];
                     
                     map.setExtent(extents);
-                    map.zoomIn();
+                    map.setZoom(14);
                     
                     displaySavedNotes();
                         
                 // {/literal}]]>
                 </script>
+
+
+	{include file="navigation.htmlf.tpl"}
+        <div class="container">
+        
+            {if $scan && $scan.decoded}
+            
+                <p>
+                	<div class="buttonBar">
+                        <button type="button" onClick= "addMarkerNote()">Add Note</button>
+                    </div>
+                    <h4>
+                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
+                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
+                    </h4>
+                </p>
+            
+                <div class="mapFormHolder">
+    
+                    {if $form.form_url}
+                        <div class="fieldSet">
+                            <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
+                        </div>
+                    {/if}
+    
+                    <div class="page_map" id="map"></div>
+                
+                </div>
+                
+            {elseif $scan}
+                {include file="en/scan-process-info.htmlf.tpl"}
+            {/if}
+            {include file="footer.htmlf.tpl"}
+        </div>
+
+
 
 
 <!-- Hide for a secondo                    
