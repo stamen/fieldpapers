@@ -39,7 +39,30 @@
         {/literal}
     </script>
     
-    {if $pages}
+    {if $print.selected_page}
+        <div class="overview_print" id="overview_map"></div>
+        <h1>
+            Untitled
+        </h1>
+        <p>
+            <b><a href='{$base_dir}/place.php?place_id={$place_id}'>{$place[4]}</a>, <a href='{$base_dir}/place.php?country_id={$place[1]}'>{$place[0]}</a></b><br />
+            Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
+            <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
+        </p>
+        <ul><li><a href="{$print.pdf_url}"><b>Download PDF</b></a></li></ul>
+        
+        <div class="print" id="map"></div>
+        
+        <div class="clearfloat"></div>
+        
+        <h2>Individual Page</h2>
+        
+        <div class="atlasPage"> 
+            <img src="{$print.selected_page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
+            <br />
+            <span class="atlasPageNumber">{$print.selected_page.page_number}</span>
+        </div>
+    {else}
         <div class="overview_print" id="overview_map"></div>
         <h1>
             Untitled
@@ -66,29 +89,6 @@
                     <span class="atlasPageNumber">{$page.page_number}</span>
                 </div>
             {/foreach}
-    {else}
-        <div class="overview_print" id="overview_map"></div>
-        <h1>
-            Untitled
-        </h1>
-        <p>
-            <b><a href='{$base_dir}/place.php?place_id={$place_id}'>{$place[4]}</a>, <a href='{$base_dir}/place.php?country_id={$place[1]}'>{$place[0]}</a></b><br />
-            Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
-            <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
-        </p>
-        <ul><li><a href="{$print.pdf_url}"><b>Download PDF</b></a></li></ul>
-        
-        <div class="print" id="map"></div>
-        
-        <div class="clearfloat"></div>
-        
-        <h2>Individual Page</h2>
-        
-        <div class="atlasPage"> 
-            <img src="{$print.selected_page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
-            <br />
-            <span class="atlasPageNumber">{$print.selected_page.page_number}</span>
-        </div>
     {/if}
 
 {else}
