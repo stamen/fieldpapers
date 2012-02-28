@@ -71,7 +71,7 @@
         <h2>{$pages|@count} pages</h2>
     
         {foreach from=$pages item="page" name="index"}
-            <div class="atlasThumb"> 
+            <div class="atlasPage"> 
                 <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
                 <br />
                 <span class="atlasPageNumber">{$page.page_number}</span>
