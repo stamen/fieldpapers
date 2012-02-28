@@ -33,7 +33,13 @@
                     name="atlasPage" width="100%" id="atlasPage" /></a>
                     
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
-                    <div class="atlasPlace"><a href="place.php">Place</a></div>
+                    <div class="atlasPlace"><a href="place.php">
+                    {if $print.country_name}
+                        {$print.country_name}
+                    {else}
+                        Unknown Place
+                    {/if}
+                    </a></div>
                     <div class="atlasMeta">
                     {if $print.number_of_pages == 1}
                         1 page,
