@@ -815,10 +815,10 @@
             <input type="radio" id="radio_landscape" name="orientation" value="landscape" onclick="changeOrientation(this.value)"> Landscape
             <input type="radio" id="radio_portrait" name="orientation" value="portrait" onclick="changeOrientation(this.value)"> Portrait
             <select style="margin-left:10px" name="provider" onchange="setProvider(this.value);">
+                <option>Bing/Toner</option>
                 <option>Open Street Map</option>
                 <option>Bing Aerial</option>
                 <option>Toner</option>
-                <option>Bing/Toner</option>
             </select>
             <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 940px; position: absolute;">
                 <input type="hidden" name="action" value="compose">
