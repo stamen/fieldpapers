@@ -63,13 +63,13 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .buttonBar {float: right; text-align: right; padding: 10px; }
 .buttonBar button { margin-left: 20px; font-size: 1.25em;}
 
-.fieldSet { background-color: #444; float: right; width: 360px; padding: 10px; }
-.fieldSet iframe { height: 380px;}
+.fieldSet { background-color: #6F6; float: right; width: 400px; margin-left: 20px; }
+.fieldSet iframe { height: 380px; width: 400px;}
 
 .page_map { float: right; }
 .page_map img { }
 .large { width: 960px; height: 600px; }
-.small { width: 600px; height: 400px;}
+.small { width: 520px; height: 400px;}
 
 #notes_title { margin-left: 20px; }
 #notes { margin: 20px; }
