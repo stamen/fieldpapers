@@ -72,7 +72,7 @@
                         div.className = 'marker';
                         
                         var img = document.createElement('img');
-                        img.src = 'img/eye_new.png';
+                        img.src = 'img/icon_x_mark_new.png';
                         div.appendChild(img);
                         
                         var br = document.createElement('br');
@@ -202,7 +202,7 @@
                         div.className = 'marker';
                         
                         var img = document.createElement('img');
-                        img.src = 'img/eye.png';
+                        img.src = 'img/icon_x_mark.png';
                         div.appendChild(img);
                         
                         div.title = note;
@@ -269,12 +269,12 @@
                         
                         img.onmouseover = function(e)
                         {
-                            img.src = 'img/eye_hover.png';
+                            img.src = 'img/icon_x_mark_hover.png';
                         }
                         
                         img.onmouseout = function(e)
                         {
-                            img.src = 'img/eye.png';
+                            img.src = 'img/icon_x_mark.png';
                         }
                         
                         var mousemove = false;
@@ -391,31 +391,33 @@
                 // {/literal}]]>
                 </script>
                 
+                
+                <p>
+                	<div class="buttonBar">
+                        <div>
+                            <button type="button" onClick= "addMarkerNote()">
+                           		Add a Note
+                            </button>
+                        </div>
+                        
+                        <div>
+                            <button type="button" onClick= "document.getElementById('scan-form').submit();">
+                            	Save All
+                            </button>
+                        </div>                    
+                    </div>
+                
+                    <small>
+                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
+                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
+                    </small>
+                </p>
                 <div class="fieldSet">
                     {if $form.form_url}
-                        <iframe style="margin-left: 20px;" width="500px" 
-                        height="450px" align="middle" frameborder="0"
-                        src="{$form.form_url}">
-                        </iframe>
+                        <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
                     {else}
-                        <div style='float: left; margin-left: 20px'>There are no forms associated with this scan.</div>
+                        <div style="float: left; margin-left: 20px">There are no forms associated with this scan.</div>
                     {/if}
-                    <br/>
-                    <div>
-                        <button style='float: left; margin-left: 20px; 
-                                margin-top: 20px;' type="button" 
-                                onClick= "addMarkerNote()">
-                        Add Note
-                        </button>
-                    </div>
-                    
-                    <div>
-                        <button style='float: left; margin-left: 20px; 
-                                margin-top: 20px;' type="button" 
-                                onClick= "document.getElementById('scan-form').submit();">
-                        Submit Notes
-                        </button>
-                    </div>
                 </div>
     {elseif $scan}
         {include file="en/scan-process-info.htmlf.tpl"}
