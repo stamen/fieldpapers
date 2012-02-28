@@ -262,8 +262,8 @@
             ////
             var MM = com.modestmaps;
             
-            var osm_provider = new MM.TemplatedMapProvider('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png');
-            map_layer = new MM.Layer(osm_provider);
+            var bing_toner_provider = new MM.TemplatedMapProvider('http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg');
+            map_layer = new MM.Layer(bing_toner_provider);
             
             setMapHeight();
             
@@ -273,7 +273,7 @@
             
             // Initialize value of page_zoom input
             document.getElementById('page_zoom').value = 12;
-            document.getElementById('provider').value = 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
+            document.getElementById('provider').value = 'http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg';
             
             ////
             // UI
