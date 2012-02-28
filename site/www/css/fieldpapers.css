@@ -12,6 +12,8 @@ ul, ol, dl {
 h1, h2, h3, h4, h5, h6, p { margin-top: 0; padding-right: 10px; padding-left: 10px; }
 .subHead { font-size: 0.5em; color: #666; font-weight: normal;}
 
+img { border: 1px solid black }
+
 small { font-size: 0.75em; }
 code { background-color: #eee; color: #333; padding: 5px; font-family: "Lucida Console", Monaco, monospace; }
 input { font-size: 1.25em; padding: 3px; }
@@ -28,7 +30,7 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .clearfloat { clear:both;height:0;font-size: 1px;line-height: 0px;}
 
 .navbar {width: 960px; padding-top: 20px; margin-right:auto; margin-left:auto; height: 100px; vertical-align: center; }
-.logo {width: 300px; margin-left: 10px; margin-right: 10px; float: left; text-align: center; padding-top: 5px;}
+.logo {width: 300px; margin-left: 10px; margin-right: 10px; float: left; text-align: center; padding-top: 5px; border: none;}
 .navbar ul {list-style:none; float: left;}
 .navbar li {width: 140px; margin-left: 10px; display: block; float: left; padding-bottom: 20px;}
 .navbar li.in { border-bottom: 2px solid black;}
@@ -38,9 +40,10 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .navbar a:hover { text-decoration: none; color: #09F; }
 
 .homeThird { float: left; width: 320px; text-align: center; }
+.homeThird img { border: none; }
 
 .atlasPage { margin-right: 10px; float: left; margin-bottom: 2em; }
-.atlasPage img { width: 300px; border: 1px solid black; }
+.atlasPage img { width: 300px; }
 .atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
