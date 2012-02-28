@@ -53,8 +53,8 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .hotSpot { width: 48%; margin-left: 10px; margin-bottom: 2em; float: left;}
     /*#map { width: 100%; height: 300px; }*/
     .atlas { width: 100%; height: 300px; }
-    .overview_print { width: 60%; float: right; height: 150px; margin-left: 10px; margin-bottom: 10px;}
-    .print { width: 100%; height: 600px; }
+    .overview_print { width: 60%; float: right; height: 150px; margin-left: 10px; margin-bottom: 10px; border: 1px solid black;}
+    .print { width: 100%; height: 600px; border: 1px solid black;}
     
 .page_map { width: 690px; height: 560px; float: left;}
 #notes_title { margin-left: 20px; }
