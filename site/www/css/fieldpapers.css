@@ -65,10 +65,9 @@ a:hover, a:active, a:focus {
 .navbar a:link, .navbar a:visited, .navbar a:visited { text-decoration: none; color: #000; }
 .navbar a:hover { text-decoration: none; color: #09F; }
 
-.homeThird { float: left; width: 320px; text-align: center;}
+.homeThird { float: left; width: 320px; text-align: center; }
 
-
-.atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; }
+.atlasPage { margin-left: 10px; float: left; margin-bottom: 2em; border: 1px solid black;}
 .atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
