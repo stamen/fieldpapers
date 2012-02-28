@@ -6,7 +6,6 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Person - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
@@ -33,7 +32,7 @@
                     name="atlasPage" width="100%" id="atlasPage" /></a>
                     
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
-                    <div class="atlasPlace"><a href="place.php">
+                    <div class="atlasPlace"><a href="{$base_dir}/place.php?country_id={$print.country_woeid}">
                     {if $print.country_name}
                         {$print.country_name}
                     {else}
