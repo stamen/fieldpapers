@@ -43,9 +43,9 @@
         {        
             if (provider === "Bing/Toner")
             {
-                var tileURL = 'http://tilefarm.stamen.com/boner/{Z}/{X}/{Y}.jpg';
+                var tileURL = 'http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg';
             } else if (provider === "Bing Aerial") {
-                var tileURL = 'http://tilefarm.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg';
+                var tileURL = 'http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg';
             } else if (provider === "Toner") {
                 var tileURL = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
             } else if (provider === "Open Street Map") {
