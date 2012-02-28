@@ -62,18 +62,50 @@ a:hover, a:active, a:focus { text-decoration: none;}
 	
 /* SCAN.PHP */
 	
-.page_map { width: 960px; height: 600px; }
+.page_map { width: 600px; height: 400px; float: left; }
 .buttonBar {float: right; text-align: right; padding: 10px; }
 .buttonBar button { margin-left: 20px; margin-top: 20px; font-size: 1.25em;}
 #notes_title { margin-left: 20px; }
 #notes { margin: 20px; }
 #notes_submit { margin-left: 20px; }
 
+    /* <![CDATA[{literal} */
+    
+        #scan-form,
+        #scan-form .marker
+        {
+            position: absolute;
+        }
+        
+        #scan-form .marker img
+        {
+            cursor: pointer;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        .show {
+            display: block;
+        }
+        
+        #notes {
+            margin: 10px;
+        
+        }
+        
+        #remove, #remove_new {
+            margin-left: 10px;
+        }
+        
+    /* {/literal}]]> */
+
 .AtlasList {width: 75%;}
 .FieldsetList {width: 20%; margin-right: 20px;}
 
 .largePage { float: left; }
-.fieldSet {  margin-left: 20px; }
+.fieldSet {  margin-left: 20px; float: left; }
 .fieldSet iframe { margin-left: 20px; width: 320px; height: 450px}
 .fieldSet table { margin-left: 10px; border: 1px solid #000; }
 .fieldSet td { vertical-align: top; padding: 10px; }
