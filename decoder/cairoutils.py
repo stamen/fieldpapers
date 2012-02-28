@@ -58,6 +58,9 @@ class FakeContext:
         self.stack = [(1, 0, 0, 0, -1, height)]
         self.affine = Affine(*self.stack[0])
     
+    def get_current_point(self):
+        return self.point.x, self.point.y
+    
     def command(self, text, *args):
         if args:
             self.page.append((text, args))
@@ -120,6 +123,15 @@ class FakeContext:
     def move_to(self, x, y):
         self.point = Point(x, y)
         self.command('%.3f %.3f m' % (x, y))
+
+    def line_to(self, x, y):
+        self.point = Point(x, y)
+        self.command('%.3f %.3f l' % (x, y))
+
+    def rel_move_to(self, x, y):
+        end = Point(x, y).add(self.point)
+        self.point = end
+        self.command('%.3f %.3f m' % (end.x, end.y))
 
     def rel_line_to(self, x, y):
         end = Point(x, y).add(self.point)
@@ -199,6 +211,8 @@ class FakeContext:
         self.command('q 1 0 0 -1 0 0 cm BT %.3f %.3f Td (%s) Tj ET Q' % (x, -y, text))
 
     def text_extents(self, text):
+        """ Width is the third element of the returned array.
+        """
         return self.context.text_extents(text)
 
 def get_drawing_context(print_filename, page_width_pt, page_height_pt):

@@ -4,7 +4,11 @@
     {
         $geojson = array(
             'type' => 'FeatureCollection',
-            'properties' => array('paper_size' => $print['paper_size'], 'orientation' => $print['orientation']),
+            'properties' => array(
+                'paper_size' => $print['paper_size'],
+                'orientation' => $print['orientation'],
+                'layout' => $print['layout']
+            ),
             'features' => array()
         );
         

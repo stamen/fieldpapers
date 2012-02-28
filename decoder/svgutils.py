@@ -1,4 +1,6 @@
 import ctypes
+from re import compile, DOTALL
+
 from cairo import ImageSurface, Context, FORMAT_A8
 
 def place_image(context, img, x, y, width, height):
@@ -39,6 +41,53 @@ def draw_circle(context, x, y, radius):
     context.rel_curve_to(0, bezier, -bezier, radius, -radius, radius)
     context.rel_curve_to(-bezier, 0, -radius, -bezier, -radius, -radius)
     context.rel_curve_to(0, -bezier, bezier, -radius, radius, -radius)
+
+def draw_cross(context, x, y, radius, weight):
+    """
+    """
+    context.move_to(x + weight, y)
+    context.line_to(x + radius + weight, y + radius)
+    context.line_to(x + radius, y + radius + weight)
+    context.line_to(x, y + weight)
+    context.line_to(x - radius, y + radius + weight)
+    context.line_to(x - radius - weight, y + radius)
+    context.line_to(x - weight, y)
+    context.line_to(x - radius - weight, y - radius)
+    context.line_to(x - radius, y - radius - weight)
+    context.line_to(x, y - weight)
+    context.line_to(x + radius, y - radius - weight)
+    context.line_to(x + radius + weight, y - radius)
+
+def flow_text(context, width, line_height, text):
+    """ Flow a block of text into the given width, returning when needed.
+    """
+    still = compile(r'^\S')
+    words = compile(r'^(\S+(\s*))(.*)$', DOTALL)
+    
+    CR, LF = '\r', '\n'
+    text = text.replace(CR+LF, LF).replace(CR, LF)
+    
+    while still.match(text):
+        match = words.match(text)
+        head, space, text = match.group(1), match.group(2), match.group(3)
+        
+        head_extent = context.text_extents(head)
+        head_width, x_advance = head_extent[2], head_extent[4]
+        
+        x, y = context.get_current_point()
+
+        # will we move too far to the right with this word?
+        if x + head_width > width:
+            context.move_to(0, y + line_height)
+        
+        context.show_text(head)
+        context.rel_move_to(x_advance, 0)
+        
+        # apply newline if necessary
+        while LF in space:
+            y = context.get_current_point()[1]
+            context.move_to(0, y + line_height)
+            space = space[1 + space.index(LF):]
 
 def create_cairo_font_face_for_file(filename, faceindex=0, loadoptions=0):
     """

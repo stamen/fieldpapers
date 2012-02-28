@@ -20,7 +20,7 @@ from ModestMaps.Core import Point
 from cairo import ImageSurface
 from PIL import Image
 
-from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle
+from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle, draw_cross, flow_text
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
 from apiutils import append_print_file, finish_print, update_print, ALL_FINISHED
 from cairoutils import get_drawing_context
@@ -123,13 +123,42 @@ def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height)
     
     return mmap
 
-def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
+def add_page_text(ctx, text, x, y, width, height):
+    """
+    """
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.move_to(0, 12)
+    
+    try:
+        font_file = realpath('fonts/Helvetica.ttf')
+    
+        if font_file not in cached_fonts:
+            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
+        
+        font = cached_fonts[font_file]
+
+    except:
+        # hm.
+        pass
+
+    else:
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_font_face(font)
+        ctx.set_font_size(10)
+        
+        flow_text(ctx, width, 12, text)
+    
+    ctx.restore()
+
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark):
     """
     """
     print 'Adding print page:', href
     
     well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
     well_width_pt, well_height_pt = well_xmax_pt - well_xmin_pt, well_ymax_pt - well_ymin_pt
+    well_aspect_ratio = well_width_pt / well_height_pt
     
     #
     # Offset drawing area to top-left of map area
@@ -139,12 +168,38 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
     #
     # Build up map area
     #
-    draw_box(ctx, 0, 0, well_width_pt, well_height_pt)
-    ctx.set_source_rgb(.9, .9, .9)
-    ctx.fill()
-    
     img = get_mmap_image(mmap)
-    place_image(ctx, img, 0, 0, well_width_pt, well_height_pt)
+    
+    if layout == 'half-page' and well_aspect_ratio > 1:
+        map_width_pt, map_height_pt = well_width_pt/2, well_height_pt
+        add_page_text(ctx, text, map_width_pt + 24, 24, map_width_pt - 48, map_height_pt - 48)
+
+    elif layout == 'half-page' and well_aspect_ratio < 1:
+        map_width_pt, map_height_pt = well_width_pt, well_height_pt/2
+        add_page_text(ctx, text, 32, map_height_pt + 16, map_width_pt - 64, map_height_pt - 32)
+
+    else:
+        map_width_pt, map_height_pt = well_width_pt, well_height_pt
+
+    place_image(ctx, img, 0, 0, map_width_pt, map_height_pt)
+    
+    #
+    # X marks the spot, if needed
+    #
+    if mark is not None:
+        loc = Location(mark[1], mark[0])
+        pt = mmap.locationPoint(loc)
+
+        x = map_width_pt * float(pt.x) / mmap.dimensions.x
+        y = map_height_pt * float(pt.y) / mmap.dimensions.y
+        
+        draw_cross(ctx, x, y, 8, 6)
+        ctx.set_source_rgb(1, 1, 1)
+        ctx.fill()
+        
+        draw_cross(ctx, x, y, 8, 4)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.fill()
     
     #
     # Calculate positions of registration points
@@ -232,14 +287,12 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio):
 
 parser = OptionParser()
 
-parser.set_defaults(layout='1,1',
-                    bounds=(37.81211263, -122.26755482, 37.80641650, -122.25725514),
+parser.set_defaults(bounds=(37.81211263, -122.26755482, 37.80641650, -122.25725514),
                     zoom=16, paper_size='letter', orientation='landscape',
                     provider='http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')
 
 papers = 'a3 a4 letter'.split()
 orientations = 'landscape portrait'.split()
-layouts = '1,1 2,2 4,4'.split()
 
 parser.add_option('-s', '--paper-size', dest='paper_size',
                   help='Choice of papers: %s.' % ', '.join(papers),
@@ -248,10 +301,6 @@ parser.add_option('-s', '--paper-size', dest='paper_size',
 parser.add_option('-o', '--orientation', dest='orientation',
                   help='Choice of orientations: %s.' % ', '.join(orientations),
                   choices=orientations)
-
-parser.add_option('-l', '--layout', dest='layout',
-                  help='Choice of layouts: %s.' % ', '.join(layouts),
-                  choices=layouts)
 
 parser.add_option('-b', '--bounds', dest='bounds',
                   help='Choice of bounds: north, west, south, east.',
@@ -264,7 +313,7 @@ parser.add_option('-z', '--zoom', dest='zoom',
 parser.add_option('-p', '--provider', dest='provider',
                   help='Map provider in URL template form.')
 
-def main(apibase, password, print_id, pages, paper_size, orientation):
+def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     """
     """
     yield 5
@@ -282,7 +331,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
     _update_print = lambda progress: print_id and update_print(apibase, password, print_id, progress) or None
     
     print 'Print:', print_id
-    print 'Paper:', orientation, paper_size
+    print 'Paper:', orientation, paper_size, layout
     
     #
     # Prepare output context.
@@ -315,6 +364,9 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
         
             provider = TemplatedMercatorProvider(page['provider'])
             zoom = page['zoom']
+
+            mark = page.get('mark', None) or None
+            text = str(page.get('text', None) or '')
             
             north, west, south, east = page['bounds']
             northwest = Location(north, west)
@@ -324,7 +376,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation):
             
             yield 60
             
-            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio)
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark)
             
             #
             # Now make a smaller preview map for the page,
@@ -393,5 +445,5 @@ if __name__ == '__main__':
 
     opts, args = parser.parse_args()
     
-    for d in main(None, None, None, opts.paper_size, opts.orientation, opts.layout, opts.provider, opts.bounds, opts.zoom):
+    for d in main(None, None, None, opts.paper_size, opts.orientation, None, opts.provider, opts.bounds, opts.zoom):
         pass
