@@ -20,6 +20,7 @@
                
     $print = get_print($dbh, $print_id);
     $sm->assign('print', $print);
+    $sm->assign('place_id', $print['place_woeid']);
     
     $zoom = 12; //Zoom should be in the database
     

@@ -2,7 +2,7 @@
     <script>
         var map = null;
         {literal}
-            /*
+            
             function jsonFlickrApi(res, node)
             {
                 console.log('res',res);
@@ -18,7 +18,7 @@
                 
                 return false;
             }
-            */
+            
             
             $(document).ready(function() { 
                 var MM = com.modestmaps;
@@ -44,8 +44,8 @@
                 overview_map.setCenterZoom(map.getCenter(),5);
                 
                 // Get Place name
-                //var flickr_key = {/literal}'{$flickr_key}'{literal};
-                //getPlacename(north, west, flickr_key, jsonFlickrApi);
+                var flickr_key = {/literal}'{$flickr_key}'{literal};
+                getPlacename(north, west, flickr_key, jsonFlickrApi);
             });
         {/literal}
     </script>
@@ -56,7 +56,7 @@
         Untitled
     </h1>
     <p>
-        <b><a href='{$base_dir}/place.php?place_id={$place[5]}'>{$place[4]}</a>, <a href='{$base_dir}/place.php?country_id={$place[1]}'>{$place[0]}</a></b><br />
+        <b><a href='{$base_dir}/place.php?place_id={$place_id}'>{$place[4]}</a>, <a href='{$base_dir}/place.php?country_id={$place[1]}'>{$place[0]}</a></b><br />
         Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
         <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
         <br />
