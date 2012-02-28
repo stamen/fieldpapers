@@ -262,9 +262,9 @@ def read_code(image):
     if not decoded.startswith('http://'):
         raise CodeReadException('Attempt to read QR code failed')
     
-    print_id, north, west, south, east, paper, orientation = get_print_info(decoded)
+    print_id, north, west, south, east, paper, orientation, layout = get_print_info(decoded)
 
-    return print_id, north, west, south, east, paper, orientation
+    return print_id, north, west, south, east, paper, orientation, layout
 
 def get_paper_size(paper, orientation):
     """
@@ -388,7 +388,7 @@ def main(apibase, password, scan_id, url):
             yield 10
     
             try:
-                print_id, north, west, south, east, _paper, _orientation = read_code(qrcode_img)
+                print_id, north, west, south, east, _paper, _orientation, _layout = read_code(qrcode_img)
             except CodeReadException:
                 print >> stderr, 'could not read the QR code.'
                 continue
