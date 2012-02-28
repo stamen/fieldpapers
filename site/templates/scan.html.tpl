@@ -14,44 +14,6 @@
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     {/if}
-</head>
-<body>      
-        {include file="navigation.htmlf.tpl"}
-        <div class="container">
-            {if $scan && $scan.decoded}
-                <p>
-                	<div class="buttonBar">
-                        <div>
-                            <button type="button" onClick= "addMarkerNote()">
-                           		Add a Note
-                            </button>
-                        </div>
-                        
-                        <div>
-                            <button type="button" onClick= "document.getElementById('scan-form').submit();">
-                            	Save All
-                            </button>
-                        </div>                    
-                    </div>
-                
-                    <small>
-                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
-                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
-                    </small>
-                </p>
-                <div class="fieldSet">
-                    {if $form.form_url}
-                        <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
-                    {else}
-                        <div style="float: left; margin-left: 20px">There are no forms associated with this scan.</div>
-                    {/if}
-                </div>            
-            
-                <div class="page_map" id="map"></div>
-
-                <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
-                    <!--<input id="notes_submit" type="submit" value="Submit" />-->
-                </form>
 
                 <script type="text/javascript">
                 // <![CDATA[{literal}    
@@ -385,11 +347,82 @@
                         
                 // {/literal}]]>
                 </script>
+
+
+</head>
+<body> 
+
+	{include file="navigation.htmlf.tpl"}
+        <div class="container">
+        
+            {if $scan && $scan.decoded}
+            
+                <p>
+                	<div class="buttonBar">
+                        <button type="button" onClick= "addMarkerNote()">Add Note</button>
+                    </div>
+                    <h4>
+                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
+                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
+                    </h4>
+                </p>
+            
+                <div class="mapFormHolder">
+    
+                    {if $form.form_url}
+                        <div class="fieldSet">
+                            <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
+                        </div>
+    
+                    <div class="page_map" id="map"></div>
+                
+                </div>
+
+            {elseif $scan}
+                {include file="en/scan-process-info.htmlf.tpl"}
+            {/if}
+            {include file="footer.htmlf.tpl"}
+        </div>
+
+
+
+<!-- Hide for a secondo                    
+        
+            {if $scan && $scan.decoded}
+                <p>
+                	<div class="buttonBar">
+                        <div>
+                            <button type="button" onClick= "addMarkerNote()">Add Note</button>
+                        </div>                    
+                    </div>
+                
+                    <small>
+                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
+                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
+                    </small>
+                </p>
+                <div class="fieldSet">
+                    {if $form.form_url}
+                        <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
+                    {else}
+                        <div style="float: left; margin-left: 20px">There are no forms associated with this scan.</div>
+                    {/if}
+                </div>            
+            
+                <div class="page_map" id="map"></div>
+
+                <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
+                    <input id="notes_submit" type="submit" value="Submit" />
+                </form>
+
+
                 
     {elseif $scan}
         {include file="en/scan-process-info.htmlf.tpl"}
     {/if}
         {include file="footer.htmlf.tpl"}
     </div>
+-->
+    
 </body>
 </html>
