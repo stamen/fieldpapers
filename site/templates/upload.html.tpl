@@ -14,7 +14,7 @@
     
     	<h1>Upload</h1>
         
-        <p>Choose which file to upload. We'll work out which atlas it belongs to.</p>
+        <p>Choose an atlas page to upload. We'll work out where it goes (using the QR code).</p>
         
         {if $s3post}
             <form action="http://{$s3post.bucket|escape}.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
