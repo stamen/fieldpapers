@@ -80,6 +80,8 @@
         
         <div class="clearfloat"></div>
         
+        <br clear="all" />
+        
             <h2>{$pages|@count} pages</h2>
         
             {foreach from=$pages item="page" name="index"}
