@@ -362,6 +362,7 @@
             $zoom = $explicit_zoom ? intval($p['zoom']) : 16;
 
             $mark = is_array($p['mark']) ? $p['mark'] : null;
+            $fuzzy = is_array($p['fuzzy']) ? $p['fuzzy'] : null;
             $text = isset($p['text']) ? $p['text'] : null;
             
             //
@@ -408,7 +409,7 @@
             $southeast = $mmap->pointLocation($mmap->dimensions);
             $bounds = array($northwest->lat, $northwest->lon, $southeast->lat, $southeast->lon);
             
-            $message['pages'][] = compact('number', 'provider', 'bounds', 'zoom', 'text', 'mark');
+            $message['pages'][] = compact('number', 'provider', 'bounds', 'zoom', 'text', 'mark', 'fuzzy');
         }
         
         //
