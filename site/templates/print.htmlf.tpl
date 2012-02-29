@@ -45,7 +45,10 @@
             Untitled
         </h1>
         <p>
-            <b><a href='{$base_dir}/place.php?place_id={$place_id}'>{$place[4]}</a>, <a href='{$base_dir}/place.php?country_id={$place[1]}'>{$place[0]}</a></b><br />
+            {if $print.place_woeid && $print.country_name}
+                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.place_name}</a>, 
+                <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a></b><br />
+            {/if}
             Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
         </p>
@@ -68,7 +71,10 @@
             Untitled
         </h1>
         <p>
-            <b><a href='{$base_dir}/place.php?place_id={$place_id}'>{$place[4]}</a>, <a href='{$base_dir}/place.php?country_id={$place[1]}'>{$place[0]}</a></b><br />
+            {if $print.place_woeid && $print.country_name}
+                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.place_name}</a>, 
+                <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a></b><br />
+            {/if}
             Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
             <br />
@@ -79,8 +85,6 @@
         <div class="print" id="map"></div>
         
         <div class="clearfloat"></div>
-        
-        <br clear="all" />
         
             <h2>{$pages|@count} pages</h2>
         
