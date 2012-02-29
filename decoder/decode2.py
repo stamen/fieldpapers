@@ -263,6 +263,17 @@ def read_code(image):
         raise CodeReadException('Attempt to read QR code failed')
     
     print_id, north, west, south, east, paper, orientation, layout = get_print_info(decoded)
+    
+    if layout == 'half-page' and orientation == 'landscape':
+        east += (east - west)
+        print >> stderr, 'Adjusted', orientation, layout, 'bounds to %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
+
+    elif layout == 'half-page' and orientation == 'portrait':
+        south += (south - north)
+        print >> stderr, 'Adjusted', orientation, layout, 'bounds to %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
+    
+    else:
+        print >> stderr, 'Kept', orientation, layout, 'bounds at %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
 
     return print_id, north, west, south, east, paper, orientation, layout
 
