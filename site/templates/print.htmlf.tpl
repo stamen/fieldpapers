@@ -47,7 +47,7 @@
                 
                 
                 // Map 2
-                var map = new MM.Map("map", main_map_layers);
+                var map = new MM.Map("map", main_map_layers, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
                 
                 var north = '{/literal}{$print.north}{literal}';
                 var west = '{/literal}{$print.west}{literal}';
