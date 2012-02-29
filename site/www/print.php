@@ -14,10 +14,11 @@
     
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     
-    $print = get_print($dbh,$print_id);
-        
     $sm = get_smarty_instance();
     
+    $print = get_print($dbh,$print_id);
+    $sm->assign('print', $print);
+        
     if ($print['selected_page'])
     {
         $pages = array($print['selected_page']);
@@ -29,14 +30,8 @@
     
     $sm->assign('flickr_key', FLICKR_KEY);
     
-    $sm->assign('print', $print);
-    $sm->assign('place_id', $print['place_woeid']); 
     
     $zoom = 8; //Zoom should be in the database
-    
-    $place = latlon_placeinfo(.5 * ($print['north'] + $print['south']), 
-                              .5 * ($print['west'] + $print['east']), $zoom);
-    $sm->assign('place', $place);
     
     $user = get_user($dbh, $print['user_id']);
     
