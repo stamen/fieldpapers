@@ -62,7 +62,13 @@
                     <p>
                         Uploaded by <a href="person.php?id={$user_id}">{$user_name}</a>, 
                         <a href="time.php?date={$scan.created}">{$scan.age|nice_relativetime|escape}</a><br />
-                        <b>Page {$page_number}</b>, Atlas <a href="print.php?id={$print_id}">{$print_id}</a>, {$print.place_name}
+                        {if $page_number}
+                            <b>Page {$page_number}<b>,
+                        {/if}
+                        Atlas <a href="print.php?id={$print_id}">{$print_id}</a>
+                        {if $print.place_name}
+                        , {$print.place_name}
+                        {/if}
                     </p>
                 </p>
             

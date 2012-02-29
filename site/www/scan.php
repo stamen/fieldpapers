@@ -22,7 +22,7 @@
     
     $notes = get_scan_notes($dbh, $scan_id);
     $sm->assign('notes', $notes);
-
+    
     $print = get_print($dbh, $scan['print_id']);
     $sm->assign('print', $print);
     
@@ -37,10 +37,11 @@
     {
         $print_id = $matches[1];
         $page_number = $matches[2];
+        
+        $sm->assign('page_number', $page_number);
     }
     
-    $sm->assign('print_id', $print_id);
-    $sm->assign('page_number', $page_number);
+    $sm->assign('print_id', $scan['print_id']);
     
     $user = get_user($dbh, $print['user_id']);
     
