@@ -151,7 +151,7 @@ def add_page_text(ctx, text, x, y, width, height):
     
     ctx.restore()
 
-def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark):
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy):
     """
     """
     print 'Adding print page:', href
@@ -182,6 +182,19 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
         map_width_pt, map_height_pt = well_width_pt, well_height_pt
 
     place_image(ctx, img, 0, 0, map_width_pt, map_height_pt)
+    
+    if fuzzy is not None:
+        loc = Location(fuzzy[1], fuzzy[0])
+        pt = mmap.locationPoint(loc)
+
+        x = map_width_pt * float(pt.x) / mmap.dimensions.x
+        y = map_height_pt * float(pt.y) / mmap.dimensions.y
+    
+        draw_circle(ctx, x, y, 20)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(2)
+        ctx.set_dash([2, 6])
+        ctx.stroke()
     
     #
     # X marks the spot, if needed
@@ -366,6 +379,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             zoom = page['zoom']
 
             mark = page.get('mark', None) or None
+            fuzzy = page.get('fuzzy', None) or None
             text = str(page.get('text', None) or '')
             
             north, west, south, east = page['bounds']
@@ -376,7 +390,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             
             yield 60
             
-            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark)
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy)
             
             #
             # Now make a smaller preview map for the page,
