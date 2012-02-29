@@ -47,6 +47,7 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
 
 .atlasThumb { margin-left: 10px; float: left; width: 300px; margin-bottom: 2em; }
+.atlasThumb img { border: 1px solid black; }
 .atlasName {}
 .atlasPlace {}
 .atlasMeta {}
