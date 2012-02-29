@@ -109,11 +109,13 @@
         
         <div class="clearfloat"></div>
         
-            <h2>{$pages|@count} pages</h2>
+            <h2>{$pages|@count} page(s)</h2>
         
-            {foreach from=$pages item="page" name="index"}
+            {foreach from=$pages item="page"}
                 <div class="atlasPage"> 
-                    <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
+                    <a href="{$base_dir}/print.php?id={$print.id}/{$page.page_number}">
+                        <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
+                    </a>
                     <br />
                     <span class="atlasPageNumber">{$page.page_number}</span>
                 </div>
