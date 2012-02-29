@@ -24,12 +24,32 @@
     $sm->assign('notes', $notes);
 
     $print = get_print($dbh, $scan['print_id']);
+    $sm->assign('print', $print);
+    
     $form = get_form($dbh, $print['form_id']);
     $sm->assign('form', $form);
     
     // Needed?
     $user_id = $_SESSION['user']['id'];
     $sm->assign('user_id', $user_id);
+    
+    if(preg_match('#^(\w+)/(\d+)$#', $scan['print_id'], $matches))
+    {
+        $print_id = $matches[1];
+        $page_number = $matches[2];
+    }
+    
+    $sm->assign('print_id', $print_id);
+    $sm->assign('page_number', $page_number);
+    
+    $user = get_user($dbh, $print['user_id']);
+    
+    if ($user['name'])
+    {
+        $sm->assign('user_name', $user['name']);
+    } else {
+        $sm->assign('user_name', 'Anonymous');
+    }
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);

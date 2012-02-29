@@ -14,7 +14,38 @@
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     {/if}
-
+        <style type="text/css" title="text/css">
+    /* <![CDATA[{literal} */
+    
+        #scan-form,
+        #scan-form .marker
+        {
+            position: absolute;
+        }
+        
+        #scan-form .marker img
+        {
+            cursor: move;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        .show {
+            display: block;
+        }
+        
+        #notes {
+            margin: 0;
+        }
+        
+        #remove, #remove_new {
+            float: left;
+        }
+        
+    /* {/literal}]]> */
+</style>
 
 </head>
 <body> 
@@ -29,8 +60,9 @@
                         <button type="button" onClick= "addMarkerNote()">Add Note</button>
                     </div>
                     <p>
-                        Uploaded by <a href="person.php">[user_name]</a>, <a href="time.php">[nice_relativetime|escape]</a><br />
-                        <b>Page 1</b>, Atlas <a href="atlas.php">235grth</a>, Adelaide, Australia
+                        Uploaded by <a href="person.php?id={$user_id}">{$user_name}</a>, 
+                        <a href="time.php?date={$scan.created}">{$scan.age|nice_relativetime|escape}</a><br />
+                        <b>Page {$page_number}</b>, Atlas <a href="print.php?id={$print_id}">{$print_id}</a>, {$print.place_name}
                     </p>
                 </p>
             
@@ -52,7 +84,7 @@
     
                     
                 <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
-                    <input id="notes_submit" type="submit" value="Submit" />
+                    <!-- <input id="notes_submit" type="submit" value="Submit" /> -->
                 </form>
 
 
@@ -87,9 +119,16 @@
                             div.parentNode.removeChild(div);
                         }
                         
+                        var ok_button = document.createElement('button');
+                        ok_button.id = 'remove_new';
+                        ok_button.innerHTML = 'OK';
+                        ok_button.className = 'show';
+                        ok_button.onclick = submitForm;
+                        div.appendChild(ok_button);
+                        
                         var remove_button = document.createElement('button');
                         remove_button.id = 'remove_new';
-                        remove_button.innerHTML = 'Remove New Note';
+                        remove_button.innerHTML = 'Cancel';
                         remove_button.className = 'show';
                         remove_button.onclick = removeMarkerNote;
                         div.appendChild(remove_button);
@@ -147,13 +186,15 @@
                         {
                             if (!mousemove)
                             {
-                                if (textarea.className == 'hide' && remove_button.className == 'hide') 
+                                if (textarea.className == 'hide' && remove_button.className == 'hide' && ok_button.className == 'hide') 
                                 {
                                     textarea.className = 'show';
                                     remove_button.className = 'show';
-                                } else if (textarea.className == 'show' && remove_button.className == 'show') {
+                                    ok_button.className = 'show';
+                                } else if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show') {
                                     textarea.className = 'hide';
                                     remove_button.className = 'hide';
+                                    ok_button.className = 'hide';
                                 }
                             }
                             
@@ -192,6 +233,11 @@
                         document.getElementById('scan-form').appendChild(markerDiv);
                     }
                     
+                    function submitForm()
+                    {
+                        document.getElementById('scan-form').submit();   
+                    }
+                    
                     function SavedMarker(map,note,note_num,lat,lon)
                     {
                         this.location = new MM.Location(lat,lon);
@@ -221,13 +267,23 @@
                             div.removeChild(img);
                             div.removeChild(textarea);
                             div.removeChild(remove_button);
+                            div.removeChild(ok_button);
                             
                             removed.value = 1; // Removed
+                            
+                            submitForm();
                         }
+                        
+                        var ok_button = document.createElement('button');
+                        ok_button.id = 'remove';
+                        ok_button.innerHTML = 'OK';
+                        ok_button.className = 'hide';
+                        ok_button.onclick = submitForm;
+                        div.appendChild(ok_button);
                         
                         var remove_button = document.createElement('button');
                         remove_button.id = 'remove';
-                        remove_button.innerHTML = 'Remove Saved Note';
+                        remove_button.innerHTML = 'Delete';
                         remove_button.className = 'hide';
                         remove_button.onclick = removeMarkerNote;
                         div.appendChild(remove_button);
@@ -303,16 +359,18 @@
                         var marker = this;
                         
                         img.onmouseup = function(e)
-                        {
+                        {                            
                             if (!mousemove)
                             {
-                                if (textarea.className == 'hide' && remove_button.className == 'hide') 
+                                if (textarea.className == 'hide' && remove_button.className == 'hide' && ok_button.className == 'hide') 
                                 {
                                     textarea.className = 'show';
                                     remove_button.className = 'show';
-                                } else if (textarea.className == 'show' && remove_button.className == 'show') {
+                                    ok_button.className = 'show';
+                                } else if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show') {
                                     textarea.className = 'hide';
                                     remove_button.className = 'hide';
+                                    ok_button.className = 'hide';
                                 }
                             }
                             
@@ -382,7 +440,7 @@
                         extents = [new MM.Location(north, west), new MM.Location(south, east)];
                     
                     map.setExtent(extents);
-                    map.setZoom(14);
+                    map.zoomIn();
                     
                     displaySavedNotes();
                         
