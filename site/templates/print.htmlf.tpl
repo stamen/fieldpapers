@@ -15,16 +15,40 @@
                 {literal}
                     var overview_provider = '{/literal}{$pages[0].provider}{literal}';
                     var main_provider = '{/literal}{$pages[0].provider}{literal}';
+                                        
+                    var overview_map_layers = [];
+                    var main_map_layers = [];
+                    
+                    if (overview_provider.search(','))
+                    {
+                        var overview_providers = overview_provider.split(',');
+                        for (var i = 0; i < overview_providers.length; i++) {
+                            // Create layers
+                            overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_providers[i])));
+                        }
+                    } else {
+                        overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_provider)));
+                    }
+                    
+                    if (main_provider.search(','))
+                    {
+                        var main_providers = main_provider.split(',');
+                        for (var i = 0; i < main_providers.length; i++) {
+                            main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_providers[i])));
+                        }
+                    } else {
+                        main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
+                    }
                 {/literal}
                 {/if}
                 {literal}
                 
                 // Map 1
-                var overview_map = new MM.Map("overview_map", new MM.TemplatedMapProvider(overview_provider),null,[]);
+                var overview_map = new MM.Map("overview_map", overview_map_layers, null, []);
                 
                 
                 // Map 2
-                var map = new MM.Map("map", new MM.TemplatedMapProvider(main_provider),null,[]);
+                var map = new MM.Map("map", main_map_layers);
                 
                 var north = '{/literal}{$print.north}{literal}';
                 var west = '{/literal}{$print.west}{literal}';
