@@ -17,14 +17,37 @@
                     var main_provider = '{/literal}{$pages[0].provider}{literal}';
                 {/literal}
                 {/if}
-                {literal}
+                {literal}                    
+                    var overview_map_layers = [];
+                    var main_map_layers = [];
+                    
+                    if (overview_provider.search(','))
+                    {
+                        var overview_providers = overview_provider.split(',');
+                        for (var i = 0; i < overview_providers.length; i++) {
+                            // Create layers
+                            overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_providers[i])));
+                        }
+                    } else {
+                        overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_provider)));
+                    }
+                    
+                    if (main_provider.search(','))
+                    {
+                        var main_providers = main_provider.split(',');
+                        for (var i = 0; i < main_providers.length; i++) {
+                            main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_providers[i])));
+                        }
+                    } else {
+                        main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
+                    }
                 
                 // Map 1
-                var overview_map = new MM.Map("overview_map", new MM.TemplatedMapProvider(overview_provider),null,[]);
+                var overview_map = new MM.Map("overview_map", overview_map_layers, null, []);
                 
                 
                 // Map 2
-                var map = new MM.Map("map", new MM.TemplatedMapProvider(main_provider),null,[]);
+                var map = new MM.Map("map", main_map_layers);
                 
                 var north = '{/literal}{$print.north}{literal}';
                 var west = '{/literal}{$print.west}{literal}';
@@ -86,11 +109,13 @@
         
         <div class="clearfloat"></div>
         
-            <h2>{$pages|@count} pages</h2>
+            <h2>{$pages|@count} page(s)</h2>
         
-            {foreach from=$pages item="page" name="index"}
+            {foreach from=$pages item="page"}
                 <div class="atlasPage"> 
-                    <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
+                    <a href="{$base_dir}/print.php?id={$print.id}/{$page.page_number}">
+                        <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
+                    </a>
                     <br />
                     <span class="atlasPageNumber">{$page.page_number}</span>
                 </div>
