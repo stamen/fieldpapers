@@ -15,7 +15,9 @@
                 {literal}
                     var overview_provider = '{/literal}{$pages[0].provider}{literal}';
                     var main_provider = '{/literal}{$pages[0].provider}{literal}';
-                                        
+                {/literal}
+                {/if}
+                {literal}                    
                     var overview_map_layers = [];
                     var main_map_layers = [];
                     
@@ -39,9 +41,6 @@
                     } else {
                         main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
                     }
-                {/literal}
-                {/if}
-                {literal}
                 
                 // Map 1
                 var overview_map = new MM.Map("overview_map", overview_map_layers, null, []);
