@@ -369,7 +369,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
         #
     
         for (index, page) in enumerate(pages):
-            _update_print(float(index) / len(pages))
+            _update_print(0.1 + 0.9 * float(index) / len(pages))
 
             page['number'] = int(page['number'])
         
