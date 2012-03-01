@@ -17,7 +17,18 @@
     $sm = get_smarty_instance();
     
     $print = get_print($dbh,$print_id);
+    
+    if ($print['place_name'])
+    {
+        $place_name = explode(',', $print['place_name']);
+    
+        $print['city_name'] = $place_name[0];
+    } else {
+        $print['city_name'] = 'Unknown City';
+    }
+        
     $sm->assign('print', $print);
+    
         
     if ($print['selected_page'])
     {
@@ -28,13 +39,7 @@
     
     $sm->assign('pages', $pages);
     
-    $sm->assign('flickr_key', FLICKR_KEY);
-    
-    
-    $zoom = 8; //Zoom should be in the database
-    
     $user = get_user($dbh, $print['user_id']);
-    
     if ($user['name'])
     {
         $sm->assign('user_name', $user['name']);
