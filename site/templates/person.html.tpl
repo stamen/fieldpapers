@@ -32,13 +32,20 @@
                     name="atlasPage" width="100%" id="atlasPage" /></a>
                     
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
-                    <div class="atlasPlace"><a href="{$base_dir}/place.php?country_id={$print.country_woeid}">
-                    {if $print.country_name}
-                        {$print.country_name}
-                    {else}
-                        Unknown Place
-                    {/if}
-                    </a></div>
+                    <div class="atlasPlace">
+                        {if $print.city_name && $print.country_name}
+                            <a href="{$base_dir}/place.php?place_id={$print.place_woeid}">
+                                {$print.city_name}
+                            </a>,
+                            <a href="{$base_dir}/place.php?country_id={$print.country_woeid}">
+                                {if $print.country_name}
+                                    {$print.country_name}
+                                {else}
+                                    Unknown Place
+                                {/if}
+                            </a>
+                        {/if}
+                    </div>
                     <div class="atlasMeta">
                     {if $print.number_of_pages == 1}
                         1 page,
