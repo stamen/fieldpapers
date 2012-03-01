@@ -13,7 +13,7 @@
 
     /**** ... ****/
     
-    $user_id = $_GET["id"];
+    $user_id = $_GET['id'] ? $_GET['id'] : null;
     $user = get_user($dbh, $user_id);
     
     $sm = get_smarty_instance();
@@ -32,8 +32,27 @@
         $sm->assign('user_email', $user['email']);
     }
     
-    // Get scans by id
+    // Get scans by user id
     $scans = get_scans_by_user_id($dbh, $user_id);
+    
+    foreach($scans as $i => $scan)
+    {
+        $print = get_print($dbh, $scans[$i]['print_id']);
+        
+        if ($print['place_name'])
+        {
+            $place_name = explode(',', $print['place_name']);
+        
+            $print['city_name'] = $place_name[0];
+        } else {
+            $print['city_name'] = 'Unknown City';
+        }
+        
+        $scans[$i]['city_name'] = $print['city_name'];
+        $scans[$i]['place_woeid'] = $print['place_woeid'];
+        $scans[$i]['country_woeid'] = $print['country_woeid'];
+        $scans[$i]['country_name'] = $print['country_name'];
+    }
     
     $sm->assign('scans', $scans);
     
