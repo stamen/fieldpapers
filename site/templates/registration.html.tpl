@@ -26,7 +26,7 @@
                         Choose a Password<br />
 						<input type='password' name='password1' size='30' />
                     </p>
-					<p style="padding-left: 20px;">                        Type your Password Again<br />
+					<p>Type your Password Again<br />
 						<input type='password' name='password2' size='30' />
                     </p>
                     
