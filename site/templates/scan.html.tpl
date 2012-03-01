@@ -65,7 +65,7 @@
                         {if $page_number}
                             <b>Page {$page_number}<b>,
                         {/if}
-                        Atlas <a href="print.php?id={$print_id}">{$print_id}</a>
+                        Atlas <a href="print.php?id={$scan.print_id}">{$scan.print_id}</a>
                         {if $print.place_name}
                         , {$print.place_name}
                         {/if}
