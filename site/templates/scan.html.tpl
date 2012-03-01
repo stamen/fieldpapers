@@ -17,6 +17,11 @@
         <style type="text/css" title="text/css">
     /* <![CDATA[{literal} */
     
+        #map
+        {
+            background-color: black;
+        }
+    
         #scan-form,
         #scan-form .marker
         {
