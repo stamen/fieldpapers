@@ -11,8 +11,8 @@
     {include file="navigation.htmlf.tpl"}
     <div class="container">
         <h1>
-            {if $place_name && $country_name}
-                {$place_name}, {$country_name}
+            {if $city_name && $country_name}
+                {$city_name}, {$country_name}
             {else if $country_name}
                 {$country_name}
             {/if}
