@@ -20,10 +20,11 @@
         $sm->assign('woeid', $woeid);
         $prints = get_prints_by_place_woeid($dbh, $woeid);
         
-        $place_name = $prints[0]['place_name'];
+        $place_name = explode(',', $prints[0]['place_name']);
+        $city_name = $place_name[0];
         $country_name = $prints[0]['country_name'];
         
-        $sm->assign('place_name', $place_name);
+        $sm->assign('city_name', $city_name);
         $sm->assign('country_name', $country_name);
     }
     
