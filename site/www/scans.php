@@ -35,6 +35,15 @@
         } else {
             $scans[$i]['user_name'] = 'Anonymous';
         }
+        
+        if(preg_match('#^(\w+)/(\d+)$#', $scans[$i]['print_id'], $matches))
+        {
+            $print_id = $matches[1];
+            $page_number = $matches[2];
+            
+            $scans[$i]['print_base_id'] = $print_id;
+            $scans[$i]['page_number'] = $page_number;
+        }
     }
 
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
