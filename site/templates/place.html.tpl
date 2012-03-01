@@ -4,7 +4,15 @@
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Place - fieldpapers.org</title>    
+    <title> 
+        {if $city_name && $country_name}
+            {$city_name}, {$country_name}
+        {elseif $country_name}
+            {$country_name}
+        {else}
+            Unknown Place
+        {/if} - fieldpapers.org
+    </title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
 </head>
 <body>
@@ -13,8 +21,10 @@
         <h1>
             {if $city_name && $country_name}
                 {$city_name}, {$country_name}
-            {else if $country_name}
+            {elseif $country_name}
                 {$country_name}
+            {else}
+                Unknown Place
             {/if}
         </h1>
         <h2>Atlases</h2>
