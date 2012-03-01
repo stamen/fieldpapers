@@ -13,25 +13,21 @@
 
     /**** ... ****/
     
-    $scan_id = $_GET["id"];
+    $scan_id = $_GET['id'] ? $_GET['id'] : null;
     
     $sm = get_smarty_instance();
     
     $scan = get_scan($dbh, $scan_id);
     $sm->assign('scan', $scan);
     
-    $notes = get_scan_notes($dbh, $scan_id);
-    $sm->assign('notes', $notes);
-    
     $print = get_print($dbh, $scan['print_id']);
     $sm->assign('print', $print);
     
+    $notes = get_scan_notes($dbh, $scan_id);
+    $sm->assign('notes', $notes);
+    
     $form = get_form($dbh, $print['form_id']);
     $sm->assign('form', $form);
-    
-    // Needed?
-    $user_id = $_SESSION['user']['id'];
-    $sm->assign('user_id', $user_id);
     
     if(preg_match('#^(\w+)/(\d+)$#', $scan['print_id'], $matches))
     {
@@ -41,9 +37,7 @@
         $sm->assign('page_number', $page_number);
     }
     
-    $sm->assign('print_id', $scan['print_id']);
-    
-    $user = get_user($dbh, $print['user_id']);
+    $user = get_user($dbh, $scan['user_id']);
     
     if ($user['name'])
     {
