@@ -372,7 +372,7 @@ def main(apibase, password, scan_id, url):
         s, h, path, p, q, f = urlparse(url)
         uploaded_file = basename(path)
 
-        _update_scan(uploaded_file, None, 0.1)
+        _update_scan(uploaded_file, None, 0.2)
         
         yield 10
         
@@ -384,7 +384,7 @@ def main(apibase, password, scan_id, url):
         move(preblobs_filename, 'preblobs.jpg')
         unlink(postblob_filename)
 
-        _update_scan(uploaded_file, None, 0.2)
+        _update_scan(uploaded_file, None, 0.3)
 
         for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
     
@@ -411,7 +411,7 @@ def main(apibase, password, scan_id, url):
             _append_image('postblob.jpg', postblob_img)
             postblob_img.save('postblob.jpg')
     
-            _update_scan(uploaded_file, print_id, 0.3)
+            _update_scan(uploaded_file, print_id, 0.4)
             
             print >> stderr, 'geotiff...',
             
@@ -423,7 +423,7 @@ def main(apibase, password, scan_id, url):
             _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
             _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
     
-            _update_scan(uploaded_file, print_id, 0.4)
+            _update_scan(uploaded_file, print_id, 0.5)
             
             print >> stderr, 'done.'
             print >> stderr, 'tiles...',
@@ -435,7 +435,7 @@ def main(apibase, password, scan_id, url):
             
             for (index, (coord, scan2coord)) in enumerate(tiles_needed):
                 if index % 10 == 0:
-                    _update_scan(uploaded_file, print_id, 0.4 + 0.6 * float(index) / len(tiles_needed))
+                    _update_scan(uploaded_file, print_id, 0.5 + 0.5 * float(index) / len(tiles_needed))
                 
                 tile_img = extract_tile_for_coord(input, coord, scan2coord)
                 _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)

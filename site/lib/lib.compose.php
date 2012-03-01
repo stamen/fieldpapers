@@ -286,6 +286,8 @@
             $message['fields'] = get_form_fields($dbh, $form['id']);
         }
         
+        $print['progress'] = 0.1; // the first 10% is getting it queued
+        
         set_print($dbh, $print);
         $message['print_id'] = $print['id'];
         add_message($dbh, json_encode($message));
@@ -447,6 +449,8 @@
             $print['west'] = min($print['west'], $page['west']);
             $print['east'] = max($print['east'], $page['east']);
         }
+        
+        $print['progress'] = 0.1; // the first 10% is getting it queued
         
         set_print($dbh, $print);
     

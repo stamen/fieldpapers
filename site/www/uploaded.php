@@ -52,6 +52,7 @@
         $scan = get_scan($dbh, $scan['id']);
         $parsed_url = parse_url($url);
         $scan['base_url'] = "http://{$parsed_url['host']}".dirname($parsed_url['path']);
+        $scan['progress'] = 0.1; // the first 10% is just getting the thing uploaded
 
         set_scan($dbh, $scan);
         
