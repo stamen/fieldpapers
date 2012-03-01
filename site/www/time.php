@@ -13,7 +13,7 @@
     
     /**** ... ****/
     
-    $timestamp = $_GET["date"];
+    $timestamp = $_GET['date'] ? $_GET['date'] : null;
 
     $sm = get_smarty_instance();
     
