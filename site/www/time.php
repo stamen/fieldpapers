@@ -35,6 +35,15 @@
         } else {
             $prints[$i]['user_name'] = 'Anonymous';
         }
+        
+        if ($print['place_name'])
+        {
+            $place_name = explode(',', $print['place_name']);
+        
+            $prints[$i]['city_name'] = $place_name[0];
+        } else {
+            $prints[$i]['city_name'] = 'Unknown City';
+        }
     }
     
     $sm->assign('prints', $prints);
