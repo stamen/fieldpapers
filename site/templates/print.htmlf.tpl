@@ -69,7 +69,7 @@
         </h1>
         <p>
             {if $print.place_woeid && $print.country_name}
-                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.place_name}</a>, 
+                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.city_name}</a>, 
                 <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a></b><br />
             {/if}
             Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
@@ -81,7 +81,9 @@
         
         <div class="clearfloat"></div>
         
-        <h2>Individual Page</h2>
+        <h2>
+            Page {$print.selected_page.page_number}
+        </h2>
         
         <div class="atlasPage"> 
             <img src="{$print.selected_page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
@@ -95,13 +97,18 @@
         </h1>
         <p>
             {if $print.place_woeid && $print.country_name}
-                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.place_name}</a>, 
+                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.city_name}</a>, 
                 <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a></b><br />
             {/if}
             Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
             <br />
-            {$pages|@count} page(s)
+            {$pages|@count}
+            {if $pages|@count == 1}
+                page
+            {else}
+                pages
+            {/if}
         </p>
         <ul><li><a href="{$print.pdf_url}"><b>Download PDF</b></a></li></ul>
         
@@ -109,7 +116,14 @@
         
         <div class="clearfloat"></div>
         
-            <h2>{$pages|@count} page(s)</h2>
+            <h2>
+                {$pages|@count}
+                {if $pages|@count == 1}
+                    page
+                {else}
+                    pages
+                {/if}
+            </h2>
         
             {foreach from=$pages item="page"}
                 <div class="atlasPage"> 
