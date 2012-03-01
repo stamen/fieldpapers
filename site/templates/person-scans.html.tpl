@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Person - fieldpapers.org</title>    
+    <title>{$user_name} - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
