@@ -6,17 +6,16 @@
                 var MM = com.modestmaps;
                 
                 {/literal}
+
                 {if $print.selected_page}
-                {literal}
-                    var overview_provider = '{/literal}{$print.selected_page.provider}{literal}';
-                    var main_provider = '{/literal}{$print.selected_page.provider}{literal}';
-                {/literal}
+                    var overview_provider = '{$print.selected_page.provider}';
+                    var main_provider = '{$print.selected_page.provider}';
+                
                 {else}
-                {literal}
-                    var overview_provider = '{/literal}{$pages[0].provider}{literal}';
-                    var main_provider = '{/literal}{$pages[0].provider}{literal}';
-                {/literal}
+                    var overview_provider = '{$pages[0].provider}';
+                    var main_provider = '{$pages[0].provider}';
                 {/if}
+
                 {literal}                    
                     var overview_map_layers = [];
                     var main_map_layers = [];
