@@ -33,9 +33,16 @@
                     name="atlasPage" width="100%" id="atlasPage" /></a>
                     
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
-                    <div class="atlasPlace"><a href="place.php">Place</a></div>
+                    <div class="atlasPlace">
+                        {if $scan.place_woeid && $scan.city_name}
+                            <a href="place.php?place_id={$scan.place_woeid}">{$scan.city_name}</a>,
+                        {/if}
+                        {if $scan.country_woeid && $scan.country_name}
+                            <a href="place.php?place_id={$scan.country_woeid}">{$scan.country_name}</a>
+                        {/if}
+                    </div>
                     <div class="atlasMeta">
-                    Created<a href="time.php?date={$print.created}">{$scan.age|nice_relativetime|escape}</a></div>
+                    Created <a href="time.php?date={$print.created}">{$scan.age|nice_relativetime|escape}</a></div>
                 </div>
             {/foreach}
         </div>

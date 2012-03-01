@@ -694,10 +694,17 @@
     
     function get_scans_by_user_id(&$dbh, $user_id)
     {
-       $q = sprintf("SELECT id, print_id, description,
-                            base_url, uploaded_file, geojpeg_bounds,
-                            user_id, UNIX_TIMESTAMP(created) AS created,
-                            UNIX_TIMESTAMP(decoded) AS decoded
+        $q = sprintf("SELECT id, print_id,
+                             min_row, min_column, min_zoom,
+                             max_row, max_column, max_zoom,
+                             description, is_private, will_edit,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(decoded) AS decoded,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             failed, base_url, uploaded_file,
+                             has_geotiff, has_stickers,
+                             has_geojpeg, geojpeg_bounds,
+                             decoding_json, user_id
               FROM scans
               WHERE user_id=%s
               ORDER BY created DESC",
