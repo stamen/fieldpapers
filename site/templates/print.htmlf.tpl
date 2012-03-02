@@ -79,6 +79,7 @@
         <div class="print" id="map"></div>
         
         <div class="clearfloat"></div>
+        <br  clear="all" />
         
         <h2>
             Page {$print.selected_page.page_number}
