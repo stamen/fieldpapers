@@ -12,14 +12,10 @@
     </p>
     
 {else}
-    <p>
-        Processing your scanned image.
-    </p>
-
-    <p>
-        This may take a little while, generally a few minutes.
-        You don’t need to keep this browser window open—you can
-        <a href="{$base_dir}/scan.php?id={$scan.id|escape}">bookmark this page</a>
-        and come back later.
-    </p>
+	<div class="smallContainer">
+        <p>Processing your scanned image... ({$scan.progress*100|string_format:"%d"}% complete)</p>
+        <div class="progressBarCase">
+            <div class="progressBar" style="width: {$scan.progress*100}%;"></div>
+        </div>
+    </div>
 {/if}

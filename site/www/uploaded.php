@@ -52,12 +52,22 @@
         $scan = get_scan($dbh, $scan['id']);
         $parsed_url = parse_url($url);
         $scan['base_url'] = "http://{$parsed_url['host']}".dirname($parsed_url['path']);
+        $scan['progress'] = 0.1; // the first 10% is just getting the thing uploaded
 
         set_scan($dbh, $scan);
         
         $dbh->query('COMMIT');
     }
 
+    if($attempted_upload)
+        header('Location: http://'.get_domain_name().get_base_dir().'/scan.php?id='.urlencode($scan['id']));
+    
+    exit();
+    
+    //
+    // Old form stuff down here.
+    //
+    
     if($attempted_upload)
         header('Location: http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.urlencode($scan['id']));
     
