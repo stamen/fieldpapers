@@ -662,7 +662,7 @@
                              failed, s.base_url, s.uploaded_file,
                              s.has_geotiff, s.has_stickers,
                              s.has_geojpeg, s.geojpeg_bounds,
-                             s.user_id
+                             s.user_id, s.progress
                       FROM scans AS s
                       LEFT JOIN prints AS p
                         ON p.id = s.print_id
@@ -704,7 +704,7 @@
                              failed, base_url, uploaded_file,
                              has_geotiff, has_stickers,
                              has_geojpeg, geojpeg_bounds,
-                             decoding_json, user_id
+                             decoding_json, user_id, progress
               FROM scans
               WHERE user_id=%s
               ORDER BY created DESC",
@@ -737,7 +737,7 @@
                              failed, base_url, uploaded_file,
                              has_geotiff, has_stickers,
                              has_geojpeg, geojpeg_bounds,
-                             decoding_json, user_id
+                             decoding_json, user_id, progress
                       FROM scans
                       WHERE id = %s",
                      $dbh->quoteSmart($scan_id));

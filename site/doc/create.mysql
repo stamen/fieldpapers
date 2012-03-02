@@ -234,6 +234,8 @@ CREATE TABLE messages (
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
+ALTER TABLE messages CHANGE COLUMN content content MEDIUMTEXT;
+
 
 
 DROP TABLE IF EXISTS `logs`;
