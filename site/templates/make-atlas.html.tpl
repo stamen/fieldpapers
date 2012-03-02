@@ -59,8 +59,7 @@
         
         function setMapHeight()
         {   
-            var map_height = window.innerHeight - document.getElementById('nav').offsetHeight - 
-                             document.getElementsByClassName('atlas_inputs')[0].offsetHeight;
+            var map_height = window.innerHeight - document.getElementById('nav').offsetHeight;
             
             document.getElementById('map').style.height = map_height + 'px';
             
@@ -78,6 +77,8 @@
             {
                 return;
             }
+            
+            changeOrientationButtonStyle(orientation);
             
             document.getElementById('orientation').value = orientation;
             
@@ -111,6 +112,24 @@
             rect.remove();
             setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y, scaleControlCoordinates.x, scaleControlCoordinates.y);
             drawAtlas();
+        }
+        
+        function changeOrientationButtonStyle(orientation)
+        {
+            /* probably not necessary */
+            if (document.getElementById('orientation').value === orientation)
+            {
+                return;
+            }
+            
+            if (orientation === 'portrait')
+            {
+                document.getElementById('portrait_button').setAttribute("class", "radio_portrait_selected");
+                document.getElementById('landscape_button').setAttribute("class", "radio_landscape");
+            } else if (orientation === 'landscape') {
+                document.getElementById('portrait_button').setAttribute("class", "radio_portrait");
+                document.getElementById('landscape_button').setAttribute("class", "radio_landscape_selected");
+            }
         }
         
         function resetAtlasAttributes()
@@ -285,7 +304,7 @@
             
             //Initialize
             atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
-            document.getElementById('radio_landscape').checked = true; // Initially landscape
+            //document.getElementById('radio_landscape').checked = true; // Initially landscape
             
             document.getElementById('paper_size').value = 'letter';
             document.getElementById('orientation').value = 'landscape';
@@ -582,9 +601,11 @@
                 
                 if (num_rows * num_columns > 1)
                 {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Pages';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGES';
                 } else {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Page';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGE';
                 }
                 
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
@@ -619,9 +640,11 @@
                 
                 if (num_rows * num_columns > 1)
                 {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Pages';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGES';
                 } else {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Page';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGE';
                 }
                 
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
@@ -650,9 +673,11 @@
                 
                 if (num_rows * num_columns > 1)
                 {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Pages';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGES';
                 } else {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Page';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGE';
                 }
                 
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
@@ -686,9 +711,11 @@
                 
                 if (num_rows * num_columns > 1)
                 {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Pages';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGES';
                 } else {
-                    document.getElementById("page-count").innerHTML = num_rows * num_columns + ' Page';
+                    document.getElementById("page_count").innerHTML = '<b>' + num_rows * num_columns + '</b>';
+                    document.getElementById("page_plural").innerHTML = 'PAGE';
                 }
                 
                 atlas_aspect_ratio = page_aspect_ratio*(num_columns/num_rows);
@@ -802,24 +829,112 @@
             cursor: pointer;
         }
         
-        .atlas_inputs {
-            margin-left: 10px;
+        #atlas_inputs_container {
+            height: 0px;
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            top:0;
+            text-align: center;
+        }
+        
+        #atlas_inputs {
+            padding: 10px 0px 0px 0px;
+            margin: -25px auto 0 auto;
+            background-color: #FFF;
+            border-top: 2px solid #000;
+            text-align: center;
+            width: 330px;
+        }
+        
+        #page_count_container {
+            display: inline-block;
+            width: 2em;
+            margin: 0px 20px 10px 20px;
+            text-align: center;
+        }
+        
+        #page_plural {
+            font-size: 0.675em;
+            line-height 1.5em;
+            color: #666;
+        }
+        
+        #done_button {
+            font-size: 13px;
+            padding: 0px 8px 0px 8px;
+            position: relative;
+            top: -8px;
+            margin: 0;
+        }
+        
+        .radio_portrait {
+            background: url("{/literal}{$base_dir}{literal}/img/button-portrait-off.png") no-repeat;
+            display: inline-block;
+            padding: 2px 2px 2px 2px;
+            margin-left: 5px;
+            position: relative;
+            top: 3px;
+            width: 19px;
+            height: 25px;
+            cursor: pointer;
+        }
+        
+        .radio_portrait_selected {
+            background: url("{/literal}{$base_dir}{literal}/img/button-portrait-selected.png") no-repeat;
+            display: inline-block;
+            padding: 2px 2px 2px 2px;
+            margin-left: 5px;
+            position: relative;
+            top: 3px;
+            width: 19px;
+            height: 25px;
+            cursor: pointer;
+        }
+        
+        .radio_landscape {
+            background: url("{/literal}{$base_dir}{literal}/img/button-landscape-off.png") no-repeat;
+            display: inline-block;
+            padding: 2px 0px 2px 2px;
+            width: 25px;
+            height: 19px;
+            cursor: pointer;
+        }
+        
+        .radio_landscape_selected {
+            background: url("{/literal}{$base_dir}{literal}/img/button-landscape-selected.png") no-repeat;
+            display: inline-block;
+            padding: 2px 0px 2px 2px;
+            width: 25px;
+            height: 19px;
+            cursor: pointer;
         }
         {/literal}
     </style>
 </head>
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
-        <div id="container">
-        <div class="atlas_inputs">                        
-            <input type="radio" id="radio_landscape" name="orientation" value="landscape" onclick="changeOrientation(this.value)"> Landscape
-            <input type="radio" id="radio_portrait" name="orientation" value="portrait" onclick="changeOrientation(this.value)"> Portrait
-            <select style="margin-left:10px" name="provider" onchange="setProvider(this.value);">
-                <option>Bing/Toner</option>
-                <option>Open Street Map</option>
-                <option>Bing Aerial</option>
-                <option>Toner</option>
-            </select>
+        <div id="container" style="position: relative">
+            <div id="atlas_inputs_container">
+                <div id="atlas_inputs">
+                    <select style="top: -8px; position: relative;" name="provider" onchange="setProvider(this.value);">
+                        <option>Bing/Toner</option>
+                        <option>Open Street Map</option>
+                        <option>Bing Aerial</option>
+                        <option>Toner</option>
+                    </select> 
+        
+                    <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>            
+                    <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
+            
+                    <span id="page_count_container">
+                        <span class="section" id="page_count"><b>1</b></span><br />
+                        <span id="page_plural">PAGE</span>
+                    </span>
+                    
+                    <input id="done_button" type="button" onclick="setAndSubmitData()" value="Done" />
+                </div>
+            </div>
             <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 940px; position: absolute;">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
@@ -827,6 +942,7 @@
                 <input type="hidden" id="orientation" name="orientation">
                 <input type="hidden" id="provider" name="provider">
                 
+                <!--
                 <select id="forms" name="form_id" style="margin-left: 30px">
                     {if $default_form == 'none'}
                         <option selected>Select a Form for this Atlas</option>
@@ -841,10 +957,8 @@
                         {/if}
                     {/foreach}
                 </select>
-                <span style="margin-left:10px"><span id="page-count">1 Page</span>
-                <input class="atlas_inputs" type="button" onclick="setAndSubmitData()" value="Make Atlas" />
+                -->
             </form>
-        </div>
             <div id="map">
                 <span id="zoom-container">
                     <img src='{$base_dir}/img/plus.png' id="zoom-in"
