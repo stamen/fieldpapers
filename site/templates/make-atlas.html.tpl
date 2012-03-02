@@ -36,8 +36,12 @@
             vertical_remove,
             page_dimensions;
         
-        var page_button_width = 15,
-            page_button_height = 25;
+        var page_button_width = 33,
+            page_button_height = 46,
+            remove_column_button_width = 23,
+            remove_column_button_height = 26,
+            remove_row_button_width = 26,
+            remove_row_button_height = 22;
             
         function setProvider(provider)
         {        
@@ -101,8 +105,8 @@
             scaleControlCoordinates.y = dragControlCoordinates.y + num_rows * new_page_height;
                         
             scaleControl.attr({
-                    cx: scaleControlCoordinates.x,
-                    cy: scaleControlCoordinates.y
+                    x: scaleControlCoordinates.x - 23,
+                    y: scaleControlCoordinates.y - 23
             });
             
             changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
@@ -147,8 +151,8 @@
             
             
             horizontal_remove.attr({
-                x: scaleControlCoordinates.x - 1.5 * page_button_width,
-                y: dragControlCoordinates.y + .5 * (scaleControlCoordinates.y - dragControlCoordinates.y) - .5 * page_button_height
+                x: scaleControlCoordinates.x - .5 * page_button_width - remove_column_button_width,
+                y: dragControlCoordinates.y + .5 * (scaleControlCoordinates.y - dragControlCoordinates.y) - .5 * remove_column_button_height
             });
             
             vertical_add.attr({
@@ -157,8 +161,8 @@
             });
             
             vertical_remove.attr({
-                x: dragControlCoordinates.x + .5 * (scaleControlCoordinates.x - dragControlCoordinates.x) - .5 * page_button_width,
-                y: scaleControlCoordinates.y - 1.5 * page_button_height
+                x: dragControlCoordinates.x + .5 * (scaleControlCoordinates.x - dragControlCoordinates.x) - .5 * remove_row_button_width - 1,
+                y: scaleControlCoordinates.y - .5 * page_button_height - remove_row_button_height
             });
         }
         
@@ -366,13 +370,13 @@
                 setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
                 
                 dragControl.attr({
-                        cx: dragControlCoordinates.x,
-                        cy: dragControlCoordinates.y
+                        x: dragControlCoordinates.x,
+                        y: dragControlCoordinates.y
                 });
                 
                 scaleControl.attr({
-                        cx: scaleControlCoordinates.x,
-                        cy: scaleControlCoordinates.y
+                        x: scaleControlCoordinates.x - 23,
+                        y: scaleControlCoordinates.y - 23
                 });
                 
                 
@@ -411,7 +415,8 @@
             // Initialize Coordinate Objects
             scaleControlCoordinates = {x: page_height*atlas_aspect_ratio + canvasOriginX, y: page_height + canvasOriginY};
             dragControlCoordinates = {x: canvasOriginX, y: canvasOriginY};
-                        
+            
+            /*            
             horizontal_add = canvas.rect(canvasOriginX+page_height*atlas_aspect_ratio-.5*page_button_width,
                                          canvasOriginY + .5 * page_height - .5 * page_button_height,
                                          page_button_width,
@@ -419,7 +424,15 @@
             horizontal_add.attr("stroke", "#050505");
             horizontal_add.attr("fill", "#fff");
             horizontal_add.attr("fill-opacity", 1);
+            */
             
+            horizontal_add = canvas.image("{/literal}{$base_dir}{literal}/img/button-add-off.png",
+                            canvasOriginX+page_height*atlas_aspect_ratio-.5*page_button_width,
+                            canvasOriginY + .5 * page_height - .5 * page_button_height,
+                            33,
+                            46);
+            
+            /*
             horizontal_remove = canvas.rect(canvasOriginX + page_height * atlas_aspect_ratio - 1.5 * page_button_width,
                                             canvasOriginY + .5 * page_height - .5 * page_button_height,
                                             page_button_width,
@@ -427,7 +440,15 @@
             horizontal_remove.attr("stroke", "#050505");
             horizontal_remove.attr("fill", "#050505");
             horizontal_remove.attr("fill-opacity", 1);
+            */
             
+            horizontal_remove = canvas.image("{/literal}{$base_dir}{literal}/img/button-remove-column-off.png",
+                                             canvasOriginX + page_height*atlas_aspect_ratio - remove_column_button_width - .5 * page_button_width,
+                                             canvasOriginY + .5 * page_height - .5 * remove_column_button_height,
+                                             remove_column_button_width,
+                                             remove_column_button_height);
+            
+            /*
             vertical_add = canvas.rect(canvasOriginX + .5 * page_height * atlas_aspect_ratio - .5 * page_button_width,
                                        canvasOriginY + page_height - .5 * page_button_height,
                                        page_button_width,
@@ -435,7 +456,15 @@
             vertical_add.attr("stroke", "#050505");
             vertical_add.attr("fill", "#fff");
             vertical_add.attr("fill-opacity", 1);
+            */
             
+            vertical_add = canvas.image("{/literal}{$base_dir}{literal}/img/button-add-off.png",
+                                         canvasOriginX + .5 * page_height * atlas_aspect_ratio - .5 * page_button_width,
+                                         canvasOriginY + page_height - .5 * page_button_height,
+                                         page_button_width,
+                                         page_button_height);
+            
+            /*
             vertical_remove = canvas.rect(canvasOriginX + .5 * page_height * atlas_aspect_ratio - .5 * page_button_width,
                                           canvasOriginY + page_height - 1.5 * page_button_height,
                                           page_button_width,
@@ -443,22 +472,40 @@
             vertical_remove.attr("stroke", "#050505");
             vertical_remove.attr("fill", "#050505");
             vertical_remove.attr("fill-opacity", 1);
+            */
+            
+            vertical_remove = canvas.image("{/literal}{$base_dir}{literal}/img/button-remove-row-off.png",
+                                              canvasOriginX + .5 * page_height * atlas_aspect_ratio - .5 * remove_row_button_width - 1,
+                                              canvasOriginY + page_height - .5 * page_button_height - remove_row_button_height,
+                                              remove_row_button_width,
+                                              remove_row_button_height);
             
             
+            /*
             dragControl = canvas.circle(canvasOriginX,canvasOriginY,controlRadius);
             dragControl.attr("fill", "#050505");
             dragControl.attr("fill-opacity", 1);
-            
-            /*
-            dragControl = canvas.image("button-move-atlas-off.png",
-                                        dragControlCoordinates.x-23,
-                                        dragControlCoordinates.y-23,
-                                        46,
-                                        46);
             */
             
+            dragControl = canvas.image("{/literal}{$base_dir}{literal}/img/button-move-atlas-off.png",
+                                        dragControlCoordinates.x-3,
+                                        dragControlCoordinates.y-3,
+                                        46,
+                                        46);
+            
+            /*
             scaleControl = canvas.circle(canvasOriginX + page_height * atlas_aspect_ratio, canvasOriginY + page_height,controlRadius);
             scaleControl.attr("fill", "#fff");
+            */
+            
+            scaleControl = canvas.image("{/literal}{$base_dir}{literal}/img/button-scale-atlas-off.png",
+                scaleControlCoordinates.x - 23,
+                scaleControlCoordinates.y - 23,
+                46,
+                46);
+            
+            //scaleControlCoordinates.x = scaleControl.attr("x");
+            //scaleControlCoordinates.y = scaleControl.attr("y");
             
             drawAtlas(scaleControl,dragControl,horizontal_add);
             
@@ -498,13 +545,13 @@
                     setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
                     
                     dragControl.attr({
-                            cx: dragControlCoordinates.x,
-                            cy: dragControlCoordinates.y
+                            x: dragControlCoordinates.x - 3,
+                            y: dragControlCoordinates.y - 3
                     });
                     
                     scaleControl.attr({
-                            cx: scaleControlCoordinates.x,
-                            cy: scaleControlCoordinates.y
+                            x: scaleControlCoordinates.x - 23,
+                            y: scaleControlCoordinates.y - 23
                     });
                     
                     rect.attr({
@@ -518,11 +565,14 @@
                 function(x,y,e) {                                
                     e.stopPropagation();
                     
-                    initialX = dragControl.attr("cx");
-                    initialY = dragControl.attr("cy");
+                    this.attr("src", "{/literal}{$base_dir}{literal}/img/button-move-atlas-on.png");
+                    
+                    initialX = dragControl.attr("x") + 3;
+                    initialY = dragControl.attr("y") + 3;
                 },
             
-                function () {                                                
+                function () {
+                    this.attr("src", "{/literal}{$base_dir}{literal}/img/button-move-atlas-off.png");                                                
                     checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
                     //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
                 }
@@ -561,12 +611,15 @@
                     }
                     
                     this.attr({
-                        cx: page_dimensions.x + new_width,
-                        cy: page_dimensions.y + new_height
-                    });           
+                        x: page_dimensions.x + new_width - 23,
+                        y: page_dimensions.y + new_height - 23
+                    });
                     
-                    scaleControlCoordinates.x = this.attr("cx");
-                    scaleControlCoordinates.y = this.attr("cy");
+                    page_dimensions.width = new_width;
+                    page_dimensions.height = new_height;
+                    
+                    scaleControlCoordinates.x = page_dimensions.x + page_dimensions.width;
+                    scaleControlCoordinates.y = page_dimensions.y + page_dimensions.height;
                     
                     changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
                     
@@ -580,17 +633,18 @@
                 
                 function(mouseX,mouseY,e) {
                     e.stopPropagation();
-                
-                    scaleControlCoordinates.x = this.attr("cx");
-                    scaleControlCoordinates.y = this.attr("cy");
+                    
+                    this.attr("src", "{/literal}{$base_dir}{literal}/img/button-scale-atlas-on.png");
                                     
                     initialX = scaleControlCoordinates.x;
                     initialY = scaleControlCoordinates.y;
                 },
                 
                 function(e) {
-                    scaleControlCoordinates.x = this.attr("cx");
-                    scaleControlCoordinates.y = this.attr("cy");
+                    this.attr("src", "{/literal}{$base_dir}{literal}/img/button-scale-atlas-off.png");
+                    
+                    //scaleControlCoordinates.x = this.attr("x");
+                    //scaleControlCoordinates.y = this.attr("y");
                     
                     checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
                 }
@@ -614,7 +668,7 @@
                 
                 scaleControlCoordinates.x = page_dimensions.x + page_dimensions.width;
                 scaleControl.attr({
-                    cx: scaleControlCoordinates.x
+                    x: scaleControlCoordinates.x - 23
                 });
                 
                 changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
@@ -653,7 +707,7 @@
                 
                 scaleControlCoordinates.x = page_dimensions.x + page_dimensions.width;
                 scaleControl.attr({
-                    cx: scaleControlCoordinates.x
+                    x: scaleControlCoordinates.x - 23
                 });
                 
                 changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
@@ -686,7 +740,7 @@
                 
                 scaleControlCoordinates.y = page_dimensions.y + page_dimensions.height;
                 scaleControl.attr({
-                    cy: scaleControlCoordinates.y
+                    y: scaleControlCoordinates.y - 23
                 });
                 
                 changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
@@ -722,9 +776,10 @@
                 
                 page_dimensions.height = page_dimensions.height * (num_rows/(num_rows + 1))
                 
+                
                 scaleControlCoordinates.y = page_dimensions.y + page_dimensions.height;
                 scaleControl.attr({
-                    cy: scaleControlCoordinates.y
+                    y: scaleControlCoordinates.y - 23
                 });
                 
                 changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
@@ -740,39 +795,39 @@
             }
                         
             horizontal_add.mousedown(function () {
-                this.attr("fill", "#050505");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-add-on.png");
             });
             
             horizontal_add.click(function () {
                 addHorizontalPage();
-                this.attr("fill", "#fff");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-add-off.png");
             });
                         
             horizontal_remove.mousedown(function () {
-                this.attr("fill", "#fff");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-remove-column-on.png");
             });
             
             horizontal_remove.click(function () {
                 removeHorizontalPage();
-                this.attr("fill", "#050505");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-remove-column-off.png");
             });
             
             vertical_add.mousedown(function () {
-                this.attr("fill", "#000");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-add-on.png");
             });
             
             vertical_add.click(function () {
                 addVerticalPage();
-                this.attr("fill", "#fff");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-add-off.png");
             });
             
             vertical_remove.mousedown(function () {
-                this.attr("fill", "#fff");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-remove-row-on.png");
             });
             
             vertical_remove.click(function () {
                 removeVerticalPage();
-                this.attr("fill", "#050505");
+                this.attr("src", "{/literal}{$base_dir}{literal}/img/button-remove-row-off.png");
             });
             
             // Map Callbacks
