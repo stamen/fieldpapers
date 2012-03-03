@@ -68,8 +68,8 @@
         </h1>
         <p>
             {if $print.place_woeid && $print.country_name}
-                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.city_name}</a>, 
-                <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a></b><br />
+                <b><a href='{$base_dir}/place.php?place_id={$print.place_woeid}'>{$print.city_name}</a></b>, 
+                <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a><br />
             {/if}
             Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
