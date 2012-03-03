@@ -116,7 +116,7 @@
         
         <div class="clearfloat"></div>
         
-            <h2>
+            <h2 class="pageCount">
                 {$pages|@count}
                 {if $pages|@count == 1}
                     page
