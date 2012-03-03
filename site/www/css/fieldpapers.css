@@ -40,7 +40,8 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .homeThird { float: left; width: 320px; text-align: center; }
 .homeThird img { border: none; }
 
-.atlasPage { margin-right: 20px; float: left; margin-bottom: 2em; }
+h2.pageCount {clear: both; margin-top: 20px; }
+.atlasPage { margin-right: 15px; float: left; margin-bottom: 2em; }
 .atlasPage img { width: 300px; border: 1px solid black; }
 .atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
 .atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
