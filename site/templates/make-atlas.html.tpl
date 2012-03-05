@@ -45,14 +45,14 @@
             
         function setProvider(provider)
         {        
-            if (provider === "Bing/Toner")
+            if (provider === "Satellite + Labels")
             {
                 var tileURL = 'http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg';
-            } else if (provider === "Bing Aerial") {
+            } else if (provider === "Satellite Only") {
                 var tileURL = 'http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg';
-            } else if (provider === "Toner") {
+            } else if (provider === "Black & White") {
                 var tileURL = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
-            } else if (provider === "Open Street Map") {
+            } else if (provider === "Street Map") {
                 var tileURL = 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
             }
             
@@ -364,8 +364,8 @@
             ////
             var MM = com.modestmaps;
             
-            var bing_toner_provider = new MM.TemplatedMapProvider('http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg');
-            map_layer = new MM.Layer(bing_toner_provider);
+            var satellite_labels_provider = new MM.TemplatedMapProvider('http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg');
+            map_layer = new MM.Layer(satellite_labels_provider);
             
             setMapHeight();
             
@@ -1063,10 +1063,10 @@
             <div id="atlas_inputs_container">
                 <div id="atlas_inputs">
                     <select style="top: -8px; position: relative;" name="provider" onchange="setProvider(this.value);">
-                        <option>Bing/Toner</option>
-                        <option>Open Street Map</option>
-                        <option>Bing Aerial</option>
-                        <option>Toner</option>
+                        <option>Satellite + Labels</option>
+                        <option>Street Map</option>
+                        <option>Satellite Only</option>
+                        <option>Black & White</option>
                     </select> 
         
                     <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>            
