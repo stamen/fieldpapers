@@ -16,7 +16,7 @@
             </a>
         </li>
         <li>
-            <a href="{$base_dir}/watch.php">
+            <a href="{$base_dir}/watch.php?page=1&perpage=50">
                 <span class="section">WATCH</span><br />
                 <span class="desc">recent activity</span>
             </a>
