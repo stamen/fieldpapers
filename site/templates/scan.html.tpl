@@ -4,7 +4,12 @@
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Atlas/Page - fieldpapers.org</title>    
+    <title>
+        {if $page_number && $scan.print_id}
+            Page {$page_number}, Atlas {$scan.print_id}
+        {/if}
+         - fieldpapers.org
+    </title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript" src="{$base_dir}/markerclip.js"></script>
@@ -45,8 +50,18 @@
             margin: 0;
         }
         
-        #remove, #remove_new {
+        #remove, #remove_new, #ok, #ok_new, #cancel {
             float: left;
+        }
+        
+        #saved_note {
+            background-color: white;
+            margin: 2px;
+            padding: 10px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: normal;
+            font-size: .8em;
+            width: 100px;
         }
         
     /* {/literal}]]> */
@@ -101,6 +116,10 @@
 
                 <script type="text/javascript">
                 // <![CDATA[{literal}    
+                    String.prototype.trim = function() {
+                        return this.replace(/^\s+|\s+$/g,"");
+                    }
+                        
                     var markerNumber = -1;
                     
                     var unsignedMarkerNumber = 1;                    
@@ -121,9 +140,21 @@
                         
                         var textarea = document.createElement('textarea');
                         textarea.id = "notes";
+                        //textarea.value = ''; // ?
                         textarea.name = 'marker[' + markerNumber + '][note]';
                         textarea.className = 'show';
                         div.appendChild(textarea);
+                                                
+                        var submitNote = function()
+                        {
+                            //console.log(document.getElementById('scan-form'));
+                            if (textarea.value.trim() == ''){
+                                alert('Please fill out your note!');
+                                return false;
+                            } else {
+                                document.getElementById('scan-form').submit();   
+                            }
+                        }
                         
                         var removeMarkerNote = function()
                         {                                                        
@@ -131,10 +162,10 @@
                         }
                         
                         var ok_button = document.createElement('button');
-                        ok_button.id = 'remove_new';
+                        ok_button.id = 'ok_new';
                         ok_button.innerHTML = 'OK';
                         ok_button.className = 'show';
-                        ok_button.onclick = submitForm;
+                        ok_button.onclick = submitNote;
                         div.appendChild(ok_button);
                         
                         var remove_button = document.createElement('button');
@@ -166,22 +197,13 @@
                         
                         // make it easy to drag
                         
-                        var mousemove = false;
-                        
                         img.onmousedown = function(e)
                         {
                             var marker_start = {x: div.offsetLeft, y: div.offsetTop},
                                 mouse_start = {x: e.clientX, y: e.clientY};
                             
-                            mousemove = false;
-                            
                             document.onmousemove = function(e)
-                            {
-                                if (e.type =='mousemove')
-                                {
-                                    mousemove = true;
-                                }
-                                
+                            {   
                                 var mouse_now = {x: e.clientX, y: e.clientY};
                             
                                 div.style.left = (marker_start.x + mouse_now.x - mouse_start.x) + 'px';
@@ -195,22 +217,13 @@
                         
                         img.onmouseup = function(e)
                         {
-                            if (!mousemove)
+                            if (textarea.className == 'hide' && remove_button.className == 'hide' && ok_button.className == 'hide') 
                             {
-                                if (textarea.className == 'hide' && remove_button.className == 'hide' && ok_button.className == 'hide') 
-                                {
-                                    textarea.className = 'show';
-                                    remove_button.className = 'show';
-                                    ok_button.className = 'show';
-                                } else if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show') {
-                                    textarea.className = 'hide';
-                                    remove_button.className = 'hide';
-                                    ok_button.className = 'hide';
-                                }
-                            }
-                            
-                            mousemove = false;
-                        
+                                textarea.className = 'show';
+                                remove_button.className = 'show';
+                                ok_button.className = 'show';
+                            } 
+                                                       
                             var marker_end = {x: div.offsetLeft, y: div.offsetTop};
                             
                             marker.location = map.pointLocation(marker_end);
@@ -230,14 +243,14 @@
                             div.style.left = point.x + 'px';
                             div.style.top = point.y + 'px';
                         }
-                        
+                                                
                         map.addCallback('panned', updatePosition);
                         map.addCallback('zoomed', updatePosition);
                         updatePosition();
                         
                         return div;
                     }
-                    
+
                     function addMarkerNote()
                     {                        
                         var markerDiv = new MarkerNote(map);
@@ -246,6 +259,8 @@
                     
                     function submitForm()
                     {
+                        // Not needed?
+                        //console.log(document.getElementById('scan-form'));
                         document.getElementById('scan-form').submit();   
                     }
                     
@@ -260,37 +275,78 @@
                         img.src = 'img/icon_x_mark.png';
                         div.appendChild(img);
                         
-                        div.title = note;
+                        //div.title = note;
                         
                         var br = document.createElement('br');
                         div.appendChild(br);
+                        
+                        var saved_note = document.createElement('span');
+                        saved_note.id = "saved_note";
+                        saved_note.innerHTML = note;
+                        saved_note.className = 'hide';
+                        div.appendChild(saved_note);
                         
                         var textarea = document.createElement('textarea');
                         textarea.id = "notes";
                         textarea.value = note;
                         textarea.name = 'marker[' + unsignedMarkerNumber + '][note]';
                         textarea.className = 'hide';
+                        textarea.style.width = '180px';
+                        //textarea.style.height = '200px';
                         div.appendChild(textarea);
                         
                         var removeMarkerNote = function()
                         {                            
-                            // Remove visual elements
-                            div.removeChild(img);
-                            div.removeChild(textarea);
-                            div.removeChild(remove_button);
-                            div.removeChild(ok_button);
+                            if (window.confirm("Are you sure you want to delete this saved note?"))
+                            {
+                                // Remove visual elements
+                                div.removeChild(img);
+                                div.removeChild(textarea);
+                                div.removeChild(ok_button);
+                                div.removeChild(cancel_button);
+                                div.removeChild(remove_button);
+                                
+                                removed.value = 1; // Removed
+                                
+                                submitForm();
+                            } else {
+                                return false;
+                            }
+                        }
+                        
+                        var resetNote = function()
+                        {
+                            var orig_point = map.locationPoint(new MM.Location(lat,lon));
+                            marker.location = new MM.Location(lat,lon);
+                        
+                            div.style.left = orig_point.x + 'px';
+                            div.style.top = orig_point.y + 'px';
                             
-                            removed.value = 1; // Removed
+                            textarea.value = note;
                             
-                            submitForm();
+                            if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show' && cancel_button.className == 'show') {
+                                textarea.className = 'hide';
+                                ok_button.className = 'hide';
+                                cancel_button.className = 'hide';
+                                remove_button.className = 'hide';
+                            }
+                            
+                            return false;
                         }
                         
                         var ok_button = document.createElement('button');
-                        ok_button.id = 'remove';
+                        ok_button.id = 'ok';
                         ok_button.innerHTML = 'OK';
                         ok_button.className = 'hide';
                         ok_button.onclick = submitForm;
                         div.appendChild(ok_button);
+                        
+                        var cancel_button = document.createElement('button');
+                        cancel_button.id = 'cancel';
+                        cancel_button.innerHTML = 'Cancel';
+                        cancel_button.className = 'hide';
+                        cancel_button.onclick = resetNote;
+                        div.appendChild(cancel_button);
                         
                         var remove_button = document.createElement('button');
                         remove_button.id = 'remove';
@@ -335,33 +391,47 @@
                         img.onmouseover = function(e)
                         {
                             img.src = 'img/icon_x_mark_hover.png';
+                            
+                            if (textarea.className == 'hide' && ok_button.className == 'hide' && remove_button.className == 'hide' && cancel_button.className == 'hide')
+                            {
+                                saved_note.className = 'show';
+                            }
                         }
                         
                         img.onmouseout = function(e)
                         {
                             img.src = 'img/icon_x_mark.png';
+                            
+                            if (saved_note.className = 'show')
+                            {
+                                saved_note.className = 'hide';
+                            }
                         }
-                        
-                        var mousemove = false;
-                        
+                                                
                         img.onmousedown = function(e)
                         {
                             var marker_start = {x: div.offsetLeft, y: div.offsetTop},
-                                mouse_start = {x: e.clientX, y: e.clientY};
-                                                        
-                            mousemove = false;                    
+                                mouse_start = {x: e.clientX, y: e.clientY};                   
                                     
                             document.onmousemove = function(e)
-                            {
-                                if (e.type =='mousemove')
-                                {
-                                    mousemove = true;
-                                }
-                                
+                            {                                
                                 var mouse_now = {x: e.clientX, y: e.clientY};
                             
                                 div.style.left = (marker_start.x + mouse_now.x - mouse_start.x) + 'px';
                                 div.style.top = (marker_start.y + mouse_now.y - mouse_start.y) + 'px';
+                            }
+                            
+                            if (textarea.className == 'hide' && ok_button.className == 'hide' && remove_button.className == 'hide' && cancel_button.className == 'hide') 
+                            {
+                                if (saved_note.className = 'show')
+                                {
+                                    saved_note.className = 'hide';
+                                }
+                            
+                                textarea.className = 'show';
+                                ok_button.className = 'show';
+                                cancel_button.className = 'show';
+                                remove_button.className = 'show';
                             }
                             
                             return false;
@@ -371,22 +441,6 @@
                         
                         img.onmouseup = function(e)
                         {                            
-                            if (!mousemove)
-                            {
-                                if (textarea.className == 'hide' && remove_button.className == 'hide' && ok_button.className == 'hide') 
-                                {
-                                    textarea.className = 'show';
-                                    remove_button.className = 'show';
-                                    ok_button.className = 'show';
-                                } else if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show') {
-                                    textarea.className = 'hide';
-                                    remove_button.className = 'hide';
-                                    ok_button.className = 'hide';
-                                }
-                            }
-                            
-                            mousemove = false;
-                            
                             var marker_end = {x: div.offsetLeft, y: div.offsetTop};
                             
                             marker.location = map.pointLocation(marker_end);
@@ -442,7 +496,7 @@
                 
                     var MM = com.modestmaps,
                         provider = '{/literal}{$scan.base_url}{literal}/{Z}/{X}/{Y}.jpg',
-                        map = new MM.Map("map", new MM.TemplatedMapProvider(provider)),
+                        map = new MM.Map("map", new MM.TemplatedMapProvider(provider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]),
                         bounds = '{/literal}{$scan.geojpeg_bounds}{literal}'.split(','),
                         north = parseFloat(bounds[0]),
                         west = parseFloat(bounds[1]),
