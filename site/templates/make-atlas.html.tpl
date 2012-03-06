@@ -1069,8 +1069,8 @@
                         <option>Black & White</option>
                     </select> 
         
-                    <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>            
                     <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
+                    <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>            
             
                     <span id="page_count_container">
                         <span class="section" id="page_count"><b>1</b></span><br />
