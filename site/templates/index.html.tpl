@@ -6,8 +6,6 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Home - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
-    <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>    
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
 <body>         
     {include file="navigation.htmlf.tpl"}
@@ -31,10 +29,6 @@
         </div>
         
         <div class="clearfloat"></div>
-        
-        
-<!--        {include file="hotspots.htmlf.tpl"} -->
-        
         {include file="footer.htmlf.tpl"}
     </div>
 </body>
