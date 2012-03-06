@@ -4,13 +4,11 @@
         {literal}            
             $(document).ready(function() { 
                 var MM = com.modestmaps;
-                
                 {/literal}
 
                 {if $print.selected_page}
                     var overview_provider = '{$print.selected_page.provider}';
                     var main_provider = '{$print.selected_page.provider}';
-                
                 {else}
                     var overview_provider = '{$pages[0].provider}';
                     var main_provider = '{$pages[0].provider}';
@@ -56,7 +54,50 @@
                 var extents = [new MM.Location(north, west), new MM.Location(south, east)];
                 
                 map.setExtent(extents);
+                map.setCenterZoom(map.getCenter(), 11);
                 overview_map.setCenterZoom(map.getCenter(),5);
+                
+                ////
+                // Draw the Extent of the Atlas
+                ////
+                var atlas_shape = null;
+                var atlas_locations = [];
+                
+                var fillStyle = "rgba(5,5,5,.1)";
+                var lineWidth = 3;
+                var lineJoin = 'round';
+
+                var atlasStrokeStyle = 'rgba(204,204,204,0)';                
+                
+                atlas_locations.push({'lat': north, 'lon': west});
+                atlas_locations.push({'lat': north, 'lon': east});
+                atlas_locations.push({'lat': south, 'lon': east});
+                atlas_locations.push({'lat': south, 'lon': west});
+                
+                atlas_shape = new MM.PolygonMarker(map, atlas_locations, fillStyle, atlasStrokeStyle, lineWidth, lineJoin);
+                
+                ////
+                // Draw individual pages
+                ////
+                {/literal}{if $print.selected_page}{literal}
+                    var page_shape = null;
+                    var page_locations = [];
+                    
+                    var pageStrokeStyle = 'rgba(5,5,5,0)';
+                    var pageFillStyle = "rgba(5,5,5,.3)";
+                    
+                    var north_page = '{/literal}{$pages[0].north}{literal}';
+                    var west_page = '{/literal}{$pages[0].west}{literal}';
+                    var south_page = '{/literal}{$pages[0].south}{literal}';
+                    var east_page = '{/literal}{$pages[0].east}{literal}';
+                    
+                    page_locations.push({'lat': north_page, 'lon': west_page});
+                    page_locations.push({'lat': north_page, 'lon': east_page});
+                    page_locations.push({'lat': south_page, 'lon': east_page});
+                    page_locations.push({'lat': south_page, 'lon': west_page});
+                    
+                    page_shape = new MM.PolygonMarker(map, page_locations, pageFillStyle, pageStrokeStyle, lineWidth, lineJoin);
+                {/literal}{/if}{literal}
             });
         {/literal}
     </script>
@@ -64,7 +105,7 @@
     {if $print.selected_page}
         <div class="overview_print" id="overview_map"></div>
         <h1>
-            Untitled
+            Untitled {$pages.west}
         </h1>
         <p>
             {if $print.place_woeid && $print.country_name}
