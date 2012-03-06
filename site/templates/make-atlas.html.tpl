@@ -1005,7 +1005,7 @@
             color: #666;
         }
         
-        #done_button {
+        #next_button {
             font-size: 13px;
             padding: 0px 8px 0px 8px;
             position: relative;
@@ -1077,7 +1077,7 @@
                         <span id="page_plural">PAGE</span>
                     </span>
                     
-                    <input id="done_button" type="button" onclick="setAndSubmitData()" value="Done" />
+                    <input id="next_button" type="button" onclick="setAndSubmitData()" value="Next" />
                 </div>
             </div>
             <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 940px; position: absolute;">
