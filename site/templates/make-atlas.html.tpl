@@ -984,6 +984,7 @@
         }
         
         #atlas_inputs {
+            font-size: 13px;
             padding: 10px 0px 0px 0px;
             margin: -25px auto 0 auto;
             background-color: #FFF;
