@@ -12,6 +12,7 @@
         <meta http-equiv="refresh" content="5" />
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
+        <script type="text/javascript" src="{$base_dir}/polygonmarker-canvas.js"></script>
     {/if}
 </head>
 <body>
