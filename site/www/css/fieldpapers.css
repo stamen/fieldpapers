@@ -28,7 +28,7 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .clearfloat { clear:both;height:0;font-size: 1px;line-height: 0px;}
 
 .navbar {width: 960px; padding-top: 20px; margin-right:auto; margin-left:auto; height: 100px; vertical-align: center; }
-.logo {width: 300px; margin-left: 10px; margin-right: 10px; float: left; text-align: center; padding-top: 5px; border: none;}
+.logo {width: 300px; margin-left: 10px; margin-right: 10px; float: left; text-align: left; padding-top: 5px; border: none;}
 .navbar ul {list-style:none; float: left;}
 .navbar li {width: 140px; margin-left: 10px; display: block; float: left; padding-bottom: 20px;}
 .navbar li.in { border-bottom: 2px solid black;}
