@@ -9,8 +9,10 @@
     $dbh =& get_db_connection();
     remember_user($dbh);
     
+    //header('Content-type: text/plain');
+    //print_r($_POST);
     /**** ... ****/
-    
+        
     $user = cookied_user($dbh);
     $user_id = $user['id'];
     
@@ -26,6 +28,8 @@
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
+        $_SESSION['atlas_data']['layout'] = $_POST['layout'];
+            
         $dbh =& get_db_connection();
         
         $dbh->query('START TRANSACTION');
@@ -35,13 +39,13 @@
             $print = compose_from_geojson($dbh, file_get_contents('php://input'));
 
         } else {
-            $print = compose_from_postvars($dbh, $_POST, $user_id);
+            $print = compose_from_postvars($dbh, $_SESSION['atlas_data'], $user_id);
         }
         
         $dbh->query('COMMIT');
         
+
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
         header("Location: {$print_url}");
     }
-    
 ?>
