@@ -13,6 +13,14 @@
     $user = cookied_user($dbh);
     $user_id = $user['id'];
     
+    if ($_POST)
+    {
+        foreach($_POST as $key => $value)
+        {
+            $_SESSION['atlas_data'][$key] = $value;
+        }
+    }
+            
     if($_POST['form_url'])
     {
         if(empty($_POST['form_url']))
@@ -30,15 +38,16 @@
         }
 
         set_form($dbh, $added_form);
+        $_SESSION['atlas_data']['form_id'] = $added_form['id'];
         
         $message = array('action' => 'import form',
                          'url' => $_POST['form_url'],
                          'form_id' => $added_form['id']);
             
         add_message($dbh, json_encode($message));
-        
-        $form_url = 'http://'.get_domain_name().get_base_dir().'/form.php?id='.urlencode($added_form['id']);
-        header("Location: {$form_url}");
+                
+        $layout_url = 'http://'.get_domain_name().get_base_dir().'/set-layout.php?id='.urlencode($added_form['id']);
+        header("Location: {$layout_url}");
         
         exit();
     }
