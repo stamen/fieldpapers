@@ -46,6 +46,14 @@
                     alert("We could not find that location.");
                 }
             }
+            
+            function setValue(value)
+            {
+                if (value === 'Type in a location')
+                {
+                    document.getElementById('location_input').value = '';
+                }
+            }
         
         {/literal}
     </script>
@@ -57,8 +65,8 @@
                 <h2>Where in the world is your atlas?</h2>
                 <p>                                            
                     <form id="search-form" onsubmit="return getPlaces(this.elements['query'].value);" action="{$base_dir}/make-atlas.php" method="get">
-                        <input type="text" name="query" size="50" style="padding: 5px; color: grey;" 
-                               value="Type in a location" onFocus="this.value=''"/>
+                        <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
+                               value="Type in a location" onFocus="setValue(this.value);"/>
                         <input type="hidden" id="ne_point" name="ne" />
                         <input type="hidden" id="sw_point" name="sw" />
                         <input type="hidden" id="center_point" name="center" />
