@@ -983,14 +983,20 @@
             text-align: center;
         }
         
-        #atlas_inputs {
+        .atlas_inputs {
             font-size: 13px;
-            padding: 10px 0px 0px 0px;
+            padding: 10px 10px 0px 0px;
             margin: -25px auto 0 auto;
             background-color: #FFF;
             border-top: 2px solid #000;
-            text-align: center;
-            width: 330px;
+            width: 580px;
+        }
+        
+        #area_title_container {
+            display: inline-block;
+            width: 1em;
+            margin: 0px 45px 10px 0px;
+            text-align: left;
         }
         
         #page_count_container {
@@ -1008,10 +1014,18 @@
         
         #next_button {
             font-size: 13px;
-            padding: 0px 8px 0px 8px;
             position: relative;
             top: -8px;
             margin: 0;
+        }
+        
+        #atlas_info, #atlas_layout {
+           display: inline-block;
+           padding-left: 10px;
+           margin-left: 10px;
+           border-left: 1px dashed #666;
+           
+           color: #CCC;
         }
         
         .radio_portrait {
@@ -1062,48 +1076,49 @@
         {include file="navigation.htmlf.tpl"}
         <div id="container" style="position: relative">
             <div id="atlas_inputs_container">
-                <div id="atlas_inputs">
-                    <select style="top: -8px; position: relative;" name="provider" onchange="setProvider(this.value);">
+                <div class="atlas_inputs">
+                    <span id="area_title_container">
+                        <span style="font-weight: normal; font-size: .9em;">1.</span><br />
+                        <span><b>AREA</b></span>
+                    </span>
+                    
+                    <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
+                    <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>    
+
+                    <select style="top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
                         <option>Satellite + Labels</option>
                         <option>Street Map</option>
                         <option>Satellite Only</option>
                         <option>Black & White</option>
-                    </select> 
-        
-                    <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
-                    <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>            
-            
+                    </select>
+                    
                     <span id="page_count_container">
                         <span class="section" id="page_count"><b>1</b></span><br />
                         <span id="page_plural">PAGE</span>
                     </span>
                     
                     <input id="next_button" type="button" onclick="setAndSubmitData()" value="Next" />
+                    
+                    <span id="atlas_info">
+                        <span id="area_title_container">
+                            <span style="font-weight: normal; font-size: .9em;">2.</span><br />
+                            <span><b>INFO</b></span>
+                        </span>
+                    </span>
+                    <span id="atlas_layout">
+                        <span id="area_title_container">
+                            <span style="font-weight: normal; font-size: .9em;">3.</span><br />
+                            <span><b>LAYOUT</b></span>
+                        </span>
+                    </span>
                 </div>
             </div>
-            <form id="compose_print" method="post" action="{$base_dir}/compose-print.php" style="display:inline; width: 940px; position: absolute;">
+            <form id="compose_print" method="post" action="{$base_dir}/add-form.php" style="display:inline; width: 940px; position: absolute;">
                 <input type="hidden" name="action" value="compose">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
                 <input type="hidden" id="provider" name="provider">
-                
-                <!--
-                <select id="forms" name="form_id" style="margin-left: 30px">
-                    {if $default_form == 'none'}
-                        <option selected>Select a Form for this Atlas</option>
-                    {else}
-                        <option>Forms</option>
-                        <option value="{$default_form.id}" selected>{$default_form.title} ({$default_form.id})</option>
-                    {/if}
-                    
-                    {foreach from=$forms item="form"}
-                        {if $form.id != $default_form.id}
-                            <option value="{$form.id}">{$form.title} ({$form.id})</option>
-                        {/if}
-                    {/foreach}
-                </select>
-                -->
             </form>
             <div id="zoom-container">
                 <span id="zoom-in" style="display: none;">
