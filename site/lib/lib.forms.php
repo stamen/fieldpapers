@@ -48,6 +48,24 @@
         return get_form_field($dbh, $form_id, $name);
     }
     
+    function add_form_id_to_print(&$dbh, $form_id, $print_id)
+    {   
+        $q = sprintf('UPDATE prints
+              SET form_id = %s
+              WHERE id= %s',
+             $dbh->quoteSmart($form_id),
+             $dbh->quoteSmart($print_id));
+
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+        {
+            die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+    }
+    
     function get_forms(&$dbh, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
