@@ -37,8 +37,11 @@
         } else {
             $prints[$i]['city_name'] = 'Unknown City';
         }
+        
+        $pages = get_print_pages($dbh, $print['id']);
+        $prints[$i]['page_count'] = count($pages);
     }
-
+    
     $sm = get_smarty_instance();
     $sm->assign('prints', $prints);
 

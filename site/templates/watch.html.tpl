@@ -29,7 +29,13 @@
                     Unknown Place
                 {/if}
                 </a></span>
-                <span class="atlasMeta">on <a href="{$base_dir}/time.php?date={$print.created}">{$print.created|date_format}</a></span>
+                <span class="atlasMeta">on <a href="{$base_dir}/time.php?date={$print.created}">{$print.created|date_format}</a>,
+                {$print.page_count}
+                {if $print.page_count == 1}
+                    Page
+                {else}
+                    Pages
+                {/if}</span>
             </div>
         {/foreach}
         
