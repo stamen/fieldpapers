@@ -181,6 +181,7 @@
             drawAtlas();
             
             checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+            updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
         }
         
         function changeOrientationButtonStyle(orientation)
@@ -318,6 +319,7 @@
             });
         }
         
+        /*
         function setAndSubmitData()
         {
             updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
@@ -325,6 +327,7 @@
             document.forms['compose_print'].submit();
             //return true;
         }
+        */
         
         function updatePageExtents(topLeftPoint, bottomRightPoint)
         {   
@@ -346,15 +349,24 @@
         }
                 
         function updateAtlasFormFields(pages)
-        {   
-            // TODO: Empty fields
+        {               
+            var form_data_div = document.getElementById('form_data_div');
+            
+            if (form_data_div.hasChildNodes())
+            {
+                while(form_data_div.childNodes.length >= 1)
+                {
+                    form_data_div.removeChild(form_data_div.firstChild);
+                }
+            }
+            
             for (var i = 0; i < pages.length; i++)
             {
                 var page_extent = document.createElement('input');
                 page_extent.name = "pages[" + i + "]";
                 page_extent.type = 'hidden';
                 page_extent.value = pages[i];
-                document.getElementById('compose_print').appendChild(page_extent);
+                document.getElementById('form_data_div').appendChild(page_extent);
             }
         }
         
@@ -496,6 +508,8 @@
             lines = canvas.path(pathString);
             lines.attr("stroke", "#050505");
             lines.insertBefore(rect);
+            
+            updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             
             /////
             // Handle the highlighting of all of the atlas controls
@@ -642,7 +656,7 @@
                     
                     document.getElementById('canvas').style.cursor = "default";                                               
                     checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
-                    //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
+                    updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
                 }
             );
             
@@ -731,6 +745,7 @@
                     document.getElementById('canvas').style.cursor = "default";
                     
                     checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+                    updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
                 }
             );
 
@@ -765,7 +780,7 @@
                 });
                 
                 resetAtlasAttributes();
-                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
+                updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
             
             var removeHorizontalPage = function() {
@@ -803,7 +818,7 @@
                 });
                 
                 resetAtlasAttributes();
-                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
+                updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
             
             var addVerticalPage = function() {
@@ -836,7 +851,7 @@
                 });
                 
                 resetAtlasAttributes();
-                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
+                updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
             
             var removeVerticalPage = function() {
@@ -875,7 +890,7 @@
                 });
                 
                 resetAtlasAttributes();
-                //updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
+                updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
             
             ////
@@ -1075,46 +1090,48 @@
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
         <div id="container" style="position: relative">
-            <div id="atlas_inputs_container">
-                <div class="atlas_inputs">
-                    <span id="area_title_container">
-                        <span style="font-weight: normal; font-size: .9em;">1.</span><br />
-                        <span><b>AREA</b></span>
-                    </span>
-                    
-                    <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
-                    <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>    
-
-                    <select style="top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
-                        <option>Satellite + Labels</option>
-                        <option>Street Map</option>
-                        <option>Satellite Only</option>
-                        <option>Black & White</option>
-                    </select>
-                    
-                    <span id="page_count_container">
-                        <span class="section" id="page_count"><b>1</b></span><br />
-                        <span id="page_plural">PAGE</span>
-                    </span>
-                    
-                    <input id="next_button" type="button" onclick="setAndSubmitData()" value="Next" />
-                    
-                    <span id="atlas_info">
+            <form id="compose_print" method="post" action="{$base_dir}/compose-print.php">
+                <div id="atlas_inputs_container">
+                    <div class="atlas_inputs">
                         <span id="area_title_container">
-                            <span style="font-weight: normal; font-size: .9em;">2.</span><br />
-                            <span><b>INFO</b></span>
+                            <span style="font-weight: normal; font-size: .9em;">1.</span><br />
+                            <span><b>AREA</b></span>
                         </span>
-                    </span>
-                    <span id="atlas_layout">
-                        <span id="area_title_container">
-                            <span style="font-weight: normal; font-size: .9em;">3.</span><br />
-                            <span><b>LAYOUT</b></span>
+                        
+                        <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
+                        <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>
+                        
+                        <select style="top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
+                            <option>Satellite + Labels</option>
+                            <option>Street Map</option>
+                            <option>Satellite Only</option>
+                            <option>Black & White</option>
+                        </select>
+                        
+                        <span id="page_count_container">
+                            <span class="section" id="page_count"><b>1</b></span><br />
+                            <span id="page_plural">PAGE</span>
                         </span>
-                    </span>
+                        
+                        <!-- <input id="next_button" type="button" onclick="setAndSubmitData()" value="Next" /> -->
+                        <input id="next_button" type="submit" value="Next" />
+                        
+                        <span id="atlas_info">
+                            <span id="area_title_container">
+                                <span style="font-weight: normal; font-size: .9em;">2.</span><br />
+                                <span><b>INFO</b></span>
+                            </span>
+                        </span>
+                        <span id="atlas_layout">
+                            <span id="area_title_container">
+                                <span style="font-weight: normal; font-size: .9em;">3.</span><br />
+                                <span><b>LAYOUT</b></span>
+                            </span>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <form id="compose_print" method="post" action="{$base_dir}/add-form.php" style="display:inline; width: 940px; position: absolute;">
                 <input type="hidden" name="action" value="compose">
+                <input id="form_data_div" type="hidden" name="pages[]">
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
