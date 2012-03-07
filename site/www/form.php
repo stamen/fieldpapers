@@ -13,7 +13,7 @@
     
     /**** ... ****/
     
-    $form_id = $_GET["id"];
+    $form_id = $_GET['id'] ? $_GET['id'] : null;
 
     $sm = get_smarty_instance();
      
@@ -30,7 +30,7 @@
     
     $sm->assign('form', $form);
     
-    // Get pages
+    // Get fields
     $fields = get_form_fields($dbh, $form_id);
     $sm->assign('fields', $fields);
     
