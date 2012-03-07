@@ -5,26 +5,72 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Add Form - fieldpapers.org</title>    
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <style type="text/css">
+        {literal}
+            .subnav {
+               display: inline-block;
+               padding-left: 10px;
+               padding-top: 10px;
+               margin-left: 0px;
+               border-top: 2px solid #000;
+               width: 75px;
+               text-align: left;
+               
+               color: #CCC;
+               font-size: 12px;
+            }
+            
+            .subnav.info {
+               color: #000;
+            }
+        {/literal}
+    </style>
 </head>
 <body>      
     {include file="navigation.htmlf.tpl"}
-    <div class="container">
-        <h1>Add a form</h1>
-
-            <p>Field Papers can import a form that you've created elsewhere online, for example, in a site like Survey Monkey or Google Docs. All we need is a URL to the page that displays the form, and we'll do the rest.</p>
-            
+    <div style="width: 100%; text-align: center;">
+        <span class="subnav area">
+            <span id="area">
+                <span>1.</span><br />
+                <span><b>AREA</b></span>
+            </span>
+        </span>
+        <span class="subnav info">
+            <span>
+                <span>2.</span><br />
+                <span><b>INFO</b></span>
+            </span>
+        </span>
+        <span class="subnav layout">
+            <span>
+                <span>3.</span><br />
+                <span><b>LAYOUT</b></span>
+            </span>
+        </span>
+    </div>
+    <div class="container" style="margin-top: 50px;">            
             <form action="{$base_href}" method="POST">
-                <p>
-                    URL of your form:<br />
-                    <input name="form_url" type="text" size="60" />
+                <p style="margin-bottom: 60px;">
+                    <span style="font-size: 22px;">Give Your Atlas a Name</span><br />
+                    <input style="margin-top: 10px; color: grey;" type="text" name="atlas_title" size="60"
+                           value="Untitled" onFocus="this.value=''"/>
                 </p>
-
-<!--                Optional title: <input name="form_title" type="text" size="30" /><br /> -->
                 <p>
-                        <input type="submit" value="Get Form" />
+                    If you like, you can also add a document to go alongside each page 
+                    in your atlas, like a questionnaire or a site survey form. 
+                    Field Papers can import forms created in 
+                    <a href="http://docs.google.com">Google Docs</a>. Just 
+                    enter the URL to your Google form, and we'll do the rest.
                 </p>
+                <p>
+                    <span style="font-size: 16px"><b>Google Form URL</b> (<i>This is Optional.</i>)</span><br />
+                    <input style="margin-top: 10px; color: grey;" type="text" name="form_url" size="60"
+                            value="http://" onFocus="this.value=''"/>
+                </p>
+                <div style="float: right; margin-top: 60px;">
+                    <input type="submit" value="Next" />
+                </div>
             </form>
             
             {include file="footer.htmlf.tpl"}
