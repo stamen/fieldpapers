@@ -1090,7 +1090,7 @@
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
         <div id="container" style="position: relative">
-            <form id="compose_print" method="post" action="{$base_dir}/add-form.php">
+            <form id="compose_print" method="post" action="{$base_dir}/make-info.php">
                 <div id="atlas_inputs_container">
                     <div class="atlas_inputs">
                         <span id="area_title_container">
@@ -1113,7 +1113,6 @@
                             <span id="page_plural">PAGE</span>
                         </span>
                         
-                        <!-- <input id="next_button" type="button" onclick="setAndSubmitData()" value="Next" /> -->
                         <input id="next_button" type="submit" value="Next" />
                         
                         <span id="atlas_info">
