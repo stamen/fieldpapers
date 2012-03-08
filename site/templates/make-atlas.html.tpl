@@ -1131,7 +1131,7 @@
                     </div>
                 </div>
                 <input type="hidden" name="action" value="compose">
-                <input id="form_data_div" type="hidden" name="pages[]">
+                <div id="form_data_div"></div>
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
