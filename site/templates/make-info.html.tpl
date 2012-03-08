@@ -67,7 +67,7 @@
         </span>
     </div>
     <div class="container" style="margin-top: 50px;">            
-            <form action="{$base_href}" method="POST">
+            <form action="{$base_dir}/make-layout.php" method="POST">
                 <p style="margin-bottom: 60px;">
                     <span style="font-size: 22px;">Give Your Atlas a Name</span><br />
                     <input style="margin-top: 10px; color: grey;" type="text" id='title_input' name="atlas_title" size="60"
@@ -85,6 +85,16 @@
                     <input style="margin-top: 10px; color: grey;" type="text" id='form_input' name="form_url" size="60"
                             value="http://" onFocus="setValue(this.value);"/>
                 </p>
+                
+                <input type="hidden" name="action" value="{$atlas_data.action}">
+                <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom}">
+                <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size}">
+                <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation}">
+                <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider}">
+                {foreach from=$atlas_data.pages item="page" key="index"}
+                    <input type="hidden" name="pages[{$index}]" value="{$page}">
+                {/foreach}
+                
                 <div style="float: right; margin-top: 60px;">
                     <input type="submit" value="Next" />
                 </div>
