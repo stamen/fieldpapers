@@ -63,11 +63,11 @@
                 var atlas_shape = null;
                 var atlas_locations = [];
                 
-                var fillStyle = "rgba(5,5,5,.1)";
+                var fillStyle = "rgba(5,5,5,0)";
                 var lineWidth = 3;
                 var lineJoin = 'round';
 
-                var atlasStrokeStyle = 'rgba(204,204,204,0)';                
+                var atlasStrokeStyle = 'rgba(255,255,255,1)';                
                 
                 atlas_locations.push({'lat': north, 'lon': west});
                 atlas_locations.push({'lat': north, 'lon': east});
@@ -83,8 +83,8 @@
                     var page_shape = null;
                     var page_locations = [];
                     
-                    var pageStrokeStyle = 'rgba(5,5,5,0)';
-                    var pageFillStyle = "rgba(5,5,5,.3)";
+                    var pageStrokeStyle = 'rgba(5,5,5,1)';
+                    var pageFillStyle = "rgba(5,5,5,0)";
                     
                     var north_page = '{/literal}{$pages[0].north}{literal}';
                     var west_page = '{/literal}{$pages[0].west}{literal}';
