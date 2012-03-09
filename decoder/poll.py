@@ -90,7 +90,7 @@ def composePrint(apibase, password, message_id, msg):
     if 'form_id' in msg and 'form_url' in msg:
         def on_fields(fields):
             for page in msg['pages']:
-                page['text'] = forms.fields_as_text(fields)
+                page['text'] = page.get('text', '').rstrip() + '\n\n' + forms.fields_as_text(fields)
         
         print_progress = compose2.main(apibase, password, **kwargs)
         form_progress = forms.main(apibase, password, msg['form_id'], msg['form_url'], on_fields)

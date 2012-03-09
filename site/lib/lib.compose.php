@@ -235,10 +235,13 @@
             $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, $layout);
             $bounds = get_mmap_bounds($mmap);
             
+            $text = empty($post['atlas_title']) ? null : $post['atlas_title'];
+            
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
                                         'number' => $key + 1,
                                         'provider' => $provider, 
-                                        'bounds' => $bounds
+                                        'bounds' => $bounds,
+                                        'text' => $text
                                         );
             
             $print['north'] = $bounds[0];
