@@ -10,6 +10,7 @@ import os.path
 import datetime
 import urlparse
 import optparse
+from itertools import chain
 
 import compose2, decode2, forms
 from apiutils import ALL_FINISHED
@@ -86,8 +87,18 @@ def composePrint(apibase, password, message_id, msg):
                   layout=msg.get('layout', 'full-page'),
                   pages=msg['pages'])
     
-    print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
-    return compose2.main(apibase, password, **kwargs)
+    print_progress = compose2.main(apibase, password, **kwargs)
+    
+    if 'form_id' in msg and 'form_url' in msg:
+        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id'], 'and form', msg['form_id']
+        form_progress = forms.main(apibase, password, msg['form_id'], msg['form_url'])
+        progress = chain(form_progress, print_progress)
+    
+    else:
+        print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
+        progress = print_progress
+
+    return progress
 
 def parseForm(apibase, password, message_id, msg):
     """
