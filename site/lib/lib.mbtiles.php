@@ -41,6 +41,8 @@
 
             die_with_code(500, "{$res->message}\n{$q}\n");
         }
+        
+        return get_mbtiles_by_id($dbh, $mbtiles_id);
     }
     
     function extract_mbtiles_metadata($file_path)
@@ -76,6 +78,32 @@
         );
         
         return $metadata;
+    }
+    
+    function get_mbtiles_by_id(&$dbh, $id)
+    {   
+        $q = sprintf("SELECT id, user_id, created,
+                             is_private, url, uploaded_file_path,
+                             min_zoom, max_zoom, north, south, east, west
+                      FROM mbtiles
+                      WHERE id=%s",
+                      $dbh->quoteSmart($id));
+                     
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+        {
+            if($res->getCode() == DB_ERROR_ALREADY_EXISTS)
+                continue;
+
+            die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+        
+        $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+        
+        return $row;
     }
     
 ?>
