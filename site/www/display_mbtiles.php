@@ -9,5 +9,5 @@
         
     $sm = get_smarty_instance();
     $sm->assign('filename', $filename);
-    print $sm->fetch("mbtiles.html.tpl");
+    print $sm->fetch("display_mbtiles.html.tpl");
 ?>
