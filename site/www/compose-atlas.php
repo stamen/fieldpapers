@@ -14,43 +14,6 @@
     $user = cookied_user($dbh);
     $user_id = $user['id'];
     
-    ////
-    // Process Form
-    ////
-    
-    if($_POST['form_url'] && $_POST['form_url'] != 'http://')
-    {
-        print_r('hi');
-        if(empty($_POST['form_url']))
-        {
-            header('HTTP/1.1 400');
-            die("Empty or missing form_url.\n");
-        }
-    
-        $added_form = add_form($dbh, $user_id);
-        $added_form['form_url'] = $_POST['form_url'];
-        
-        if(!empty($_POST['form_title']))
-        {
-            $added_form['title'] = $_POST['form_title'];
-        }
-
-        set_form($dbh, $added_form);
-        
-        $message = array('action' => 'import form',
-                         'url' => $_POST['form_url'],
-                         'form_id' => $added_form['id']);
-            
-        add_message($dbh, json_encode($message));
-    }
-    
-    $atlas_data = $_POST;
-    $atlas_data['form_id'] = $added_form['id'];
-    
-    ////
-    // Compose Print
-    ////
-    
     $is_json = false;
 
     foreach(getallheaders() as $header => $value)
@@ -72,12 +35,33 @@
             $print = compose_from_geojson($dbh, file_get_contents('php://input'));
 
         } else {
-            $print = compose_from_postvars($dbh, $atlas_data, $user_id);
+            $atlas_postvars = $_POST;
+
+            if($_POST['form_url'] && $_POST['form_url'] != 'http://')
+            {
+                $added_form = add_form($dbh, $user_id);
+                $added_form['form_url'] = $_POST['form_url'];
+                
+                if(!empty($_POST['form_title']))
+                {
+                    $added_form['title'] = $_POST['form_title'];
+                }
+        
+                set_form($dbh, $added_form);
+                
+                //
+                // A new form was requested.
+                // postvars will now have form_id in addition to form_url.
+                //
+                
+                $atlas_postvars['form_id'] = $added_form['id'];
+            }
+            
+            $print = compose_from_postvars($dbh, $atlas_postvars, $user_id);
         }
         
         $dbh->query('COMMIT');
         
-
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
         header("Location: {$print_url}");
     }
