@@ -31,7 +31,7 @@
     
     function add_form_field(&$dbh, $form_id, $name)
     {
-        $q = sprintf('INSERT INTO form_fields
+        $q = sprintf('REPLACE INTO form_fields
                       SET form_id = %s, `name` = %s',
                      $dbh->quoteSmart($form_id),
                      $dbh->quoteSmart($name));
@@ -51,8 +51,8 @@
     function add_form_id_to_print(&$dbh, $form_id, $print_id)
     {   
         $q = sprintf('UPDATE prints
-              SET form_id = %s
-              WHERE id= %s',
+                      SET form_id = %s
+                      WHERE id= %s',
              $dbh->quoteSmart($form_id),
              $dbh->quoteSmart($print_id));
 
