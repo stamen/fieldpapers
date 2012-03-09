@@ -1,22 +1,29 @@
 <?php
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    require_once 'init.php';
-    require_once 'data.php';
-    require_once 'lib.auth.php';
+    require_once '../lib/lib.everything.php';
     
-    //Upload mbtiles to the server.
-    
-    $target_mbtiles_folder = "uploaded_mbtiles/";
-    
+    $dbh =& get_db_connection();
+        
+    ////
+    // Path
+    ////
+    $target_mbtiles_folder = "files/mbtiles/";
     $target_mbtiles_path = $target_mbtiles_folder . basename($_FILES['uploaded_mbtiles']['name']);
     
-    if(move_uploaded_file($_FILES['uploaded_mbtiles']['tmp_name'], $target_mbtiles_path)){
-        echo "<h3>" . basename($_FILES['uploaded_mbtiles']['name']) . " has been successfully uploaded.</h3>";
-    } else {
-        die("Upload of " . basename($_FILES['uploaded_mbtiles']['name']) . " was unsuccessful.");
-    }
-        
-    //File is now sitting on the server at uploaded_tiles/some_name.mbtiles.
+    ////
+    // Content
+    ////
+    $mbtiles_content_bytes = file_get_contents($_FILES['uploaded_mbtiles']['tmp_name']);
+    
+    $mime_type = 'application/octet-stream';
+    
+    // Post the file
+    post_file($target_mbtiles_path, $mbtiles_content_bytes, $mime_type);
+    
+    // Keep a record in the database
+    $user_id = $_POST['user_id'];
+    $mbtiles_url = 'http://'.get_domain_name().get_base_dir().$target_mbtiles_path;
+    
+    add_mbtiles($dbh, $user_id, $mbtiles_url, $target_mbtiles_path);
     
     $filename = explode('.', basename($_FILES['uploaded_mbtiles']['name']));
     $slug = $filename[0];
