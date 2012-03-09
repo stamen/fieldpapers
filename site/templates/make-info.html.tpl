@@ -26,23 +26,6 @@
             }
         {/literal}
     </style>
-    
-    <script type="text/javascript">
-        {literal}
-            function setValue(value)
-            {
-                if (value === 'Untitled')
-                {
-                    document.getElementById('title_input').value = '';
-                }
-                
-                if (value === 'http://')
-                {
-                    document.getElementById('form_input').value = '';
-                }
-            }
-        {/literal}
-    </script>
 </head>
 <body>      
     {include file="navigation.htmlf.tpl"}
@@ -71,7 +54,7 @@
                 <p style="margin-bottom: 60px;">
                     <span style="font-size: 22px;">Give Your Atlas a Name</span><br />
                     <input style="margin-top: 10px; color: grey;" type="text" id='title_input' name="atlas_title" size="60"
-                           value="Untitled" onFocus="setValue(this.value);"/>
+                           placeholder="Untitled"/>
                 </p>
                 <p>
                     If you like, you can also add a document to go alongside each page 
@@ -83,7 +66,7 @@
                 <p>
                     <span style="font-size: 16px"><b>Google Form URL</b> (<i>This is Optional.</i>)</span><br />
                     <input style="margin-top: 10px; color: grey;" type="text" id='form_input' name="form_url" size="60"
-                            value="http://" onFocus="setValue(this.value);"/>
+                            placeholder="http://"/>
                 </p>
                 
                 <input type="hidden" name="action" value="{$atlas_data.action}">

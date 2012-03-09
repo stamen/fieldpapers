@@ -37,7 +37,7 @@
         } else {
             $atlas_postvars = $_POST;
 
-            if($_POST['form_url'] && $_POST['form_url'] != 'http://')
+            if(!empty($_POST['form_url']))
             {
                 $added_form = add_form($dbh, $user_id);
                 $added_form['form_url'] = $_POST['form_url'];
