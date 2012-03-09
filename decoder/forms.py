@@ -8,6 +8,14 @@ import json
 from BeautifulSoup import BeautifulSoup
 from apiutils import finish_form, fail_form, ALL_FINISHED
 
+def fields_as_text(form_fields):
+    """
+    """
+    labels = [field['label'] for field in form_fields['fields']]
+    text = '\n\n\n\n'.join(labels)
+    
+    return text
+
 def get_form_fields(url):
     """ Gets a data structure of form fields for an HTML form URL, return a dictionary.
     """
@@ -55,8 +63,6 @@ def get_form_fields(url):
         
         form_data['fields'].append(textbox_description)
     
-    print form_data
-        
     #
     # Handle the textareas
     #
@@ -113,7 +119,7 @@ def get_form_fields(url):
     
     return form_data
     
-def main(apibase, password, form_id, url):
+def main(apibase, password, form_id, url, fields_callback=None):
     """
     """
     yield 10
@@ -126,6 +132,9 @@ def main(apibase, password, form_id, url):
         fail_form(apibase, password, form_id)
 
     else:
+        if fields_callback:
+            fields_callback(form_data)
+    
         finish_form(apibase, password, form_id, form_data['action'], form_data['method'], form_data['title'], form_data['fields'])
     
     yield ALL_FINISHED
