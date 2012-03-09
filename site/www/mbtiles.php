@@ -2,21 +2,18 @@
         header('Content-Type: text/plain');
         $URL_PATH = $_SERVER['PATH_INFO'];
         
-        
-
         if(preg_match('#^\/([^\/]+)\/(\d+)\/(\d+)\/(\d+)\.\w+$#', $URL_PATH, $matches))
         {
                 list($all, $slug, $zoom, $column, $row) = $matches;
         }
 
-		$target_mbtiles_path = "uploaded_mbtiles/" . $slug . ".mbtiles";
+		$target_mbtiles_path = "files/mbtiles/" . $slug . ".mbtiles"; // Change
          
         if(!file_exists($target_mbtiles_path))
         {
                 header('HTTP/1.1 400');
                 exit('The file does not exist.');
         }
-        
         
         $db_mbtiles = new SQLite3($target_mbtiles_path);
 
