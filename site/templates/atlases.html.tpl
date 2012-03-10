@@ -35,7 +35,7 @@
                     {else if $print.number_of_pages > 1}
                         {$print.number_of_pages} pages,
                     {/if}
-                    <a href="{$base_dir}/atlases.php?date={"Y-m-d"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
+                    <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
                 </span>
             </div>
         {/foreach}
