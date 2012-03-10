@@ -18,6 +18,7 @@
                 name="atlasPage" width="100%" id="atlasPage" /></a>
                 <span class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></span>
                 <span class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a></span>,
+
                 {if $print.city_name && $print.country_name}
                     <span class="atlasPlace">
                     <a href="{$base_dir}/place.php?place_id={$print.place_woeid}">
@@ -27,13 +28,14 @@
                 {else}
                     Unknown Place
                 {/if}
+
                 <span class="atlasMeta">                    
                     {if $print.number_of_pages == 1}
                         1 page,
                     {else if $print.number_of_pages > 1}
                         {$print.number_of_pages} pages,
                     {/if}
-                    <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
+                    <a href="{$base_dir}/atlases.php?date={"Y-m-d"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
                 </span>
             </div>
         {/foreach}

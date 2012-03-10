@@ -15,7 +15,11 @@
     
     $sm = get_smarty_instance();
     
-    $prints = get_prints($dbh);
+    $print_args = array(
+        'date' => empty($_GET['date']) ? null : $_GET['date']
+        );
+    
+    $prints = get_prints($dbh, $print_args);
     
     foreach($prints as $i => $print)
     {   
@@ -34,7 +38,7 @@
     
     if($type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $sm->fetch("time.html.tpl");
+        print $sm->fetch("atlases.html.tpl");
     
     } else {
         header('HTTP/1.1 400');

@@ -362,6 +362,17 @@
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
+        $where_clauses = array('composed');
+        
+        if(isset($args['date']))
+        {
+            $time = strtotime($args['date']);
+            $start = date('Y-m-d H:i:s', $time);
+            $end = date('Y-m-d H:i:s', $time + 86400);
+            
+            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
+        }
+        
         $q = sprintf("SELECT paper_size, orientation, provider,
                              pdf_url, preview_url, geotiff_url,
                              id, north, south, east, west, zoom,
@@ -373,9 +384,11 @@
                              country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
                              user_id, progress
                       FROM prints
-                      WHERE composed
+                      WHERE %s
                       ORDER BY created DESC
                       LIMIT %d OFFSET %d",
+
+                     join(' AND ', $where_clauses),
                      $count, $offset);
     
         $res = $dbh->query($q);
