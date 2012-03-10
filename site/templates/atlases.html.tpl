@@ -21,9 +21,9 @@
 
                 {if $print.city_name && $print.country_name}
                     <span class="atlasPlace">
-                    <a href="{$base_dir}/place.php?place_id={$print.place_woeid}">
+                    <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">
                     {$print.city_name}</a>, 
-                    <span class="atlasPlace"><a href="{$base_dir}/place.php?country_id={$print.country_woeid}">
+                    <span class="atlasPlace"><a href="{$base_dir}/atlases.php?place={$print.country_woeid}">
                     {$print.country_name}</a>
                 {else}
                     Unknown Place

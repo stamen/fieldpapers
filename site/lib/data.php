@@ -373,6 +373,17 @@
             $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
+        if(isset($args['place']))
+        {
+            $woeid_clauses = array(
+                sprintf('place_woeid = %s', $dbh->quoteSmart($args['place'])),
+                sprintf('region_woeid = %s', $dbh->quoteSmart($args['place'])),
+                sprintf('country_woeid = %s', $dbh->quoteSmart($args['place']))
+                );
+        
+            $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
+        }
+        
         $q = sprintf("SELECT paper_size, orientation, provider,
                              pdf_url, preview_url, geotiff_url,
                              id, north, south, east, west, zoom,
