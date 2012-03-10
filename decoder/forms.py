@@ -11,7 +11,7 @@ from apiutils import finish_form, fail_form, ALL_FINISHED
 def fields_as_text(form_fields):
     """
     """
-    labels = [field['label'] for field in form_fields['fields']]
+    labels = [field['label'] for field in form_fields]
     text = '\n\n\n\n'.join(labels)
     
     return text
