@@ -364,18 +364,16 @@
         
         $where_clauses = array('composed');
         
-        if(isset($args['date']))
+        if(isset($args['date']) && $time = strtotime($args['date']))
         {
-            $time = strtotime($args['date']);
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time);
             
             $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
-        if(isset($args['month']))
+        if(isset($args['month']) && $time = strtotime("{$args['month']}-01"))
         {
-            $time = strtotime("{$args['month']}-01");
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time + 86400 * intval(date('t', $time)));
             
@@ -385,12 +383,17 @@
         if(isset($args['place']))
         {
             $woeid_clauses = array(
-                sprintf('place_woeid = %s', $dbh->quoteSmart($args['place'])),
-                sprintf('region_woeid = %s', $dbh->quoteSmart($args['place'])),
-                sprintf('country_woeid = %s', $dbh->quoteSmart($args['place']))
+                sprintf('place_woeid = %d', $args['place']),
+                sprintf('region_woeid = %d', $args['place']),
+                sprintf('country_woeid = %d', $args['place'])
                 );
         
             $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
+        }
+        
+        if(isset($args['user']))
+        {
+            $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
         $q = sprintf("SELECT paper_size, orientation, provider,
