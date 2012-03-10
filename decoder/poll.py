@@ -90,7 +90,7 @@ def composePrint(apibase, password, message_id, msg):
     if 'form_id' in msg and 'form_url' in msg:
         def on_fields(fields):
             for page in msg['pages']:
-                page['text'] = page.get('text', '').rstrip() + '\n\n' + forms.fields_as_text(fields)
+                page['text'] = (page.get('text', '').strip() + '\n\n' + forms.fields_as_text(fields['fields'])).strip()
         
         print_progress = compose2.main(apibase, password, **kwargs)
         form_progress = forms.main(apibase, password, msg['form_id'], msg['form_url'], on_fields)
@@ -99,6 +99,10 @@ def composePrint(apibase, password, message_id, msg):
         progress = chain(form_progress, print_progress)
     
     else:
+        if 'form_fields' in msg:
+            for page in msg['pages']:
+                page['text'] = (page.get('text', '').strip() + '\n\n' + forms.fields_as_text(msg['form_fields'])).strip()
+    
         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
         progress = compose2.main(apibase, password, **kwargs)
 
