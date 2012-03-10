@@ -11,7 +11,6 @@
     /**** ... ****/
         
     $sm = get_smarty_instance();
-    $sm->assign('atlas_data', $_POST);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);

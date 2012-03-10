@@ -52,7 +52,8 @@
     <div class="container" style="margin-top: 50px;">            
             <form action="{$base_dir}/make-layout.php" method="POST">
                 <p style="margin-bottom: 60px;">
-                    <span style="font-size: 22px;">Give Your Atlas a Name</span><br />
+                    <label for="atlas_title" style="font-size: 22px;">Give Your Atlas a Name</label>
+                    <br />
                     <input style="margin-top: 10px; color: grey;" type="text" id='title_input' name="atlas_title" size="60"
                            placeholder="Untitled"/>
                 </p>
@@ -64,16 +65,26 @@
                     enter the URL to your Google form, and we'll do the rest.
                 </p>
                 <p>
-                    <span style="font-size: 16px"><b>Google Form URL</b> (<i>This is Optional.</i>)</span><br />
+                    <label for="form_input" style="font-size: 16px"><b>Google Form URL</b> (<i>This is Optional.</i>)</label>
+                    <br />
                     <input style="margin-top: 10px; color: grey;" type="text" id='form_input' name="form_url" size="60"
                             placeholder="http://"/>
                 </p>
+                <p>
+                    Your recent forms:
+                    <select name="form_id">
+                        {foreach from=$forms item="form"}
+                            {assign var="domain" value=$form.form_url|regex_replace:"#^https?://([^/]+)/.+$#":"(\\1)"}
+                            <option value="{$form.id|escape}" label="{$form.title|escape} {$domain|escape}">{$form.title|escape} {$domain|escape}</option>
+                        {/foreach}
+                    </select>
+                </p>
                 
-                <input type="hidden" name="action" value="{$atlas_data.action}">
                 <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom}">
                 <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size}">
                 <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation}">
                 <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider}">
+
                 {foreach from=$atlas_data.pages item="page" key="index"}
                     <input type="hidden" name="pages[{$index}]" value="{$page}">
                 {/foreach}

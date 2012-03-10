@@ -80,17 +80,24 @@
         </div>
         <div class="clearfloat"></div>
         <div style="float: right; margin-top: 60px;">
-            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title}">
-            <input type="hidden" name="form_url" value="{$atlas_data.form_url}">
-            <input type="hidden" name="action" value="{$atlas_data.action}">
-            <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom}">
-            <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size}">
-            <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation}">
-            <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider}">
-            {foreach from=$atlas_data.pages item="page" key="index"}
+            <input type="hidden" name="atlas_title" value="{$request.post.atlas_title}">
+            <input type="hidden" id="page_zoom" name="page_zoom" value="{$request.post.page_zoom}">
+            <input type="hidden" id="paper_size" name="paper_size" value="{$request.post.paper_size}">
+            <input type="hidden" id="orientation" name="orientation" value="{$request.post.orientation}">
+            <input type="hidden" id="provider" name="provider" value="{$request.post.provider}">
+
+            {if $request.post.form_url}
+                <input type="hidden" name="form_url" value="{$request.post.form_url}">
+            {elseif $request.post.form_id}
+                <input type="hidden" name="form_id" value="{$request.post.form_id}">
+            {/if}
+
+            {foreach from=$request.post.pages item="page" key="index"}
                 <input type="hidden" name="pages[{$index}]" value="{$page}">
             {/foreach}
+
             <input type="submit" value="Finished!" />
+            <input type="hidden" name="action" value="compose">
         </div>
     </form>
     </div>

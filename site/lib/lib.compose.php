@@ -287,8 +287,8 @@
         {
             $print['form_id'] = $form['id'];
             
-            if($post['parsed']) {
-                $message['fields'] = get_form_fields($dbh, $form['id']);
+            if($form['parsed']) {
+                $message['form_fields'] = get_form_fields($dbh, $form['id']);
             
             } else {
                 // The form hasn't been parsed yet, probably because
