@@ -367,8 +367,17 @@
         if(isset($args['date']))
         {
             $time = strtotime($args['date']);
-            $start = date('Y-m-d H:i:s', $time);
-            $end = date('Y-m-d H:i:s', $time + 86400);
+            $start = date('Y-m-d 00:00:00', $time);
+            $end = date('Y-m-d 23:59:59', $time);
+            
+            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
+        }
+        
+        if(isset($args['month']))
+        {
+            $time = strtotime("{$args['month']}-01");
+            $start = date('Y-m-d 00:00:00', $time);
+            $end = date('Y-m-d 23:59:59', $time + 86400 * intval(date('t', $time)));
             
             $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
         }

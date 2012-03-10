@@ -16,8 +16,9 @@
     $sm = get_smarty_instance();
     
     $print_args = array(
-        'date' => empty($_GET['date']) ? null : $_GET['date'],
-        'place' => empty($_GET['place']) ? null : $_GET['place']
+        'date' => preg_match('#^\d{4}-\d\d-\d\d$#', $_GET['date']) ? $_GET['date'] : null,
+        'month' => preg_match('#^\d{4}-\d\d$#', $_GET['month']) ? $_GET['month'] : null,
+        'place' => is_numeric($_GET['place']) ? $_GET['place'] : null
         );
     
     $prints = get_prints($dbh, $print_args);
