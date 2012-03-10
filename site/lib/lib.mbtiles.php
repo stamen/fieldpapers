@@ -8,6 +8,8 @@
                 
         $mbtiles_id = generate_id();
         
+        // Check type for query
+        
         $q = sprintf('INSERT INTO mbtiles
                       SET id = %s, 
                       user_id = %s,
@@ -18,7 +20,9 @@
                       north=%s,
                       south=%s,
                       east=%s,
-                      west=%s',
+                      west=%s,
+                      center_lat=%s,
+                      center_lon=%s',
                      $dbh->quoteSmart($mbtiles_id),
                      $dbh->quoteSmart($user_id),
                      $dbh->quoteSmart($url),
@@ -28,7 +32,9 @@
                      $dbh->quoteSmart($metadata['north']),
                      $dbh->quoteSmart($metadata['south']),
                      $dbh->quoteSmart($metadata['east']),
-                     $dbh->quoteSmart($metadata['west']));
+                     $dbh->quoteSmart($metadata['west']),
+                     $dbh->quoteSmart($metadata['center_lat']),
+                     $dbh->quoteSmart($metadata['center_lon']));
                      
         error_log(preg_replace('/\s+/', ' ', $q));
 
@@ -57,6 +63,13 @@
         $maxzoom_query = "select value from metadata where name='maxzoom'";
         $maxzoom = $db_mbtiles->querySingle($maxzoom_query);
         
+        $center_query = "select value from metadata where name='center'";
+        $center = $db_mbtiles->querySingle($center_query);
+        
+        $center_array = explode(',', $center);
+        $center_lat = $center_array[1];
+        $center_lon = $center_array[0];
+        
         $bounds_query = "select value from metadata where name='bounds'";
         $bounds = $db_mbtiles->querySingle($bounds_query);
                 
@@ -74,7 +87,9 @@
             "north" => $north,
             "south" => $south,
             "east" => $east,
-            "west" => $west
+            "west" => $west,
+            "center_lat" => $center_lat,
+            "center_lon" => $center_lon
         );
         
         return $metadata;
@@ -104,6 +119,35 @@
         $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
         
         return $row;
+    }
+    
+    function get_mbtiles_by_user_id(&$dbh, $user_id)
+    {   
+        $q = sprintf("SELECT id, user_id, created,
+                             is_private, url, uploaded_file_path,
+                             min_zoom, max_zoom, north, south, east, west
+                      FROM mbtiles
+                      WHERE user_id=%s",
+                      $dbh->quoteSmart($user_id));
+                     
+        error_log(preg_replace('/\s+/', ' ', $q));
+
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+        {
+            if($res->getCode() == DB_ERROR_ALREADY_EXISTS)
+                continue;
+
+            die_with_code(500, "{$res->message}\n{$q}\n");
+        }
+        
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+            $rows[] = $row;
+        
+        return $rows;
     }
     
 ?>
