@@ -358,7 +358,7 @@
         return true;
     }
     
-    function get_prints(&$dbh, $page)
+    function get_prints(&$dbh, $args, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
