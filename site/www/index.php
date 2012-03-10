@@ -16,7 +16,7 @@
     
     $sm = get_smarty_instance();
     
-    $prints = get_prints($dbh, 6);
+    $prints = get_prints($dbh, null, 6);
     
     // Get user names
     foreach ($prints as $i => $print)

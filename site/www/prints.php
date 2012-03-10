@@ -15,7 +15,7 @@
         
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
-    $prints = get_prints($dbh, $pagination);
+    $prints = get_prints($dbh, null, $pagination);
     list($count, $offset, $perpage, $page) = get_pagination($pagination);
     
     foreach ($prints as $i => $print)
