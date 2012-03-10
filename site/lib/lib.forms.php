@@ -66,17 +66,22 @@
         }
     }
     
-    function get_forms(&$dbh, $page)
+    function get_forms(&$dbh, $user_id, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
-        $q = sprintf("SELECT id, title, http_method, action_url,
+        $where_user_clause = empty($user_id)
+            ? '1'
+            : sprintf('(user_id = %s)', $dbh->quoteSmart($user_id));
+        
+        $q = sprintf("SELECT id, form_url, title, http_method, action_url,
                              UNIX_TIMESTAMP(created) AS created,
                              UNIX_TIMESTAMP(parsed) AS parsed,
                              UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              user_id
                       FROM forms
                       WHERE parsed
+                        AND {$where_user_clause}
                       ORDER BY created DESC
                       LIMIT %d OFFSET %d",
                      $count, $offset);
