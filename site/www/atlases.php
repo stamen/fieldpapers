@@ -16,7 +16,8 @@
     $sm = get_smarty_instance();
     
     $print_args = array(
-        'date' => empty($_GET['date']) ? null : $_GET['date']
+        'date' => empty($_GET['date']) ? null : $_GET['date'],
+        'place' => empty($_GET['place']) ? null : $_GET['place']
         );
     
     $prints = get_prints($dbh, $print_args);
