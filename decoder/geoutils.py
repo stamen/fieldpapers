@@ -1,6 +1,7 @@
 from tempfile import mkstemp
 from os import close, unlink
 from math import hypot
+from subprocess import Popen
 
 from osgeo import gdal, osr
 
@@ -43,6 +44,13 @@ def calculate_gcps(p2s, paper_width_pt, paper_height_pt, north, west, south, eas
     
     # x, y in image pixels
     ul_px, ur_px, lr_px, ll_px = [p2s(pt) for pt in (ul_pt, ur_pt, lr_pt, ll_pt)]
+    
+    ul_gcp = (ul_x, ul_y, ul_px.x, ul_px.y)
+    ur_gcp = (ur_x, ur_y, ur_px.x, ur_px.y)
+    lr_gcp = (lr_x, lr_y, lr_px.x, lr_px.y)
+    ll_gcp = (ll_x, ll_y, ll_px.x, ll_px.y)
+    
+    return ul_gcp, ur_gcp, lr_gcp, ll_gcp
     
     ul_gcp = gdal.GCP(ul_x, ul_y, ul_z, ul_px.x, ul_px.y)
     ur_gcp = gdal.GCP(ur_x, ur_y, ur_z, ur_px.x, ur_px.y)
@@ -97,29 +105,42 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     merc = osr.SpatialReference()
     merc.ImportFromEPSG(900913)
     
-    #
-    # Start an output file
-    #
-    driver = gdal.GetDriverByName('GTiff')
+    handle, vrt_filename = mkstemp(dir='.', prefix='geotiff-', suffix='.vrt')
+    handle, png_filename = mkstemp(dir='.', prefix='geotiff-', suffix='.png')
+    image.save(png_filename)
     
-    handle, geotiff_filename = mkstemp(prefix='geotiff-', suffix='.tif')
-    geotiff_ds = driver.Create(geotiff_filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80', 'BLOCKYSIZE=8'])
-    geotiff_ds.SetGCPs(gcps, str(merc))
+    translate = 'gdal_translate -of VRT'.split()
     
-    close(handle)
+    for (e, n, x, y) in gcps:
+        translate += ('-gcp %(x)d %(y)d %(e)d %(n)d' % locals()).split()
     
-    #
-    # Copy over the pixel data for each channel.
-    #
-    for (i, chan) in enumerate(image.convert('RGB').split()):
-        band = geotiff_ds.GetRasterBand(i + 1)
-        band.WriteRaster(0, 0, image.size[0], image.size[1], chan.tostring())
+    translate += ['-a_srs', 'EPSG:900913']
+    translate += [png_filename, vrt_filename]
+    
+    print ' '.join(translate)
+    
+    translate = Popen(translate)
+    translate.wait()
+    
+    handle, tif_filename = mkstemp(dir='.', prefix='geotiff-', suffix='.tif')
+    
+    warp = 'gdalwarp -tps -co COMPRESS=JPEG -co QUALITY=80'.split()
+    warp += [vrt_filename, tif_filename]
+    
+    print ' '.join(warp)
+    
+    warp = Popen(warp)
+    warp.wait()
+    
+    unlink(png_filename)
+    unlink(vrt_filename)
     
     #
     # Read the raw bytes of the GeoTIFF for return.
     #
-    geotiff_ds.FlushCache()
-    geotiff_bytes = open(geotiff_filename, 'r').read()
+    geotiff_bytes = open(tif_filename).read()
+    
+    exit(1)
     
     #
     # Do another one, smaller this time for the projected JPEG.
