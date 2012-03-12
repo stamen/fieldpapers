@@ -41,7 +41,8 @@
             remove_column_button_width = 23,
             remove_column_button_height = 26,
             remove_row_button_width = 26,
-            remove_row_button_height = 22;
+            remove_row_button_height = 22,
+            controlRadius = 23;
             
         function setProvider(provider)
         {        
@@ -120,19 +121,35 @@
                     {
                         map.setCenterZoom(map.getCenter(),map.getZoom()-1);
                     } else {
-                        if (left_overflow)
+                        if (right_overflow && bottom_overflow)
                         {
+                            var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                            var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                            map.panBy(pan_delta_x, pan_delta_y);
+                        } else if (right_overflow && top_overflow) {
+                            var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                            var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                            map.panBy(pan_delta_x, pan_delta_y);
+                        } else if (left_overflow && top_overflow) {
+                            var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+                            var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                            map.panBy(pan_delta_x, pan_delta_y);
+                        } else if (left_overflow && bottom_overflow) {
+                            var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+                            var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                            map.panBy(pan_delta_x, pan_delta_y);
+                        } else if (left_overflow) {
                             // Number of pixels to pan
-                            var pan_delta = map_top_left_point.x - topLeftPoint.x + 100;
+                            var pan_delta = map_top_left_point.x - topLeftPoint.x + 3;
                             map.panBy(pan_delta,0);
                         } else if (top_overflow) {
-                            var pan_delta = map_top_left_point.y - topLeftPoint.y + 100;
+                            var pan_delta = map_top_left_point.y - topLeftPoint.y + controlRadius;
                             map.panBy(0, pan_delta);
                         } else if (right_overflow) {
-                            var pan_delta = map_bottom_right_point.x - bottomRightPoint.x - 100;
+                            var pan_delta = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
                             map.panBy(pan_delta, 0);
                         } else if (bottom_overflow) {
-                            var pan_delta = map_bottom_right_point.y - bottomRightPoint.y - 100;
+                            var pan_delta = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
                             map.panBy(0, pan_delta);
                         }
                     }
