@@ -34,10 +34,10 @@
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
                     <div class="atlasPlace">
                         {if $print.city_name && $print.country_name}
-                            <a href="{$base_dir}/place.php?place_id={$print.place_woeid}">
+                            <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">
                                 {$print.city_name}
                             </a>,
-                            <a href="{$base_dir}/place.php?country_id={$print.country_woeid}">
+                            <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">
                                 {if $print.country_name}
                                     {$print.country_name}
                                 {else}
