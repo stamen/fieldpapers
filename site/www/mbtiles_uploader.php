@@ -30,8 +30,8 @@
     
     $mbtiles = add_mbtiles($dbh, $user_id, $mbtiles_url, $mbtiles_filename,'files/'.$target_mbtiles_path);
     
-    $mbtiles_url = 'http://'.get_domain_name().get_base_dir().'/display_mbtiles.php?id='.urlencode($mbtiles['id']).'&filename='.urlencode($slug);
-    header("Location: $mbtiles_url");
+    $display_mbtiles_url = 'http://'.get_domain_name().get_base_dir().'/display_mbtiles.php?id='.urlencode($mbtiles['id']).'&filename='.urlencode($slug);
+    header("Location: $display_mbtiles_url");
     
     exit();
 ?>
