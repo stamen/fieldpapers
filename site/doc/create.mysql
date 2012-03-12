@@ -247,3 +247,30 @@ CREATE TABLE `logs` (
     created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 ) ENGINE=MyISAM, CHARACTER SET utf8;
+
+
+
+DROP TABLE IF EXISTS mbtiles;
+
+CREATE TABLE mbtiles (
+
+    id              VARCHAR(8) NOT NULL,
+    
+    user_id         VARCHAR(8) NOT NULL,
+    
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    is_private      ENUM('yes','no') DEFAULT 'no',
+    url             VARCHAR(255),
+    uploaded_file   VARCHAR(255),
+    
+    min_zoom        INT,
+    max_zoom        INT,
+    center_zoom     INT,
+    center_x_coord  INT,
+    center_y_coord  INT,
+    
+    PRIMARY KEY     (id),
+    INDEX `user`    (user_id)
+    
+) ENGINE=InnoDB, CHARACTER SET utf8;
