@@ -6,8 +6,9 @@
     ////
     // Path
     ////
+    $mbtiles_filename = basename($_FILES['uploaded_mbtiles']['name']);
     $target_mbtiles_folder = "mbtiles/";
-    $target_mbtiles_path = $target_mbtiles_folder . basename($_FILES['uploaded_mbtiles']['name']);
+    $target_mbtiles_path = $target_mbtiles_folder . $mbtiles_filename;
     
     ////
     // Content
@@ -21,12 +22,13 @@
     
     // Keep a record in the database
     $user_id = $_POST['user_id'];
-    $mbtiles_url = 'http://'.get_domain_name().get_base_dir().$target_mbtiles_path;
-    
-    $mbtiles = add_mbtiles($dbh, $user_id, $mbtiles_url, 'files/'.$target_mbtiles_path);
     
     $filename = explode('.', basename($_FILES['uploaded_mbtiles']['name']));
     $slug = $filename[0];
+    
+    $mbtiles_url = 'http://'.get_domain_name().get_base_dir().'/mbtiles.php/'.$slug. '/{Z}/{X}/{Y}.png';
+    
+    $mbtiles = add_mbtiles($dbh, $user_id, $mbtiles_url, $mbtiles_filename,'files/'.$target_mbtiles_path);
     
     $mbtiles_url = 'http://'.get_domain_name().get_base_dir().'/display_mbtiles.php?id='.urlencode($mbtiles['id']).'&filename='.urlencode($slug);
     header("Location: $mbtiles_url");
