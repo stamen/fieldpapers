@@ -55,7 +55,7 @@
         <div class="homeThird">
             <img src="{$base_dir}/img/image-make-maps-only.png" alt="Make Maps Only">
             <div style="text-align: left; margin-left: 90px;">
-                <input style="margin-right: 10px" type="radio" name="layout" value="full-page">
+                <input style="margin-right: 10px" type="radio" name="layout" value="full-page" checked>
                 Maps Only
                 <br><span style="font-size: .8em; color: #666; margin-left: 30px;">one per page</span>
             </div>
