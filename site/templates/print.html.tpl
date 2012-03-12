@@ -6,8 +6,6 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Atlas - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    
     {if $print && !$print.composed}
         <meta http-equiv="refresh" content="5" />
     {else}
@@ -15,7 +13,7 @@
         <script type="text/javascript" src="{$base_dir}/polygonmarker-canvas.js"></script>
     {/if}
 </head>
-<body>
+<body onload="loadMaps()">
     {include file="navigation.htmlf.tpl"}
     <div class="container">
         {include file="print.htmlf.tpl"}
