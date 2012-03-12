@@ -24,7 +24,7 @@
                 {else if $print|@count >= 1}
                     {$prints|@count} Atlases
                 {/if}
-                | <a href="{$base_dir}/person-scans.php?id={$user_id}">Uploads</a></h2>
+                | <a href="{$base_dir}/uploads.php?user={$user_id}">Uploads</a></h2>
             </h2>
             {foreach from=$prints item="print" name="index"}
                 <div class="atlasThumb"> 
@@ -34,10 +34,10 @@
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
                     <div class="atlasPlace">
                         {if $print.city_name && $print.country_name}
-                            <a href="{$base_dir}/place.php?place_id={$print.place_woeid}">
+                            <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">
                                 {$print.city_name}
                             </a>,
-                            <a href="{$base_dir}/place.php?country_id={$print.country_woeid}">
+                            <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">
                                 {if $print.country_name}
                                     {$print.country_name}
                                 {else}
@@ -52,7 +52,7 @@
                     {else if $print.number_of_pages > 1}
                         {$print.number_of_pages} pages,
                     {/if}
-                    from <a href="time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a></div>
+                    from <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a></div>
                 </div>
             {/foreach}
         </div>

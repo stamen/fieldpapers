@@ -24,8 +24,8 @@
             <div class="atlas" id="map{$k}"></div>
             
             <div>
-            <a href="{$base_dir}/print.php?id={$print.id}">Untitled</a> in <a href="{$base_dir}/place.php">
-            Place</a>, by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a>
+            <a href="{$base_dir}/print.php?id={$print.id}">Untitled</a> in <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">
+            Place</a>, by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user_name}</a>
             </div>
         </div>
     {/foreach}
