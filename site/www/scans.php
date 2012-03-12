@@ -15,7 +15,7 @@
     
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
-    $scans = get_scans($dbh, $pagination, false);
+    $scans = get_scans($dbh, null, $pagination, false);
     $prints = array();
     
     foreach($scans as $i => $scan)
