@@ -24,7 +24,7 @@
                 {else if $print|@count >= 1}
                     {$prints|@count} Atlases
                 {/if}
-                | <a href="{$base_dir}/person-scans.php?id={$user_id}">Uploads</a></h2>
+                | <a href="{$base_dir}/uploads.php?user={$user_id}">Uploads</a></h2>
             </h2>
             {foreach from=$prints item="print" name="index"}
                 <div class="atlasThumb"> 
