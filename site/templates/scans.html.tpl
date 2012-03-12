@@ -18,7 +18,7 @@
     {include file="navigation.htmlf.tpl"}
     
     <div class="container">    
-    <h2><a href="{$base_dir}/watch.php?page=1&perpage=50">Atlases</a> | Uploads</h2>
+    <h2><a href="{$base_dir}/atlases.php">Atlases</a> | Uploads</h2>
     
         {foreach from=$scans item="scan" name="index"}
             <div class="atlasThumb"> 
