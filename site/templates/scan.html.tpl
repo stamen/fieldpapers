@@ -1,21 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>
         {if $page_number && $scan.print_id}
             Page {$page_number}, Atlas {$scan.print_id}
         {/if}
          - fieldpapers.org
     </title>    
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript" src="{$base_dir}/markerclip.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     {if $scan && !$scan.decoded && !$scan.failed}
-        <meta http-equiv="refresh" content="5" />
+        <meta http-equiv="refresh" content="5">
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     {/if}
@@ -81,7 +79,7 @@
                     </div>
                     <p>
                         Uploaded by <a href="person.php?id={$scan.user_id}">{$user_name}</a>, 
-                        <a href="uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a><br />
+                        <a href="uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a><br>
                         {if $page_number}
                             <b>Page {$page_number}<b>,
                         {/if}
@@ -110,7 +108,7 @@
     
                     
                 <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
-                    <!-- <input id="notes_submit" type="submit" value="Submit" /> -->
+                    <!-- <input id="notes_submit" type="submit" value="Submit"> -->
                 </form>
 
 

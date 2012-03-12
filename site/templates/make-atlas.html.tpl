@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Make - fieldpapers.org</title>
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript" src="{$base_dir}/raphael.js"></script>
     
@@ -1166,7 +1166,7 @@
                 <div id="atlas_inputs_container">
                     <div class="atlas_inputs">
                         <span id="area_title_container">
-                            <span style="font-weight: normal; font-size: .9em;">1.</span><br />
+                            <span style="font-weight: normal; font-size: .9em;">1.</span><br>
                             <span><b>AREA</b></span>
                         </span>
                         
@@ -1184,21 +1184,21 @@
                         </select>
                         
                         <span id="page_count_container">
-                            <span class="section" id="page_count"><b>1</b></span><br />
+                            <span class="section" id="page_count"><b>1</b></span><br>
                             <span id="page_plural">PAGE</span>
                         </span>
                         
-                        <input id="next_button" type="submit" value="Next" />
+                        <input id="next_button" type="submit" value="Next">
                         
                         <span id="atlas_info">
                             <span id="area_title_container">
-                                <span style="font-weight: normal; font-size: .9em;">2.</span><br />
+                                <span style="font-weight: normal; font-size: .9em;">2.</span><br>
                                 <span><b>INFO</b></span>
                             </span>
                         </span>
                         <span id="atlas_layout">
                             <span id="area_title_container">
-                                <span style="font-weight: normal; font-size: .9em;">3.</span><br />
+                                <span style="font-weight: normal; font-size: .9em;">3.</span><br>
                                 <span><b>LAYOUT</b></span>
                             </span>
                         </span>
@@ -1214,11 +1214,11 @@
             <div id="zoom-container">
                 <span id="zoom-in" style="display: none;">
                 <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button"
-                          width="46" height="46" />
+                          width="46" height="46">
                 </span>
                 <span id="zoom-out" style="display: none;">
                     <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button"
-                              width="46" height="46" />
+                              width="46" height="46">
                 </span>
             </div>
             <div id="map">

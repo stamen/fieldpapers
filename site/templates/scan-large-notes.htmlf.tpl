@@ -18,7 +18,7 @@
 
 {if $scan.has_geojpeg == 'yes'}
     <p class="wide" id="notes-image">
-        <img border="1" src="{$scan.base_url}/walking-paper-{$scan.id}.jpg" />
+        <img border="1" src="{$scan.base_url}/walking-paper-{$scan.id}.jpg">
         <button id="add-note">Add Note</button>
     </p>
     <table class="wide" id="notes-rows">
@@ -48,6 +48,6 @@
 {else}
     <p class="wide">
         <a href="{$scan.base_url}/{$scan.uploaded_file}">
-            <img border="1" src="{$scan.base_url}/large.jpg" /></a>
+            <img border="1" src="{$scan.base_url}/large.jpg"></a>
     </p>
 {/if}
