@@ -35,10 +35,10 @@
                     <div class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></div>
                     <div class="atlasPlace">
                         {if $scan.place_woeid && $scan.city_name}
-                            <a href="place.php?place_id={$scan.place_woeid}">{$scan.city_name}</a>,
+                            <a href="uploads.php?place={$scan.place_woeid}">{$scan.city_name}</a>,
                         {/if}
                         {if $scan.country_woeid && $scan.country_name}
-                            <a href="place.php?place_id={$scan.country_woeid}">{$scan.country_name}</a>
+                            <a href="uploads.php?place={$scan.country_woeid}">{$scan.country_name}</a>
                         {/if}
                     </div>
                     <div class="atlasMeta">
