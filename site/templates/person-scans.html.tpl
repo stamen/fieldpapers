@@ -42,7 +42,7 @@
                         {/if}
                     </div>
                     <div class="atlasMeta">
-                    Created <a href="time.php?date={$scan.created}">{$scan.age|nice_relativetime|escape}</a></div>
+                    Created <a href="uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a></div>
                 </div>
             {/foreach}
         </div>
