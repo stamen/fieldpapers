@@ -681,10 +681,44 @@
         return $rows;
     }
     
-    function get_scans(&$dbh, $page, $include_private=false)
+    function get_scans(&$dbh, $args, $page, $include_private=false)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
     
+        $where_clauses = array('decoded');
+        
+        if(isset($args['date']) && $time = strtotime($args['date']))
+        {
+            $start = date('Y-m-d 00:00:00', $time);
+            $end = date('Y-m-d 23:59:59', $time);
+            
+            $where_clauses[] = sprintf('(s.created BETWEEN "%s" AND "%s")', $start, $end);
+        }
+        
+        if(isset($args['month']) && $time = strtotime("{$args['month']}-01"))
+        {
+            $start = date('Y-m-d 00:00:00', $time);
+            $end = date('Y-m-d 23:59:59', $time + 86400 * intval(date('t', $time)));
+            
+            $where_clauses[] = sprintf('(s.created BETWEEN "%s" AND "%s")', $start, $end);
+        }
+        
+        if(isset($args['place']))
+        {
+            $woeid_clauses = array(
+                sprintf('p.place_woeid = %d', $args['place']),
+                sprintf('p.region_woeid = %d', $args['place']),
+                sprintf('p.country_woeid = %d', $args['place'])
+                );
+        
+            $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
+        }
+        
+        if(isset($args['user']))
+        {
+            $where_clauses[] = sprintf('(s.user_id = %s)', $dbh->quoteSmart($args['user']));
+        }
+        
         $q = sprintf("SELECT p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,
                              s.id, s.print_id,
                              s.min_row, s.min_column, s.min_zoom,
@@ -702,10 +736,12 @@
                       FROM scans AS s
                       LEFT JOIN prints AS p
                         ON p.id = s.print_id
-                      WHERE decoded
+                      WHERE %s
                         AND %s
                       ORDER BY s.created DESC
                       LIMIT %d OFFSET %d",
+
+                     join(' AND ', $where_clauses),
                      ($include_private ? '1' : "s.is_private='no'"),
                      $count, $offset);
     
