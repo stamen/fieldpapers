@@ -52,8 +52,10 @@
                 var tileURL = 'http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg';
             } else if (provider === "Black & White") {
                 var tileURL = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
-            } else if (provider === "Street Map") {
+            } else if (provider === "Open Street Map") {
                 var tileURL = 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
+            } else if (provider === '{/literal}{$mbtiles_data.uploaded_file}{literal}') {
+                var tileURL = '{/literal}{$mbtiles_data.provider}{literal}';
             }
             
             document.getElementById('provider').value = tileURL;
@@ -81,9 +83,14 @@
             var map_extent = map.getExtent();
             var map_top_left_point = map.locationPoint(map_extent[0]);
             var map_bottom_right_point = map.locationPoint(map_extent[1]);
+            
+            // Create 4 Boolean values for overflow tests
+            var left_overflow = topLeftPoint.x < map_top_left_point.x;
+            var top_overflow = topLeftPoint.y < map_top_left_point.y;
+            var right_overflow = bottomRightPoint.x > map_bottom_right_point.x;
+            var bottom_overflow = bottomRightPoint.y > map_bottom_right_point.y;
                             
-            if (topLeftPoint.x < map_top_left_point.x || topLeftPoint.y < map_top_left_point.y ||
-                bottomRightPoint.x > map_bottom_right_point.x || bottomRightPoint.y > map_bottom_right_point.y)
+            if (left_overflow || top_overflow || right_overflow || bottom_overflow)
             { 
                 if (resize === true)
                 {                        
@@ -98,12 +105,38 @@
                     changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
                     
                     resetAtlas();
-                } else {
+                } else {                    
                     var dragControlLocation = map.pointLocation(dragControlCoordinates);
                     var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
                     
-                    map.setCenterZoom(map.getCenter(),map.getZoom()-1);
+                    var ui_width = scaleControlCoordinates.x - dragControlCoordinates.x;
+                    var ui_height = scaleControlCoordinates.y - dragControlCoordinates.y;
+                    var map_width = map_bottom_right_point.x - map_top_left_point.x;
+                    var map_height = map_bottom_right_point.y - map_top_left_point.y;
                     
+                    var fraction_of_map = .8;
+                    
+                    if ((ui_width > fraction_of_map * map_width) || (ui_height > fraction_of_map * map_height))
+                    {
+                        map.setCenterZoom(map.getCenter(),map.getZoom()-1);
+                    } else {
+                        if (left_overflow)
+                        {
+                            // Number of pixels to pan
+                            var pan_delta = map_top_left_point.x - topLeftPoint.x + 100;
+                            map.panBy(pan_delta,0);
+                        } else if (top_overflow) {
+                            var pan_delta = map_top_left_point.y - topLeftPoint.y + 100;
+                            map.panBy(0, pan_delta);
+                        } else if (right_overflow) {
+                            var pan_delta = map_bottom_right_point.x - bottomRightPoint.x - 100;
+                            map.panBy(pan_delta, 0);
+                        } else if (bottom_overflow) {
+                            var pan_delta = map_bottom_right_point.y - bottomRightPoint.y - 100;
+                            map.panBy(0, pan_delta);
+                        }
+                    }
+                                        
                     dragControlCoordinates = map.locationPoint(dragControlLocation);
                     scaleControlCoordinates = map.locationPoint(scaleControlLocation);
                     
@@ -318,17 +351,7 @@
                 path: pathString
             });
         }
-        
-        /*
-        function setAndSubmitData()
-        {
-            updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
-            
-            document.forms['compose_print'].submit();
-            //return true;
-        }
-        */
-        
+                
         function updatePageExtents(topLeftPoint, bottomRightPoint)
         {   
             console.log('update');
@@ -376,22 +399,54 @@
             ////
             var MM = com.modestmaps;
             
-            var satellite_labels_provider = new MM.TemplatedMapProvider('http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg');
-            map_layer = new MM.Layer(satellite_labels_provider);
+            {/literal}
+            {if $mbtiles_data}{literal}
+                var provider = new MM.TemplatedMapProvider('{/literal}{$mbtiles_data.provider}{literal}');
+                document.getElementById('provider').value = '{/literal}{$mbtiles_data.provider}{literal}';
+            {/literal}
+            {else}{literal}
+                var provider = new MM.TemplatedMapProvider('http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg');
+                document.getElementById('provider').value = 'http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg';
+            {/literal}
+            {/if}{literal}
+            
+            map_layer = new MM.Layer(provider);
             
             setMapHeight();
             
             map = new MM.Map('map', map_layer,null,[new MM.DragHandler(), new MM.DoubleClickHandler()]);
-                                
-            map.setCenterZoom(new MM.Location({/literal}{$center}{literal}), 10); // Set a default case
+            
+            //console.log('center', {/literal}{$center}{literal});
+            
+            {/literal}
+            {if $mbtiles_data}{literal}
+                var map_center_x = {/literal}{$mbtiles_data.center_x}{literal};
+                var map_center_y = {/literal}{$mbtiles_data.center_y}{literal};
+                var map_zoom = {/literal}{$mbtiles_data.zoom}{literal};
+                
+                var map_coordinates = new MM.Coordinate(map_center_y, map_center_x, map_zoom);
+                
+                var map_center = map.coordinateLocation(map_coordinates);
+                
+                map.setZoomRange({/literal}{$mbtiles_data.min_zoom}{literal}, {/literal}{$mbtiles_data.max_zoom}{literal});
+                
+                console.log('map_center', map_center);
+                console.log('map_zoom', map_zoom);
+            {/literal}
+            {else}{literal}
+                var map_center = new MM.Location({/literal}{$center}{literal});
+                var map_zoom = {/literal}{$zoom}{literal};
+            {/literal}
+            {/if}{literal}
+                            
+            map.setCenterZoom(map_center, map_zoom); // Set a default case, deal with zoom
             
             // Initialize value of page_zoom input
             
             document.getElementById('zoom-out').style.display = 'inline';
             document.getElementById('zoom-in').style.display = 'inline';
             
-            document.getElementById('page_zoom').value = 12;
-            document.getElementById('provider').value = 'http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg';
+            document.getElementById('page_zoom').value = map_zoom;
             
             ////
             // UI
@@ -428,13 +483,13 @@
             
             canvas = Raphael("canvas");
                                     
-            var ne_location = new MM.Location({/literal}{$extent.ne}{literal});
-            var sw_location = new MM.Location({/literal}{$extent.sw}{literal});
+            //var ne_location = new MM.Location({/literal}{$extent.ne}{literal});
+            //var sw_location = new MM.Location({/literal}{$extent.sw}{literal});
             
-            var nw_point = map.locationPoint(new MM.Location(ne_location.lat,sw_location.lon));
-            var se_point = map.locationPoint(new MM.Location(sw_location.lat,ne_location.lon));
+            //var nw_point = map.locationPoint(new MM.Location(ne_location.lat,sw_location.lon));
+            //var se_point = map.locationPoint(new MM.Location(sw_location.lat,ne_location.lon));
             
-            var center_point = map.locationPoint(new MM.Location({/literal}{$center}{literal}));
+            var center_point = map.locationPoint(map_center);
             console.log('center_point', center_point);
             
             var page_height = 200,
@@ -1101,9 +1156,12 @@
                         <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
                         <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>
                         
-                        <select style="top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
+                        <select style="width: 150px; top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
+                            {if $mbtiles_data}
+                                <option>{$mbtiles_data.uploaded_file}</option>
+                            {/if}
                             <option>Satellite + Labels</option>
-                            <option>Street Map</option>
+                            <option>Open Street Map</option>
                             <option>Satellite Only</option>
                             <option>Black & White</option>
                         </select>
