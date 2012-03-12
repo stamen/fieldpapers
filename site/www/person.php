@@ -34,7 +34,7 @@
     }
     
     // Get prints by id
-    $prints = get_prints_by_user_id($dbh, $user_id);
+    $prints = get_prints($dbh, array('user' => $user['id']));
     
     foreach($prints as $i => $print)
     {   
