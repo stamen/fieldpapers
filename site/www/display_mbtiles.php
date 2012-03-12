@@ -15,4 +15,5 @@
     $sm->assign('mbtiles_data', $mbtiles_data);
     
     print $sm->fetch("display_mbtiles.html.tpl");
+    
 ?>
