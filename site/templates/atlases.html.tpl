@@ -10,7 +10,7 @@
 <body>
     {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <h2>Atlases | <a href="{$base_dir}/scans.php">Uploads</a></h2>
+        <h2>Atlases | <a href="{$base_dir}/uploads.php">Uploads</a></h2>
         
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
