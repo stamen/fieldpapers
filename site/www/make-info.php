@@ -8,6 +8,11 @@
     $dbh =& get_db_connection();
     remember_user($dbh);
     
+    $forms = array();
+    
+    if($user = cookied_user($dbh))
+        $forms = get_forms($dbh, $user['id'], get_pagination(8));
+    
     /**** ... ****/
     
     $user = cookied_user($dbh);
@@ -15,6 +20,7 @@
     
     $sm = get_smarty_instance();
     $sm->assign('atlas_data', $_POST);
+    $sm->assign('forms', $forms);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
