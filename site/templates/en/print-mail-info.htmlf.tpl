@@ -7,9 +7,9 @@
 </p>
 
 <blockquote>
-    Walking Papers<br />
-    c/o Stamen Design<br />
-    2017 Mission St. #300<br />
+    Walking Papers<br>
+    c/o Stamen Design<br>
+    2017 Mission St. #300<br>
     San Francisco, CA 94110
 </blockquote>
 

@@ -112,7 +112,7 @@
         <p>
             {if $print.place_woeid && $print.country_name}
                 <b><a href='{$base_dir}/atlases.php?place={$print.place_woeid}'>{$print.city_name}</a></b>, 
-                <a href='{$base_dir}/atlases.php?place={$print.country_woeid}'>{$print.country_name}</a><br />
+                <a href='{$base_dir}/atlases.php?place={$print.country_woeid}'>{$print.country_name}</a><br>
             {/if}
             Created by <a href='{$base_dir}/atlases.php?user={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
@@ -122,15 +122,15 @@
         <div class="print" id="map"></div>
         
         <div class="clearfloat"></div>
-        <br  clear="all" />
+        <br  clear="all">
         
         <h2>
             Page {$print.selected_page.page_number}
         </h2>
         
         <div class="atlasPage"> 
-            <img src="{$print.selected_page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
-            <br />
+            <img src="{$print.selected_page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage">
+            <br>
             <span class="atlasPageNumber">{$print.selected_page.page_number}</span>
         </div>
     {else}
@@ -141,11 +141,11 @@
         <p>
             {if $print.place_woeid && $print.country_name}
                 <b><a href='{$base_dir}/atlases.php?place={$print.place_woeid}'>{$print.city_name}</a>, 
-                <a href='{$base_dir}/atlases.php?place={$print.country_woeid}'>{$print.country_name}</a></b><br />
+                <a href='{$base_dir}/atlases.php?place={$print.country_woeid}'>{$print.country_name}</a></b><br>
             {/if}
             Created by <a href='{$base_dir}/atlases.php?user={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
-            <br />
+            <br>
             {$pages|@count}
             {if $pages|@count == 1}
                 page
@@ -171,9 +171,9 @@
             {foreach from=$pages item="page"}
                 <div class="atlasPage"> 
                     <a href="{$base_dir}/print.php?id={$print.id}/{$page.page_number}">
-                        <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage" />
+                        <img src="{$page.preview_url}" alt="printed page" name="atlasPage" id="atlasPage">
                     </a>
-                    <br />
+                    <br>
                     <span class="atlasPageNumber">{$page.page_number}</span>
                 </div>
             {/foreach}
@@ -187,7 +187,7 @@
             <div class="progressBar" style="width: {$print.progress*100}%;"></div>
         </div>
         <p>
-            This may take a while, generally a few minutes. <br /><br />
+            This may take a while, generally a few minutes. <br><br>
 			You don't need to keep this window open; you can <a href="{$base_dir}/print.php?id={$print.id|escape}">bookmark 
             this page</a> and come back later.
         </p>

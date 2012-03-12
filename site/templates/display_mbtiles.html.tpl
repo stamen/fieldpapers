@@ -17,7 +17,7 @@
     </style>
     {/literal}
     <script type="text/javascript" src="{$base_dir}/js/modestmaps.min.js"></script>
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <script type="text/javascript">
         {literal}
         var map;

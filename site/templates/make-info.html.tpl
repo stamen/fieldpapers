@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Add Form - fieldpapers.org</title>    
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <style type="text/css">
         {literal}
             .subnav {
@@ -32,19 +30,19 @@
     <div style="width: 100%; text-align: center;">
         <span class="subnav area">
             <span id="area">
-                <span>1.</span><br />
+                <span>1.</span><br>
                 <span><b>AREA</b></span>
             </span>
         </span>
         <span class="subnav info">
             <span>
-                <span>2.</span><br />
+                <span>2.</span><br>
                 <span><b>INFO</b></span>
             </span>
         </span>
         <span class="subnav layout">
             <span>
-                <span>3.</span><br />
+                <span>3.</span><br>
                 <span><b>LAYOUT</b></span>
             </span>
         </span>
@@ -53,9 +51,9 @@
             <form action="{$base_dir}/make-layout.php" method="POST">
                 <p style="margin-bottom: 60px;">
                     <label for="atlas_title" style="font-size: 22px;">Give Your Atlas a Name</label>
-                    <br />
+                    <br>
                     <input style="margin-top: 10px; color: grey;" type="text" id='title_input' name="atlas_title" size="60"
-                           placeholder="Untitled"/>
+                           placeholder="Untitled">
                 </p>
                 <p>
                     If you like, you can also add a document to go alongside each page 
@@ -66,9 +64,9 @@
                 </p>
                 <p>
                     <label for="form_input" style="font-size: 16px"><b>Google Form URL</b> (<i>This is Optional.</i>)</label>
-                    <br />
+                    <br>
                     <input style="margin-top: 10px; color: grey;" type="text" id='form_input' name="form_url" size="60"
-                            placeholder="http://"/>
+                            placeholder="http://">
                 </p>
                 <p>
                     Your recent forms:
@@ -90,7 +88,7 @@
                 {/foreach}
                 
                 <div style="float: right; margin-top: 60px;">
-                    <input type="submit" value="Next" />
+                    <input type="submit" value="Next">
                 </div>
             </form>
             

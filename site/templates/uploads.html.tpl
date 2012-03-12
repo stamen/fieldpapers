@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Uploads - fieldpapers.org</title>    
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
@@ -16,7 +14,7 @@
             <div class="atlasThumb">
                 <a href="{$base_dir}/scan.php?id={$scan.id}">
                 <img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
-                name="atlasPage" width="100%" id="atlasPage" /></a>
+                name="atlasPage" width="100%" id="atlasPage"></a>
                 <span class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">Untitled</a></span>
                 <span class="atlasOwner">by <a href="{$base_dir}/uploads.php?user={$scan.user_id}">{$scan.user_name}</a></span>,
 

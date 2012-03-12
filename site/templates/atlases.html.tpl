@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Atlases - fieldpapers.org</title>    
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
@@ -16,7 +14,7 @@
             <div class="atlasThumb">
                 <a href="{$base_dir}/print.php?id={$print.id}">
                 <img src="{$print.preview_url}" alt="printed page" 
-                name="atlasPage" width="100%" id="atlasPage" /></a>
+                name="atlasPage" width="100%" id="atlasPage"></a>
                 <span class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></span>
                 <span class="atlasOwner">by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user_name}</a></span>,
 

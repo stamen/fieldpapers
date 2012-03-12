@@ -12,7 +12,7 @@
                 <td>
                     {if $scan}
                         <a href="{$base_dir}/scan.php?id={$scan.id|escape}">
-                            <img border="1" src="{$scan.base_url}/preview.jpg" /></a>
+                            <img border="1" src="{$scan.base_url}/preview.jpg"></a>
                     {/if}
                 </td>
             {/foreach}
@@ -29,7 +29,7 @@
                             <a href="{$base_dir}/scan.php?id={$scan.id|escape}">
                                 <b id="scan-{$scan.id|escape}">{$scan.age|nice_relativetime|escape}
                                     {if $scan.will_edit == 'no'}✻{/if}</b>
-                                <br />
+                                <br>
                                 {$scan.print_place_name|escape}</a>
         
                         {else}
@@ -48,7 +48,7 @@
                         {/if}
         
                         {if $scan.description}
-                            <br />
+                            <br>
                             {$scan.description|escape}
                         {/if}
                     {/if}

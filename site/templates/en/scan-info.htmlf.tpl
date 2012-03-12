@@ -12,14 +12,14 @@
     {if $print.place_woeid}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
-        <br />
+        <br>
         {$print.place_name|escape}
 
     {else}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
     {/if}
-    <br/>
+    <br>
     Uploaded {$scan.age|nice_relativetime|escape}.
 </p>
 
@@ -40,17 +40,17 @@
 
 <p>
     <a href="{$base_dir}/scan-large.php?id={$scan.id}">
-        <img border="1" src="{$scan.base_url}/preview.jpg" /></a>
+        <img border="1" src="{$scan.base_url}/preview.jpg"></a>
 </p>
 
 <p style="background-color: #000; text-align: center; color: #fff">
     <b>Notes about this scan</b>
-    <br/><br/>
+    <br><br>
     {if $scan_note}
         {$scan_note}
     {else}
         There are no notes associated with this scan! 
-        <br/><br/><a href="{$base_dir}/page.php?id={$scan.id}">Create some notes!</a>
+        <br><br><a href="{$base_dir}/page.php?id={$scan.id}">Create some notes!</a>
     {/if}
 </p>
         

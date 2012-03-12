@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Search - fieldpapers.org</title>
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript">
         {literal}            
@@ -38,11 +38,11 @@
                 <p>                                            
                     <form id="search-form" action="{$base_dir}/find-place.php" method="post">
                         <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
-                               value="Type in a location" onFocus="setValue(this.value);"/>
+                               value="Type in a location" onFocus="setValue(this.value);">
                         {if $error}
                             <p style="color: #C33;">We could not find that place. Please try again.</p>
                         {/if}
-                        <input type="submit" name="action" value="Start There" />
+                        <input type="submit" name="action" value="Start There">
                     </form>
                 </p>
                 {if $user_mbtiles}
@@ -57,8 +57,8 @@
                                     {$user_mbtiles_file.uploaded_file}
                                     </option>
                                 {/foreach}
-                            </select><br />
-                            <input type="submit" name="action" value="Use MBTiles" />
+                            </select><br>
+                            <input type="submit" name="action" value="Use MBTiles">
                         </form>
                     </p>
                 {/if}

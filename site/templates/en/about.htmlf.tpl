@@ -39,6 +39,6 @@
 </p>
 <p>
     <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
-    <br />
+    <br>
     <a href="http://github.com/migurski/paperwalking">http://github.com/migurski/paperwalking</a>
 </p>

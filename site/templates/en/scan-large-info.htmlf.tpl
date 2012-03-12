@@ -12,14 +12,14 @@
     {if $print.place_woeid}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
-        <br />
+        <br>
         {$print.place_name|escape}
 
     {else}
         <a id="print-location" href="http://www.openstreetmap.org/?lat={$print.latitude|escape}&amp;lon={$print.longitude|escape}&amp;zoom=15&amp;layers=B000FTF">
             {$print.latitude|nice_degree:"lat"|escape}, {$print.longitude|nice_degree:"lon"|escape}</a>
     {/if}
-    <br/>
+    <br>
     Uploaded {$scan.age|nice_relativetime|escape}.
 </p>
 
