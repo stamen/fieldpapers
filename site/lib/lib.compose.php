@@ -235,10 +235,13 @@
             $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, $layout);
             $bounds = get_mmap_bounds($mmap);
             
+            $text = empty($post['atlas_title']) ? null : $post['atlas_title'];
+            
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
                                         'number' => $key + 1,
                                         'provider' => $provider, 
-                                        'bounds' => $bounds
+                                        'bounds' => $bounds,
+                                        'text' => $text
                                         );
             
             $print['north'] = $bounds[0];
@@ -283,7 +286,17 @@
         if($post['form_id'] && $form = get_form($dbh, $post['form_id']))
         {
             $print['form_id'] = $form['id'];
-            $message['fields'] = get_form_fields($dbh, $form['id']);
+            
+            if($form['parsed']) {
+                $message['form_fields'] = get_form_fields($dbh, $form['id']);
+            
+            } else {
+                // The form hasn't been parsed yet, probably because
+                // compose-atlas.php was called with just a form_url.
+                
+                $message['form_id'] = $form['id'];
+                $message['form_url'] = $form['form_url'];
+            }
         }
         
         $print['progress'] = 0.1; // the first 10% is getting it queued

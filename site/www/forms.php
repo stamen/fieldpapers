@@ -15,7 +15,7 @@
     
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
-    $forms = get_forms($dbh, $pagination);
+    $forms = get_forms($dbh, null, $pagination);
     
     foreach ($forms as $i => $form)
     {
