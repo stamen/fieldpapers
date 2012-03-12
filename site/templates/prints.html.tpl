@@ -20,7 +20,7 @@
                 <span class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></span> 
                 <span class="atlasOwner">by <a href="{$base_dir}/person.php?id={$print.user_id}">{$print.user_name}</a></span>, 
                 in <span class="atlasPlace"><a href="{$base_dir}/place.php">Place</a></span>
-                <span class="atlasMeta">on <a href="{$base_dir}/time.php?date={$print.created}">{$print.created|date_format}</a></span>
+                <span class="atlasMeta">on <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.created|date_format}</a></span>
             </div>
         {/foreach}
         

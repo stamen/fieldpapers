@@ -113,7 +113,7 @@
                 <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a><br />
             {/if}
             Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
-            <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
+            <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
         </p>
         <ul><li><a href="{$print.pdf_url}"><b>Download PDF</b></a></li></ul>
         
@@ -142,7 +142,7 @@
                 <a href='{$base_dir}/place.php?country_id={$print.country_woeid}'>{$print.country_name}</a></b><br />
             {/if}
             Created by <a href='{$base_dir}/person.php?id={$print.user_id}'>{$user_name}</a>, 
-            <a href="{$base_dir}/time.php?date={$print.created}">{$print.age|nice_relativetime|escape}</a>
+            <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
             <br />
             {$pages|@count}
             {if $pages|@count == 1}
