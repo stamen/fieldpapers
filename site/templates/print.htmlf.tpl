@@ -1,105 +1,107 @@
 {if $print.composed}
     <script>
+    {literal}
+        function loadMaps() {
         var map = null;
-        {literal}            
-            $(document).ready(function() { 
-                var MM = com.modestmaps;
-                {/literal}
+            var MM = com.modestmaps;
+            {/literal}
 
-                {if $print.selected_page}
-                    var overview_provider = '{$print.selected_page.provider}';
-                    var main_provider = '{$print.selected_page.provider}';
-                {else}
-                    var overview_provider = '{$pages[0].provider}';
-                    var main_provider = '{$pages[0].provider}';
-                {/if}
+            {if $print.selected_page}
+                var overview_provider = '{$print.selected_page.provider}';
+                var main_provider = '{$print.selected_page.provider}';
+            {else}
+                var overview_provider = '{$pages[0].provider}';
+                var main_provider = '{$pages[0].provider}';
+            {/if}
 
-                {literal}                    
-                    var overview_map_layers = [];
-                    var main_map_layers = [];
-                    
-                    if (overview_provider.search(','))
-                    {
-                        var overview_providers = overview_provider.split(',');
-                        for (var i = 0; i < overview_providers.length; i++) {
-                            // Create layers
-                            overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_providers[i])));
-                        }
-                    } else {
-                        overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_provider)));
+            {literal}                    
+                var overview_map_layers = [];
+                var main_map_layers = [];
+                
+                if (overview_provider.search(','))
+                {
+                    var overview_providers = overview_provider.split(',');
+                    for (var i = 0; i < overview_providers.length; i++) {
+                        // Create layers
+                        overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_providers[i])));
                     }
-                    
-                    if (main_provider.search(','))
-                    {
-                        var main_providers = main_provider.split(',');
-                        for (var i = 0; i < main_providers.length; i++) {
-                            main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_providers[i])));
-                        }
-                    } else {
-                        main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
+                } else {
+                    overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_provider)));
+                }
+                
+                if (main_provider.search(','))
+                {
+                    var main_providers = main_provider.split(',');
+                    for (var i = 0; i < main_providers.length; i++) {
+                        main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_providers[i])));
                     }
-                
-                // Map 1
-                var overview_map = new MM.Map("overview_map", overview_map_layers, null, []);
-                
-                
-                // Map 2
-                var map = new MM.Map("map", main_map_layers, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
-                
-                var north = '{/literal}{$print.north}{literal}';
-                var west = '{/literal}{$print.west}{literal}';
-                var south = '{/literal}{$print.south}{literal}';
-                var east = '{/literal}{$print.east}{literal}';
-                
-                var extents = [new MM.Location(north, west), new MM.Location(south, east)];
-                
-                map.setExtent(extents);
-                map.setCenterZoom(map.getCenter(), 11);
-                overview_map.setCenterZoom(map.getCenter(),5);
-                
-                ////
-                // Draw the Extent of the Atlas
-                ////
-                var atlas_shape = null;
-                var atlas_locations = [];
-                
-                var fillStyle = "rgba(5,5,5,0)";
-                var lineWidth = 3;
-                var lineJoin = 'round';
+                } else {
+                    main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
+                }
+            
+            // Map 1
+            var overview_map = new MM.Map("overview_map", overview_map_layers, null, []);
+            
+            
+            // Map 2
+            var map = new MM.Map("map", main_map_layers, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+            
+            var north = '{/literal}{$print.north}{literal}';
+            var west = '{/literal}{$print.west}{literal}';
+            var south = '{/literal}{$print.south}{literal}';
+            var east = '{/literal}{$print.east}{literal}';
+            
+            var zoom = '{/literal}{$pages[0].zoom}{literal}';
+            
+            var extents = [new MM.Location(north, west), new MM.Location(south, east)];
+            
+            map.setExtent(extents);
+            map.setCenterZoom(map.getCenter(), zoom - 2);
+            overview_map.setCenterZoom(map.getCenter(),5);
+            
+            ////
+            // Draw the Extent of the Atlas
+            ////
+            var atlas_shape = null;
+            var atlas_locations = [];
+            
+            var fillStyle = "rgba(5,5,5,0)";
+            var lineWidth = 3;
+            var lineJoin = 'round';
 
-                var atlasStrokeStyle = 'rgba(255,255,255,1)';                
+            var atlasStrokeStyle = 'rgba(255,255,255,1)';                
+            
+            atlas_locations.push({'lat': north, 'lon': west});
+            atlas_locations.push({'lat': north, 'lon': east});
+            atlas_locations.push({'lat': south, 'lon': east});
+            atlas_locations.push({'lat': south, 'lon': west});
+            
+            atlas_shape = new MM.PolygonMarker(map, atlas_locations, fillStyle, atlasStrokeStyle, lineWidth, lineJoin);
+            
+            ////
+            // Draw individual pages
+            ////
+            {/literal}{if $print.selected_page}{literal}
+                var page_shape = null;
+                var page_locations = [];
                 
-                atlas_locations.push({'lat': north, 'lon': west});
-                atlas_locations.push({'lat': north, 'lon': east});
-                atlas_locations.push({'lat': south, 'lon': east});
-                atlas_locations.push({'lat': south, 'lon': west});
+                var pageStrokeStyle = 'rgba(5,5,5,1)';
+                var pageFillStyle = "rgba(5,5,5,0)";
                 
-                atlas_shape = new MM.PolygonMarker(map, atlas_locations, fillStyle, atlasStrokeStyle, lineWidth, lineJoin);
+                var north_page = '{/literal}{$pages[0].north}{literal}';
+                var west_page = '{/literal}{$pages[0].west}{literal}';
+                var south_page = '{/literal}{$pages[0].south}{literal}';
+                var east_page = '{/literal}{$pages[0].east}{literal}';
                 
-                ////
-                // Draw individual pages
-                ////
-                {/literal}{if $print.selected_page}{literal}
-                    var page_shape = null;
-                    var page_locations = [];
-                    
-                    var pageStrokeStyle = 'rgba(5,5,5,1)';
-                    var pageFillStyle = "rgba(5,5,5,0)";
-                    
-                    var north_page = '{/literal}{$pages[0].north}{literal}';
-                    var west_page = '{/literal}{$pages[0].west}{literal}';
-                    var south_page = '{/literal}{$pages[0].south}{literal}';
-                    var east_page = '{/literal}{$pages[0].east}{literal}';
-                    
-                    page_locations.push({'lat': north_page, 'lon': west_page});
-                    page_locations.push({'lat': north_page, 'lon': east_page});
-                    page_locations.push({'lat': south_page, 'lon': east_page});
-                    page_locations.push({'lat': south_page, 'lon': west_page});
-                    
-                    page_shape = new MM.PolygonMarker(map, page_locations, pageFillStyle, pageStrokeStyle, lineWidth, lineJoin);
-                {/literal}{/if}{literal}
-            });
-        {/literal}
+                page_locations.push({'lat': north_page, 'lon': west_page});
+                page_locations.push({'lat': north_page, 'lon': east_page});
+                page_locations.push({'lat': south_page, 'lon': east_page});
+                page_locations.push({'lat': south_page, 'lon': west_page});
+                
+                page_shape = new MM.PolygonMarker(map, page_locations, pageFillStyle, pageStrokeStyle, lineWidth, lineJoin);
+            {/literal}{/if}{literal}
+            };
+    {/literal}
     </script>
     
     {if $print.selected_page}
