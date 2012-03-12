@@ -22,7 +22,7 @@
         'user' => preg_match('/^\w+$/', $_GET['user']) ? $_GET['user'] : null
         );
     
-    $prints = get_prints($dbh, $print_args);
+    $prints = get_prints($dbh, $print_args, 50);
     
     foreach($prints as $i => $print)
     {   
