@@ -6,7 +6,6 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Form - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css" />    
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     
     {if $form && !$form.parsed}
         <meta http-equiv="refresh" content="5" />
@@ -42,7 +41,6 @@
                     </ul>
                 </p>
             {/if}
-            <p><a href="{$base_dir}/make-set-area.php?form_id={$form.id|escape}">Make</a> an atlas with this form.</p>
         {else}
             <p>Preparing your form.</p>
             <p>
