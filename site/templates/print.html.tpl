@@ -8,8 +8,18 @@
         <meta http-equiv="refresh" content="5">
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
-        <script type="text/javascript" src="{$base_dir}/polygonmarker-canvas.js"></script>
+        <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
     {/if}
+    <style type="text/css">
+        {literal}
+        #canvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 3;
+        }
+        {/literal}
+    </style>
 </head>
 <body onload="loadMaps()">
     {include file="navigation.htmlf.tpl"}
