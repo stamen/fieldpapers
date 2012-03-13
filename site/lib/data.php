@@ -27,6 +27,34 @@
     define('STEP_FATAL_ERROR', 100);
     define('STEP_FATAL_QRCODE_ERROR', 101);
     
+    class Context
+    {
+        // Database connection
+        var $db;
+
+        // Smarty instance
+        var $sm;
+        
+        // Logged-in user
+        var $user;
+        
+        // Request content-type
+        var $type;
+        
+        function Context(&$db_link, &$smarty, $user, $type)
+        {
+            $this->db =& $db_link;
+            $this->sm =& $smarty;
+            $this->user = $user;
+            $this->type = $type;
+        }
+        
+        function close()
+        {
+            mysql_close($this->db);
+        }
+    }
+    
     function &get_db_connection()
     {
         $dbh =& DB::connect(DB_DSN);

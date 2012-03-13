@@ -4,7 +4,7 @@
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    $dbh =& get_db_connection();
+    $context = default_context();
     
     /**** ... ****/
     
@@ -12,19 +12,19 @@
     {
         
         $q = sprintf("SELECT email, hash, activated FROM users WHERE email=%s AND hash=%s",
-                     $dbh->quoteSmart($_GET['email']),
-                     $dbh->quoteSmart($_GET['hash']));
+                     $context->db->quoteSmart($_GET['email']),
+                     $context->db->quoteSmart($_GET['hash']));
 
-        $res_search = $dbh->query($q);
+        $res_search = $context->db->query($q);
         $match = $res_search->fetchRow(DB_FETCHMODE_ASSOC);
         
         if ($match)
         {  
             $q = sprintf("UPDATE users SET activated=NOW() WHERE email=%s AND hash=%s AND NOT activated",
-                        $dbh->quoteSmart($_GET['email']),
-                        $dbh->quoteSmart($_GET['hash']));
+                        $context->db->quoteSmart($_GET['email']),
+                        $context->db->quoteSmart($_GET['hash']));
     
-            $res = $dbh->query($q);
+            $res = $context->db->query($q);
 
             echo 'Congratulations! You are now activated.';
         } else {

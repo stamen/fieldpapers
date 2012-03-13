@@ -1,16 +1,10 @@
 <?php
-   /**
-    * Post-upload page, with an interstitial information-gathering
-    * form after a scan image has been successfully uploaded.
-    */
 
     require_once '../lib/lib.everything.php';
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
     
     /**** ... ****/
     
@@ -20,7 +14,7 @@
     $expected_etag = $_GET['etag'] ? $_GET['etag'] : null;
 
     if($scan_id)
-        $scan = get_scan($dbh, $scan_id);
+        $scan = get_scan($context->db, $scan_id);
 
     if($scan && $object_id && $expected_etag)
     {
@@ -41,22 +35,22 @@
 
     if($acceptable_upload && $scan && !$scan['decoded'])
     {
-        $dbh->query('START TRANSACTION');
+        $context->db->query('START TRANSACTION');
 
         $message = array('action' => 'decode',
                          'scan_id' => $scan['id'],
                          'url' => $url);
         
-        add_message($dbh, json_encode($message));
+        add_message($context->db, json_encode($message));
         
-        $scan = get_scan($dbh, $scan['id']);
+        $scan = get_scan($context->db, $scan['id']);
         $parsed_url = parse_url($url);
         $scan['base_url'] = "http://{$parsed_url['host']}".dirname($parsed_url['path']);
         $scan['progress'] = 0.1; // the first 10% is just getting the thing uploaded
 
-        set_scan($dbh, $scan);
+        set_scan($context->db, $scan);
         
-        $dbh->query('COMMIT');
+        $context->db->query('COMMIT');
     }
 
     if($attempted_upload)
@@ -71,11 +65,10 @@
     if($attempted_upload)
         header('Location: http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.urlencode($scan['id']));
     
-    $sm = get_smarty_instance();
-    $sm->assign('scan', $scan);
-    $sm->assign('language', $language);
+    $context->sm->assign('scan', $scan);
+    $context->sm->assign('language', $language);
     
     header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("uploaded.html.tpl");
+    print $context->sm->fetch("uploaded.html.tpl");
 
 ?>

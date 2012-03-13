@@ -11,7 +11,7 @@
     <body>
         <div class="smallContainer">
             <h1>Create a Field Papers Account</h1>
-                <form id='register_form' method='POST' action='login.php' style='margin-left: 10px;'>
+                <form id='register_form' method='POST' action='registration.php' style='margin-left: 10px;'>
 					<p>
                     	Your Email Address<br>
                         <input type='text' name='email' size='30'>

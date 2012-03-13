@@ -5,14 +5,9 @@
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
     
     /**** ... ****/
-    
-    $user = cookied_user($dbh);
-    $user_id = $user['id'];
     
     $is_json = false;
 
@@ -26,20 +21,18 @@
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {       
-        $dbh =& get_db_connection();
-        
-        $dbh->query('START TRANSACTION');
+        $context->db->query('START TRANSACTION');
         
         if($is_json) {
             $json = json_decode(file_get_contents('php://input'), true);
-            $print = compose_from_geojson($dbh, file_get_contents('php://input'));
+            $print = compose_from_geojson($context->db, file_get_contents('php://input'));
 
         } else {
             $atlas_postvars = $_POST;
 
             if(!empty($_POST['form_url']))
             {
-                $added_form = add_form($dbh, $user_id);
+                $added_form = add_form($context->db, $context->user['id']);
                 $added_form['form_url'] = $_POST['form_url'];
                 
                 if(!empty($_POST['form_title']))
@@ -47,7 +40,7 @@
                     $added_form['title'] = $_POST['form_title'];
                 }
         
-                set_form($dbh, $added_form);
+                set_form($context->db, $added_form);
                 
                 //
                 // A new form was requested.
@@ -57,10 +50,10 @@
                 $atlas_postvars['form_id'] = $added_form['id'];
             }
             
-            $print = compose_from_postvars($dbh, $atlas_postvars, $user_id);
+            $print = compose_from_postvars($context->db, $atlas_postvars, $context->user['id']);
         }
         
-        $dbh->query('COMMIT');
+        $context->db->query('COMMIT');
         
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
         header("Location: {$print_url}");
