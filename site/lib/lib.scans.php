@@ -262,7 +262,8 @@
     function get_scan_note(&$dbh, $scan_id, $note_number)
     {
         $q = sprintf("SELECT scan_id, note_number, note,
-                             latitude, longitude, geometry
+                             latitude, longitude, geometry,
+                             UNIX_TIMESTAMP(created) AS created
                       FROM scan_notes
                       WHERE scan_id = %s
                         AND note_number = %s",
@@ -279,19 +280,26 @@
         return $row;
     }
     
-    function get_scan_notes(&$dbh, $scan_id, $page)
+    function get_scan_notes(&$dbh, $args, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
+        $where_clauses = array('1');
+        
+        if(isset($args['scan']))
+        {
+            $where_clauses[] = sprintf('(scan_id = %s)', $dbh->quoteSmart($args['scan']));
+        }
+        
         $q = sprintf('SELECT scan_id, note_number, note,
-                             latitude, longitude, geometry
+                             latitude, longitude, geometry,
+                             UNIX_TIMESTAMP(created) AS created
                       FROM scan_notes
                       WHERE %s
                       ORDER BY created DESC
                       LIMIT %d OFFSET %d',
-                     ($scan_id ? 'scan_id = '.$dbh->quoteSmart($scan_id) : '1'),
-                     $count,
-                     $offset);
+                     join(' AND ', $where_clauses),
+                     $count, $offset);
     
         $res = $dbh->query($q);
         

@@ -20,7 +20,7 @@
                 
                 $note_number = 1;
                 
-                foreach(get_scan_notes($context->db, $scan['id']) as $note)
+                foreach(get_scan_notes($context->db, array('scan' => $scan['id'])) as $note)
                 {
                     $note_number = max($note_number, $note['note_number'] + 1);
                 }
