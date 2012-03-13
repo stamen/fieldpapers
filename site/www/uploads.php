@@ -1,19 +1,18 @@
 <?php
-   /**
-    * 
-    */
 
     require_once '../lib/lib.everything.php';
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
     
+    if($context->type == 'text/html')
+    {
+        session_start();
+        remember_user($context->db);
+    }
+
     /**** ... ****/
-    
-    $sm = get_smarty_instance();
     
     $scan_args = array(
         'date' => preg_match('#^\d{4}-\d\d-\d\d$#', $_GET['date']) ? $_GET['date'] : null,
@@ -22,24 +21,24 @@
         'user' => preg_match('/^\w+$/', $_GET['user']) ? $_GET['user'] : null
         );
     
-    $scans = get_scans($dbh, $scan_args, 50);
+    $scans = get_scans($context->db, $scan_args, 50);
     
     foreach($scans as $i => $scan)
     {   
-        $user = get_user($dbh, $scans[$i]['user_id']);
+        $user = get_user($context->db, $scans[$i]['user_id']);
         
         $scans[$i]['user_name'] = $user['name'] ? $user['name'] : 'Anonymous';
         $scans[$i]['city_name'] = $scan['place_name'] ? $scan['place_name'] : 'Unknown City';
     }
     
-    $sm->assign('scans', $scans);
+    $context->sm->assign('scans', $scans);
     
     $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
     $type = get_preferred_type($type);
     
     if($type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $sm->fetch("uploads.html.tpl");
+        print $context->sm->fetch("uploads.html.tpl");
     
     } else {
         header('HTTP/1.1 400');

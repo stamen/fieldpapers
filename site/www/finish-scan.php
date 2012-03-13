@@ -1,26 +1,17 @@
 <?php
-   /**
-    * Display page for a single print with a given ID.
-    *
-    * When this page receives a POST request, it's probably from compose.py
-    * (check the API_PASSWORD) with new information on print components for
-    * building into a new PDF.
-    */
 
     require_once '../lib/lib.everything.php';
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     enforce_api_password($_POST['password']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
-
+    $context = default_context();
+    
     /**** ... ****/
     
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
     
-    $scan = get_scan($dbh, $scan_id);
+    $scan = get_scan($context->db, $scan_id);
     
     if(!$scan)
     {
@@ -29,7 +20,7 @@
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
-        $dbh->query('START TRANSACTION');
+        $context->db->query('START TRANSACTION');
         
         $scan['print_id'] = $_POST['print_id'];
         $scan['user_name'] = $_POST['user_name'];
@@ -67,13 +58,13 @@
             $scan['place_woeid'] = $place[5];
         }
         
-        add_log($dbh, "Posting additional details to scan {$scan['id']}");
+        add_log($context->db, "Posting additional details to scan {$scan['id']}");
 
-        set_scan($dbh, $scan);
+        set_scan($context->db, $scan);
 
-        finish_scan($dbh, $scan['id']);
+        finish_scan($context->db, $scan['id']);
 
-        $dbh->query('COMMIT');
+        $context->db->query('COMMIT');
     }
     
     header('HTTP/1.1 200');
