@@ -21,6 +21,9 @@
                 {if $scan.place_woeid}
                     <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
                 {/if}
+                {if $scan.region_woeid}
+                    <a href="{$base_dir}/uploads.php?place={$scan.region_woeid}">{$scan.region_name|nice_placename}</a>,
+                {/if}
                 {if $scan.country_woeid}
                     <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>
                 {else}
