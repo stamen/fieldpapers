@@ -17,7 +17,7 @@
                 var x = mbtiles_info[2];
                 var z = mbtiles_info[3];
 
-                document.getElementById('mbtiles_form').action = '{/literal}{$base_dir}{literal}/make-atlas.php?\mbtiles_id=' + id + '&coordinates=' + y + '/' + x + '/' + z;
+                document.getElementById('mbtiles_form').action = '{/literal}{$base_dir}{literal}/make-step2-geography.php?\mbtiles_id=' + id + '&coordinates=' + y + '/' + x + '/' + z;
             }
         {/literal}
     </script>
@@ -41,7 +41,7 @@
                     <h2>Or Choose your MBTiles</h2>
                     <p>
                         <form id="mbtiles_form" method="post" 
-                              action="{$base_dir}/make-atlas.php?mbtiles_id={$user_mbtiles[0].id}&coordinates={$user_mbtiles[0].center_y_coord}/{$user_mbtiles[0].center_x_coord}/{$user_mbtiles[0].center_zoom}">
+                              action="{$base_dir}/make-step2-geography.php?mbtiles_id={$user_mbtiles[0].id}&coordinates={$user_mbtiles[0].center_y_coord}/{$user_mbtiles[0].center_x_coord}/{$user_mbtiles[0].center_zoom}">
                             <select id='mbtiles_selection' name="mbtiles_id" onChange="changeFormAction(selectedIndex)">
                                 {foreach from=$user_mbtiles key="index" item="user_mbtiles_file"}
                                     <h2>{$index}</h2>

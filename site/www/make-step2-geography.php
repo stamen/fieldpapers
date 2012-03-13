@@ -31,6 +31,6 @@
     }
         
     header("Content-Type: text/html; charset=UTF-8");
-    print $context->sm->fetch("make-atlas.html.tpl");
+    print $context->sm->fetch("make-step2-geography.html.tpl");
     
 ?>
