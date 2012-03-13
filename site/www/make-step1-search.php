@@ -19,7 +19,7 @@
         
         $redirect_href = is_array($latlon)
             ? sprintf('http://%s%s/make-atlas.php?center=%s', get_domain_name(), get_base_dir(), join(',', $latlon))
-            : sprintf('http://%s%s/atlas-search-form.php?error=no_response', get_domain_name(), get_base_dir());
+            : sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
         
         header('HTTP/1.1 303');
         header("Location: $redirect_href");
@@ -34,6 +34,6 @@
     }
     
     header("Content-Type: text/html; charset=UTF-8");
-    print $context->sm->fetch("atlas-search-form.html.tpl");
+    print $context->sm->fetch("make-step1-search.html.tpl");
     
 ?>

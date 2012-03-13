@@ -11,13 +11,13 @@
         <h1>Welcome to Field Papers</h1>
         
         <div class="homeThird">
-            <a href="{$base_dir}/atlas-search-form.php"><img src="{$base_dir}/img/graphic-make-large.gif" alt="Hand-drawn graphic to represent making a Field Papers atlas"></a>
-            <h3><a href="{$base_dir}/atlas-search-form.php">Make yourself an Atlas.</a></h3>
+            <a href="{$base_dir}/make-step1-search.php"><img src="{$base_dir}/img/graphic-make-large.gif" alt="Hand-drawn graphic to represent making a Field Papers atlas"></a>
+            <h3><a href="{$base_dir}/make-step1-search.php">Make yourself an Atlas.</a></h3>
             <p>Print out anywhere in the world.</p>  
         </div>
         <div class="homeThird">
-            <a href="{$base_dir}/atlas-search-form.php"><img src="{$base_dir}/img/graphic-in-the-field-large.gif" alt="Hand-drawn graphic a Field Papers atlas out in the wild"></a>
-            <h3><a href="{$base_dir}/atlas-search-form.php">Take it into the field.</a></h3>
+            <a href="{$base_dir}/make-step1-search.php"><img src="{$base_dir}/img/graphic-in-the-field-large.gif" alt="Hand-drawn graphic a Field Papers atlas out in the wild"></a>
+            <h3><a href="{$base_dir}/make-step1-search.php">Take it into the field.</a></h3>
             <p>Scribble on it, draw things, make notes. </p>  
         </div>
         <div class="homeThird">
