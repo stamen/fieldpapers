@@ -1,14 +1,11 @@
 <?php
-   /**
-    * File upload form, for sites configured to use local file storage instead of S3.
-    *
-    * POST vars include expiration time and signature for pre-signed posts.
-    */
 
     require_once '../lib/lib.everything.php';
 
     enforce_master_on_off_switch();
-
+    
+    /*** ... ***/
+    
     $dirname = $_POST['dirname'] ? $_POST['dirname'] : null;
     $redirect = preg_match('#^http://#', $_POST['redirect']) ? $_POST['redirect'] : null;
     $expiration = $_POST['expiration'] ? $_POST['expiration'] : null;

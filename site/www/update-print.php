@@ -5,12 +5,12 @@
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     enforce_api_password($_POST['password']);
     
-    $dbh =& get_db_connection();
-
+    $context = default_context();
+    
     /**** ... ****/
 
     $print_id = $_GET['id'] ? $_GET['id'] : null;
-    $print = get_print($dbh, $print_id);
+    $print = get_print($context->db, $print_id);
     
     if(!$print)
     {
@@ -19,12 +19,12 @@
     
     if($progress = $_POST['progress'])
     {
-        $dbh->query('START TRANSACTION');
+        $context->db->query('START TRANSACTION');
         
         $print['progress'] = $progress;
-        set_print($dbh, $print);
+        set_print($context->db, $print);
 
-        $dbh->query('COMMIT');
+        $context->db->query('COMMIT');
     }
     
     header('HTTP/1.1 200');

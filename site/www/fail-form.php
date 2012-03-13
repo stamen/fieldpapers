@@ -1,31 +1,17 @@
 <?php
-   /**
-    * 
-    */
 
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'../lib');
-    require_once 'init.php';
-    require_once 'data.php';
-    require_once 'lib.auth.php';
-    require_once 'lib.forms.php';
-
-    $form_id = $_GET['id'] ? $_GET['id'] : null;
+    require_once '../lib/lib.everything.php';
     
-    list($user_id, $language) = read_userdata($_COOKIE['visitor'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    enforce_master_on_off_switch( $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    enforce_api_password($_POST['password']);
     
-    enforce_master_on_off_switch($language);
-
+    $context = default_context();
+    
     /**** ... ****/
     
-    $dbh =& get_db_connection();
+    $form_id = $_GET['id'] ? $_GET['id'] : null;
     
-    if($user_id)
-        $user = get_user($dbh, $user_id);
-
-    if($user)
-        setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);
-    
-    $form = get_form($dbh, $form_id);
+    $form = get_form($context->db, $form_id);
     
     if(!$form)
     {
@@ -37,13 +23,13 @@
         if($_POST['password'] != API_PASSWORD)
             die_with_code(401, 'Sorry, bad password');
         
-        $dbh->query('START TRANSACTION');
+        $context->db->query('START TRANSACTION');
         
-        add_log($dbh, "Failing form {$form['id']}");
+        add_log($context->db, "Failing form {$form['id']}");
 
-        fail_form($dbh, $form['id'], 1);
+        fail_form($context->db, $form['id'], 1);
 
-        $dbh->query('COMMIT');
+        $context->db->query('COMMIT');
     }
     
     header('HTTP/1.1 200');
