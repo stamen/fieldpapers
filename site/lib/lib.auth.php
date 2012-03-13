@@ -201,23 +201,4 @@
         unset($_SESSION['user']);
     }
     
-   /**
-    * For a visitor who's never been seen before, make up a new user_id in the
-    * database with add_user() and track that person via $_SESSION['user'] that
-    * doesn't have name or email.
-    *
-    * For a visitor who has a $_SESSION['user'] id, just make sure
-    * it's valid and create a new one if it's not (see above).
-    */
-    function remember_user(&$dbh)
-    {
-        // Need to test $_SESSION['user']['id'] instead?
-        if (is_array($_SESSION['user']) && $user = get_user($dbh, $_SESSION['user']['id']))
-        {
-            $_SESSION['user'] = $user;            
-        } else {            
-            $_SESSION['user'] = add_user($dbh);
-        }
-    }
-    
 ?>
