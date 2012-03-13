@@ -22,8 +22,6 @@
                     <span class="atlasPlace">
                     <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">
                     {$print.place_name|nice_placename}</a>, 
-                    <a href="{$base_dir}/atlases.php?place={$print.region_woeid}">
-                    {$print.region_name|nice_placename}</a>, 
                     <span class="atlasPlace"><a href="{$base_dir}/atlases.php?place={$print.country_woeid}">
                     {$print.country_name|nice_placename}</a>
                 {else}

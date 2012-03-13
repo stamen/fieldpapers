@@ -114,9 +114,6 @@
                 {if $print.place_woeid}
                     <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>,
                 {/if}
-                {if $print.region_woeid}
-                    <a href="{$base_dir}/atlases.php?place={$print.region_woeid}">{$print.region_name|nice_placename}</a>,
-                {/if}
                 {if $print.country_woeid}
                     <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
                 {/if}
@@ -150,9 +147,6 @@
             <b>
                 {if $print.place_woeid}
                     <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>,
-                {/if}
-                {if $print.region_woeid}
-                    <a href="{$base_dir}/atlases.php?place={$print.region_woeid}">{$print.region_name|nice_placename}</a>,
                 {/if}
                 {if $print.country_woeid}
                     <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
