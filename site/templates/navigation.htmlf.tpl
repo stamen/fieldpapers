@@ -4,7 +4,7 @@
     </div>
     <ul>
         <li>
-            <a href="{$base_dir}/atlas-search-form.php">
+            <a href="{$base_dir}/make-step1-search.php">
                 <span class="section">MAKE</span><br>
                 <span class="desc">an atlas to print</span>
             </a>
