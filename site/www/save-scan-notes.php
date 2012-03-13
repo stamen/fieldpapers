@@ -31,6 +31,7 @@
                 $note['latitude'] = $marker['lat'];
                 $note['longitude'] = $marker['lon'];
                 $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+                $note['user_id'] = $context->user['id'];
                 
                 set_scan_note($context->db, $note);
                 
@@ -57,6 +58,7 @@
                 $note['latitude'] = $marker['lat'];
                 $note['longitude'] = $marker['lon'];
                 $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+                $note['user_id'] = $context->user['id'];
                                 
                 set_scan_note($context->db, $note);
                 
