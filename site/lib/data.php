@@ -625,6 +625,32 @@
         return md5(join(' ', array($dirname, $expiration, $api_password)));
     }
     
+    function placename_latlon($name)
+    {
+        $req = new HTTP_Request('http://where.yahooapis.com/v1/places.q(' . urlencode($name) . ');count=1');
+        $req->addQueryString('select', 'long');
+        $req->addQueryString('format', 'json');
+        $req->addQueryString('appid', GEOPLANET_APPID);
+
+        $res = $req->sendRequest();
+
+        if(PEAR::isError($res))
+            return null;
+
+        if($req->getResponseCode() == 200)
+        {
+            $rsp = json_decode($req->getResponseBody(), true);
+            
+            if($rsp && $rsp['places'] && $rsp['places']['place'] && $rsp['places']['place'][0])
+            {
+                $centroid = $rsp['places']['place'][0]['centroid'];
+                return array($centroid['latitude'], $centroid['longitude']);
+            }
+        }
+        
+        return null;
+    }
+    
     function latlon_placeinfo($lat, $lon, $zoom)
     {
         $req = new HTTP_Request('http://api.flickr.com/services/rest/');
