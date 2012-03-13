@@ -1,19 +1,11 @@
 <?php
-   /**
-    * POST endpoint for attaching new files to a scan or print, e.g. tiles.
-    *
-    * Requires global site API password and a scan or print ID, shows an HTML upload form.
-    */
 
     require_once '../lib/lib.everything.php';
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    
     enforce_api_password($_GET['password']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
     
     /**** ... ****/
     
@@ -23,13 +15,13 @@
     $mimetype = $_GET['mimetype'] ? $_GET['mimetype'] : null;
         
     if($scan_id) {
-        $scan = get_scan($dbh, $scan_id);
+        $scan = get_scan($context->db, $scan_id);
     
         $dirname = "scans/{$scan['id']}/".ltrim($dirname, '/');
         $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan['id']);
 
     } elseif($print_id) {
-        $print = get_print($dbh, $print_id);
+        $print = get_print($context->db, $print_id);
     
         $dirname = "prints/{$print['id']}/".ltrim($dirname, '/');
         $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?print='.rawurlencode($print['id']);
@@ -43,24 +35,20 @@
         ? null
         : local_get_post_details(time() + 600, $dirname, $redirect);
 
-    $sm = get_smarty_instance();
-    $sm->assign('s3post', $s3post);
-    $sm->assign('localpost', $localpost);
-    $sm->assign('language', $language);
-    $sm->assign('mimetype', $mimetype);
+    $context->sm->assign('s3post', $s3post);
+    $context->sm->assign('localpost', $localpost);
+    $context->sm->assign('language', $language);
+    $context->sm->assign('mimetype', $mimetype);
     
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type);
-    
-    if($type == 'text/html') {
+    if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $sm->fetch("append.html.tpl");
+        print $context->sm->fetch("append.html.tpl");
     
-    } elseif($type == 'application/paperwalking+xml') { 
+    } elseif($context->type == 'application/paperwalking+xml') { 
         header("Content-Type: application/paperwalking+xml; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
-        print $sm->fetch("append.xml.tpl");
+        print $context->sm->fetch("append.xml.tpl");
     
     } else {
         header('HTTP/1.1 400');

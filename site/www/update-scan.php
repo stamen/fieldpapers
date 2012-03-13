@@ -5,12 +5,12 @@
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     enforce_api_password($_POST['password']);
     
-    $dbh =& get_db_connection();
-
+    $context = default_context();
+    
     /**** ... ****/
 
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
-    $scan = get_scan($dbh, $scan_id);
+    $scan = get_scan($context->db, $scan_id);
     
     if(!$scan)
     {
@@ -19,12 +19,12 @@
     
     if($progress = $_POST['progress'])
     {
-        $dbh->query('START TRANSACTION');
+        $context->db->query('START TRANSACTION');
         
         $scan['progress'] = $progress;
-        set_scan($dbh, $scan);
+        set_scan($context->db, $scan);
 
-        $dbh->query('COMMIT');
+        $context->db->query('COMMIT');
     }
     
     header('HTTP/1.1 200');

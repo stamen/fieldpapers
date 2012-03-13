@@ -4,30 +4,18 @@
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
-    
-    $forms = array();
-    
-    if($user = cookied_user($dbh))
-        $forms = get_forms($dbh, $user['id'], get_pagination(8));
+    $context = default_context();
     
     /**** ... ****/
     
-    $user = cookied_user($dbh);
-    $user_id = $user['id'];
+    $forms = get_forms($context->db, $context->user['id'], get_pagination(8));
     
-    $sm = get_smarty_instance();
-    $sm->assign('atlas_data', $_POST);
-    $sm->assign('forms', $forms);
+    $context->sm->assign('atlas_data', $_POST);
+    $context->sm->assign('forms', $forms);
     
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type);
-    
-    if($type == 'text/html') {
+    if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $sm->fetch("make-info.html.tpl");
+        print $context->sm->fetch("make-info.html.tpl");
     
     } else {
         header('HTTP/1.1 400');

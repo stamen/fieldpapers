@@ -1,28 +1,17 @@
 <?php
-   /**
-    * Upload form for new scans.
-    *
-    * Each time this page is accessed a new scan is created and some old unfulfilled ones are culled.
-    *
-    * Requires global site API password, shows an HTML upload form.
-    */
 
     require_once '../lib/lib.everything.php';
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
 
     /**** ... ****/ 
     
-    $user = cookied_user($dbh);
-    
-    $dbh->query('START TRANSACTION');
-    $scan = add_scan($dbh, $user['id']);
-    flush_scans($dbh, 3600);
-    $dbh->query('COMMIT');
+    $context->db->query('START TRANSACTION');
+    $scan = add_scan($context->db, $context->user['id']);
+    flush_scans($context->db, 3600);
+    $context->db->query('COMMIT');
     
     $dirname = "scans/{$scan['id']}";
     $redirect = 'http://'.get_domain_name().get_base_dir().'/uploaded.php?scan='.rawurlencode($scan['id']);
@@ -35,10 +24,9 @@
         ? null
         : local_get_post_details(time() + 600, $dirname, $redirect);
 
-    $sm = get_smarty_instance();
-    $sm->assign('s3post', $s3post);
-    $sm->assign('localpost', $localpost);
+    $context->sm->assign('s3post', $s3post);
+    $context->sm->assign('localpost', $localpost);
     
     header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("upload.html.tpl");
+    print $context->sm->fetch("upload.html.tpl");
 ?>
