@@ -20,7 +20,6 @@
     function &default_context()
     {
         $db =& get_db_connection();
-        $sm =& get_smarty_instance();
         
         $user = null;
         $type = get_preferred_type($_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT']);
@@ -37,10 +36,13 @@
             if(!$user)
             {
                 $user = add_user(&$db);
-                login_user_by_id(&$db, $user['id']);
+                $_SESSION['user'] = $user;
             }
         }
 
+        // Smarty is created last because it need $_SESSION populated
+        $sm =& get_smarty_instance();
+        
         $ctx = new Context($db, $sm, $user, $type);
 
         return $ctx;
