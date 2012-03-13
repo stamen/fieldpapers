@@ -41,7 +41,9 @@
                              failed, base_url, uploaded_file,
                              has_geotiff, has_stickers,
                              has_geojpeg, geojpeg_bounds,
-                             decoding_json, user_id, progress
+                             decoding_json, user_id, progress,
+                             place_name, region_name, country_name,
+                             place_woeid, region_woeid, country_woeid
                       FROM scans
                       WHERE id = %s",
                      $dbh->quoteSmart($scan_id));
@@ -85,9 +87,9 @@
         if(isset($args['place']))
         {
             $woeid_clauses = array(
-                sprintf('p.place_woeid = %d', $args['place']),
-                sprintf('p.region_woeid = %d', $args['place']),
-                sprintf('p.country_woeid = %d', $args['place'])
+                sprintf('s.place_woeid = %d', $args['place']),
+                sprintf('s.region_woeid = %d', $args['place']),
+                sprintf('s.country_woeid = %d', $args['place'])
                 );
         
             $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
@@ -98,7 +100,9 @@
             $where_clauses[] = sprintf('(s.user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
-        $q = sprintf("SELECT p.place_name AS print_place_name, p.place_woeid AS print_place_woeid,
+        $q = sprintf("SELECT s.place_name, s.place_woeid,
+                             s.region_name, s.region_woeid,
+                             s.country_name, s.country_woeid,
                              s.id, s.print_id,
                              s.min_row, s.min_column, s.min_zoom,
                              s.max_row, s.max_column, s.max_zoom,
@@ -155,7 +159,7 @@
 
         // TODO: ditch dependency on table_columns()
         // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers', 'progress') as $field)
+        foreach(array('print_id', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers', 'progress', 'place_name', 'region_name', 'country_name', 'place_woeid', 'region_woeid', 'country_woeid') as $field)
             if(in_array($field, $column_names) && !is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
