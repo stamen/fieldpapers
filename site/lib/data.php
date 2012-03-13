@@ -27,6 +27,42 @@
     define('STEP_FATAL_ERROR', 100);
     define('STEP_FATAL_QRCODE_ERROR', 101);
     
+    class Context
+    {
+        // Database connection
+        var $db;
+
+        // Smarty instance
+        var $sm;
+        
+        // Request content-type
+        var $type;
+        
+        function Context(&$db_link, &$smarty, $type)
+        {
+            $this->db =& $db_link;
+            $this->sm =& $smarty;
+            $this->type = $type;
+        }
+        
+        function close()
+        {
+            mysql_close($this->db);
+        }
+    }
+    
+    function &default_context()
+    {
+        $db =& get_db_connection();
+        $sm =& get_smarty_instance();
+        
+        $type = get_preferred_type($_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT']);
+
+        $ctx = new Context($db, $sm, $type);
+
+        return $ctx;
+    }
+    
     function &get_db_connection()
     {
         $dbh =& DB::connect(DB_DSN);
