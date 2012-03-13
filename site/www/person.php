@@ -7,38 +7,34 @@
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
 
     /**** ... ****/
     
     $user_id = $_GET["id"];
     
-    $user = get_user($dbh, $user_id);
+    $user = get_user($context->db, $user_id);
     
-    $sm = get_smarty_instance();
-    
-    $sm->assign('user_id', $user_id);
+    $context->sm->assign('user_id', $user_id);
     
     if ($user['name'])
     {
-        $sm->assign('user_name', $user['name']);
+        $context->sm->assign('user_name', $user['name']);
     } else {
-        $sm->assign('user_name', 'Anonymous');
+        $context->sm->assign('user_name', 'Anonymous');
     }
     
     if ($user['email'])
     {
-        $sm->assign('user_email', $user['email']);
+        $context->sm->assign('user_email', $user['email']);
     }
     
     // Get prints by id
-    $prints = get_prints($dbh, array('user' => $user['id']));
+    $prints = get_prints($context->db, array('user' => $user['id']));
     
     foreach($prints as $i => $print)
     {   
-        $pages = get_print_pages($dbh, $print['id']);
+        $pages = get_print_pages($context->db, $print['id']);
         $prints[$i]['number_of_pages'] = count($pages);
         
         if ($print['place_name'])
@@ -51,20 +47,17 @@
         }
     }
     
-    $sm->assign('prints', $prints);
+    $context->sm->assign('prints', $prints);
     
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type);
-    
-    if($type == 'text/html') {
+    if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $sm->fetch("person.html.tpl");
+        print $context->sm->fetch("person.html.tpl");
     
-    } elseif($type == 'application/paperwalking+xml') { 
+    } elseif($context->type == 'application/paperwalking+xml') { 
         header("Content-Type: application/paperwalking+xml; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
-        print $sm->fetch("person.xml.tpl");
+        print $context->sm->fetch("person.xml.tpl");
     
     } else {
         header('HTTP/1.1 400');

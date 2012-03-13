@@ -4,32 +4,30 @@
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
     
     /**** ... ****/
     
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
     $notes = is_array($_POST['notes']) ? $_POST['notes'] : array();
         
-    $user = get_user($dbh, $_SESSION['user']['id']);  
+    $user = get_user($context->db, $_SESSION['user']['id']);  
     
-    $scan = get_scan($dbh, $scan_id);
+    $scan = get_scan($context->db, $scan_id);
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
         if($scan)
         {
-            $dbh->query('START TRANSACTION');
+            $context->db->query('START TRANSACTION');
     
-            set_scan_notes($dbh, $user['id'], $scan['id'], $notes);
+            set_scan_notes($context->db, $user['id'], $scan['id'], $notes);
             
-            $dbh->query('COMMIT');
+            $context->db->query('COMMIT');
         }
     }
     
-    $scan_notes = get_scan_notes($dbh, array('page' => 1, 'perpage' => 242), $scan ? $scan['id'] : null);
+    $scan_notes = get_scan_notes($context->db, array('page' => 1, 'perpage' => 242), $scan ? $scan['id'] : null);
     
     if($user['id'])
         setcookie('visitor', write_userdata($user['id'], $language), time() + 86400 * 31);

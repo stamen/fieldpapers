@@ -1,25 +1,20 @@
 <?php
-   /**
-    * Display page for list of all recent forms in reverse-chronological order.
-    */
 
     require_once '../lib/lib.everything.php';
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
+    $context = default_context();
+
     /**** ... ****/
-    
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
     
     $pagination = array('page' => $_GET['page'], 'perpage' => $_GET['perpage']);
     
-    $forms = get_forms($dbh, null, $pagination);
+    $forms = get_forms($context->db, null, $pagination);
     
     foreach ($forms as $i => $form)
     {
-        $user = get_user($dbh, $form['user_id']);
+        $user = get_user($context->db, $form['user_id']);
         
         if ($user['name'])
         {
@@ -32,15 +27,14 @@
     
     list($count, $offset, $perpage, $page) = get_pagination($pagination);
 
-    $sm = get_smarty_instance();
-    $sm->assign('forms', $forms);
+    $context->sm->assign('forms', $forms);
 
-    $sm->assign('count', $count);
-    $sm->assign('offset', $offset);
-    $sm->assign('perpage', $perpage);
-    $sm->assign('page', $page);
+    $context->sm->assign('count', $count);
+    $context->sm->assign('offset', $offset);
+    $context->sm->assign('perpage', $perpage);
+    $context->sm->assign('page', $page);
     
     header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("forms.html.tpl");
+    print $context->sm->fetch("forms.html.tpl");
 
 ?>

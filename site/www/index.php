@@ -5,12 +5,6 @@
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     $context = default_context();
-    
-    if($context->type == 'text/html')
-    {
-        session_start();
-        remember_user($context->db);
-    }
 
     /**** ... ****/
     

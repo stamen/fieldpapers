@@ -7,15 +7,13 @@
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
 
     /**** ... ****/
             
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
     
-    $scan = get_scan($dbh, $scan_id);
+    $scan = get_scan($context->db, $scan_id);
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
@@ -34,29 +32,28 @@
                           'is_private' => $_POST['is_private'],
                           'will_edit' => $_POST['will_edit']);
             
-            $dbh->query('START TRANSACTION');
-            $scan = set_scan($dbh, $scan);
-            $dbh->query('COMMIT');
+            $context->db->query('START TRANSACTION');
+            $scan = set_scan($context->db, $scan);
+            $context->db->query('COMMIT');
         }
     }
     
     if($scan)
     {
-        $print = get_print($dbh, $scan['print_id']);
-        $notes = get_scan_notes($dbh, array('page' => 1, 'perpage' => 242), $scan['id']);
+        $print = get_print($context->db, $scan['print_id']);
+        $notes = get_scan_notes($context->db, array('page' => 1, 'perpage' => 242), $scan['id']);
     }
 
-    $sm = get_smarty_instance();
-    $sm->assign('scan', $scan);
-    $sm->assign('step', $step);
-    $sm->assign('print', $print);
-    $sm->assign('notes', $notes);
-    $sm->assign('language', $language);
+    $context->sm->assign('scan', $scan);
+    $context->sm->assign('step', $step);
+    $context->sm->assign('print', $print);
+    $context->sm->assign('notes', $notes);
+    $context->sm->assign('language', $language);
     
     scan_headers($scan);
     print_headers($print);
     
     header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("scan-large.html.tpl");
+    print $context->sm->fetch("scan-large.html.tpl");
 
 ?>

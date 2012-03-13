@@ -1,18 +1,10 @@
 <?php
-   /**
-    * Language setting view and change endpoint.
-    *
-    * Accepts POST var with replacement language setting that modifies a cookie
-    * and redirects the visitor, or simply displays the current lanaguage settings.
-    */
 
     require_once '../lib/lib.everything.php';
       
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
     
     /**** ... ****/
     
@@ -31,8 +23,7 @@
         header("Location: {$location}");
     }
     
-    $sm = get_smarty_instance();
-    $sm->assign('language', $language);
+    $context->sm->assign('language', $language);
     
     header("Content-Type: text/html; charset=UTF-8");
     print $sm->fetch("language.html.tpl");

@@ -35,20 +35,16 @@
         ? null
         : local_get_post_details(time() + 600, $dirname, $redirect);
 
-    $context->sm = get_smarty_instance();
     $context->sm->assign('s3post', $s3post);
     $context->sm->assign('localpost', $localpost);
     $context->sm->assign('language', $language);
     $context->sm->assign('mimetype', $mimetype);
     
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type);
-    
-    if($type == 'text/html') {
+    if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
         print $context->sm->fetch("append.html.tpl");
     
-    } elseif($type == 'application/paperwalking+xml') { 
+    } elseif($context->type == 'application/paperwalking+xml') { 
         header("Content-Type: application/paperwalking+xml; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";

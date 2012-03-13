@@ -1,7 +1,8 @@
 <?php
+
     require_once '../lib/lib.everything.php';
     
-    $dbh =& get_db_connection();
+    $context = default_context();
         
     ////
     // Path
@@ -28,10 +29,9 @@
     
     $mbtiles_url = 'http://'.get_domain_name().get_base_dir().'/mbtiles.php/'.$slug. '/{Z}/{X}/{Y}.png';
     
-    $mbtiles = add_mbtiles($dbh, $user_id, $mbtiles_url, $mbtiles_filename,'files/'.$target_mbtiles_path);
+    $mbtiles = add_mbtiles($context->db, $user_id, $mbtiles_url, $mbtiles_filename,'files/'.$target_mbtiles_path);
     
     $display_mbtiles_url = 'http://'.get_domain_name().get_base_dir().'/display_mbtiles.php?id='.urlencode($mbtiles['id']).'&filename='.urlencode($slug);
     header("Location: $display_mbtiles_url");
     
-    exit();
 ?>
