@@ -35,13 +35,17 @@
         // Smarty instance
         var $sm;
         
+        // Logged-in user
+        var $user;
+        
         // Request content-type
         var $type;
         
-        function Context(&$db_link, &$smarty, $type)
+        function Context(&$db_link, &$smarty, $user, $type)
         {
             $this->db =& $db_link;
             $this->sm =& $smarty;
+            $this->user = $user;
             $this->type = $type;
         }
         
@@ -49,18 +53,6 @@
         {
             mysql_close($this->db);
         }
-    }
-    
-    function &default_context()
-    {
-        $db =& get_db_connection();
-        $sm =& get_smarty_instance();
-        
-        $type = get_preferred_type($_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT']);
-
-        $ctx = new Context($db, $sm, $type);
-
-        return $ctx;
     }
     
     function &get_db_connection()
