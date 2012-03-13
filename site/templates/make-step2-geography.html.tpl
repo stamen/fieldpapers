@@ -1162,7 +1162,7 @@
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
         <div id="container" style="position: relative">
-            <form id="compose_print" method="post" action="{$base_dir}/make-info.php">
+            <form id="compose_print" method="post" action="{$base_dir}/make-step3-info.php">
                 <div id="atlas_inputs_container">
                     <div class="atlas_inputs">
                         <span id="area_title_container">
