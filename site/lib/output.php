@@ -19,8 +19,13 @@
         $s->assign('base_dir', get_base_dir());
         $s->assign('base_href', get_base_href());
         $s->assign('constants', get_defined_constants());
-        $s->assign('request', array('get' => $_GET, 'post' => $_POST, 'uri' => $_SERVER['REQUEST_URI'], 'session' => $_SESSION));
         $s->assign('providers', get_map_providers());
+
+        $s->assign('request', array('get' => $_GET,
+                                    'post' => $_POST,
+                                    'uri' => $_SERVER['REQUEST_URI'],
+                                    'authenticated' => ($_SESSION['logged_in'] ? true : false),
+                                    'user' => $_SESSION['user']));
         
         $s->register_modifier('nice_placename', 'nice_placename');
         $s->register_modifier('nice_relativetime', 'nice_relativetime');

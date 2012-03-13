@@ -1,6 +1,6 @@
- {if $request.session.logged_in}
+ {if $request.authenticated}
         <p style='display: inline;'>
-            Signed in as <b>{$request.session.user.name}</b>
+            Signed in as <b>{$request.user.name}</b>
             
             <form id='logout_form' name='logout_form' method='POST' action='{$base_dir}/login.php' style='display: inline;'>
                 <!--<input type='submit' id="login_button" value='Log Out'>-->
