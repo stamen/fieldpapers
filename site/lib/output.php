@@ -22,6 +22,7 @@
         $s->assign('request', array('get' => $_GET, 'post' => $_POST, 'uri' => $_SERVER['REQUEST_URI'], 'session' => $_SESSION));
         $s->assign('providers', get_map_providers());
         
+        $s->register_modifier('nice_placename', 'nice_placename');
         $s->register_modifier('nice_relativetime', 'nice_relativetime');
         $s->register_modifier('nice_datetime', 'nice_datetime');
         $s->register_modifier('nice_degree', 'nice_degree');
@@ -69,6 +70,11 @@
         return array(array('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 'OpenStreetMap'));
     }
     
+    function nice_placename($place_name)
+    {
+        return preg_replace('/^(.+?)(,.*)?$/', '\1', $place_name);
+    }
+
     function nice_datetime($ts)
     {
         return date('l, M j Y, g:ia T', $ts);

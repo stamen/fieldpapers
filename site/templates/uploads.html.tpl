@@ -18,12 +18,11 @@
                 <span class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">Untitled</a></span>
                 <span class="atlasOwner">by <a href="{$base_dir}/uploads.php?user={$scan.user_id}">{$scan.user_name}</a></span>,
 
-                {if $scan.city_name && $scan.country_name}
-                    <span class="atlasPlace">
-                    <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">
-                    {$scan.city_name}</a>, 
-                    <span class="atlasPlace"><a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">
-                    {$scan.country_name}</a>
+                {if $scan.place_woeid}
+                    <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
+                {/if}
+                {if $scan.country_woeid}
+                    <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>
                 {else}
                     Unknown Place
                 {/if}

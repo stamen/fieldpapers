@@ -18,15 +18,6 @@
     
     $print = get_print($dbh,$print_id);
     
-    if ($print['place_name'])
-    {
-        $place_name = explode(',', $print['place_name']);
-    
-        $print['city_name'] = $place_name[0];
-    } else {
-        $print['city_name'] = 'Unknown City';
-    }
-        
     $sm->assign('print', $print);
     
         
