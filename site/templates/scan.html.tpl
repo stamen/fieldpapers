@@ -84,9 +84,10 @@
                             <b>Page {$page_number}<b>,
                         {/if}
                         Atlas <a href="print.php?id={$scan.print_id}">{$scan.print_id}</a>
-                        {if $print.place_name}
-                        , {$print.place_name}
+                        {if $scan.place_woeid}
+                            <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
                         {/if}
+                        <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>
                     </p>
                 </p>
             

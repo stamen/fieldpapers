@@ -1,8 +1,10 @@
+from sys import stderr
 from tempfile import mkstemp
 from os import close, unlink
 from math import hypot
+from subprocess import Popen, PIPE
 
-from osgeo import gdal, osr
+from osgeo import osr
 
 try:
     from PIL import Image
@@ -18,11 +20,13 @@ from imagemath import extract_image
 from matrixmath import Point
 from dimensions import ptpin
 
+epsg900913 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over'
+
 def calculate_gcps(p2s, paper_width_pt, paper_height_pt, north, west, south, east):
     """
     """
     merc = osr.SpatialReference()
-    merc.ImportFromEPSG(900913)
+    merc.ImportFromProj4(epsg900913)
     
     latlon = osr.SpatialReference()
     latlon.ImportFromEPSG(4326)
@@ -44,17 +48,17 @@ def calculate_gcps(p2s, paper_width_pt, paper_height_pt, north, west, south, eas
     # x, y in image pixels
     ul_px, ur_px, lr_px, ll_px = [p2s(pt) for pt in (ul_pt, ur_pt, lr_pt, ll_pt)]
     
-    ul_gcp = gdal.GCP(ul_x, ul_y, ul_z, ul_px.x, ul_px.y)
-    ur_gcp = gdal.GCP(ur_x, ur_y, ur_z, ur_px.x, ur_px.y)
-    lr_gcp = gdal.GCP(lr_x, lr_y, lr_z, lr_px.x, lr_px.y)
-    ll_gcp = gdal.GCP(ll_x, ll_y, ll_z, ll_px.x, ll_px.y)
+    ul_gcp = (ul_x, ul_y, ul_px.x, ul_px.y)
+    ur_gcp = (ur_x, ur_y, ur_px.x, ur_px.y)
+    lr_gcp = (lr_x, lr_y, lr_px.x, lr_px.y)
+    ll_gcp = (ll_x, ll_y, ll_px.x, ll_px.y)
     
     return ul_gcp, ur_gcp, lr_gcp, ll_gcp
 
 def calculate_geotransform(gcps, full_width, fuller_width, buffer):
     """ Return a geotransform tuple that puts the GCPs into a chosen image size.
     """
-    xs, ys = [gcp.GCPX for gcp in gcps], [gcp.GCPY for gcp in gcps]
+    xs, ys = [gcp[0] for gcp in gcps], [gcp[1] for gcp in gcps]
     xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
 
     xspan = xmax - xmin
@@ -83,7 +87,7 @@ def calculate_geotransform(gcps, full_width, fuller_width, buffer):
     # finalize the image size in image pixels and image bounds in map units
     
     full_height = int(height + buffer * 2)
-    bounds = (xoff, yoff, xoff + full_width * xstride, yoff + full_height * ystride)
+    bounds = (xoff, yoff + full_height * ystride, xoff + full_width * xstride, yoff)
     
     return xform, bounds, (full_width, full_height)
 
@@ -95,54 +99,81 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     #
     gcps = calculate_gcps(p2s, paper_width_pt, paper_height_pt, north, west, south, east)
     merc = osr.SpatialReference()
-    merc.ImportFromEPSG(900913)
+    merc.ImportFromProj4(epsg900913)
     
-    #
-    # Start an output file
-    #
-    driver = gdal.GetDriverByName('GTiff')
+    handle, png_filename = mkstemp(prefix='geotiff-', suffix='.png')
+    handle, vrt_filename = mkstemp(prefix='geotiff-', suffix='.vrt')
+    handle, tif1_filename = mkstemp(prefix='geotiff-', suffix='.tif')
+    handle, tif2_filename = mkstemp(prefix='geotiff-', suffix='.tif')
+    handle, jpg_filename = mkstemp(prefix='geotiff-', suffix='.jpg')
     
-    handle, geotiff_filename = mkstemp(prefix='geotiff-', suffix='.tif')
-    geotiff_ds = driver.Create(geotiff_filename, image.size[0], image.size[1], 3, options=['COMPRESS=JPEG', 'JPEG_QUALITY=80', 'BLOCKYSIZE=8'])
-    geotiff_ds.SetGCPs(gcps, str(merc))
+    try:
+        image.save(png_filename)
+        
+        translate = 'gdal_translate -of VRT'.split()
+        
+        for (e, n, x, y) in gcps:
+            translate += ('-gcp %(x).1f %(y).1f %(e).1f %(n).1f' % locals()).split()
+        
+        translate += ['-a_srs', epsg900913]
+        translate += [png_filename, vrt_filename]
+        
+        print >> stderr, '%', ' '.join(translate)
+        
+        translate = Popen(translate, stdout=PIPE)
+        translate.wait()
+        
+        if translate.returncode:
+            raise Exception(translate.returncode)
+        
+        warp1 = 'gdalwarp -of GTiff -tps -co COMPRESS=JPEG -co JPEG_QUALITY=80'.split()
+        warp1 += ['-dstnodata', '153 153 153']
+        warp1 += [vrt_filename, tif1_filename]
+        
+        print >> stderr, '%', ' '.join(warp1)
+        
+        warp1 = Popen(warp1, stdout=PIPE)
+        warp1.wait()
+        
+        if warp1.returncode:
+            raise Exception(warp1.returncode)
+        
+        #
+        # Read the raw bytes of the GeoTIFF for return.
+        #
+        geotiff_bytes = open(tif1_filename).read()
+        
+        #
+        # Do another one, smaller this time for the projected JPEG.
+        #
+        xform, img_bounds, img_size = calculate_geotransform(gcps, 760, 960, 100)
+        
+        warp2 = 'gdalwarp -of GTiff -tps'.split()
+        warp2 += ('-te %.1f %.1f %.1f %.1f' % img_bounds).split()
+        warp2 += ('-ts %d %d' % img_size).split()
+        warp2 += ['-dstnodata', '153 153 153']
+        warp2 += [vrt_filename, tif2_filename]
+        
+        print >> stderr, '%', ' '.join(warp2)
+        
+        warp2 = Popen(warp2, stdout=PIPE)
+        warp2.wait()
+        
+        if warp2.returncode:
+            raise Exception(warp2.returncode)
+        
+        geojpeg_img = Image.open(tif2_filename)
+        geojpeg_img.save(jpg_filename)
+        
+    except Exception, e:
+        raise
     
-    close(handle)
-    
-    #
-    # Copy over the pixel data for each channel.
-    #
-    for (i, chan) in enumerate(image.convert('RGB').split()):
-        band = geotiff_ds.GetRasterBand(i + 1)
-        band.WriteRaster(0, 0, image.size[0], image.size[1], chan.tostring())
-    
-    #
-    # Read the raw bytes of the GeoTIFF for return.
-    #
-    geotiff_ds.FlushCache()
-    geotiff_bytes = open(geotiff_filename, 'r').read()
-    
-    #
-    # Do another one, smaller this time for the projected JPEG.
-    #
-    xform, img_bounds, img_size = calculate_geotransform(gcps, 760, 960, 100)
-    
-    handle, geojpeg_filename = mkstemp(prefix='geojpeg-', suffix='.tif')
-    geojpeg_ds = driver.Create(geojpeg_filename, img_size[0], img_size[1], 3)
-    close(handle)
-
-    geojpeg_ds.SetProjection(merc.ExportToWkt())
-    geojpeg_ds.SetGeoTransform(xform)
-    
-    gdal.ReprojectImage(geotiff_ds, geojpeg_ds, None, None, gdal.GRA_Cubic)
-    
-    channels = []
-    
-    for b in (1, 2, 3):
-        band = geojpeg_ds.GetRasterBand(b)
-        chan = Image.fromstring('L', img_size, band.ReadRaster(0, 0, *img_size))
-        channels.append(chan)
-    
-    geojpeg_img = Image.merge('RGB', channels)
+    finally:
+        unlink(png_filename)
+        unlink(vrt_filename)
+        unlink(tif1_filename)
+        unlink(tif2_filename)
+        unlink(jpg_filename)
     
     #
     # Project image bounds to geographic coordinates
@@ -157,12 +188,6 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
     lon2, lat2, z2 = proj.TransformPoint(x2, y2)
     img_bounds = min(lat1, lat2), min(lon1, lon2), max(lat1, lat2), max(lon1, lon2)
     
-    #
-    # Close out and return.
-    #
-    unlink(geotiff_filename)
-    unlink(geojpeg_filename)
-
     return geotiff_bytes, geojpeg_img, img_bounds
 
 def list_tiles_for_bounds(image, s2p, paper_width_pt, paper_height_pt, north, west, south, east):

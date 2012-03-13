@@ -153,6 +153,24 @@ ALTER TABLE scans ADD COLUMN geojpeg_bounds TEXT AFTER uploaded_file;
 
 ALTER TABLE scans ADD COLUMN progress FLOAT NULL AFTER failed;
 
+ALTER TABLE scans ADD COLUMN place_woeid INT UNSIGNED AFTER decoding_json;
+ALTER TABLE scans ADD COLUMN place_name VARCHAR(128) AFTER decoding_json;
+
+ALTER TABLE scans ADD COLUMN region_woeid INT UNSIGNED AFTER decoding_json;
+ALTER TABLE scans ADD COLUMN region_name VARCHAR(64) AFTER decoding_json;
+
+ALTER TABLE scans ADD COLUMN country_woeid INT UNSIGNED AFTER decoding_json;
+ALTER TABLE scans ADD COLUMN country_name VARCHAR(64) AFTER decoding_json;
+
+UPDATE scans, prints
+    SET scans.country_woeid = prints.country_woeid,
+        scans.country_name = prints.country_name,
+        scans.region_woeid = prints.region_woeid,
+        scans.region_name = prints.region_name,
+        scans.place_woeid = prints.place_woeid,
+        scans.place_name = prints.place_name
+    WHERE prints.id = scans.print_id;
+    
 
 
 DROP TABLE IF EXISTS forms;

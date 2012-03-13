@@ -45,8 +45,27 @@
         $scan['will_edit'] = $_POST['will_edit'];
         $scan['has_geotiff'] = $_POST['has_geotiff'];
         $scan['has_geojpeg'] = $_POST['has_geojpeg'];
-        $scan['geojpeg_bounds'] = $_POST['geojpeg_bounds'];
         $scan['has_stickers'] = $_POST['has_stickers'];
+        
+        if(preg_match('/^-?\d+(\.\d+)?(,-?\d+(\.\d+)?){3}$/', $_POST['geojpeg_bounds']))
+        {
+            $scan['geojpeg_bounds'] = $_POST['geojpeg_bounds'];
+            $zoom = $scan['min_zoom']/2 + $scan['max_zoom']/2;
+
+            list($south, $west, $north, $east) = explode(',', $_POST['geojpeg_bounds']);
+
+            $lat = $south/2 + $north/2;
+            $lon = $west/2 + $east/2;
+            
+            $place = latlon_placeinfo($lat, $lon, $zoom);
+            
+            $scan['country_name'] = $place[0];
+            $scan['region_name'] = $place[2];
+            $scan['place_name'] = $place[4];
+            $scan['country_woeid'] = $place[1];
+            $scan['region_woeid'] = $place[3];
+            $scan['place_woeid'] = $place[5];
+        }
         
         add_log($dbh, "Posting additional details to scan {$scan['id']}");
 

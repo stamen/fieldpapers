@@ -189,10 +189,15 @@
             Untitled {$pages.west}
         </h1>
         <p>
-            {if $print.place_woeid && $print.country_name}
-                <b><a href='{$base_dir}/atlases.php?place={$print.place_woeid}'>{$print.city_name}</a></b>, 
-                <a href='{$base_dir}/atlases.php?place={$print.country_woeid}'>{$print.country_name}</a><br>
-            {/if}
+            <b>
+                {if $print.place_woeid}
+                    <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>,
+                {/if}
+                {if $print.country_woeid}
+                    <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
+                {/if}
+            </b><br>
+            
             Created by <a href='{$base_dir}/atlases.php?user={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
         </p>
@@ -220,10 +225,15 @@
             Untitled
         </h1>
         <p>
-            {if $print.place_woeid && $print.country_name}
-                <b><a href='{$base_dir}/atlases.php?place={$print.place_woeid}'>{$print.city_name}</a>, 
-                <a href='{$base_dir}/atlases.php?place={$print.country_woeid}'>{$print.country_name}</a></b><br>
-            {/if}
+            <b>
+                {if $print.place_woeid}
+                    <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>,
+                {/if}
+                {if $print.country_woeid}
+                    <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
+                {/if}
+            </b><br>
+            
             Created by <a href='{$base_dir}/atlases.php?user={$print.user_id}'>{$user_name}</a>, 
             <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
             <br>
