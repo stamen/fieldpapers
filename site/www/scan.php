@@ -5,12 +5,6 @@
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
     $context = default_context();
-    
-    if($context->type == 'text/html')
-    {
-        session_start();
-        remember_user($context->db);
-    }
 
     /**** ... ****/
     
@@ -45,14 +39,11 @@
         $context->sm->assign('user_name', 'Anonymous');
     }
     
-    $type = $_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT'];
-    $type = get_preferred_type($type);
-    
-    if($type == 'text/html') {
+    if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
         print $context->sm->fetch("scan.html.tpl");
     
-    } elseif($type == 'application/paperwalking+xml') { 
+    } elseif($context->type == 'application/paperwalking+xml') { 
         header("Content-Type: application/paperwalking+xml; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";

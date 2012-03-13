@@ -1,20 +1,14 @@
 <?php
-   /**
-    * Statistics display page, with information about a variety
-    * of usage numbers for this installation of Walking Papers.
-    */
 
     require_once '../lib/lib.everything.php';
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    session_start();
-    $dbh =& get_db_connection();
-    remember_user($dbh);
+    $context = default_context();
 
     /**** ... ****/
 
-    $res = $dbh->query('SELECT COUNT(*) FROM prints WHERE created > NOW() - INTERVAL 1 MONTH');
+    $res = $context->db->query('SELECT COUNT(*) FROM prints WHERE created > NOW() - INTERVAL 1 MONTH');
     
     if(PEAR::isError($res)) 
         die_with_code(500, "{$res->message}\n");
@@ -23,9 +17,9 @@
     
 
 
-    $res = $dbh->query('SELECT COUNT(*)
-                        FROM scans
-                        WHERE decoded');
+    $res = $context->db->query('SELECT COUNT(*)
+                                FROM scans
+                                WHERE decoded');
     
     if(PEAR::isError($res)) 
         die_with_code(500, "{$res->message}\n");
@@ -37,11 +31,11 @@
     $hemisphere_count = array('northern' => 0, 'southern' => 0, 'eastern' => 0, 'western' => 0);
     $orientation_count = array('landscape' => 0, 'portrait' => 0);
     
-    $res = $dbh->query('SELECT (north + south) / 2 AS latitude,
-                               (east + west) / 2 AS longitude,
-                               orientation
-                        FROM prints
-                        WHERE created > NOW() - INTERVAL 1 MONTH');
+    $res = $context->db->query('SELECT (north + south) / 2 AS latitude,
+                                       (east + west) / 2 AS longitude,
+                                       orientation
+                                FROM prints
+                                WHERE created > NOW() - INTERVAL 1 MONTH');
 
     if(PEAR::isError($res)) 
         die_with_code(500, "{$res->message}\n");
@@ -71,14 +65,14 @@
     
     $zooms = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     
-    if(in_array('zoom', array_keys(table_columns($dbh, 'prints'))))
+    if(in_array('zoom', array_keys(table_columns($context->db, 'prints'))))
     {
-        $res = $dbh->query('SELECT zoom, count(*) AS prints
-                            FROM prints
-                            WHERE zoom
-                              AND created > NOW() - INTERVAL 1 MONTH
-                            GROUP BY zoom
-                            ORDER BY zoom');
+        $res = $context->db->query('SELECT zoom, count(*) AS prints
+                                    FROM prints
+                                    WHERE zoom
+                                      AND created > NOW() - INTERVAL 1 MONTH
+                                    GROUP BY zoom
+                                    ORDER BY zoom');
     
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n");
@@ -93,14 +87,14 @@
     $country_counts = array();
     $country_percents = array();
     
-    if(in_array('country_woeid', array_keys(table_columns($dbh, 'prints'))))
+    if(in_array('country_woeid', array_keys(table_columns($context->db, 'prints'))))
     {
-        $res = $dbh->query('SELECT country_woeid, country_name, COUNT(*) AS print_count
-                            FROM prints
-                            WHERE country_woeid
-                              AND created > NOW() - INTERVAL 1 MONTH
-                            GROUP BY country_woeid
-                            ORDER BY print_count DESC, created DESC');
+        $res = $context->db->query('SELECT country_woeid, country_name, COUNT(*) AS print_count
+                                    FROM prints
+                                    WHERE country_woeid
+                                      AND created > NOW() - INTERVAL 1 MONTH
+                                    GROUP BY country_woeid
+                                    ORDER BY print_count DESC, created DESC');
     
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n");
@@ -133,11 +127,11 @@
     $scan_states = array('progress' => 0, 'finished' => 0, 'failed' => 0);
     $total_scans = 0;
     
-    $res = $dbh->query('SELECT last_step, COUNT(*) AS scans
-                        FROM scans
-                        WHERE last_step != 0
-                          AND created > NOW() - INTERVAL 1 MONTH
-                        GROUP BY last_step');
+    $res = $context->db->query('SELECT last_step, COUNT(*) AS scans
+                                FROM scans
+                                WHERE last_step != 0
+                                  AND created > NOW() - INTERVAL 1 MONTH
+                                GROUP BY last_step');
 
     if(PEAR::isError($res)) 
         die_with_code(500, "{$res->message}\n");
@@ -166,23 +160,22 @@
     
 
 
-    $sm = get_smarty_instance();
-    //$sm->assign('print_count', $print_count);
-    //$sm->assign('scan_count', $scan_count);
-    $sm->assign('print_percent', round(100 * $print_count / ($print_count + $scan_count)));
-    $sm->assign('scan_percent', round(100 * $scan_count / ($print_count + $scan_count)));
-    //$sm->assign('hemisphere_count', $hemisphere_count);
-    $sm->assign('hemisphere_percent', $hemisphere_percent);
-    //$sm->assign('orientation_count', $orientation_count);
-    $sm->assign('orientation_percent', $orientation_percent);
-    $sm->assign('country_names', $country_names);
-    //$sm->assign('country_counts', $country_counts);
-    $sm->assign('country_percents', $country_percents);
-    $sm->assign('scan_states', $scan_states);
-    $sm->assign('zooms', $zooms);
-    $sm->assign('language', $language);
+    //$context->sm->assign('print_count', $print_count);
+    //$context->sm->assign('scan_count', $scan_count);
+    $context->sm->assign('print_percent', round(100 * $print_count / ($print_count + $scan_count)));
+    $context->sm->assign('scan_percent', round(100 * $scan_count / ($print_count + $scan_count)));
+    //$context->sm->assign('hemisphere_count', $hemisphere_count);
+    $context->sm->assign('hemisphere_percent', $hemisphere_percent);
+    //$context->sm->assign('orientation_count', $orientation_count);
+    $context->sm->assign('orientation_percent', $orientation_percent);
+    $context->sm->assign('country_names', $country_names);
+    //$context->sm->assign('country_counts', $country_counts);
+    $context->sm->assign('country_percents', $country_percents);
+    $context->sm->assign('scan_states', $scan_states);
+    $context->sm->assign('zooms', $zooms);
+    $context->sm->assign('language', $language);
     
     header("Content-Type: text/html; charset=UTF-8");
-    print $sm->fetch("zeitgeist.html.tpl");
+    print $context->sm->fetch("zeitgeist.html.tpl");
 
 ?>
