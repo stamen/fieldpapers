@@ -6,14 +6,6 @@
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
     <script type="text/javascript">
         {literal}            
-            function setValue(value)
-            {
-                if (value === 'Type in a location')
-                {
-                    document.getElementById('location_input').value = '';
-                }
-            }
-            
             function changeFormAction(index)
             {
                 var mbtiles_info = document.getElementById('mbtiles_selection').options[index].value;
@@ -36,9 +28,9 @@
             <div class="smallContainer" style="text-align: center;">
                 <h2>Where in the world is your atlas?</h2>
                 <p>                                            
-                    <form id="search-form" action="{$base_dir}/find-place.php" method="post">
+                    <form id="search-form" action="{$base_dir}/atlas-search-form.php" method="post">
                         <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
-                               value="Type in a location" onFocus="setValue(this.value);">
+                               placeholder="Type in a location">
                         {if $error}
                             <p style="color: #C33;">We could not find that place. Please try again.</p>
                         {/if}
