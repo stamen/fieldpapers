@@ -4,7 +4,6 @@
 
     $context = default_context();
     
-    $context->sm->assign('user', $context->user);
-    
     print $context->sm->fetch("upload_mbtiles.html.tpl");
+
 ?>
