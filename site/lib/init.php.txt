@@ -14,6 +14,8 @@
     // Flickr application key
     define('FLICKR_KEY', '*** http://www.flickr.com/services/api/keys/ ***');
 
+    session_name('paperwalking-sessionid');
+
     // Amazon S3
     // leave one or more of these constants empty to use local uploads
     define('AWS_ACCESS_KEY', '*** http://aws.amazon.com/ ***');
