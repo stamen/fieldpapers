@@ -263,7 +263,8 @@
     {
         $q = sprintf("SELECT scan_id, note_number, note,
                              latitude, longitude, geometry,
-                             UNIX_TIMESTAMP(created) AS created
+                             UNIX_TIMESTAMP(created) AS created,
+                             user_id
                       FROM scan_notes
                       WHERE scan_id = %s
                         AND note_number = %s",
@@ -291,9 +292,15 @@
             $where_clauses[] = sprintf('(scan_id = %s)', $dbh->quoteSmart($args['scan']));
         }
         
+        if(isset($args['user']))
+        {
+            $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
+        }
+        
         $q = sprintf('SELECT scan_id, note_number, note,
                              latitude, longitude, geometry,
-                             UNIX_TIMESTAMP(created) AS created
+                             UNIX_TIMESTAMP(created) AS created,
+                             user_id
                       FROM scan_notes
                       WHERE %s
                       ORDER BY created DESC
@@ -386,6 +393,50 @@
         {
             die_with_code(500, "{$res->message}\n{$q}\n");
         }
+    }
+    
+    function scan_notes_to_geojson($notes)
+    {
+        $geojson = array(
+            'type' => 'FeatureCollection',
+            'features' => array()
+        );
+        
+        $base_href = 'http://'.get_domain_name().get_base_dir();
+        
+        foreach($notes as $note)
+        {
+            $scan = $note['scan'];
+        
+            $feature = array(
+                'type' => 'Feature',
+                'id' => "{$note['scan_id']}/{$note['note_number']}",
+                'properties' => array(
+                    'note' => $note['note'],
+                    'number' => intval($note['note_number']),
+                    'created' => date('c', $note['created']),
+
+                    'scan_id' => $note['scan_id'],
+                    'scan_href' => "{$base_href}/scan.php?id={$note['scan_id']}",
+                    'scan_description' => $scan['description'],
+                    'scan_place_woeid' => $scan['place_woeid'],
+                    'scan_region_woeid' => $scan['region_woeid'],
+                    'scan_country_woeid' => $scan['country_woeid'],
+                    'scan_place_name' => $scan['place_name'],
+                    'scan_region_name' => $scan['region_name'],
+                    'scan_country_name' => $scan['country_name'],
+                    'scan_created' => date('c', $scan['created'])
+                ),
+                'geometry' => array(
+                    'type' => 'Point',
+                    'coordinates' => array(floatval($note['longitude']), floatval($note['latitude']))
+                )
+            );
+            
+            $geojson['features'][] = $feature;
+        }
+        
+        return json_encode($geojson);
     }
     
 ?>
