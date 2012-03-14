@@ -11,43 +11,16 @@
 
     /**** ... ****/
     
-    $user_id = $_GET["id"];
-    
-    $user = get_user($context->db, $user_id);
-    
-    $context->sm->assign('user_id', $user_id);
-    
-    if ($user['name'])
+    if(empty($_GET['id']) && $context->user)
     {
-        $context->sm->assign('user_name', $user['name']);
-    } else {
-        $context->sm->assign('user_name', 'Anonymous');
+        // redirect to the calling-user's page
+        die(print_r($context->user, 1));
     }
     
-    if ($user['email'])
+    if($user = get_user($context->db, $_GET['id']))
     {
-        $context->sm->assign('user_email', $user['email']);
+        $context->sm->assign('user', $user);
     }
-    
-    // Get prints by id
-    $prints = get_prints($context->db, array('user' => $user['id']));
-    
-    foreach($prints as $i => $print)
-    {   
-        $pages = get_print_pages($context->db, $print['id']);
-        $prints[$i]['number_of_pages'] = count($pages);
-        
-        if ($print['place_name'])
-        {
-            $place_name = explode(',', $print['place_name']);
-        
-            $prints[$i]['city_name'] = $place_name[0];
-        } else {
-            $prints[$i]['city_name'] = 'Unknown City';
-        }
-    }
-    
-    $context->sm->assign('prints', $prints);
     
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
