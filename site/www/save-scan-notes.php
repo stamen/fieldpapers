@@ -20,7 +20,7 @@
                 
                 $note_number = 1;
                 
-                foreach(get_scan_notes($context->db, $scan['id']) as $note)
+                foreach(get_scan_notes($context->db, array('scan' => $scan['id'])) as $note)
                 {
                     $note_number = max($note_number, $note['note_number'] + 1);
                 }
@@ -31,6 +31,7 @@
                 $note['latitude'] = $marker['lat'];
                 $note['longitude'] = $marker['lon'];
                 $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+                $note['user_id'] = $context->user['id'];
                 
                 set_scan_note($context->db, $note);
                 
@@ -57,6 +58,7 @@
                 $note['latitude'] = $marker['lat'];
                 $note['longitude'] = $marker['lon'];
                 $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+                $note['user_id'] = $context->user['id'];
                                 
                 set_scan_note($context->db, $note);
                 
