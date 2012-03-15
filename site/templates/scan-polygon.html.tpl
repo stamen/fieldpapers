@@ -830,6 +830,8 @@
                         {
                             vertices = [];
                             vertex_display_objects = [];
+                            control_midpoints = [];
+                            control_midpoint_display_objects = [];
                             previous_paths = [];
                         }
                         
