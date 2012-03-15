@@ -55,16 +55,14 @@ def finish_print(apibase, password, print_id, print_info):
 
     return
 
-def update_scan(apibase, password, scan_id, uploaded_file, print_id, progress):
+def update_scan(apibase, password, scan_id, progress):
     
     """
     """
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     query = urlencode({'id': scan_id})
     
-    params = urlencode({'print_id': print_id,
-                        'password': password,
-                        'uploaded_file': uploaded_file,
+    params = urlencode({'password': password,
                         'progress': progress})
     
     req, path = _prepare_http_connection(apibase)
@@ -75,13 +73,15 @@ def update_scan(apibase, password, scan_id, uploaded_file, print_id, progress):
 
     return
 
-def finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, geojpeg_bounds):
+def finish_scan(apibase, password, scan_id, uploaded_file, print_id, print_page_number, print_href, min_coord, max_coord, geojpeg_bounds):
     """
     """
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     query = urlencode({'id': scan_id})
     
     params = urlencode({'print_id': print_id,
+                        'print_page_number': print_page_number,
+                        'print_href': print_href,
                         'password': password,
                         'uploaded_file': uploaded_file,
                         'has_geotiff': 'yes',
