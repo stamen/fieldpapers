@@ -30,13 +30,9 @@
         $context->sm->assign('page_number', $page_number);
     }
     
-    $user = get_user($context->db, $scan['user_id']);
-    
-    if ($user['name'])
+    if($user = get_user($context->db, $scan['user_id']))
     {
-        $context->sm->assign('user_name', $user['name']);
-    } else {
-        $context->sm->assign('user_name', 'Anonymous');
+        $context->sm->assign('user', $user);
     }
     
     if($context->type == 'text/html') {

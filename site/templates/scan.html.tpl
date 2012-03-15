@@ -75,7 +75,7 @@
                         <button type="button" onClick= "addMarkerNote()">Add Note</button>
                     </div>
                     <p>
-                        Uploaded by <a href="person.php?id={$scan.user_id}">{$user_name}</a>, 
+                        Uploaded by <a href="person.php?id={$scan.user_id}">{$user.name}</a>, 
                         <a href="uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a><br>
                         {if $page_number}
                             <b>Page {$page_number}<b>,
