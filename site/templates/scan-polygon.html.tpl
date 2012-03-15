@@ -501,7 +501,7 @@
                                         });
                                         
                                         setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
-                                        redrawPathOnVertexDrag(temp_vertices);
+                                        //redrawPathOnVertexDrag(temp_vertices);
                                     };
                                 }(i),
                                 
@@ -610,7 +610,7 @@
                                     return function() {
                                         console.log('End');
                                         
-                                        replaceVertices(temp_vertices);
+                                        //replaceVertices(temp_vertices);
                                         
                                         //savePolygonLocationData(vertices);
                                         
@@ -657,7 +657,7 @@
                                         
                                         setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                                         
-                                        redrawPathOnVertexDrag(temp_vertices);
+                                        //redrawPathOnVertexDrag(temp_vertices);
                                     };
                                 }(i),
                                 
