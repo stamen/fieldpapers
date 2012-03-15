@@ -655,7 +655,7 @@
                                             cy: initialMidpointYs[index] + dy
                                         });
                                         
-                                        setControlMidPoints(e,index,this.attr('cx'), this.attr('cy'));
+                                        setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                                         
                                         redrawPathOnVertexDrag(temp_vertices);
                                     };
