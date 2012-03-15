@@ -22,14 +22,6 @@
     $form = get_form($context->db, $print['form_id']);
     $context->sm->assign('form', $form);
     
-    if(preg_match('#^(\w+)/(\d+)$#', $scan['print_id'], $matches))
-    {
-        $print_id = $matches[1];
-        $page_number = $matches[2];
-        
-        $context->sm->assign('page_number', $page_number);
-    }
-    
     if($user = get_user($context->db, $scan['user_id']))
     {
         $context->sm->assign('user', $user);
