@@ -155,30 +155,7 @@
                     var polygon_location_data = [];
                     
                     var saved_polygons = [];
-                    
-                    /*
-                    function addNewIntermediateVertices(index)
-                    {
-                        if (index % 2 != 0)
-                        {
-                            console.log('adding new intermediate vertices');
-                            console.log(index);
-                            
-                            // Add new vertices to the vertices array
-                            var intermediate_vertex = {x: .5*(vertices[index-1].x + vertices[index].x),
-                                                       y: .5*(vertices[index-1].y + vertices[index].y)};
-                            vertices.splice(index-1, 0, intermediate_vertex);
-                            
-                            intermediate_vertex = {x: .5*(vertices[index].x + vertices[index+1].x),
-                                                   y: .5*(vertices[index].y + vertices[index+1].y)};
-                                                       
-                            vertices.splice(index+1, 0, intermediate_vertex);
-                        }
-                        
-                        addVertices();
-                    }
-                    */
-                    
+                                        
                     function redrawPolygonAndVertices(polygon_location_data)
                     {
                         console.log('redraw polygon');
@@ -268,7 +245,6 @@
                     
                     function turnOnPath(e)
                     {
-                        //console.log(e);
                         draw_path = true;
                         
                         var map_element = document.getElementById('map');
@@ -279,8 +255,6 @@
                     
                     function drawNewPath(e)
                     {
-                        console.log('new path');
-                        //console.log(e);
                         if (new_path)
                         {
                             new_path.remove();
@@ -300,7 +274,6 @@
                     
                     function setPolygon(e)
                     {
-                        console.log('double click');
                         e.stopPropagation();
                         
                         var enabled_span = document.getElementById('polygon-enabled');
@@ -369,35 +342,16 @@
                     {
                         var master_path_array = Raphael.parsePathString(master_path);
                         
-                        console.log('master path array');
-                        console.log(master_path_array);
-                        
                         ////
                         // Find the vertices
                         ////
                         
                         for (i = 0; i < master_path_array.length - 3; i++)
-                        {
-                            /*
-                            // Push intermediary vertices
-                            if (i > 0)
-                            {
-                                vertices.push({x: .5*(master_path_array[i-1][1] + master_path_array[i][1]),
-                                               y: .5*(master_path_array[i-1][2] + master_path_array[i][2])
-                                              });
-                            }
-                            */
-                            
+                        {                            
                             // Push main vertices
                             vertices.push({x: master_path_array[i][1], y: master_path_array[i][2]});
                         }
-                        
-                        /*
-                        vertices.push({x: .5*(master_path_array[master_path_array.length-3][1] + master_path_array[master_path_array.length-2][1]),
-                                       y: .5*(master_path_array[master_path_array.length-3][2] + master_path_array[master_path_array.length-2][2])
-                                      });
-                        */
-                        
+                                                
                         createControlMidpoints();
                         
                         ////
@@ -445,8 +399,6 @@
                                     return function (cx, cy, e) {
                                         e.stopPropagation();
                                         
-                                        //this.attr("fill", "#FFF");
-                                        
                                         initialXs[index] = this.attr("cx");
                                         initialYs[index] = this.attr("cy");
                                     }
@@ -458,8 +410,6 @@
                                         console.log('End');
                                         
                                         //savePolygonLocationData(vertices);
-                                        
-                                        //addNewIntermediateVertices(index);
                                     }
                                 }(i)
                             );
@@ -501,7 +451,6 @@
                                         });
                                         
                                         setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
-                                        //redrawPathOnVertexDrag(temp_vertices);
                                     };
                                 }(i),
                                 
@@ -509,8 +458,6 @@
                                 
                                     return function (cx, cy, e) {
                                         e.stopPropagation();
-                                        
-                                        //this.attr("fill", "#FFF");
                                         
                                         initialMidpointXs[index] = this.attr("cx");
                                         initialMidpointYs[index] = this.attr("cy");
@@ -522,17 +469,13 @@
                                 
                                 function (index) {
                                     return function() {
-                                        console.log('End');
-                                        
 										replaceVertices(temp_vertices);
-                                        //savePolygonLocationData(vertices);
                                     }
                                 }(i)
                             );
                         }
                         
                     }
-                    
                     
                     function replaceVertices(vertex_points)
                     {
@@ -571,7 +514,7 @@
                             vertex_display_objects.push(vertex_display_object);
                         }
                         
-                        // This is unnecessary duplication.
+                        // Is this unnecessary duplication?
                         for (var i = 0; i < vertex_display_objects.length; i++)
                         {
                             vertex_display_objects[i].drag(
@@ -608,18 +551,11 @@
                                 
                                 function (index) {
                                     return function() {
-                                        console.log('End');
-                                        
-                                        //replaceVertices(temp_vertices);
-                                        
                                         //savePolygonLocationData(vertices);
-                                        
-                                        //addNewIntermediateVertices(index);
                                     }
                                 }(i)
                             );
                         }
-                        
                         
                         ////
                         // Draw the control midpoints
@@ -656,8 +592,6 @@
                                         });
                                         
                                         setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
-                                        
-                                        //redrawPathOnVertexDrag(temp_vertices);
                                     };
                                 }(i),
                                 
@@ -665,8 +599,6 @@
                                 
                                     return function (cx, cy, e) {
                                         e.stopPropagation();
-                                        
-                                        //this.attr("fill", "#FFF");
                                         
                                         initialMidpointXs[index] = this.attr("cx");
                                         initialMidpointYs[index] = this.attr("cy");
@@ -678,8 +610,6 @@
                                 
                                 function (index) {
                                     return function() {
-                                        console.log('End');
-                                        
                                         replaceVertices(temp_vertices);
                                         
                                         //savePolygonLocationData(vertices);
@@ -705,13 +635,13 @@
                         
                         control_midpoints[prev_index].x = .5*(vertices[prev_index].x + vertices[this_index].x);
                         
-                         control_midpoints[this_index].y =  .5*(vertices[this_index].y +  vertices[next_index].y);
+                        control_midpoints[this_index].y =  .5*(vertices[this_index].y +  vertices[next_index].y);
                         
-                         control_midpoints[prev_index].y =  .5*(vertices[prev_index].y +  vertices[this_index].y);
+                        control_midpoints[prev_index].y =  .5*(vertices[prev_index].y +  vertices[this_index].y);
                          
-                         control_midpoint_display_objects[this_index].attr({cx: control_midpoints[this_index].x, cy: control_midpoints[this_index].y});
+                        control_midpoint_display_objects[this_index].attr({cx: control_midpoints[this_index].x, cy: control_midpoints[this_index].y});
                          
-                        control_midpoint_display_objects[prev_index].attr({cx:  control_midpoints[prev_index].x, cy:  control_midpoints[prev_index].y});
+                        control_midpoint_display_objects[prev_index].attr({cx:  control_midpoints[prev_index].x, cy: control_midpoints[prev_index].y});
                     }
                     
                     function setTempVertices(index, cx, cy)
@@ -759,7 +689,6 @@
                         canvas_element.onmousemove = null;
                         canvas_element.onclick = null;
                         canvas_element.ondblclick = null;
-                        //canvas_element.removeEventListener('onmousemove',moveCircle,false)
                     }
                     
                     function handleScrolling(e)
@@ -774,6 +703,7 @@
                         circle.show();
                         
                         var map_element = document.getElementById('map');
+                        
                         //var prev_scroll_top;
                         
                         if (e.type == "scroll")
@@ -805,17 +735,13 @@
                     }
                 
                     function addPolygon()
-                    {
-                        console.log('Add Polygon.');
-                        
-                        //alert('Polygon drawing enabled.');
-                        
+                    {   
                         var enabled_span = document.getElementById('polygon-enabled');
                         enabled_span.innerHTML = "Polygon drawing currently enabled."
                         enabled_span.style.fontWeight = "bold";
                         
                         ////
-                        // Save the previous polygon
+                        // TODO: Save the previous polygon
                         ////
                         
                         ////
@@ -857,6 +783,7 @@
                         MM = com.modestmaps;
                         var provider = '{/literal}{$scan.base_url}{literal}/{Z}/{X}/{Y}.jpg';
                         map = new MM.Map("map", new MM.TemplatedMapProvider(provider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+                        
                     var bounds = '{/literal}{$scan.geojpeg_bounds}{literal}'.split(','),
                         north = parseFloat(bounds[0]),
                         west = parseFloat(bounds[1]),
@@ -869,8 +796,6 @@
                     
                     function convertPolyPointsToLocations()
                     {
-                        console.log('convert poly points');
-                        
                         polygon_location_data = new Array(vertices.length);
                         
                         for (var i=0; i < vertices.length; i++)
