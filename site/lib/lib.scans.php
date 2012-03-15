@@ -31,7 +31,7 @@
     
     function get_scan(&$dbh, $scan_id)
     {
-        $q = sprintf("SELECT id, print_id,
+        $q = sprintf("SELECT id, print_id, print_page_number, print_href,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
                              description, is_private, will_edit,
