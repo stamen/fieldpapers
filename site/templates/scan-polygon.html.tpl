@@ -156,16 +156,20 @@
                     
                     var saved_polygons = [];
                                         
-                    function redrawPolygonAndVertices(polygon_location_data)
-                    {
-                        console.log('redraw polygon');
-                        
+                    function redrawPolygonAndVertices(polygon_location_data, control_location_data)
+                    {   
                         // Update Vertices
                         for (var i = 0; i < vertices.length; i++)
                         {
                             var polygon_point_data = map.locationPoint(polygon_location_data[i]);
-                            console.log(map.locationPoint(polygon_location_data[0]));
+                            //console.log(map.locationPoint(polygon_location_data[0]));
                             vertices[i] = {x: polygon_point_data.x, y: polygon_point_data.y};
+                        }
+                        
+                        for (var i = 0; i < control_midpoints.length; i++)
+                        {
+                            var control_point_data = map.locationPoint(control_location_data[i]);
+                            control_midpoints[i] = {x: control_point_data.x, y: control_point_data.y};
                         }
                         
                         // Move the vertices
@@ -175,6 +179,17 @@
                             vertex_display_objects[i].attr({
                                 cx: vertices[i].x,
                                 cy: vertices[i].y
+                            });
+                        
+                        }
+                        
+                        // Move the control points
+                        
+                        for (var i = 0; i < control_midpoint_display_objects.length; i++)
+                        {
+                            control_midpoint_display_objects[i].attr({
+                                cx: control_midpoints[i].x,
+                                cy: control_midpoints[i].y
                             });
                         
                         }
@@ -197,9 +212,7 @@
                     }
                     
                     function redrawPathOnVertexDrag(vertex_points)
-                    {
-                        console.log('redraw path');
-                        
+                    {   
                         var new_path = 'M' + vertex_points[0].x + ',' + vertex_points[0].y;
                         
                         for (var i = 1; i < vertex_points.length; i++)
@@ -213,7 +226,7 @@
                             path: new_path
                         });
                                                 
-                        //savePolygonLocationData();
+                        savePolygonLocationData(vertex_points, control_midpoints);
                     }
                     
                     function handlePath(e)
@@ -292,7 +305,6 @@
                         }
                         
                         new_master_path = new_master_path + 'L' + start_x + ',' + start_y + 'Z';
-                        console.log(new_master_path);
                         
                         new_polygon = canvas.path(new_master_path);
                         new_polygon.attr("fill", "#050505");
@@ -307,7 +319,7 @@
                         
                         addVertices();
                         
-                        //savePolygonLocationData(vertices);
+                        savePolygonLocationData(vertices, control_midpoints);
                         
                         circle.remove();
                         
@@ -407,9 +419,7 @@
                                 
                                 function (index) {
                                     return function() {
-                                        console.log('End');
-                                        
-                                        //savePolygonLocationData(vertices);
+                                        savePolygonLocationData(vertices, control_midpoints);
                                     }
                                 }(i)
                             );
@@ -541,8 +551,6 @@
                                     return function (cx, cy, e) {
                                         e.stopPropagation();
                                         
-                                        //this.attr("fill", "#FFF");
-                                        
                                         initialXs[index] = this.attr("cx");
                                         initialYs[index] = this.attr("cy");
                                     }
@@ -551,7 +559,7 @@
                                 
                                 function (index) {
                                     return function() {
-                                        //savePolygonLocationData(vertices);
+                                        savePolygonLocationData(vertices, control_midpoints);
                                     }
                                 }(i)
                             );
@@ -580,9 +588,6 @@
                             control_midpoint_display_objects[i].drag(
                                 
                                 function (index) {
-                                    ////
-                                    // Need to use a closure
-                                    ////
                                     return function(dx, dy, cx, cy, e){
                                         e.stopPropagation();
                                     
@@ -612,7 +617,7 @@
                                     return function() {
                                         replaceVertices(temp_vertices);
                                         
-                                        //savePolygonLocationData(vertices);
+                                        savePolygonLocationData(vertices, control_midpoints);
                                     }
                                 }(i)
                             );
@@ -623,10 +628,13 @@
                     {
                         var this_index = index;
                         var prev_index = index - 1;
+                        
 						if (prev_index < 0) {
 							prev_index = prev_index + vertices.length;
 						}
+						
 						var next_index = index + 1;
+						
 						if (next_index >= vertices.length) {
 							next_index = next_index - vertices.length;
 						}
@@ -639,9 +647,11 @@
                         
                         control_midpoints[prev_index].y =  .5*(vertices[prev_index].y +  vertices[this_index].y);
                          
-                        control_midpoint_display_objects[this_index].attr({cx: control_midpoints[this_index].x, cy: control_midpoints[this_index].y});
+                        control_midpoint_display_objects[this_index].attr({cx: control_midpoints[this_index].x, 
+                                                                           cy: control_midpoints[this_index].y});
                          
-                        control_midpoint_display_objects[prev_index].attr({cx:  control_midpoints[prev_index].x, cy: control_midpoints[prev_index].y});
+                        control_midpoint_display_objects[prev_index].attr({cx:  control_midpoints[prev_index].x, 
+                                                                           cy: control_midpoints[prev_index].y});
                     }
                     
                     function setTempVertices(index, cx, cy)
@@ -675,7 +685,7 @@
                     
                     function setVertices(e,index,x,y)
                     {
-                        console.log(index); // Don't remove this
+                        //console.log(index); // Don't remove this
                         vertices[index].x = x;
                         vertices[index].y = y;
                         
@@ -684,7 +694,6 @@
                     
                     function undoDrawEvents()
                     {
-                        console.log('remove event listener');
                         var canvas_element = document.getElementById('canvas');
                         canvas_element.onmousemove = null;
                         canvas_element.onclick = null;
@@ -806,12 +815,10 @@
                         }
                     }
                     
-                    /*
-                    function savePolygonLocationData(vertices)
+                    function savePolygonLocationData(vertices, control_midpoints)
                     {
-                        console.log('save polygon location data');
-                        
-                        polygon_location_data = new Array(vertices.length);
+                        polygon_location_data = new Array(vertices);
+                        control_location_data = new Array(control_midpoints);
                         
                         for (var i=0; i < vertices.length; i++)
                         {
@@ -820,27 +827,31 @@
                             polygon_location_data[i] = location;
                         }
                         
-                        console.log('converted');
+                        for (var i=0; i < control_midpoints.length; i++)
+                        {
+                            var vertex_point = new MM.Point(control_midpoints[i].x, control_midpoints[i].y);
+                            var location= map.pointLocation(vertex_point);
+                            control_location_data[i] = location;
+                        }
+                        
+                        console.log('save polygon location data');
                         console.log(polygon_location_data);
-                        //console.log(vertices);
-                        //convertPolyPointsToLocations();
                     }
-                    */
                     
                     map.addCallback('panned', function(m) {
-                        redrawPolygonAndVertices(polygon_location_data);
+                        redrawPolygonAndVertices(polygon_location_data, control_location_data);
                     });
                     
                     map.addCallback('zoomed', function(m) {
-                        redrawPolygonAndVertices(polygon_location_data);
+                        redrawPolygonAndVertices(polygon_location_data, control_location_data);
                     });
                     
                     map.addCallback('centered', function(m) {
-                        redrawPolygonAndVertices(polygon_location_data);
+                        redrawPolygonAndVertices(polygon_location_data, control_location_data);
                     });
                     
                     map.addCallback('extentset', function(m) {
-                        redrawPolygonAndVertices(polygon_location_data);
+                        redrawPolygonAndVertices(polygon_location_data, control_location_data);
                     });
                     
                 // {/literal}]]>
