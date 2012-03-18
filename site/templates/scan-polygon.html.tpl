@@ -226,7 +226,7 @@
                             path: new_path
                         });
                                                 
-                        savePolygonLocationData(vertex_points, control_midpoints);
+                        //savePolygonLocationData(vertex_points, control_midpoints);
                     }
                     
                     function handlePath(e)
@@ -480,6 +480,7 @@
                                 function (index) {
                                     return function() {
 										replaceVertices(temp_vertices);
+										savePolygonLocationData(vertices, control_midpoints);
                                     }
                                 }(i)
                             );
@@ -834,8 +835,8 @@
                             control_location_data[i] = location;
                         }
                         
-                        console.log('save polygon location data');
-                        console.log(polygon_location_data);
+                        //console.log('save polygon location data');
+                        //console.log(polygon_location_data);
                     }
                     
                     map.addCallback('panned', function(m) {
