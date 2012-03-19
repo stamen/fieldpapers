@@ -3,7 +3,7 @@ from StringIO import StringIO
 from subprocess import Popen, PIPE
 from os.path import basename, dirname, join as pathjoin
 from os import close, write, unlink
-from urlparse import urlparse
+from urlparse import urlparse, urljoin
 from tempfile import mkstemp
 from random import random
 from shutil import move
@@ -249,9 +249,9 @@ def read_code(image):
         decode.stdin.close()
         decode.wait()
         
-        decoded = decode.stdout.read().strip()
+        print_url = decode.stdout.read().strip()
         
-        if decoded.startswith('http://'):
+        if print_url.startswith('http://'):
             break
         
         matrix = (1 + jit(), jit(), jit(), jit(), 1 + jit(), jit())
@@ -259,10 +259,10 @@ def read_code(image):
         
         print >> stderr, 'jittering QR code image by %.2f, %.2f, %.2f, %.2f, %.2f, %.2f' % matrix
     
-    if not decoded.startswith('http://'):
+    if not print_url.startswith('http://'):
         raise CodeReadException('Attempt to read QR code failed')
     
-    print_id, north, west, south, east, paper, orientation, layout = get_print_info(decoded)
+    print_id, north, west, south, east, paper, orientation, layout = get_print_info(print_url)
     
     if layout == 'half-page' and orientation == 'landscape':
         east += (east - west)
@@ -275,7 +275,7 @@ def read_code(image):
     else:
         print >> stderr, 'Kept', orientation, layout, 'bounds at %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
 
-    return print_id, north, west, south, east, paper, orientation, layout
+    return print_id, print_url, north, west, south, east, paper, orientation, layout
 
 def get_paper_size(paper, orientation):
     """
@@ -328,13 +328,13 @@ def main(apibase, password, scan_id, url):
     #
     # Prepare a shorthand for pushing data.
     #
-    def _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds):
+    def _finish_scan(uploaded_file, print_id, print_page_number, print_url, min_coord, max_coord, img_bounds):
         if scan_id:
-            finish_scan(apibase, password, scan_id, uploaded_file, print_id, min_coord, max_coord, img_bounds)
+            finish_scan(apibase, password, scan_id, uploaded_file, print_id, print_page_number, print_url, min_coord, max_coord, img_bounds)
     
-    def _update_scan(uploaded_file, print_id, progress):
+    def _update_scan(uploaded_file, progress):
         if scan_id:
-            update_scan(apibase, password, scan_id, uploaded_file, print_id, progress)
+            update_scan(apibase, password, scan_id, progress)
     
     def _fail_scan():
         if scan_id:
@@ -372,7 +372,7 @@ def main(apibase, password, scan_id, url):
         s, h, path, p, q, f = urlparse(url)
         uploaded_file = basename(path)
 
-        _update_scan(uploaded_file, None, 0.2)
+        _update_scan(uploaded_file, 0.2)
         
         yield 10
         
@@ -384,7 +384,7 @@ def main(apibase, password, scan_id, url):
         move(preblobs_filename, 'preblobs.jpg')
         unlink(postblob_filename)
 
-        _update_scan(uploaded_file, None, 0.3)
+        _update_scan(uploaded_file, 0.3)
 
         for (s2p, paper, orientation, blobs_abcde) in paper_matches(blobs):
     
@@ -399,7 +399,7 @@ def main(apibase, password, scan_id, url):
             yield 10
     
             try:
-                print_id, north, west, south, east, _paper, _orientation, _layout = read_code(qrcode_img)
+                print_id, print_url, north, west, south, east, _paper, _orientation, _layout = read_code(qrcode_img)
             except CodeReadException:
                 print >> stderr, 'could not read the QR code.'
                 continue
@@ -407,11 +407,19 @@ def main(apibase, password, scan_id, url):
             if (_paper, _orientation) != (paper, orientation):
                 continue
             
+            print_page_number = None
+
+            if print_url.startswith(apibase):
+                if '/' in print_id:
+                    print_id, print_page_number = print_id.split('/', 1)
+            else:
+                print_id = None
+            
             draw_postblobs(postblob_img, blobs_abcde)
             _append_image('postblob.jpg', postblob_img)
             postblob_img.save('postblob.jpg')
     
-            _update_scan(uploaded_file, print_id, 0.4)
+            _update_scan(uploaded_file, 0.4)
             
             print >> stderr, 'geotiff...',
             
@@ -423,7 +431,7 @@ def main(apibase, password, scan_id, url):
             _append_file('walking-paper-%s.tif' % scan_id, geotiff_bytes)
             _append_image('walking-paper-%s.jpg' % scan_id, geojpeg_img)
     
-            _update_scan(uploaded_file, print_id, 0.5)
+            _update_scan(uploaded_file, 0.5)
             
             print >> stderr, 'done.'
             print >> stderr, 'tiles...',
@@ -435,7 +443,7 @@ def main(apibase, password, scan_id, url):
             
             for (index, (coord, scan2coord)) in enumerate(tiles_needed):
                 if index % 10 == 0:
-                    _update_scan(uploaded_file, print_id, 0.5 + 0.5 * float(index) / len(tiles_needed))
+                    _update_scan(uploaded_file, 0.5 + 0.5 * float(index) / len(tiles_needed))
                 
                 tile_img = extract_tile_for_coord(input, coord, scan2coord)
                 _append_image('%(zoom)d/%(column)d/%(row)d.jpg' % coord.__dict__, tile_img)
@@ -472,7 +480,7 @@ def main(apibase, password, scan_id, url):
     
     else:
         if 'print_id' in locals():
-            _finish_scan(uploaded_file, print_id, min_coord, max_coord, img_bounds)
+            _finish_scan(uploaded_file, print_id, print_page_number, print_url, min_coord, max_coord, img_bounds)
 
         else:
             print >> stderr, 'Failed, unable to find a print_id'
