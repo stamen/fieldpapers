@@ -68,15 +68,17 @@
                     <input style="margin-top: 10px; color: grey;" type="text" id='form_input' name="form_url" size="60"
                             placeholder="http://">
                 </p>
-                <p>
-                    Your recent forms:
-                    <select name="form_id">
-                        {foreach from=$forms item="form"}
-                            {assign var="domain" value=$form.form_url|regex_replace:"#^https?://([^/]+)/.+$#":"(\\1)"}
-                            <option value="{$form.id|escape}" label="{$form.title|escape} {$domain|escape}">{$form.title|escape} {$domain|escape}</option>
-                        {/foreach}
-                    </select>
-                </p>
+                {if $forms}
+                    <p>
+                        Your recent forms:
+                        <select name="form_id">
+                            {foreach from=$forms item="form"}
+                                {assign var="domain" value=$form.form_url|regex_replace:"#^https?://([^/]+)/.+$#":"(\\1)"}
+                                <option value="{$form.id|escape}" label="{$form.title|escape} {$domain|escape}">{$form.title|escape} {$domain|escape}</option>
+                            {/foreach}
+                        </select>
+                    </p>
+                {/if}
                 
                 <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom}">
                 <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size}">
