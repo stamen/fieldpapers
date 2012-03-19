@@ -38,13 +38,15 @@
             $note['longitude'] = $marker['lon'];
             $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
             $note['user_id'] = $context->user['id'];
+            $note['marker_number'] = $note_number;
             
             set_scan_note($context->db, $note);
             
             $context->db->query('COMMIT');
             
             $json_response['status'] = 201;
-            $json_response['marker_number'] = $note_number;
+            //$json_response['marker_number'] = $note_number;
+            $json_response['note_data'] = $note;
             $json_response['message'] = 'New marker note created.';
         } else {
             if (!$scan)
