@@ -55,10 +55,6 @@
 
         $scan = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
-        // TODO: ditch special-case for base_url
-        if(empty($scan['base_url']))
-            $scan['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $scan['id']);
-        
         return $scan;
     }
     
@@ -132,13 +128,7 @@
         $rows = array();
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
-        {
-            // TODO: ditch special-case for base_url
-            if(empty($row['base_url']))
-                $row['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $row['id']);
-            
             $rows[] = $row;
-        }
         
         return $rows;
     }
@@ -151,12 +141,18 @@
             return false;
 
         $update_clauses = array();
-        $column_names = array_keys(table_columns($dbh, 'scans'));
 
-        // TODO: ditch dependency on table_columns()
-        // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'print_page_number', 'print_href', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers', 'progress', 'place_name', 'region_name', 'country_name', 'place_woeid', 'region_woeid', 'country_woeid') as $field)
-            if(in_array($field, $column_names) && !is_null($scan[$field]))
+        $field_names = array(
+            'print_id', 'print_page_number', 'print_href', 'user_id', 'min_row',
+            'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom',
+            'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file',
+            'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds',
+            'has_stickers', 'progress', 'place_name', 'region_name',
+            'country_name', 'place_woeid', 'region_woeid', 'country_woeid'
+            );
+
+        foreach($field_names as $field)
+            if(!is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
 
