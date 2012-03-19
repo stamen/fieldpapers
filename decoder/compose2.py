@@ -1,5 +1,5 @@
 ﻿from sys import argv
-from math import log
+from math import log, pi
 from copy import copy
 from itertools import product
 from urllib import urlopen, urlencode
@@ -151,6 +151,78 @@ def add_page_text(ctx, text, x, y, width, height):
     
     ctx.restore()
 
+def get_map_scale(mmap, well_height_pt):
+    """
+    """
+    north = mmap.pointLocation(Point(0, 0)).lat
+    south = mmap.pointLocation(mmap.dimensions).lat
+    
+    vertical_degrees = north - south
+    vertical_meters = 6378137 * pi * 2 * vertical_degrees / 360
+    pts_per_meter = well_height_pt / vertical_meters
+    
+    # a selection of reasonable scale values to show
+    meterses = range(50, 300, 50) + range(300, 1000, 100) + range(1000, 10000, 1000) + range(10000, 100000, 10000) + range(100000, 1000000, 100000) + range(1000000, 10000000, 1000000)
+    
+    for meters in meterses:
+        points = meters * pts_per_meter
+        
+        if points > 100:
+            # stop at an inch and a half or so
+            break
+
+    if meters > 10000:
+        distance = '%d' % (meters / 1000.0)
+        units = 'kilometers'
+    elif meters > 1000:
+        distance = '%.1f' % (meters / 1000.0)
+        units = 'kilometers'
+    else:
+        distance = '%d' % meters
+        units = 'meters'
+    
+    return points, distance, units
+
+def add_scale_bar(ctx, mmap, well_height_pt):
+    """
+    """
+    size, distance, units = get_map_scale(mmap, well_height_pt)
+    
+    ctx.save()
+    ctx.translate(15, well_height_pt - 20)
+    
+    draw_box(ctx, 10, -10, size + 10, 20)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.fill()
+    
+    ctx.move_to(0, 2)
+    ctx.line_to(0, 5)
+    ctx.line_to(size, 5)
+    ctx.line_to(size, 2)
+
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.set_line_width(.5)
+    ctx.set_dash([])
+    ctx.stroke()
+
+    ctx.set_font_size(9)
+    zero_width = ctx.text_extents('0')[2]
+    distance_width = ctx.text_extents(distance)[2]
+
+    ctx.move_to(0, 0)
+    ctx.show_text('0')
+    
+    ctx.move_to(size - distance_width, 0)
+    ctx.show_text(distance)
+    
+    ctx.set_font_size(7)
+    units_width = ctx.text_extents(units)[2]
+
+    ctx.move_to(zero_width + (size - zero_width - distance_width)/2 - units_width/2, 0)
+    ctx.show_text(units.upper())
+    
+    ctx.restore()
+
 def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy):
     """
     """
@@ -180,8 +252,12 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
 
     else:
         map_width_pt, map_height_pt = well_width_pt, well_height_pt
-
+    
     place_image(ctx, img, 0, 0, map_width_pt, map_height_pt)
+    
+    #
+    # Draw a dot if need be
+    #
     
     if fuzzy is not None:
         loc = Location(fuzzy[1], fuzzy[0])
@@ -295,6 +371,8 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
         
         ctx.move_to(well_width_pt - text_width, -6)
         ctx.show_text(line)
+        
+        add_scale_bar(ctx, mmap, well_height_pt)
     
     ctx.show_page()
 
