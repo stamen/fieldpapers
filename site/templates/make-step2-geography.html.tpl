@@ -422,8 +422,8 @@
                 document.getElementById('provider').value = '{/literal}{$mbtiles_data.provider}{literal}';
             {/literal}
             {else}{literal}
-                var provider = new MM.TemplatedMapProvider('http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg');
-                document.getElementById('provider').value = 'http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg';
+                var provider = new MM.TemplatedMapProvider('http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png');
+                document.getElementById('provider').value = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
             {/literal}
             {/if}{literal}
             
@@ -1179,10 +1179,10 @@
                             {if $mbtiles_data}
                                 <option>{$mbtiles_data.uploaded_file}</option>
                             {/if}
+                            <option>Black & White</option>
                             <option>Satellite + Labels</option>
                             <option>Open Street Map</option>
                             <option>Satellite Only</option>
-                            <option>Black & White</option>
                         </select>
                         
                         <span id="page_count_container">
