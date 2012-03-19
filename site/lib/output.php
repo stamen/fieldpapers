@@ -28,6 +28,7 @@
                                     'user' => $_SESSION['user']));
         
         $s->register_modifier('nice_placename', 'nice_placename');
+        $s->register_modifier('nice_domainname', 'nice_domainname');
         $s->register_modifier('nice_relativetime', 'nice_relativetime');
         $s->register_modifier('nice_datetime', 'nice_datetime');
         $s->register_modifier('nice_degree', 'nice_degree');
@@ -75,6 +76,11 @@
         return array(array('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 'OpenStreetMap'));
     }
     
+    function nice_domainname($url)
+    {
+        return preg_replace('#^http://([^/]+)(/.+)?$#', '\1', $url);
+    }
+
     function nice_placename($place_name)
     {
         return preg_replace('/^(.+?)(,.*)?$/', '\1', $place_name);
