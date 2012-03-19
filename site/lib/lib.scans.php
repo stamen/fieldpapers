@@ -96,6 +96,11 @@
             $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
+        if(isset($args['print']))
+        {
+            $where_clauses[] = sprintf('(print_id = %s)', $dbh->quoteSmart($args['print']));
+        }
+        
         $q = sprintf("SELECT place_name, place_woeid,
                              region_name, region_woeid,
                              country_name, country_woeid,
@@ -278,6 +283,12 @@
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
         $where_clauses = array('1');
+        
+        if(is_array($args['scans']))
+        {
+            $scan_ids = array_map(array(&$dbh, 'quoteSmart'), $args['scans']);
+            $where_clauses[] = sprintf('(scan_id IN (%s))', join(',', $scan_ids));
+        }
         
         if(isset($args['scan']))
         {
