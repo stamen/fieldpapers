@@ -13,6 +13,7 @@
         <meta http-equiv="refresh" content="5">
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
+        <script type="text/javascript" src="{$base_dir}/reqwest.min.js"></script>
     {/if}
         <style type="text/css" title="text/css">
     /* <![CDATA[{literal} */
@@ -105,10 +106,8 @@
 
     
                     
-                <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
-                    <!-- <input id="notes_submit" type="submit" value="Submit"> -->
+                <form id="scan-form">
                 </form>
-
 
                 <script type="text/javascript">
                 // <![CDATA[{literal}    
@@ -118,10 +117,21 @@
                         
                     var markerNumber = -1;
                     
-                    var unsignedMarkerNumber = 1;                    
+                    var unsignedMarkerNumber = 1;
+                    
+                    var post_url = '{/literal}{$base_dir}{literal}/save-scan-notes.php?scan_id={/literal}{$scan.id}{literal}';               
 
-                    function MarkerNote(map)
+                    function MarkerNote(map, post_url)
                     {
+                        this.location = map.getCenter();
+                        
+                        var data = this.data = {
+                            'lat': this.location.lat,
+                            'lon': this.location.lon,
+                            'marker_number': markerNumber,
+                            'note': ''
+                        };
+                        
                         this.location = map.getCenter();
                                                 
                         var div = document.createElement('div');
@@ -140,7 +150,11 @@
                         textarea.name = 'marker[' + markerNumber + '][note]';
                         textarea.className = 'show';
                         div.appendChild(textarea);
-                                                
+                        
+                        textarea.onchange = function () { 
+                            data.note = this.value; 
+                        };
+                                                       
                         var submitNote = function()
                         {
                             //console.log(document.getElementById('scan-form'));
@@ -148,7 +162,20 @@
                                 alert('Please fill out your note!');
                                 return false;
                             } else {
-                                document.getElementById('scan-form').submit();   
+                                console.log(data);
+                                console.log(post_url);
+                                
+                                reqwest({
+                                    url: post_url,
+                                    method: 'post',
+                                    data: data,
+                                    type: 'json',
+                                    success: function (resp) {
+                                      console.log(resp);
+                                    }
+                                });
+                                
+                                return false; 
                             }
                         }
                         
@@ -223,8 +250,11 @@
                             var marker_end = {x: div.offsetLeft, y: div.offsetTop};
                             
                             marker.location = map.pointLocation(marker_end);
-                            input_lat.value = marker.location.lat.toFixed(6);
-                            input_lon.value = marker.location.lon.toFixed(6);
+                            //input_lat.value = marker.location.lat.toFixed(6);
+                            //input_lon.value = marker.location.lon.toFixed(6);
+                            
+                            data.lat = marker.location.lat.toFixed(6);
+                            data.lon = marker.location.lon.toFixed(6);
                         
                             document.onmousemove = null;
                             return false;
@@ -249,20 +279,20 @@
 
                     function addMarkerNote()
                     {                        
-                        var markerDiv = new MarkerNote(map);
+                        var markerDiv = new MarkerNote(map, post_url);
                         document.getElementById('scan-form').appendChild(markerDiv);
                     }
-                    
-                    function submitForm()
-                    {
-                        // Not needed?
-                        //console.log(document.getElementById('scan-form'));
-                        document.getElementById('scan-form').submit();   
-                    }
-                    
+                                        
                     function SavedMarker(map,note,note_num,lat,lon)
                     {
                         this.location = new MM.Location(lat,lon);
+                        
+                        var data = this.data = {
+                            'lat': parseFloat(lat),
+                            'lon': parseFloat(lon),
+                            'marker_number': unsignedMarkerNumber,
+                            'note': note
+                        };
                                               
                         var div = document.createElement('div');
                         div.className = 'marker';
@@ -291,20 +321,28 @@
                         //textarea.style.height = '200px';
                         div.appendChild(textarea);
                         
+                        textarea.onchange = function () { 
+                            data.note = this.value; 
+                        };
+                        
                         var removeMarkerNote = function()
                         {                            
                             if (window.confirm("Are you sure you want to delete this saved note?"))
                             {
                                 // Remove visual elements
+                                /*
                                 div.removeChild(img);
                                 div.removeChild(textarea);
                                 div.removeChild(ok_button);
                                 div.removeChild(cancel_button);
                                 div.removeChild(remove_button);
+                                */
                                 
-                                removed.value = 1; // Removed
+                                div.parentNode.removeChild(div);
                                 
-                                submitForm();
+                                data.removed = 1; // Removed
+                                
+                                submitNote();
                             } else {
                                 return false;
                             }
@@ -330,11 +368,44 @@
                             return false;
                         }
                         
+                        var submitNote = function()
+                        {
+                            console.log('data', data);
+                            reqwest({
+                                url: post_url,
+                                method: 'post',
+                                data: data,
+                                type: 'json',
+                                success: function (resp) {
+                                  console.log('response',resp);
+                                  
+                                  changeMarkerDisplay(resp);
+                                }
+                            });
+                            
+                            
+                            
+                            return false;
+                        }
+                        
+                        var changeMarkerDisplay = function(resp)
+                        {
+                            if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show' && cancel_button.className == 'show') {
+                                textarea.className = 'hide';
+                                ok_button.className = 'hide';
+                                cancel_button.className = 'hide';
+                                remove_button.className = 'hide';
+                            }
+                        
+                            saved_note.innerHTML = resp.note_data.note;
+                            textarea.value = resp.note_data.note;
+                        }
+                                              
                         var ok_button = document.createElement('button');
                         ok_button.id = 'ok';
                         ok_button.innerHTML = 'OK';
                         ok_button.className = 'hide';
-                        ok_button.onclick = submitForm;
+                        ok_button.onclick = submitNote;
                         div.appendChild(ok_button);
                         
                         var cancel_button = document.createElement('button');
@@ -440,8 +511,10 @@
                             var marker_end = {x: div.offsetLeft, y: div.offsetTop};
                             
                             marker.location = map.pointLocation(marker_end);
-                            input_lat.value = marker.location.lat.toFixed(6);
-                            input_lon.value = marker.location.lon.toFixed(6);
+                            //input_lat.value = marker.location.lat.toFixed(6);
+                            //input_lon.value = marker.location.lon.toFixed(6);
+                            data.lat = marker.location.lat.toFixed(6);
+                            data.lon = marker.location.lon.toFixed(6);
                         
                             document.onmousemove = null;
                             return false;
@@ -473,7 +546,7 @@
                     
                     function addSavedNote(note,note_num,lat,lon)
                     {
-                        var saved_marker = new SavedMarker(map,note,note_num,lat,lon);
+                        var saved_marker = new SavedMarker(map, note,note_num,lat,lon);
                         document.getElementById('scan-form').appendChild(saved_marker);
                     }
                     
