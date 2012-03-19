@@ -13,8 +13,10 @@
     $scan = get_scan($context->db, $scan_id);
     $context->sm->assign('scan', $scan);
     
-    $print = get_print($context->db, $scan['print_id']);
-    $context->sm->assign('print', $print);
+    if($scan['print_id'] && $print = get_print($context->db, $scan['print_id']))
+    {
+        $context->sm->assign('print', $print);
+    }
     
     $notes = get_scan_notes($context->db, array('scan' => $scan['id']));
     $context->sm->assign('notes', $notes);

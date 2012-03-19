@@ -73,7 +73,7 @@
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time);
             
-            $where_clauses[] = sprintf('(s.created BETWEEN "%s" AND "%s")', $start, $end);
+            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
         if(isset($args['month']) && $time = strtotime("{$args['month']}-01"))
@@ -81,15 +81,15 @@
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time + 86400 * intval(date('t', $time)));
             
-            $where_clauses[] = sprintf('(s.created BETWEEN "%s" AND "%s")', $start, $end);
+            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
         if(isset($args['place']))
         {
             $woeid_clauses = array(
-                sprintf('s.place_woeid = %d', $args['place']),
-                sprintf('s.region_woeid = %d', $args['place']),
-                sprintf('s.country_woeid = %d', $args['place'])
+                sprintf('place_woeid = %d', $args['place']),
+                sprintf('region_woeid = %d', $args['place']),
+                sprintf('country_woeid = %d', $args['place'])
                 );
         
             $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
@@ -97,35 +97,31 @@
         
         if(isset($args['user']))
         {
-            $where_clauses[] = sprintf('(s.user_id = %s)', $dbh->quoteSmart($args['user']));
+            $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
-        $q = sprintf("SELECT s.place_name, s.place_woeid,
-                             s.region_name, s.region_woeid,
-                             s.country_name, s.country_woeid,
-                             s.id, s.print_id,
-                             s.min_row, s.min_column, s.min_zoom,
-                             s.max_row, s.max_column, s.max_zoom,
-                             s.description, s.is_private, s.will_edit,
-                             (p.north + p.south) / 2 AS print_latitude,
-                             (p.east + p.west) / 2 AS print_longitude,
-                             UNIX_TIMESTAMP(s.created) AS created,
-                             UNIX_TIMESTAMP(s.decoded) AS decoded,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
-                             failed, s.base_url, s.uploaded_file,
-                             s.has_geotiff, s.has_stickers,
-                             s.has_geojpeg, s.geojpeg_bounds,
-                             s.user_id, s.progress
-                      FROM scans AS s
-                      LEFT JOIN prints AS p
-                        ON p.id = s.print_id
+        $q = sprintf("SELECT place_name, place_woeid,
+                             region_name, region_woeid,
+                             country_name, country_woeid,
+                             id, print_id,
+                             min_row, min_column, min_zoom,
+                             max_row, max_column, max_zoom,
+                             description, is_private, will_edit,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(decoded) AS decoded,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             failed, base_url, uploaded_file,
+                             has_geotiff, has_stickers,
+                             has_geojpeg, geojpeg_bounds,
+                             user_id, progress
+                      FROM scans
                       WHERE %s
                         AND %s
-                      ORDER BY s.created DESC
+                      ORDER BY created DESC
                       LIMIT %d OFFSET %d",
 
                      join(' AND ', $where_clauses),
-                     ($include_private ? '1' : "s.is_private='no'"),
+                     ($include_private ? '1' : "is_private='no'"),
                      $count, $offset);
     
         $res = $dbh->query($q);
