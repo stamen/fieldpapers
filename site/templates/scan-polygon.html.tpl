@@ -247,8 +247,6 @@
                         new_polygon.attr("fill", "#050505");
                         new_polygon.attr("opacity", .3);
                         
-                        //new_path.remove();
-                        
                         readVertices(polygon_vertices);
                         
                         createPolygon();
@@ -422,12 +420,6 @@
                             vertex_display_objects[i].hide();
                             control_midpoint_display_objects[i].hide();
                         }
-                        
-                        // page to start with predrawn polygon
-                        // Hide vertex display objects and control_midpoint_display_objects
-                        // differentiate between active and inactive polygons
-                        // recompute of pan and zoom
-                        // add text boxes to polygons
                     }
                     
                     function changePolygon(index)
@@ -552,8 +544,6 @@
                         new_polygon.attr({
                             path: new_path
                         });
-                                                
-                        //savePolygonLocationData(vertex_points, control_midpoints);
                     }
                     
                     function handlePath(e)
@@ -1014,7 +1004,6 @@
                     
                     function setControlMidpoints(e, index, x, y)
                     {
-                        console.log('index and control_midpoints', index, control_midpoints);
                         control_midpoints[index].x = x;
                         control_midpoints[index].y = y;
 						temp_vertices[index + 1].x = x;
