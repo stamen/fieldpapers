@@ -25,17 +25,12 @@
                     <a href="{$base_dir}/uploads.php?place={$scan.region_woeid}">{$scan.region_name|nice_placename}</a>,
                 {/if}
                 {if $scan.country_woeid}
-                    <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>
+                    <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>,
                 {else}
-                    Unknown Place
+                    Unknown Place,
                 {/if}
 
                 <span class="atlasMeta">                    
-                    {if $scan.number_of_pages == 1}
-                        1 page,
-                    {else if $scan.number_of_pages > 1}
-                        {$scan.number_of_pages} pages,
-                    {/if}
                     <a href="{$base_dir}/uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a>
                 </span>
             </div>

@@ -170,6 +170,19 @@ UPDATE scans, prints
         scans.place_woeid = prints.place_woeid,
         scans.place_name = prints.place_name
     WHERE prints.id = scans.print_id;
+
+DROP INDEX print ON scans;
+
+ALTER TABLE scans ADD COLUMN print_page_number INT UNSIGNED AFTER print_id;
+ALTER TABLE scans ADD COLUMN print_href TEXT NULL AFTER print_page_number;
+
+UPDATE scans SET
+    print_page_number = CAST(SUBSTR(print_id, 10) AS UNSIGNED INTEGER),
+    print_id = SUBSTR(print_id, 1, 8)
+    WHERE print_id LIKE '%/%';
+
+ALTER TABLE scans CHANGE COLUMN print_id print_id VARCHAR(8) NULL;
+CREATE INDEX print ON scans (print_id, print_page_number);
     
 
 
