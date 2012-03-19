@@ -76,12 +76,20 @@
                         <button type="button" onClick= "addMarkerNote()">Add Note</button>
                     </div>
                     <p>
-                        Uploaded by <a href="person.php?id={$scan.user_id}">{$user_name}</a>, 
+                        Uploaded by <a href="person.php?id={$scan.user_id}">{$user.name}</a>, 
                         <a href="uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a><br>
                         {if $page_number}
                             <b>Page {$page_number}<b>,
                         {/if}
-                        Atlas <a href="print.php?id={$scan.print_id}">{$scan.print_id}</a>
+                        
+                        {if $scan.print_id && $print}
+                            Atlas <a href="print.php?id={$scan.print_id}{if $scan.print_page_number}%2F{$scan.print_page_number}{/if}">{$scan.print_id}</a>
+                        {elseif $scan.print_href}
+                            Atlas from <a href="{$scan.print_href|escape}">{$scan.print_href|nice_domainname|escape}</a>
+                        {else}
+                            Atlas from ???
+                        {/if}
+                        
                         {if $scan.place_woeid}
                             <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
                         {/if}
