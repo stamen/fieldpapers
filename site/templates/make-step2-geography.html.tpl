@@ -509,8 +509,8 @@
             var center_point = map.locationPoint(map_center);
             console.log('center_point', center_point);
             
-            var page_height = 200,
-                canvasOriginX = (center_point.x - .5 * page_height * atlas_aspect_ratio) || 160,
+            var page_height = 150,
+                canvasOriginX = (center_point.x - page_height * atlas_aspect_ratio) || 160,
                 canvasOriginY = (center_point.y - .5 * page_height) || 160,
                 controlRadius = 15;
             
@@ -854,6 +854,8 @@
                 resetAtlasAttributes();
                 updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
             }
+            
+            addHorizontalPage();
             
             var removeHorizontalPage = function() {
                 if (num_columns === 1)
