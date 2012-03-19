@@ -31,7 +31,7 @@
     
     function get_scan(&$dbh, $scan_id)
     {
-        $q = sprintf("SELECT id, print_id,
+        $q = sprintf("SELECT id, print_id, print_page_number, print_href,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
                              description, is_private, will_edit,
@@ -55,10 +55,6 @@
 
         $scan = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
-        // TODO: ditch special-case for base_url
-        if(empty($scan['base_url']))
-            $scan['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $scan['id']);
-        
         return $scan;
     }
     
@@ -73,7 +69,7 @@
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time);
             
-            $where_clauses[] = sprintf('(s.created BETWEEN "%s" AND "%s")', $start, $end);
+            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
         if(isset($args['month']) && $time = strtotime("{$args['month']}-01"))
@@ -81,15 +77,15 @@
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time + 86400 * intval(date('t', $time)));
             
-            $where_clauses[] = sprintf('(s.created BETWEEN "%s" AND "%s")', $start, $end);
+            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
         if(isset($args['place']))
         {
             $woeid_clauses = array(
-                sprintf('s.place_woeid = %d', $args['place']),
-                sprintf('s.region_woeid = %d', $args['place']),
-                sprintf('s.country_woeid = %d', $args['place'])
+                sprintf('place_woeid = %d', $args['place']),
+                sprintf('region_woeid = %d', $args['place']),
+                sprintf('country_woeid = %d', $args['place'])
                 );
         
             $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
@@ -97,35 +93,36 @@
         
         if(isset($args['user']))
         {
-            $where_clauses[] = sprintf('(s.user_id = %s)', $dbh->quoteSmart($args['user']));
+            $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
-        $q = sprintf("SELECT s.place_name, s.place_woeid,
-                             s.region_name, s.region_woeid,
-                             s.country_name, s.country_woeid,
-                             s.id, s.print_id,
-                             s.min_row, s.min_column, s.min_zoom,
-                             s.max_row, s.max_column, s.max_zoom,
-                             s.description, s.is_private, s.will_edit,
-                             (p.north + p.south) / 2 AS print_latitude,
-                             (p.east + p.west) / 2 AS print_longitude,
-                             UNIX_TIMESTAMP(s.created) AS created,
-                             UNIX_TIMESTAMP(s.decoded) AS decoded,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.created) AS age,
-                             failed, s.base_url, s.uploaded_file,
-                             s.has_geotiff, s.has_stickers,
-                             s.has_geojpeg, s.geojpeg_bounds,
-                             s.user_id, s.progress
-                      FROM scans AS s
-                      LEFT JOIN prints AS p
-                        ON p.id = s.print_id
+        if(isset($args['print']))
+        {
+            $where_clauses[] = sprintf('(print_id = %s)', $dbh->quoteSmart($args['print']));
+        }
+        
+        $q = sprintf("SELECT place_name, place_woeid,
+                             region_name, region_woeid,
+                             country_name, country_woeid,
+                             id, print_id,
+                             min_row, min_column, min_zoom,
+                             max_row, max_column, max_zoom,
+                             description, is_private, will_edit,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(decoded) AS decoded,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             failed, base_url, uploaded_file,
+                             has_geotiff, has_stickers,
+                             has_geojpeg, geojpeg_bounds,
+                             user_id, progress
+                      FROM scans
                       WHERE %s
                         AND %s
-                      ORDER BY s.created DESC
+                      ORDER BY created DESC
                       LIMIT %d OFFSET %d",
 
                      join(' AND ', $where_clauses),
-                     ($include_private ? '1' : "s.is_private='no'"),
+                     ($include_private ? '1' : "is_private='no'"),
                      $count, $offset);
     
         $res = $dbh->query($q);
@@ -136,13 +133,7 @@
         $rows = array();
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
-        {
-            // TODO: ditch special-case for base_url
-            if(empty($row['base_url']))
-                $row['base_url'] = sprintf('http://%s.s3.amazonaws.com/scans/%s', S3_BUCKET_ID, $row['id']);
-            
             $rows[] = $row;
-        }
         
         return $rows;
     }
@@ -155,12 +146,18 @@
             return false;
 
         $update_clauses = array();
-        $column_names = array_keys(table_columns($dbh, 'scans'));
 
-        // TODO: ditch dependency on table_columns()
-        // TODO: ditch special-case for base_url
-        foreach(array('print_id', 'user_id', 'min_row', 'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom', 'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file', 'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds', 'has_stickers', 'progress', 'place_name', 'region_name', 'country_name', 'place_woeid', 'region_woeid', 'country_woeid') as $field)
-            if(in_array($field, $column_names) && !is_null($scan[$field]))
+        $field_names = array(
+            'print_id', 'print_page_number', 'print_href', 'user_id', 'min_row',
+            'min_column', 'min_zoom', 'max_row', 'max_column', 'max_zoom',
+            'description', 'is_private', 'will_edit', 'base_url', 'uploaded_file',
+            'decoding_json', 'has_geotiff', 'has_geojpeg', 'geojpeg_bounds',
+            'has_stickers', 'progress', 'place_name', 'region_name',
+            'country_name', 'place_woeid', 'region_woeid', 'country_woeid'
+            );
+
+        foreach($field_names as $field)
+            if(!is_null($scan[$field]))
                 if($scan[$field] != $old_scan[$field] || in_array($field, array('base_url')))
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($scan[$field]));
 
@@ -286,6 +283,12 @@
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
         $where_clauses = array('1');
+        
+        if(is_array($args['scans']))
+        {
+            $scan_ids = array_map(array(&$dbh, 'quoteSmart'), $args['scans']);
+            $where_clauses[] = sprintf('(scan_id IN (%s))', join(',', $scan_ids));
+        }
         
         if(isset($args['scan']))
         {
