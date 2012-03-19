@@ -76,21 +76,12 @@
                         <button type="button" onClick= "addMarkerNote()">Add Note</button>
                     </div>
                     <p>
-                        Uploaded by <a href="person.php?id={$scan.user_id}">{$user.name}</a>, 
+                        Uploaded by <a href="person.php?id={$scan.user_id}">{$user_name}</a>, 
                         <a href="uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a><br>
                         {if $page_number}
                             <b>Page {$page_number}<b>,
                         {/if}
-                        
-                        {if $scan.print_id && $print}
-                            Atlas <a href="print.php?id={$scan.print_id}{if $scan.print_page_number}%2F{$scan.print_page_number}{/if}">{$scan.print_id}</a>
-                        {elseif $scan.print_href}
-                            Atlas from <a href="{$scan.print_href|escape}">{$scan.print_href|nice_domainname|escape}</a>
-                        {else}
-                            Atlas from ???
-                        {/if}
-                        
-                        
+                        Atlas <a href="print.php?id={$scan.print_id}">{$scan.print_id}</a>
                         {if $scan.place_woeid}
                             <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
                         {/if}
@@ -181,11 +172,21 @@
                                     type: 'json',
                                     success: function (resp) {
                                       console.log(resp);
+                                      changeMarkerDisplay(resp);
                                     }
                                 });
                                 
                                 return false; 
                             }
+                        }
+                        
+                        var changeMarkerDisplay = function(resp)
+                        {
+                            div.parentNode.removeChild(div);
+                        
+                            var note = resp.note_data;
+                            
+                            addSavedNote(note.note,note.marker_number,note.latitude,note.longitude)
                         }
                         
                         var removeMarkerNote = function()
@@ -386,13 +387,15 @@
                                 data: data,
                                 type: 'json',
                                 success: function (resp) {
-                                  console.log('response',resp);
+                                  //console.log('response',resp);
+                                  if (resp.status != 200)
+                                  {
+                                    alert('There was a problem: ' + resp.message);
+                                  }
                                   
                                   changeMarkerDisplay(resp);
                                 }
                             });
-                            
-                            
                             
                             return false;
                         }
