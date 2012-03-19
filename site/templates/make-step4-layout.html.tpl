@@ -53,25 +53,31 @@
         
         <div style="margin-top: 20px">
         <div class="homeThird">
-            <img src="{$base_dir}/img/image-make-maps-only.png" alt="Make Maps Only">
+            <label for="maps_only">
+                <img src="{$base_dir}/img/image-make-maps-only.png" alt="Make Maps Only">
+            </label>
             <div style="text-align: left; margin-left: 90px;">
-                <input style="margin-right: 10px" type="radio" name="layout" value="full-page" checked>
+                <input style="margin-right: 10px" type="radio" name="layout" id="maps_only" value="full-page" checked>
                 Maps Only
                 <br><span style="font-size: .8em; color: #666; margin-left: 30px;">one per page</span>
             </div>
         </div>
         <div class="homeThird">
-            <img src="{$base_dir}/img/image-make-map-notes.png" alt="Maps and Notes on Their Own Page">
+            <label for="maps_notes_own">
+                <img src="{$base_dir}/img/image-make-map-notes.png" alt="Maps and Notes on Their Own Page">
+            </label>
             <div style="text-align: left; margin-left: 90px;">
-            <input style="margin-right: 10px" type="radio" name="layout" value="half-page">
+            <input style="margin-right: 10px" type="radio" name="layout" id="maps_notes_own" value="half-page">
             Maps + Notes
             <br><span style="font-size: .8em; color: #666; margin-left: 30px;">on their own pages</span>
             </div>
         </div>
         <div class="homeThird">
-            <img src="{$base_dir}/img/image-make-maps-notes-2up.png" alt="Maps and Notes on the Same Page">
+            <label for="maps_notes_same">
+                <img src="{$base_dir}/img/image-make-maps-notes-2up.png" alt="Maps and Notes on the Same Page">
+            </label>
             <div style="text-align: left; margin-left: 90px;">
-                <input style="margin-right: 10px" type="radio" name="layout" value="full-page">
+                <input style="margin-right: 10px" type="radio" name="layout" id="maps_notes_same" value="full-page">
                 Maps + Notes
                 <br><span style="font-size: .8em; color: #666; margin-left: 30px;">on same page</span>
             </div>
