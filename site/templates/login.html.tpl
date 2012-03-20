@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-
-{include file="navigation.htmlf.tpl"}
-
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -9,6 +6,7 @@
         <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     </head>
         <body>
+            {include file="navigation.htmlf.tpl"}
             <div class="smallContainer">
                 {if $logged_in}
                     <h1>{$username} is logged in.</h1>
@@ -40,7 +38,7 @@
                     <p>Or, <a href="registration.php">create an account</a>.</p>
                 </form>
                 {/if}
+                {include file="footer.htmlf.tpl"}
             </div>
-            {include file="footer.htmlf.tpl"}
         </body>
 </html>
