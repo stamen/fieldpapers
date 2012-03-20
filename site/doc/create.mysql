@@ -110,6 +110,9 @@ CREATE TABLE pages (
 
 ALTER TABLE pages ADD COLUMN `text` TEXT NULL AFTER page_number;
 
+ALTER TABLE pages CHANGE COLUMN print_id print_id VARCHAR(8) NOT NULL;
+ALTER TABLE pages CHANGE COLUMN page_number page_number VARCHAR(5) NOT NULL;
+
 
 
 DROP TABLE IF EXISTS scans;
@@ -183,6 +186,8 @@ UPDATE scans SET
 
 ALTER TABLE scans CHANGE COLUMN print_id print_id VARCHAR(8) NULL;
 CREATE INDEX print ON scans (print_id, print_page_number);
+
+ALTER TABLE scans CHANGE COLUMN print_page_number print_page_number VARCHAR(5) NOT NULL;
     
 
 
