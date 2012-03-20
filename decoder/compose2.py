@@ -151,7 +151,7 @@ def add_page_text(ctx, text, x, y, width, height):
     
     ctx.restore()
 
-def get_map_scale(mmap, well_height_pt):
+def get_map_scale(mmap, map_height_pt):
     """
     """
     north = mmap.pointLocation(Point(0, 0)).lat
@@ -159,7 +159,7 @@ def get_map_scale(mmap, well_height_pt):
     
     vertical_degrees = north - south
     vertical_meters = 6378137 * pi * 2 * vertical_degrees / 360
-    pts_per_meter = well_height_pt / vertical_meters
+    pts_per_meter = map_height_pt / vertical_meters
     
     # a selection of reasonable scale values to show
     meterses = range(50, 300, 50) + range(300, 1000, 100) + range(1000, 10000, 1000) + range(10000, 100000, 10000) + range(100000, 1000000, 100000) + range(1000000, 10000000, 1000000)
@@ -183,18 +183,45 @@ def get_map_scale(mmap, well_height_pt):
     
     return points, distance, units
 
-def add_scale_bar(ctx, mmap, well_height_pt):
+def add_scale_bar(ctx, mmap, map_height_pt):
     """
     """
-    size, distance, units = get_map_scale(mmap, well_height_pt)
+    size, distance, units = get_map_scale(mmap, map_height_pt)
     
     ctx.save()
-    ctx.translate(15, well_height_pt - 20)
+    ctx.translate(60, map_height_pt - 20)
     
-    draw_box(ctx, 10, -10, size + 10, 20)
+    draw_box(ctx, -50, -10, size + 10 + 45, 20)
     ctx.set_source_rgb(1, 1, 1)
     ctx.fill()
     
+    #
+    # true north
+    #
+
+    draw_circle(ctx, -40, 0, 6.7)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.fill()
+    
+    ctx.move_to(-40, -6.7)
+    ctx.line_to(-38.75, -2.2)
+    ctx.line_to(-41.25, -2.2)
+    ctx.line_to(-40, -6.5)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.fill()
+    
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.set_font_size(5.8)
+
+    ctx.move_to(-25.1, -2.1)
+    ctx.show_text('TRUE')
+    ctx.move_to(-27.6, 4.9)
+    ctx.show_text('NORTH')
+
+    #
+    # scale bar
+    #
+
     ctx.move_to(0, 2)
     ctx.line_to(0, 5)
     ctx.line_to(size, 5)
@@ -372,7 +399,7 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
         ctx.move_to(well_width_pt - text_width, -6)
         ctx.show_text(line)
         
-        add_scale_bar(ctx, mmap, well_height_pt)
+        add_scale_bar(ctx, mmap, map_height_pt)
     
     ctx.show_page()
 
