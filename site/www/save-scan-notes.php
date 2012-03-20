@@ -13,8 +13,6 @@
     $key = $_POST['marker_number'];
     $marker = $_POST;
     
-    print_r($_POST);
-    
     $json_response = array('status' => 200,
                            'marker_number' => null,
                            'message' => ''
