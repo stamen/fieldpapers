@@ -238,7 +238,7 @@
             $text = empty($post['atlas_title']) ? null : $post['atlas_title'];
             
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
-                                        'number' => $key + 1,
+                                        'number' => $key,
                                         'provider' => $provider, 
                                         'bounds' => $bounds,
                                         'text' => $text
@@ -250,10 +250,9 @@
             $print['west'] = $bounds[1];
         }
 
-        foreach($message['pages'] as $key => $value)
+        foreach($message['pages'] as $value)
         {
-            $number = $key + 1;
-            $page = add_print_page($dbh, $print['id'], $number);
+            $page = add_print_page($dbh, $print['id'], $value['number']);
             
             $page['zoom'] = $value['zoom'];
 

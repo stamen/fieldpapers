@@ -80,13 +80,13 @@
                     </p>
                 {/if}
                 
-                <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom}">
-                <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size}">
-                <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation}">
-                <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider}">
+                <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
+                <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
+                <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
+                <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider|escape}">
 
                 {foreach from=$atlas_data.pages item="page" key="index"}
-                    <input type="hidden" name="pages[{$index}]" value="{$page}">
+                    <input type="hidden" name="pages[{$index|escape}]" value="{$page|escape}">
                 {/foreach}
                 
                 <div style="float: right; margin-top: 60px;">

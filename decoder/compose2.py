@@ -476,9 +476,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
         for (index, page) in enumerate(pages):
             _update_print(0.1 + 0.9 * float(index) / len(pages))
 
-            page['number'] = int(page['number'])
-        
-            page_href = print_href and (print_href + '/%(number)d' % page) or None
+            page_href = print_href and (print_href + '/%(number)s' % page) or None
         
             provider = TemplatedMercatorProvider(page['provider'])
             zoom = page['zoom']
@@ -512,8 +510,8 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             
             out = StringIO()
             preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
-            preview_url = _append_file('preview-p%(number)d.jpg' % page, out.getvalue())
-            print_info['pages[%(number)d][preview_url]' % page] = preview_url
+            preview_url = _append_file('preview-p%(number)s.jpg' % page, out.getvalue())
+            print_info['pages[%(number)s][preview_url]' % page] = preview_url
     
         #
         # Complete the PDF and upload it.

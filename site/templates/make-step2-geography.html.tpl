@@ -375,13 +375,16 @@
             var width_increment = (bottomRightPoint.x - topLeftPoint.x)/num_columns;
             var height_increment = (bottomRightPoint.y -topLeftPoint.y)/num_rows;
             
+            var rows = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD,BE,BF,BG,BH,BI,BJ,BK,BL,BM,BN,BO,BP,BQ,BR,BS,BT,BU,BV,BW,BX,BY,BZ'.split(',');
+            var cols = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,30,31,32,33,34,35,36,37,38,39'.split(',');
+            
             var pages = [];
             for (var i = 0; i < num_rows; i++) {
                 for (var j = 0; j < num_columns; j++) {
                     var topLeftLocation = map.pointLocation(new MM.Point(topLeftPoint.x + j*width_increment, topLeftPoint.y + i*height_increment));
                     var bottomRightLocation = map.pointLocation(new MM.Point(topLeftPoint.x + (j+1)*width_increment, topLeftPoint.y + (i+1)*height_increment));
                     var page = [topLeftLocation.lat, topLeftLocation.lon, bottomRightLocation.lat, bottomRightLocation.lon];
-                    pages.push(page.join(','));
+                    pages.push({name: rows[i]+cols[j], value: page.join(',')});
                 }
             }
             
@@ -403,9 +406,9 @@
             for (var i = 0; i < pages.length; i++)
             {
                 var page_extent = document.createElement('input');
-                page_extent.name = "pages[" + i + "]";
+                page_extent.name = "pages[" + pages[i].name + "]";
                 page_extent.type = 'hidden';
-                page_extent.value = pages[i];
+                page_extent.value = pages[i].value;
                 document.getElementById('form_data_div').appendChild(page_extent);
             }
         }
