@@ -15,6 +15,7 @@
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
         <script type="text/javascript" src="{$base_dir}/reqwest.min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/marker_notes.js"></script>
     {/if}
     <style type="text/css" title="text/css">
     /* <![CDATA[{literal} */
@@ -93,7 +94,8 @@
             
                 <p>
                     <div class="buttonBar">
-                        <button type="button" onClick= "addPolygon()">Add Polygon</button>
+                        <button type="button" onClick= "addPolygon()">Add Polygon Note</button>
+                        <button type="button" onClick= "addMarkerNote()">Add Marker Note</button>
                     </div>
                     <p>
                         Uploaded by <a href="person.php?id={$scan.user_id}">{$user_name}</a>, 
@@ -111,7 +113,7 @@
                 </p>
             
                 {if $form.form_url}
-                <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
+                <form id="scan-form">
                     <textarea id="textarea_note" class="hide" style="background-color: white">Note</textarea>
                     <input type="button" value="OK" onclick="submitPolygonNote();" />
                 </form>
@@ -125,7 +127,7 @@
                     </div>
                     
                 {else}
-                    <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
+                    <form id="scan-form">
                         <div class="marker">
                             <textarea id="polygon_note" class="show" style="background-color: white">Note</textarea>
                             <button type="button" style="" onclick="submitPolygonNote();">OK</button>
@@ -189,11 +191,11 @@
                     var delta = {dx: 0, dy: 0};
                     
                     ///
-                    // Dealing with Notes
+                    // Dealing with Marker Notes and Polygon Notes
                     ///
                     var markerNumber = -1;
                     var unsignedMarkerNumber = 1;
-                    
+                    var scan_id = {/literal}'{$scan.id}'{literal};
                     var post_url = '{/literal}{$base_dir}{literal}/save-scan-notes.php?scan_id={/literal}{$scan.id}{literal}';   
                     
                         MM = com.modestmaps;
@@ -212,7 +214,26 @@
                     
                     canvas = Raphael("canvas");
                     
+                    displaySavedNotes();
                     loadPolygonData();
+                    
+                    function displaySavedNotes() 
+                    {
+                        {/literal}{foreach from=$notes item="note"}{literal}
+                            var note_geometry = '{/literal}{$note.geometry}{literal}';
+                            
+                            if (note_geometry.substring(0,5) == 'POINT')
+                            {
+                                var note = {/literal}{$note.note|@json_encode}{literal},
+                                    note_num = {/literal}{$note.note_number}{literal},
+                                    lat = {/literal}{$note.latitude}{literal},
+                                    lon = {/literal}{$note.longitude}{literal};
+                                
+                                console.log(note,note_num,lat,lon);
+                                addSavedNote(note,note_num,lat,lon);
+                            }
+                        {/literal}{/foreach}{literal}
+                    }
                     
                     function loadPolygonData()
                     {
@@ -1331,7 +1352,7 @@
                         
                         return false; 
                     }
-                    
+                
                 // {/literal}]]>
                 </script>                    
                     
