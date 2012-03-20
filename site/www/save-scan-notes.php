@@ -13,6 +13,8 @@
     $key = $_POST['marker_number'];
     $marker = $_POST;
     
+    print_r($_POST);
+    
     $json_response = array('status' => 200,
                            'marker_number' => null,
                            'message' => ''
@@ -36,7 +38,14 @@
             $note['note'] = $marker['note'];
             $note['latitude'] = $marker['lat'];
             $note['longitude'] = $marker['lon'];
-            $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+            
+            if ($marker['type'] && $marker['type'] == 'POLYGON')
+            {
+                $note['geometry'] = $marker['geometry'];
+            } else {
+                $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+            }
+            
             $note['user_id'] = $context->user['id'];
             $note['marker_number'] = $note_number;
             
@@ -84,7 +93,14 @@
             $note['note'] = $marker['note'];
             $note['latitude'] = $marker['lat'];
             $note['longitude'] = $marker['lon'];
-            $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+            
+            if ($marker['type'] && $marker['type'] == 'POLYGON')
+            {
+                $note['geometry'] = $marker['geometry'];
+            } else {
+                $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
+            }
+            
             $note['user_id'] = $context->user['id'];
                             
             set_scan_note($context->db, $note);
