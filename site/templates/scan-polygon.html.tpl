@@ -14,6 +14,7 @@
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/reqwest.min.js"></script>
     {/if}
     <style type="text/css" title="text/css">
     /* <![CDATA[{literal} */
@@ -27,6 +28,7 @@
         #scan-form .marker
         {
             position: absolute;
+            z-index: 4;
         }
         
         #scan-form .marker img
@@ -42,10 +44,18 @@
             display: block;
         }
         
-        #notes {
+        #textarea_note {
             margin: 0;
+            position: absolute;
+            z-index: 4;
         }
         
+        #textarea_note_button {
+            margin: 0;
+            position: absolute;
+            z-index: 4;
+        }
+
         #remove, #remove_new, #ok, #ok_new, #cancel {
             float: left;
         }
@@ -101,6 +111,10 @@
                 </p>
             
                 {if $form.form_url}
+                <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
+                    <textarea id="textarea_note" class="hide" style="background-color: white">Note</textarea>
+                    <input type="button" value="OK" onclick="submitPolygonNote();" />
+                </form>
                     <div class="mapFormHolder">
                         <div class="fieldSet">
                             <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
@@ -111,18 +125,21 @@
                     </div>
                     
                 {else}
+                    <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
+                        <div class="marker">
+                            <textarea id="polygon_note" class="show" style="background-color: white">Note</textarea>
+                            <button type="button" style="" onclick="submitPolygonNote();">OK</button>
+                        </div>
+                    </form>
                     <div class="page_map smaller" id="map">
                         <div id="canvas"></div>
                     </div>
                                 
                 {/if}
     
-                    
-                <form id="scan-form" action="{$base_dir}/save-scan-notes.php?scan_id={$scan.id}" method="POST">
-                    <div id="notes" class="hide" style="background-color: white">Note</div>
-                </form>
                 <script type="text/javascript">
                 // <![CDATA[{literal}
+                    
                     var MM;
                     var map;
                     
@@ -172,9 +189,12 @@
                     var delta = {dx: 0, dy: 0};
                     
                     ///
-                    // Tracking Notes
+                    // Dealing with Notes
                     ///
                     var markerNumber = -1;
+                    var unsignedMarkerNumber = 1;
+                    
+                    var post_url = '{/literal}{$base_dir}{literal}/save-scan-notes.php?scan_id={/literal}{$scan.id}{literal}';   
                     
                         MM = com.modestmaps;
                         var provider = '{/literal}{$scan.base_url}{literal}/{Z}/{X}/{Y}.jpg';
@@ -197,39 +217,54 @@
                     function loadPolygonData()
                     {
                         {/literal}{foreach from=$notes item="note"}{literal}
-                            var polygon_bounds = '{/literal}{$note.geometry}{literal}';
+                            var note_geometry = '{/literal}{$note.geometry}{literal}';
                             
-                            var polygon_vertices_string = polygon_bounds.substring(10, polygon_bounds.length - 2);
-                            var polygon_loc_vertices = polygon_vertices_string.split(', ');
+                            var note_data = {
+                                'lat': '{/literal}{$note.latitude}{literal}',
+                                'lon': '{/literal}{$note.longitude}{literal}',
+                                'note': {/literal}{$note.note|@json_encode}{literal},
+                                'marker_number': '{/literal}{$note.note_number}{literal}',
+                                'type': 'POINT',
+                            };
                             
-                            polygon_loc_vertices = polygon_loc_vertices.map(function(p) { return p.split(' ')});
+                            console.log(note_geometry);
                             
-                            for (var i = 0; i < polygon_loc_vertices.length; i++)
-                            {
-                                for (var j = 0; j < polygon_loc_vertices[i].length; j++)
-                                {
-                                    polygon_loc_vertices[i][j] = parseFloat(polygon_loc_vertices[i][j]);
-                                }
-                            }
-                            
-                            console.log(polygon_loc_vertices);
-                            
-                            var polygon_vertices = [];
-                            for (var i = 0; i < polygon_loc_vertices.length; i++)
-                            {
-                                var p_loc = new MM.Location(polygon_loc_vertices[i][1], polygon_loc_vertices[i][0]);
-                                var p_point = map.locationPoint(p_loc);
+                            if (note_geometry.substring(0,7) == 'POLYGON')
+                            {  
+                                note_data.type = 'POLYGON';
                                 
-                                polygon_vertices[i] = p_point;
+                                var polygon_vertices_string = note_geometry.substring(10, note_geometry.length - 2);
+                                var polygon_loc_vertices = polygon_vertices_string.split(', ');
+                                
+                                polygon_loc_vertices = polygon_loc_vertices.map(function(p) { return p.split(' ')});
+                                
+                                for (var i = 0; i < polygon_loc_vertices.length; i++)
+                                {
+                                    for (var j = 0; j < polygon_loc_vertices[i].length; j++)
+                                    {
+                                        polygon_loc_vertices[i][j] = parseFloat(polygon_loc_vertices[i][j]);
+                                    }
+                                }
+                                
+                                console.log(polygon_loc_vertices);
+                                
+                                var polygon_vertices = [];
+                                for (var i = 0; i < polygon_loc_vertices.length; i++)
+                                {
+                                    var p_loc = new MM.Location(polygon_loc_vertices[i][1], polygon_loc_vertices[i][0]);
+                                    var p_point = map.locationPoint(p_loc);
+                                    
+                                    polygon_vertices[i] = p_point;
+                                }
+                                
+                                console.log(polygon_vertices);
+                                
+                                loadPolygon(note_data, polygon_vertices);
                             }
-                            
-                            console.log(polygon_vertices);
-                            
-                            loadPolygon(polygon_vertices);
                         {/literal}{/foreach}{literal}
                     }
                     
-                    function loadPolygon(polygon_vertices)
+                    function loadPolygon(note_data, polygon_vertices)
                     {
                         if (active_polygon != -1)
                         {
@@ -249,7 +284,7 @@
                         
                         readVertices(polygon_vertices);
                         
-                        createPolygon();
+                        createPolygon(note_data);
                         
                         savePolygonLocationData(vertices, control_midpoints);
                         
@@ -393,18 +428,21 @@
                     }
                     
                     
-                    function createPolygon()
+                    function createPolygon(note_data)
                     {
                         // Adding active polygon
                         var polygon_to_add = {'vertices': vertices,
                                               'vertex_display_objects': vertex_display_objects,
                                               'polygon': new_polygon,
                                               'control_midpoints': control_midpoints,
-                                              'control_midpoint_display_objects': control_midpoint_display_objects};
+                                              'control_midpoint_display_objects': control_midpoint_display_objects,
+                                              'note_data': note_data
+                                              };
                         
                         saved_polygons.push(polygon_to_add);
                         
                         active_polygon = saved_polygons.length - 1;
+                        updateTextArea(note_data.note);
                     }
                     
                     function savePolygon(index)
@@ -414,6 +452,8 @@
                         saved_polygons[index].polygon = new_polygon;
                         saved_polygons[index].control_midpoints = control_midpoints;
                         saved_polygons[index].control_midpoint_display_objects = control_midpoint_display_objects;
+                        
+                        saved_polygons[index].note_data.note = document.getElementById('polygon_note').value;
                         
                         for (var i = 0; i < vertices.length; i++)
                         {
@@ -431,6 +471,7 @@
                         }
                         
                         active_polygon = index;
+                        updateTextArea(saved_polygons[active_polygon].note_data.note);
                         
                         vertices = saved_polygons[active_polygon].vertices;
                         vertex_display_objects = saved_polygons[active_polygon].vertex_display_objects;
@@ -444,14 +485,16 @@
                             control_midpoint_display_objects[i].show();
                         }
                         
-                        showPolygonNote();
+                        //showPolygonNote();
                     }
                     
+                    /*
                     function showPolygonNote()
                     {
-                        var notes = document.getElementById('notes');
-                        notes.className = 'show';
+                        var textarea_note = document.getElementById('textarea_note');
+                        textarea_note.className = 'show';
                     }
+                    */
                     
                     function redrawPolygon(vertices, control_midpoints, vertex_display_objects, control_midpoint_display_objects, polygon, polygon_location_data, control_point_location_data)
                     {   
@@ -648,7 +691,19 @@
                         
                         addVertices();
                         
-                        createPolygon();
+                        ////
+                        // Handling Note Data
+                        ////
+                        
+                        var note_data = {
+                            'note': '',
+                            'marker_number': markerNumber,
+                            'type': 'POLYGON',
+                        };
+                        
+                        markerNumber--;
+                        
+                        createPolygon(note_data);
                         
                         savePolygonLocationData(vertices, control_midpoints);
                         
@@ -1160,6 +1215,120 @@
                     map.addCallback('extentset', function(m) {
                         redrawPolygonsAndVertices();
                     });
+                    
+                    function updateTextArea(note)
+                    {
+                        document.getElementById('polygon_note').value = note;
+                    }
+                    
+                    function compute_area_of_polygon(vertices)
+                    {
+                        var area = 0;
+                        var j = vertices.length - 1
+                        
+                        for (var i=0; i < vertices.length; i++)
+                        {
+                            var point1 = vertices[i];
+                            var point2 = vertices[j];
+                            
+                            area = area + point1.x*point2.y;
+                            area = area - point1.y*point2.x;
+                            
+                            j = i;
+                        }
+                        
+                        area = .5 * area;
+                        
+                        return area;                    
+                    }
+                    
+                    function getCentroid()
+                    {
+                        var num_of_vertices = vertices.length;
+                        
+                        var j = num_of_vertices - 1;
+                        var x = 0;
+                        var y = 0;
+                        
+                        for (var i=0; i < num_of_vertices; i++)
+                        {
+                            var point1 = vertices[i];
+                            var point2 = vertices[j];
+                            
+                            var diff = point1.x*point2.y - point2.x*point1.y;
+                            
+                            x = x + diff * (point1.x+point2.x);
+                            y = y + diff * (point1.y+point2.y);
+                            
+                            j = i;
+                        }
+  
+    
+                        var factor = 6 * compute_area_of_polygon(vertices);
+
+                        var centroid = [x/factor,y/factor];
+                        
+                        var converted_centroid = map.pointLocation(new MM.Point(centroid[0], centroid[1]));
+
+                        return converted_centroid;
+                    }
+                    
+                    function submitPolygonNote()
+                    {
+                        console.log('submit polygon note');
+                        
+                        console.log('active_polygon', active_polygon);
+                        
+                        if (active_polygon === -1)
+                        {
+                            return;
+                        }
+                        
+                        savePolygon(active_polygon);
+                        
+                        var geometry_string = 'POLYGON ((';       
+                        
+                        console.log('saved_polygon_location_data', saved_polygon_location_data);                 
+                        
+                        for (var i = 0; i < saved_polygon_location_data[active_polygon].length; i++)
+                        {
+                            if (i == (saved_polygon_location_data[active_polygon].length - 1))
+                            {
+                                geometry_string = geometry_string + saved_polygon_location_data[active_polygon][i].lon + ' '  + saved_polygon_location_data[active_polygon][i].lat + '))';
+                            } else {
+                                geometry_string = geometry_string + saved_polygon_location_data[active_polygon][i].lon + ' '  + saved_polygon_location_data[active_polygon][i].lat + ', ';
+                            }
+                        }
+                        
+                        console.log('geometry_string', geometry_string);
+                        
+                        saved_polygons[active_polygon].note_data.geometry = geometry_string;
+                        
+                        var centroid = getCentroid();
+                        
+                        saved_polygons[active_polygon].note_data.lat = centroid.lat;
+                        saved_polygons[active_polygon].note_data.lon = centroid.lon;
+                        
+                        saved_polygons[active_polygon].note_data.note = document.getElementById('polygon_note').value;
+                        
+                        console.log('note_data', saved_polygons[active_polygon].note_data);
+                        
+                        reqwest({
+                            url: post_url,
+                            method: 'post',
+                            data: saved_polygons[active_polygon].note_data,
+                            type: 'json',
+                            success: function (resp) {
+                              console.log('note_data', saved_polygons[active_polygon].note_data);
+                              console.log('response', resp);
+                              //changeMarkerDisplay(resp);
+                            }
+                        });
+                        
+                        active_polygon = -1;
+                        
+                        return false; 
+                    }
                     
                 // {/literal}]]>
                 </script>                    
