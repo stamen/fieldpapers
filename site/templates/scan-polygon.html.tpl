@@ -295,6 +295,7 @@
                         // Inactivate the loaded polygons
                         savePolygon(active_polygon);
                         active_polygon = -1;
+                        document.getElementById('polygon_note').value = '';
                     }
                     
                     
@@ -655,6 +656,7 @@
                         }
                         
                         active_polygon = -1;
+                        //document.getElementById('polygon_note').value = '';
                         
                         vertices = [];
                         vertex_display_objects = [];
