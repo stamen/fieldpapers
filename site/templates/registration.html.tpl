@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-
-{include file="navigation.htmlf.tpl"}
-
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -9,6 +6,7 @@
         <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     </head>
     <body>
+        {include file="navigation.htmlf.tpl"}
         <div class="smallContainer">
             <h1>Create a Field Papers Account</h1>
                 <form id='register_form' method='POST' action='registration.php' style='margin-left: 10px;'>
@@ -35,7 +33,7 @@
                     <input type='hidden' name='action' value='register'>
                     <input type='hidden' name='redirect' value='index.php'>
                 </form>
-        </div>
-        {include file="footer.htmlf.tpl"}        
+            {include file="footer.htmlf.tpl"} 
+        </div>       
     </body>
 </html>
