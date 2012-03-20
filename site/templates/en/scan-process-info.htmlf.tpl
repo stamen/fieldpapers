@@ -13,7 +13,7 @@
     
 {else}
 	<div class="smallContainer">
-        <p>Processing your scanned image... ({$scan.progress*100|string_format:"%d"}% complete)</p>
+        <p>Processing your page snapshot... ({$scan.progress*100|string_format:"%d"}% complete)</p>
         <div class="progressBarCase">
             <div class="progressBar" style="width: {$scan.progress*100}%;"></div>
         </div>
