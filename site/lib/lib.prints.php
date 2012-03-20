@@ -114,7 +114,7 @@
     {
         $atlas_part = false;
     
-        if(preg_match('#^(\w+)/(\d+)$#', $print_id, $m))
+        if(preg_match('#^(\w+)/(\w+)$#', $print_id, $m))
             list($print_id, $page_number) = array($m[1], $m[2]);
     
         $q = sprintf("SELECT layout, atlas_pages,
@@ -220,7 +220,7 @@
     function add_print_page(&$dbh, $print_id, $page_number)
     {
         $q = sprintf('INSERT INTO pages
-                      SET print_id = %s, page_number = %d',
+                      SET print_id = %s, page_number = %s',
                      $dbh->quoteSmart($print_id),
                      $dbh->quoteSmart($page_number));
 
