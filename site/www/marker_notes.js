@@ -48,7 +48,7 @@ function MarkerNote(map, post_url)
                 data: data,
                 type: 'json',
                 error: function(err) {
-                    console.log(err)
+                    console.log(err);
                 },
                 success: function (resp) {
                   console.log(resp);
@@ -271,7 +271,7 @@ function SavedMarker(map,note,note_num,lat,lon)
                 console.log('error', err);
             },
             success: function (resp) {
-              console.log('response',resp);
+              //console.log('response',resp);
               if (resp.status != 200)
               {
                 alert('There was a problem: ' + resp.message);
@@ -286,6 +286,7 @@ function SavedMarker(map,note,note_num,lat,lon)
     
     var changeMarkerDisplay = function(resp)
     {
+        //console.log('changemarkerresp', resp);
         if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show' && cancel_button.className == 'show') {
             textarea.className = 'hide';
             ok_button.className = 'hide';
