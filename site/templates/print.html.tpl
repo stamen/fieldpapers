@@ -391,8 +391,8 @@
                     {/if}
                 </p>
 
-                <p class="borrow"><strike>Borrow this Atlas</strike></p>
-                <p class="download"><a href="{$print.pdf_url}">Download PDF <!--<span class="size">17MB</span>--></a></p>
+                {* TODO: <p class="borrow">Borrow this Atlas</p> *}
+                <p class="download"><a href="{$print.pdf_url}">Download PDF {* TODO: <span class="size">17MB</span> *}</a></p>
             </div>
             
             <div id="atlas-export-column">
