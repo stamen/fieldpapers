@@ -69,6 +69,11 @@
                 font-weight: bold;
             }
             
+            #atlas-index-map-holder a
+            {
+                color: white;
+            }
+            
             #atlas-index-map-holder .title
             {
                 top: 0;
@@ -340,17 +345,28 @@
             
             <div id="atlas-overview-map-holder">
                 <div id="atlas-overview-map"></div>
-                <h2>Location Name</h2>
+                <h2>
+                    {if $print.place_woeid}{$print.place_name|nice_placename},{/if}
+                    {if $print.country_woeid}{$print.country_name|nice_placename}{/if}
+                </h2>
             </div>
             
             <div id="atlas-index-map-holder">
                 <div id="atlas-index-map"></div>
                 
-                <h3 class="title">Atlas Title</h3>
-                <p class="count">Page Count</p>
+                <h3 class="title">[Atlas Title]</h3>
+                <p class="count">
+                    {if $pages|@count == 1}
+                        One page
+                    {elseif $pages|@count == 2}
+                        Two pages
+                    {else}
+                        {$pages|@count} pages
+                    {/if}
+                </p>
 
-                <p class="borrow"><a>Borrow this Atlas</a></p>
-                <p class="download"><a>Download PDF <span class="size">17MB</span></a></p>
+                <p class="borrow"><strike>Borrow this Atlas</strike></p>
+                <p class="download"><a href="{$print.pdf_url}">Download PDF <!--<span class="size">17MB</span>--></a></p>
             </div>
             
             <div id="atlas-export-column">
