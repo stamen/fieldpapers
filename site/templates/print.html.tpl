@@ -25,7 +25,7 @@
             border: 1px solid black;
             position: relative;
             
-            background-color: orange;
+            background-color: #ddd;
         }
             
             #atlas-overview-map-holder h2
@@ -53,7 +53,7 @@
             position: relative;
             margin-top: -1px;
             
-            background-color: yellow;
+            background-color: #ddd;
         }
             
             #atlas-index-map-holder #atlas-index-map
@@ -143,7 +143,8 @@
         
         #atlas-export-column li,
         #atlas-activity-stream a.date,
-        #atlas-activity-stream ul li .details
+        #atlas-activity-stream ul li .details,
+        #atlas-activity-stream ul li .details a
         {
             color: #999;
         }
