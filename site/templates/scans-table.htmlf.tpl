@@ -11,7 +11,7 @@
 
                 <td>
                     {if $scan}
-                        <a href="{$base_dir}/scan.php?id={$scan.id|escape}">
+                        <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">
                             <img border="1" src="{$scan.base_url}/preview.jpg"></a>
                     {/if}
                 </td>
@@ -26,14 +26,14 @@
                 <td>
                     {if $scan}
                         {if $scan.print_place_woeid}
-                            <a href="{$base_dir}/scan.php?id={$scan.id|escape}">
+                            <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">
                                 <b id="scan-{$scan.id|escape}">{$scan.age|nice_relativetime|escape}
                                     {if $scan.will_edit == 'no'}✻{/if}</b>
                                 <br>
                                 {$scan.print_place_name|escape}</a>
         
                         {else}
-                            <a href="{$base_dir}/scan.php?id={$scan.id|escape}">
+                            <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">
                                 <b id="scan-{$scan.id|escape}">{$scan.age|nice_relativetime|escape}
                                     {if $scan.will_edit == 'no'}✻{/if}</b></a>
             
