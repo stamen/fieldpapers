@@ -31,7 +31,7 @@
     
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $context->sm->fetch("scan-polygon-redesign.html.tpl");
+        print $context->sm->fetch("snapshot.html.tpl");
     
     } elseif($context->type == 'application/paperwalking+xml') { 
         header("Content-Type: application/paperwalking+xml; charset=UTF-8");
