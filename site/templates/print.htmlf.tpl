@@ -220,7 +220,7 @@
     <ul>
         {foreach from=$scans item="scan"}
             <li>
-                <a href="scan.php?id={$scan.id|escape}">Scan {$scan.id|escape}</a>, {$scan.age|nice_relativetime|escape}
+                <a href="snapshot.php?id={$scan.id|escape}">Scan {$scan.id|escape}</a>, {$scan.age|nice_relativetime|escape}
             </li>
         {/foreach}
     </ul>
@@ -230,7 +230,7 @@
     <ul>
         {foreach from=$notes item="note"}
             <li>
-                <i>{$note.note|escape}</i> on <a href="scan.php?id={$note.scan_id|escape}">scan {$note.scan_id|escape}</a>
+                <i>{$note.note|escape}</i> on <a href="snapshot.php?id={$note.scan_id|escape}">scan {$note.scan_id|escape}</a>
             </li>
         {/foreach}
     </ul>
