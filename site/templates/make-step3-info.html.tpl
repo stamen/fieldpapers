@@ -56,29 +56,15 @@
                            placeholder="Untitled">
                 </p>
                 <p>
-                    If you like, you can also add a document to go alongside each page 
-                    in your atlas, like a questionnaire or a site survey form. 
-                    Field Papers can import forms created in 
-                    <a href="http://docs.google.com">Google Docs</a>. Just 
-                    enter the URL to your Google form, and we'll do the rest.
+                    <label for="atlas_text" style="font-size: 16px"><b>Page Text</b> (<i>This is Optional.</i>)</label>
                 </p>
                 <p>
-                    <label for="form_input" style="font-size: 16px"><b>Google Form URL</b> (<i>This is Optional.</i>)</label>
-                    <br>
-                    <input style="margin-top: 10px; color: grey;" type="text" id='form_input' name="form_url" size="60"
-                            placeholder="http://">
+                    If you like, you can also add text for each page
+                    in your atlas, like a questionnaire or a site survey form. 
                 </p>
-                {if $forms}
-                    <p>
-                        Your recent forms:
-                        <select name="form_id">
-                            {foreach from=$forms item="form"}
-                                {assign var="domain" value=$form.form_url|regex_replace:"#^https?://([^/]+)/.+$#":"(\\1)"}
-                                <option value="{$form.id|escape}" label="{$form.title|escape} {$domain|escape}">{$form.title|escape} {$domain|escape}</option>
-                            {/foreach}
-                        </select>
-                    </p>
-                {/if}
+                <p>
+                    <textarea name="atlas_text" rows="10" style="font-size: 16px; width: 40em;" placeholder="Text to print with each page of your atlas"></textarea>
+                </p>
                 
                 <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
                 <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">

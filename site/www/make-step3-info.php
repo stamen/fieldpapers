@@ -8,10 +8,6 @@
     
     /**** ... ****/
     
-    $forms = get_forms($context->db, $context->user['id'], get_pagination(8));
-    
-    $context->sm->assign('forms', $forms);
-    
     $atlas_data = array(
         'page_zoom' => sprintf('%d', $_POST['page_zoom']),
         'paper_size' => $_POST['paper_size'],

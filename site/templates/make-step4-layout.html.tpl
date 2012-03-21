@@ -84,12 +84,13 @@
         </div>
         <div class="clearfloat"></div>
         <div style="float: right; margin-top: 60px;">
-            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape}">
+            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}">
+            <input type="hidden" name="atlas_text" value="{$atlas_data.atlas_text|escape:hexentity}">
             <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
             <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
             <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
             <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider|escape}">
-
+            
             {if $atlas_data.form_url}
                 <input type="hidden" name="form_url" value="{$atlas_data.form_url|escape}">
             {elseif $atlas_data.form_id}
