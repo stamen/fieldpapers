@@ -34,7 +34,6 @@ function MarkerNote(map, post_url)
                                    
     var submitNote = function()
     {
-        //console.log(document.getElementById('scan-form'));
         if (textarea.value.trim() == ''){
             alert('Please fill out your note!');
             return false;

@@ -3,10 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>
-        {if $page_number && $scan.print_id}
-            Page {$page_number}, Atlas {$scan.print_id}
-        {/if}
-         - fieldpapers.org
+        Snapshot - fieldpapers.org
     </title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     {if $scan && !$scan.decoded && !$scan.failed}
@@ -145,6 +142,9 @@
         
         #polygon_note
         {
+            background-color: #fff;
+            border: 1px solid #050505;
+            padding: 5px;
             position: absolute;
             z-index: 5;
         }
@@ -697,7 +697,9 @@
                         var note_height = polygon_note.offsetHeight;
                         var note_width = polygon_note.offsetWidth;
                         
-                        polygon_note.style.left = current_polygon_bbox.x - .25 * note_width + 'px';
+                        console.log(current_polygon_bbox);
+                        
+                        polygon_note.style.left = current_polygon_bbox.x + .5 * current_polygon_bbox.width - .5 * note_width + 'px';
                         polygon_note.style.top = current_polygon_bbox.y - note_height - offsetY + 'px';
                     }
                     
