@@ -32,7 +32,7 @@
             {
                 font-size: 24px;
                 position: absolute;
-                padding: 2px 8px;
+                padding: 7px 12px;
                 margin: 0;
                 bottom: 0;
                 
@@ -50,28 +50,52 @@
             background-color: yellow;
         }
             
-            #atlas-index-map-holder .info
+            #atlas-index-map-holder .title,
+            #atlas-index-map-holder .count,
+            #atlas-index-map-holder .borrow,
+            #atlas-index-map-holder .download
             {
                 position: absolute;
-                top: 0;
+                width: auto;
+                height: 18px;
+
+                color: white;
+                background-color: black;
+                margin: 0;
+                padding: 7px 12px;
+
+                font-size: 18px;
+                line-height: 18px;
+                font-weight: bold;
             }
             
-            #atlas-index-map-holder .links
+            #atlas-index-map-holder .title
             {
-                position: absolute;
-                text-align: right;
+                top: 0;
+                left: 0;
+            }
+            
+            #atlas-index-map-holder .count
+            {
+                top: 32px;
+                left: 0;
+            }
+            
+            #atlas-index-map-holder .borrow
+            {
+                bottom: 32px;
+                right: 0;
+            }
+            
+            #atlas-index-map-holder .download
+            {
                 bottom: 0;
                 right: 0;
             }
             
-            #atlas-index-map-holder .info>*,
-            #atlas-index-map-holder .links>*
+            #atlas-index-map-holder .download .size
             {
-                color: white;
-                background-color: black;
-                padding: 4px 8px;
-                font-size: 18px;
-                line-height: 26px;
+                font-weight: normal;
             }
             
         #atlas-export-column
@@ -321,16 +345,12 @@
             
             <div id="atlas-index-map-holder">
                 <div id="atlas-index-map"></div>
-
-                <div class="info">
-                    <strong>Atlas Title</strong><br>
-                    <span>Page Count</span>
-                </div>
                 
-                <div class="links">
-                    <a><strong>Borrow this Atlas</strong></a><br>
-                    <a><strong>Download PDF</strong> 17MB</a>
-                </div>
+                <h3 class="title">Atlas Title</h3>
+                <p class="count">Page Count</p>
+
+                <p class="borrow"><a>Borrow this Atlas</a></p>
+                <p class="download"><a>Download PDF <span class="size">17MB</span></a></p>
             </div>
             
             <div id="atlas-export-column">
