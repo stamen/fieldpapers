@@ -3,10 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>
-        {if $page_number && $scan.print_id}
-            Page {$page_number}, Atlas {$scan.print_id}
-        {/if}
-         - fieldpapers.org
+        Snapshot - fieldpapers.org
     </title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     {if $scan && !$scan.decoded && !$scan.failed}
