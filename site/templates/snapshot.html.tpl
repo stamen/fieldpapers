@@ -229,7 +229,7 @@
                             </span>
                             <div class="radio_landscape_selected" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
                             <div class="radio_portrait" id="polygon_button" title="Add Polygon" onclick="addPolygon();"></div>
-                            <input id="next_button" type="button" value="Done" onclick="doneRedirect()">
+                            <input id="next_button" type="button" value="Finished" onclick="finishedRedirect()">
                         </div>
                     </div>
                     <form id="scan-form">
@@ -1584,8 +1584,11 @@
                         return false; 
                     }
                     
-                    function doneRedirect()
-                    {                        
+                    function finishedRedirect()
+                    {   
+                        var redirect_url = '{/literal}{$scan.print_href|escape}{literal}';
+                        window.location = redirect_url;
+                        /*
                         var post_url = '{/literal}{$base_dir}{literal}/save-scan-notes.php?scan_id={/literal}{$scan.id}{literal}';
                       
                         var base_url = '{/literal}{$base_dir}{literal}';
@@ -1602,6 +1605,7 @@
                         } else {
                             console.log('There was an error in redirection.');
                         }
+                        */
                     }
                                         
                     var zoom_in = document.getElementById("zoom-in");
