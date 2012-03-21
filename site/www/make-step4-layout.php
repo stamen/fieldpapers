@@ -10,12 +10,11 @@
     
     $atlas_data = array(
         'atlas_title' => $_POST['atlas_title'],
+        'atlas_text' => $_POST['atlas_text'],
         'page_zoom' => sprintf('%d', $_POST['page_zoom']),
         'paper_size' => $_POST['paper_size'],
         'orientation' => $_POST['orientation'],
         'provider' => $_POST['provider'],
-        'form_url' => $_POST['form_url'],
-        'form_id' => $_POST['form_id'],
         'pages' => (is_array($_POST['pages']) ? $_POST['pages'] : array())
         );
 
