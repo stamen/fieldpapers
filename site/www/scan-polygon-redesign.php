@@ -13,8 +13,10 @@
     $scan = get_scan($context->db, $scan_id);
     $context->sm->assign('scan', $scan);
     
-    $print = get_print($context->db, $scan['print_id']);
-    $context->sm->assign('print', $print);
+    if($scan['print_id'] && $print = get_print($context->db, $scan['print_id']))
+    {
+        $context->sm->assign('print', $print);
+    }
     
     $notes = get_scan_notes($context->db, array('scan' => $scan['id']));
     $context->sm->assign('notes', $notes);
@@ -22,21 +24,9 @@
     $form = get_form($context->db, $print['form_id']);
     $context->sm->assign('form', $form);
     
-    if(preg_match('#^(\w+)/(\d+)$#', $scan['print_id'], $matches))
+    if($user = get_user($context->db, $scan['user_id']))
     {
-        $print_id = $matches[1];
-        $page_number = $matches[2];
-        
-        $context->sm->assign('page_number', $page_number);
-    }
-    
-    $user = get_user($context->db, $scan['user_id']);
-    
-    if ($user['name'])
-    {
-        $context->sm->assign('user_name', $user['name']);
-    } else {
-        $context->sm->assign('user_name', 'Anonymous');
+        $context->sm->assign('user', $user);
     }
     
     if($context->type == 'text/html') {
