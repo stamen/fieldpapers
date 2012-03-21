@@ -176,12 +176,24 @@
     
    /**
     * Return north, west, south, east array for an mmap instance.
+    *
+    * Optionally inflate the bounds by some factor.
     */
-    function get_mmap_bounds($mmap)
+    function get_mmap_bounds($mmap, $inflate=0)
     {
         $northwest = $mmap->pointLocation(new MMaps_Point(0, 0));
         $southeast = $mmap->pointLocation($mmap->dimensions);
-        $bounds = array($northwest->lat, $northwest->lon, $southeast->lat, $southeast->lon);
+        
+        $lat_span = $northwest->lat - $southeast->lat;
+        $lon_span = $southeast->lon - $northwest->lon;
+
+        $lat_buff = $lat_span * $inflate;
+        $lon_buff = $lon_span * $inflate;
+
+        $bounds = array($northwest->lat + $lat_buff,
+                        $northwest->lon - $lon_buff,
+                        $southeast->lat - $lat_buff,
+                        $southeast->lon + $lon_buff);
         
         return $bounds;
     }
@@ -263,8 +275,9 @@
         
         $index = array('number' => 'i',
                        'zoom' => $mmap->coordinate->zoom,
-                       'bounds' => get_mmap_bounds($mmap),
+                       'bounds' => get_mmap_bounds($mmap, 0.1),
                        'provider' => $provider,
+                       'role' => 'index',
                        'text' => ''
                        );
 
