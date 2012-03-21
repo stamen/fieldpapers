@@ -40,6 +40,12 @@
                 background-color: black;
             }
         
+            #atlas-overview-map-holder #atlas-overview-map
+            {
+                width: 100%;
+                height: 100%;
+            }
+        
         #atlas-index-map-holder
         {
             height: 738px;
@@ -49,6 +55,20 @@
             
             background-color: yellow;
         }
+            
+            #atlas-index-map-holder #atlas-index-map
+            {
+                width: 100%;
+                height: 100%;
+            }
+                
+            #atlas-index-map-holder #atlas-index-map-canvas
+            {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: 3;
+            }
             
             #atlas-index-map-holder .title,
             #atlas-index-map-holder .count,
@@ -243,11 +263,11 @@
                             }
                         
                         // Map 1
-                        var overview_map = new MM.Map("overview_map", overview_map_layers, null, []);
+                        var overview_map = new MM.Map("atlas-overview-map", overview_map_layers, null, []);
                         
                         
                         // Map 2
-                        var map = new MM.Map("map", main_map_layers, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+                        var map = new MM.Map("atlas-index-map", main_map_layers, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
                         
                         var north = '{/literal}{$print.north}{literal}';
                         var west = '{/literal}{$print.west}{literal}';
@@ -266,7 +286,7 @@
                         // Draw the Extent of the Atlas
                         ////
                         
-                        canvas = Raphael("canvas"); // Use this for both the print and page extents
+                        canvas = Raphael("atlas-index-map-canvas"); // Use this for both the print and page extents
                         
                         var nw_point = map.locationPoint(new MM.Location(north, west));
                         var ne_point = map.locationPoint(new MM.Location(north, east));
@@ -352,7 +372,7 @@
             </div>
             
             <div id="atlas-index-map-holder">
-                <div id="atlas-index-map"></div>
+                <div id="atlas-index-map"><div id="atlas-index-map-canvas"></div></div>
                 
                 <h3 class="title">[Atlas Title]</h3>
                 <p class="count">
