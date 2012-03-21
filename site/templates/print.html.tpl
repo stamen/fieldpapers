@@ -438,10 +438,10 @@
                                 {else}
                                     Someone anonymous
                                 {/if}
-                                uploaded a <a href="{$base_dir}/scan.php?id={$scan.id|escape}">snapshot of page {$scan.print_page_number|escape}</a>
+                                uploaded a <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">snapshot of page {$scan.print_page_number|escape}</a>
                                 <a href="{$base_dir}/uploads.php?month={"Y-m"|@date:$scan.created}" class="date">- {$scan.age|nice_relativetime|escape}</a>
                                 <br>
-                                <a href="{$base_dir}/scan.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
+                                <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
 
                                 {*
                                 <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> <a class="date">- 3 weeks ago</a>
@@ -458,7 +458,7 @@
                                 {else}
                                     Someone anonymous
                                 {/if}
-                                added <a href="{$base_dir}/scan.php?id={$scan.id|escape}">a note about page {$scan.print_page_number|escape}</a>
+                                added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">a note about page {$scan.print_page_number|escape}</a>
                                 <a class="date">- {$note.age|nice_relativetime|escape}</a>
                                 <ol>
                                     <li>{$note.note|escape}</li>
