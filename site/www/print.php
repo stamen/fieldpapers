@@ -28,17 +28,41 @@
         $context->sm->assign('user', $user);
     }
     
+    $users = array();
+    $user_id = $print['user_id'];
+    
+    if(is_null($users[$user_id]))
+        $users[$user_id] = get_user($context->db, $user_id);
+    
+    $print['user_name'] = $users[$user_id]['name'];
+    
     if($scans = get_scans($context->db, array('print' => $print['id'])))
     {
         $note_args = array('scans' => array());
         
         foreach($scans as $scan)
+        {
             $note_args['scans'][] = $scan['id'];
+            $user_id = $scan['user_id'];
+            
+            if(is_null($users[$user_id]))
+                $users[$user_id] = get_user($context->db, $user_id);
+            
+            $scan['user_name'] = $users[$user_id]['name'];
+        }
         
         $notes = get_scan_notes($context->db, $note_args);
         
         foreach($notes as $i => $note)
+        {
             $notes[$i]['scan'] = $scan;
+            $user_id = $note['user_id'];
+            
+            if(is_null($users[$user_id]))
+                $users[$user_id] = get_user($context->db, $user_id);
+            
+            $note['user_name'] = $users[$user_id]['name'];
+        }
 
         $context->sm->assign('scans', $scans);
         $context->sm->assign('notes', $notes);

@@ -412,11 +412,15 @@
                             {if $event.type == "print"}
                                 {assign var="print" value=$event.print}
 
-                                <a href="{$base_dir}/person.php?id={$print.user_id|escape}">{$print.user_id|escape}</a>
+                                {if $print.user_name}
+                                    <a href="{$base_dir}/person.php?id={$print.user_id|escape}">{$print.user_name|escape}</a>
+                                {else}
+                                    Someone anonymous
+                                {/if}
                                 made this atlas of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
                                 <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
                                 <br>
-                                <span class="details">[page count] + [style name] + {$print.orientation|escape} + [layout] + <a>[mbtiles?]</a></span>
+                                <span class="details">[page count] + [style name] + {$print.orientation|escape} + {$print.layout|escape}</span>
         
                                 {*
                                 <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
@@ -427,7 +431,11 @@
                             {elseif $event.type == "scan"}
                                 {assign var="scan" value=$event.scan}
 
-                                <a href="{$base_dir}/person.php?id={$scan.user_id|escape}">{$scan.user_id|escape}</a>
+                                {if $scan.user_name}
+                                    <a href="{$base_dir}/person.php?id={$scan.user_id|escape}">{$scan.user_name|escape}</a>
+                                {else}
+                                    Someone anonymous
+                                {/if}
                                 uploaded a <a href="{$base_dir}/scan.php?id={$scan.id|escape}">snapshot of page {$scan.print_page_number|escape}</a>
                                 <a href="{$base_dir}/uploads.php?month={"Y-m"|@date:$scan.created}" class="date">- {$scan.age|nice_relativetime|escape}</a>
                                 <br>
@@ -443,7 +451,11 @@
                                 {assign var="note" value=$event.note}
                                 {assign var="scan" value=$note.scan}
 
-                                <a href="{$base_dir}/person.php?id={$note.user_id|escape}">{$note.user_id|escape}</a>
+                                {if $note.user_name}
+                                    <a href="{$base_dir}/person.php?id={$note.user_id|escape}">{$note.user_name|escape}</a>
+                                {else}
+                                    Someone anonymous
+                                {/if}
                                 added <a href="{$base_dir}/scan.php?id={$scan.id|escape}">a note about page {$scan.print_page_number|escape}</a>
                                 <a class="date">- {$note.age|nice_relativetime|escape}</a>
                                 <ol>
