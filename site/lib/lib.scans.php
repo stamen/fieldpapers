@@ -420,7 +420,7 @@
                     'created' => date('c', $note['created']),
 
                     'scan_id' => $note['scan_id'],
-                    'scan_href' => "{$base_href}/scan.php?id={$note['scan_id']}",
+                    'scan_href' => "{$base_href}/snapshot.php?id={$note['scan_id']}",
                     'scan_description' => $scan['description'],
                     'scan_place_woeid' => $scan['place_woeid'],
                     'scan_region_woeid' => $scan['region_woeid'],

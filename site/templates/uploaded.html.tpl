@@ -28,7 +28,7 @@
                 a few bits of information about it before you proceed to trace it.
             </p>
             -->
-            <form action="{$base_dir}/scan.php?id={$scan.id|escape}" method="post" enctype="multipart/form-data">
+            <form action="{$base_dir}/snapshot.php?id={$scan.id|escape}" method="post" enctype="multipart/form-data">
                 <!--
                 {*
                 <p>

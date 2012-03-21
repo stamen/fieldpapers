@@ -54,7 +54,7 @@
     }
 
     if($attempted_upload)
-        header('Location: http://'.get_domain_name().get_base_dir().'/scan.php?id='.urlencode($scan['id']));
+        header('Location: http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($scan['id']));
     
     exit();
     

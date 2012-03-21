@@ -8,7 +8,7 @@
 <p>
     Help complete this step by entering the text from the top-right corner of your scan:
 </p>
-<form action="{$base_dir}/scan.php?id={$scan.id|escape}" method="post">
+<form action="{$base_dir}/snapshot.php?id={$scan.id|escape}" method="post">
     <input name="qrcode_contents" type="text" size="48" placeholder="http://{$domain}{$base_dir}/print.php?id=0000">
     <input name="action" type="hidden" value="override QR code">
     <input class="mac-button" type="submit" value="Save">

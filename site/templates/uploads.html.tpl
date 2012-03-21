@@ -12,10 +12,10 @@
         
         {foreach from=$scans item="scan" name="index"}
             <div class="atlasThumb">
-                <a href="{$base_dir}/scan.php?id={$scan.id}">
+                <a href="{$base_dir}/snapshot.php?id={$scan.id}">
                 <img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
                 name="atlasPage" width="100%" id="atlasPage"></a>
-                <span class="atlasName"><a href="{$base_dir}/scan.php?id={$scan.id}">Untitled</a></span>
+                <span class="atlasName"><a href="{$base_dir}/snapshot.php?id={$scan.id}">Untitled</a></span>
                 <span class="atlasOwner">by <a href="{$base_dir}/uploads.php?user={$scan.user_id}">{$scan.user_name}</a></span>,
 
                 {if $scan.place_woeid}
