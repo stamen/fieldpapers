@@ -168,7 +168,12 @@ function MarkerNote(map, post_url)
 }
 
 function addMarkerNote()
-{                        
+{
+    if (arguments[0] == 'marker')
+    {
+        changeNoteButtonStyle('marker'); 
+    }
+    
     var markerDiv = new MarkerNote(map, post_url);
     document.getElementById('scan-form').appendChild(markerDiv);
 }
@@ -218,16 +223,7 @@ function SavedMarker(map,note,note_num,lat,lon)
     var removeMarkerNote = function()
     {                            
         if (window.confirm("Are you sure you want to delete this saved note?"))
-        {
-            // Remove visual elements
-            /*
-            div.removeChild(img);
-            div.removeChild(textarea);
-            div.removeChild(ok_button);
-            div.removeChild(cancel_button);
-            div.removeChild(remove_button);
-            */
-            
+        {            
             div.parentNode.removeChild(div);
             
             data.removed = 1; // Removed
@@ -296,6 +292,16 @@ function SavedMarker(map,note,note_num,lat,lon)
     
         saved_note.innerHTML = resp.note_data.note;
         textarea.value = resp.note_data.note;
+    }
+    
+    var hidePolygonNote = function()
+    {
+        console.log('hide polygon note');
+        if (active_polygon != -1)
+        {
+            savePolygon(active_polygon);
+            active_polygon = -1;
+        }
     }
                           
     var ok_button = document.createElement('button');
@@ -374,6 +380,8 @@ function SavedMarker(map,note,note_num,lat,lon)
                             
     img.onmousedown = function(e)
     {
+        hidePolygonNote();
+        
         var marker_start = {x: div.offsetLeft, y: div.offsetTop},
             mouse_start = {x: e.clientX, y: e.clientY};                   
                 
