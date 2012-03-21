@@ -285,7 +285,6 @@
                         var extents = [new MM.Location(north, west), new MM.Location(south, east)];
                         
                         map.setExtent(extents);
-                        map.setCenterZoom(map.getCenter(), zoom - 2);
                         overview_map.setCenterZoom(map.getCenter(),5);
                         
                         ////
