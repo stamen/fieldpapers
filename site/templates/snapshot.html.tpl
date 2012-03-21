@@ -142,6 +142,9 @@
         
         #polygon_note
         {
+            background-color: #fff;
+            border: 1px solid #050505;
+            padding: 5px;
             position: absolute;
             z-index: 5;
         }
@@ -694,7 +697,7 @@
                         var note_height = polygon_note.offsetHeight;
                         var note_width = polygon_note.offsetWidth;
                         
-                        polygon_note.style.left = current_polygon_bbox.x - .25 * note_width + 'px';
+                        polygon_note.style.left = current_polygon_bbox.x - .125 * note_width + 'px';
                         polygon_note.style.top = current_polygon_bbox.y - note_height - offsetY + 'px';
                     }
                     
