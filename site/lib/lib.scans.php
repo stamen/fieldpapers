@@ -104,7 +104,7 @@
         $q = sprintf("SELECT place_name, place_woeid,
                              region_name, region_woeid,
                              country_name, country_woeid,
-                             id, print_id,
+                             id, print_id, print_page_number, print_href,
                              min_row, min_column, min_zoom,
                              max_row, max_column, max_zoom,
                              description, is_private, will_edit,
@@ -261,6 +261,7 @@
         $q = sprintf("SELECT scan_id, note_number, note,
                              latitude, longitude, geometry,
                              UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              user_id
                       FROM scan_notes
                       WHERE scan_id = %s
@@ -303,6 +304,7 @@
         $q = sprintf('SELECT scan_id, note_number, note,
                              latitude, longitude, geometry,
                              UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                              user_id
                       FROM scan_notes
                       WHERE %s
