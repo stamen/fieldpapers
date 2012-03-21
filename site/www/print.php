@@ -36,10 +36,34 @@
             $note_args['scans'][] = $scan['id'];
         
         $notes = get_scan_notes($context->db, $note_args);
+        
+        foreach($notes as $i => $note)
+            $notes[$i]['scan'] = $scan;
 
         $context->sm->assign('scans', $scans);
         $context->sm->assign('notes', $notes);
+
+    } else {
+        $notes = array();
     }
+    
+    $activity = array(array('type' => 'print', 'print' => $print));
+    $times = array($print['created']);
+
+    foreach($scans as $scan)
+    {
+        $activity[] = array('type' => 'scan', 'scan' => $scan);
+        $times[] = $scan['created'];
+    }
+        
+    foreach($notes as $note)
+    {
+        $activity[] = array('type' => 'note', 'note' => $note);
+        $times[] = $note['created'];
+    }
+    
+    array_multisort($times, SORT_ASC, $activity);
+    $context->sm->assign('activity', $activity);
         
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");

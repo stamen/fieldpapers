@@ -173,6 +173,11 @@
             margin-top: .5em;
         }
         
+        #atlas-activity-stream img
+        {
+            border: 1px solid #ddd;
+        }
+        
         {/literal}
     </style>
 </head>
@@ -402,35 +407,67 @@
                 <h3>Activity</h3>
                 
                 <ul>
-                    <li>
-                        <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
-                        <br>
-                        <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
-                    </li>
-                    <li>
-                        <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> <a class="date">- 3 weeks ago</a>
-                        <br>
-                        <img>
-                    </li>
-                    <li>
-                        <a>George</a> added 3 notes about <a>page B2</a> <a class="date">- 2 weeks ago</a>
-                        <ol>
-                            <li>This is where I found a</li>
-                            <li>Fire hydrant looks busted</li>
-                            <li>Best eggs in the city</li>
-                        </ol>
-                    </li>
-                    <li>
-                        Someone anonymous added a note to <a>page B2</a> <a class="date">- 4 days ago</a>
-                        <ol>
-                            <li>This is where I found a</li>
-                            <li>Fire hydrant looks busted</li>
-                            <li>Best eggs in the city</li>
-                        </ol>
-                    </li>
-                    <li>
-                        <a>Roger Ramjet</a> borrowed this atlas, and made <a>My Summer Holiday in Dubai</a> (14 pages) <a class="date">- yesterday</a>
-                    </li>
+                    {foreach from=$activity item="event"}
+                        <li>
+                            {if $event.type == "print"}
+                                {assign var="print" value=$event.print}
+
+                                <a href="{$base_dir}/person.php?id={$print.user_id|escape}">{$print.user_id|escape}</a>
+                                made this atlas of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
+                                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
+                                <br>
+                                <span class="details">[page count] + [style name] + {$print.orientation|escape} + [layout] + <a>[mbtiles?]</a></span>
+        
+                                {*
+                                <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
+                                <br>
+                                <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
+                                *}
+
+                            {elseif $event.type == "scan"}
+                                {assign var="scan" value=$event.scan}
+
+                                <a href="{$base_dir}/person.php?id={$scan.user_id|escape}">{$scan.user_id|escape}</a>
+                                uploaded a <a href="{$base_dir}/scan.php?id={$scan.id|escape}">snapshot of page {$scan.print_page_number|escape}</a>
+                                <a href="{$base_dir}/uploads.php?month={"Y-m"|@date:$scan.created}" class="date">- {$scan.age|nice_relativetime|escape}</a>
+                                <br>
+                                <a href="{$base_dir}/scan.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
+
+                                {*
+                                <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> <a class="date">- 3 weeks ago</a>
+                                <br>
+                                <img>
+                                *}
+
+                            {elseif $event.type == "note"}
+                                {assign var="note" value=$event.note}
+                                {assign var="scan" value=$note.scan}
+
+                                <a href="{$base_dir}/person.php?id={$note.user_id|escape}">{$note.user_id|escape}</a>
+                                added <a href="{$base_dir}/scan.php?id={$scan.id|escape}">a note about page {$scan.print_page_number|escape}</a>
+                                <a class="date">- {$note.age|nice_relativetime|escape}</a>
+                                <ol>
+                                    <li>{$note.note|escape}</li>
+                                </ol>
+
+                                {*
+                                <a>George</a> added 3 notes about <a>page B2</a> <a class="date">- 2 weeks ago</a>
+                                <ol>
+                                    <li>This is where I found a</li>
+                                    <li>Fire hydrant looks busted</li>
+                                    <li>Best eggs in the city</li>
+                                </ol>
+
+                                Someone anonymous added a note to <a>page B2</a> <a class="date">- 4 days ago</a>
+                                <ol>
+                                    <li>This is where I found a</li>
+                                    <li>Fire hydrant looks busted</li>
+                                    <li>Best eggs in the city</li>
+                                </ol>
+                                *}
+                            {/if}
+                        </li>
+                    {/foreach}
                 </ul>
             </div>
         {else}
