@@ -198,7 +198,7 @@
         $orientation = isset($post['orientation']) ? $post['orientation'] : 'portrait';
         $layout = isset($post['layout']) ? $post['layout'] : 'full-page';
         $provider = $post['provider'];
-
+        
         //
         // "orientation" above refers to the *map*, so if we want half-size
         // we'll need to flip the orientation of the overall printed sheet
@@ -229,6 +229,13 @@
         $print['orientation'] = $message['orientation'];
         $print['layout'] = $message['layout'];
         
+        // build up bounds for each page in the message
+        
+        $print['north'] = -90;
+        $print['east'] = -180;
+        $print['south'] = 90;
+        $print['west'] = 180;
+        
         foreach($extents as $key => $value)
         {
             list($north, $west, $south, $east) = array_map('floatval', explode(',', $value));
@@ -244,12 +251,27 @@
                                         'text' => $text
                                         );
             
-            $print['north'] = $bounds[0];
-            $print['south'] = $bounds[2];
-            $print['east'] = $bounds[3];
-            $print['west'] = $bounds[1];
+            $print['north'] = max($print['north'], $bounds[0]);
+            $print['south'] = min($print['south'], $bounds[2]);
+            $print['west'] = min($print['west'], $bounds[1]);
+            $print['east'] = max($print['east'], $bounds[3]);
         }
+        
+        // prepare the index page and add it to the message for safekeeping.
+        
+        $mmap = create_mmap_from_bounds($paper_size, $orientation, $print['north'], $print['west'], $print['south'], $print['east'], $layout);
+        
+        $index = array('number' => 'i',
+                       'zoom' => $mmap->coordinate->zoom,
+                       'bounds' => get_mmap_bounds($mmap),
+                       'provider' => $provider,
+                       'text' => ''
+                       );
 
+        array_unshift($message['pages'], $index);
+
+        // create pages based on message contents
+        
         foreach($message['pages'] as $value)
         {
             $page = add_print_page($dbh, $print['id'], $value['number']);
@@ -266,14 +288,10 @@
             $page['provider'] = $value['provider'];
             
             set_print_page($dbh, $page);
-         
-            $print['north'] = max($print['north'], $page['north']);
-            $print['south'] = min($print['south'], $page['south']);
-            $print['west'] = min($print['west'], $page['west']);
-            $print['east'] = max($print['east'], $page['east']);
         }
         
-        // Deal with WOEIDs   
+        // Deal with WOEIDs
+        
         $place = latlon_placeinfo(.5 * ($print['north'] + $print['south']), .5 * ($print['west'] + $print['east']), $post['page_zoom'] - 3);
         $print['country_name'] = $place[0];
         $print['country_woeid'] = $place[1];
