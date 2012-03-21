@@ -200,6 +200,16 @@ function SavedMarker(map,note,note_num,lat,lon)
     var br = document.createElement('br');
     div.appendChild(br);
     
+    /*
+    var background_div = document.createElement('div');
+    background_div.style.position = 'absolute';
+    background_div.style.zIndex = '1';
+    background_div.style.width = '180px';
+    background_div.style.height = '60px';
+    background_div.style.background = '#000';
+    div.appendChild(background_div);
+    */
+    
     var saved_note = document.createElement('span');
     saved_note.id = "saved_note";
     saved_note.innerHTML = note;

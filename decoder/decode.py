@@ -417,10 +417,10 @@ def updateScan(apibase, password, scan_id, uploaded_file, print_id, has_stickers
                                'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom})
     
     req = httplib.HTTPConnection(host, 80)
-    req.request('POST', path + '/scan.php?' + query, params, headers)
+    req.request('POST', path + '/snapshot.php?' + query, params, headers)
     res = req.getresponse()
     
-    assert res.status == 200, 'POST to scan.php resulting in status %s instead of 200' % res.status
+    assert res.status == 200, 'POST to snapshot.php resulting in status %s instead of 200' % res.status
 
     return
 
