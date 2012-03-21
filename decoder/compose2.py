@@ -171,12 +171,12 @@ def get_map_scale(mmap, map_height_pt):
             # stop at an inch and a half or so
             break
 
-    if meters > 10000:
+    if meters > 1000:
         distance = '%d' % (meters / 1000.0)
         units = 'kilometers'
-    elif meters > 1000:
-        distance = '%.1f' % (meters / 1000.0)
-        units = 'kilometers'
+    elif meters == 1000:
+        distance = '%d' % (meters / 1000.0)
+        units = 'kilometer'
     else:
         distance = '%d' % meters
         units = 'meters'
@@ -250,7 +250,7 @@ def add_scale_bar(ctx, mmap, map_height_pt):
     
     ctx.restore()
 
-def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy):
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy, indexees):
     """
     """
     print 'Adding print page:', href
@@ -285,7 +285,6 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
     #
     # Draw a dot if need be
     #
-    
     if fuzzy is not None:
         loc = Location(fuzzy[1], fuzzy[0])
         pt = mmap.locationPoint(loc)
@@ -316,6 +315,30 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
         draw_cross(ctx, x, y, 8, 4)
         ctx.set_source_rgb(0, 0, 0)
         ctx.fill()
+    
+    #
+    # Perhaps some boxes?
+    #
+    page_numbers = []
+    
+    for page in indexees:
+        north, west, south, east = page['bounds']
+        
+        ul = mmap.locationPoint(Location(north, west))
+        lr = mmap.locationPoint(Location(south, east))
+        
+        x1 = map_width_pt * float(ul.x) / mmap.dimensions.x
+        x2 = map_width_pt * float(lr.x) / mmap.dimensions.x
+        y1 = map_height_pt * float(ul.y) / mmap.dimensions.y
+        y2 = map_height_pt * float(lr.y) / mmap.dimensions.y
+        
+        draw_box(ctx, x1, y1, x2-x1, y2-y1)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(1)
+        ctx.set_dash([])
+        ctx.stroke()
+        
+        page_numbers.append((x1, y1, x2, y2, page['number']))
     
     #
     # Calculate positions of registration points
@@ -400,6 +423,21 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
         ctx.show_text(line)
         
         add_scale_bar(ctx, mmap, map_height_pt)
+        
+        ctx.set_font_face(font)
+        ctx.set_font_size(18)
+
+        for (x1, y1, x2, y2, number) in page_numbers:
+            number_w, number_h = ctx.text_extents(number)[2:4]
+            offset_x, offset_y = (x1 + x2 - number_w) / 2, (y1 + y2 + number_h) / 2
+            
+            draw_box(ctx, offset_x - 4, offset_y - number_h - 4, number_w + 8, number_h + 8)
+            ctx.set_source_rgb(1, 1, 1)
+            ctx.fill()
+    
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.move_to(offset_x, offset_y)
+            ctx.show_text(number)
     
     ctx.show_page()
 
@@ -484,6 +522,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             mark = page.get('mark', None) or None
             fuzzy = page.get('fuzzy', None) or None
             text = str(page.get('text', None) or '')
+            role = page.get('role', None) or None
             
             north, west, south, east = page['bounds']
             northwest = Location(north, west)
@@ -493,7 +532,12 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             
             yield 60
             
-            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy)
+            if role == 'index':
+                indexees = [pages[other] for other in range(len(pages)) if other != index]
+            else:
+                indexees = []
+            
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy, indexees)
             
             #
             # Now make a smaller preview map for the page,
