@@ -171,12 +171,12 @@ def get_map_scale(mmap, map_height_pt):
             # stop at an inch and a half or so
             break
 
-    if meters > 10000:
+    if meters > 1000:
         distance = '%d' % (meters / 1000.0)
         units = 'kilometers'
-    elif meters > 1000:
-        distance = '%.1f' % (meters / 1000.0)
-        units = 'kilometers'
+    elif meters == 1000:
+        distance = '%d' % (meters / 1000.0)
+        units = 'kilometer'
     else:
         distance = '%d' % meters
         units = 'meters'
