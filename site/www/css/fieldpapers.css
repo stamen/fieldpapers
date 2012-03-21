@@ -41,17 +41,9 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .homeThird img { border: none; }
 
 h2.pageCount {clear: both; margin-top: 20px; }
-.atlasPage { margin-right: 10px; float: left; margin-bottom: 2em; }
-.atlasPage img { width: 300px; border: 1px solid black; }
-.atlasPageCover { margin-left: 10px; float: left; margin-bottom: 2em; }
-.atlasPageIndex { margin-left: 10px; float: left; margin-bottom: 2em; }
-.atlasPageNumber { padding: 5px; font-weight: bold; color: #fff; background-color: #000;}
 
 .atlasThumb { margin-left: 10px; float: left; width: 300px; margin-bottom: 2em; }
 .atlasThumb img { border: 1px solid black; }
-.atlasName {}
-.atlasPlace {}
-.atlasMeta {}
 
 .hotSpot { width: 48%; margin-left: 10px; margin-bottom: 2em; float: left;}
     /*#map { width: 100%; height: 300px; }*/
@@ -60,7 +52,7 @@ h2.pageCount {clear: both; margin-top: 20px; }
     .print { width: 100%; height: 600px; border: 1px solid black; }
     
 	
-/* SNAPSHOT.PHP */
+/* SCAN.PHP */
 	
 .buttonBar {float: right; text-align: right; padding: 10px; }
 .buttonBar button { margin-left: 20px; font-size: 1.25em;}

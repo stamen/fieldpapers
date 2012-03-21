@@ -254,7 +254,7 @@
             $mmap = create_mmap_from_bounds($paper_size, $orientation, $north, $west, $south, $east, $layout);
             $bounds = get_mmap_bounds($mmap);
             
-            $text = empty($post['atlas_title']) ? null : $post['atlas_title'];
+            $text = trim(sprintf("%s\n\n%s", $post['atlas_title'], $post['atlas_text']));
             
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
                                         'number' => $key,
@@ -270,18 +270,20 @@
         }
         
         // prepare the index page and add it to the message for safekeeping.
-        
-        $mmap = create_mmap_from_bounds($paper_size, $orientation, $print['north'], $print['west'], $print['south'], $print['east'], $layout);
-        
-        $index = array('number' => 'i',
-                       'zoom' => $mmap->coordinate->zoom,
-                       'bounds' => get_mmap_bounds($mmap, 0.1),
-                       'provider' => $provider,
-                       'role' => 'index',
-                       'text' => ''
-                       );
-
-        array_unshift($message['pages'], $index);
+        if(count($extents) > 1)
+        {
+            $mmap = create_mmap_from_bounds($paper_size, $orientation, $print['north'], $print['west'], $print['south'], $print['east'], $layout);
+            
+            $index = array('number' => 'i',
+                           'zoom' => $mmap->coordinate->zoom,
+                           'bounds' => get_mmap_bounds($mmap, 0.1),
+                           'provider' => $provider,
+                           'role' => 'index',
+                           'text' => ''
+                           );
+    
+            array_unshift($message['pages'], $index);
+        }
 
         // create pages based on message contents
         

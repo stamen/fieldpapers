@@ -28,18 +28,66 @@
         $context->sm->assign('user', $user);
     }
     
+    $users = array();
+    $user_id = $print['user_id'];
+    
+    if(is_null($users[$user_id]))
+        $users[$user_id] = get_user($context->db, $user_id);
+    
+    $print['user_name'] = $users[$user_id]['name'];
+    
     if($scans = get_scans($context->db, array('print' => $print['id'])))
     {
         $note_args = array('scans' => array());
         
         foreach($scans as $scan)
+        {
             $note_args['scans'][] = $scan['id'];
+            $user_id = $scan['user_id'];
+            
+            if(is_null($users[$user_id]))
+                $users[$user_id] = get_user($context->db, $user_id);
+            
+            $scan['user_name'] = $users[$user_id]['name'];
+        }
         
         $notes = get_scan_notes($context->db, $note_args);
+        
+        foreach($notes as $i => $note)
+        {
+            $notes[$i]['scan'] = $scan;
+            $user_id = $note['user_id'];
+            
+            if(is_null($users[$user_id]))
+                $users[$user_id] = get_user($context->db, $user_id);
+            
+            $note['user_name'] = $users[$user_id]['name'];
+        }
 
         $context->sm->assign('scans', $scans);
         $context->sm->assign('notes', $notes);
+
+    } else {
+        $notes = array();
     }
+    
+    $activity = array(array('type' => 'print', 'print' => $print));
+    $times = array($print['created']);
+
+    foreach($scans as $scan)
+    {
+        $activity[] = array('type' => 'scan', 'scan' => $scan);
+        $times[] = $scan['created'];
+    }
+        
+    foreach($notes as $note)
+    {
+        $activity[] = array('type' => 'note', 'note' => $note);
+        $times[] = $note['created'];
+    }
+    
+    array_multisort($times, SORT_ASC, $activity);
+    $context->sm->assign('activity', $activity);
         
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
