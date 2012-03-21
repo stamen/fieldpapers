@@ -18,6 +18,111 @@
             position: absolute;
             z-index: 3;
         }
+        
+        #atlas-overview-map-holder
+        {
+            height: 138px;
+            border: 1px solid black;
+            position: relative;
+            
+            background-color: orange;
+        }
+            
+            #atlas-overview-map-holder h2
+            {
+                font-size: 24px;
+                position: absolute;
+                padding: 2px 8px;
+                margin: 0;
+                bottom: 0;
+                
+                color: white;
+                background-color: black;
+            }
+        
+        #atlas-index-map-holder
+        {
+            height: 738px;
+            border: 1px solid black;
+            position: relative;
+            margin-top: -1px;
+            
+            background-color: yellow;
+        }
+            
+            #atlas-index-map-holder .info
+            {
+                position: absolute;
+                top: 0;
+            }
+            
+            #atlas-index-map-holder .links
+            {
+                position: absolute;
+                text-align: right;
+                bottom: 0;
+                right: 0;
+            }
+            
+            #atlas-index-map-holder .info>*,
+            #atlas-index-map-holder .links>*
+            {
+                color: white;
+                background-color: black;
+                padding: 4px 8px;
+                font-size: 18px;
+                line-height: 26px;
+            }
+            
+        #atlas-export-column
+        {
+            float: right;
+            width: 25%;
+        }
+        
+        #atlas-export-column a,
+        #atlas-activity-stream a
+        {
+            color: #23a5fb;
+        }
+
+        #atlas-export-column,
+        #atlas-activity-stream
+        {
+            margin-top: 14px;
+        }
+        
+        #atlas-export-column li,
+        #atlas-activity-stream a.date,
+        #atlas-activity-stream ul li .details
+        {
+            color: #999;
+        }
+        
+        #atlas-export-column,
+        #atlas-activity-stream
+        {
+            font-size: 18px;
+            line-height: 30px;
+        }
+        
+        #atlas-activity-stream h3
+        {
+            font-size: 24px;
+        }
+        
+        #atlas-export-column h4,
+        #atlas-activity-stream h3
+        {
+            margin-bottom: .5em;
+        }
+        
+        #atlas-export-column>ul,
+        #atlas-activity-stream>ul
+        {
+            margin-top: .5em;
+        }
+        
         {/literal}
     </style>
 </head>
@@ -209,20 +314,26 @@
                     {/literal}
             </script>
             
-            <div id="atlas-overview-map">Atlas Overview Map</div>
-            
-            <h2>Location Name</h2>
+            <div id="atlas-overview-map-holder">
+                <div id="atlas-overview-map"></div>
+                <h2>Location Name</h2>
+            </div>
             
             <div id="atlas-index-map-holder">
                 <div id="atlas-index-map"></div>
 
-                <h3>Atlas Title</h3>
-                <p id="page-count">Page Count</p>
-                <p id="borrow-link">Borrow this Atlas</p>
-                <p id="download-link">Download PDF</p>
+                <div class="info">
+                    <strong>Atlas Title</strong><br>
+                    <span>Page Count</span>
+                </div>
+                
+                <div class="links">
+                    <a><strong>Borrow this Atlas</strong></a><br>
+                    <a><strong>Download PDF</strong> 17MB</a>
+                </div>
             </div>
             
-            <div id="export-column">
+            <div id="atlas-export-column">
                 <h4>Export Geodata</h4>
                 <ul>
                     <li><a>GeoJSON</a> 24KB</li>
@@ -230,40 +341,41 @@
                 </ul>
             </div>
             
-            <h3>Activity</h3>
-            
-            <ul id="atlas-activity-stream">
-                <li>
-                    <a>George</a> made this atlas of <a>Dubai</a> -<a>3 weeks ago</a>
-                    <br>
-                    18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a>
-                </li>
-                <li>
-                    <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> -<a>3 weeks ago</a>
-                    <br>
-                    <img>
-                </li>
-                <li>
-                    <a>George</a> added 3 notes about <a>page B2</a> -<a>2 weeks ago</a>
-                    <ol>
-                        <li>This is where I found a</li>
-                        <li>Fire hydrant looks busted</li>
-                        <li>Best eggs in the city</li>
-                    </ol>
-                </li>
-                <li>
-                    Someone anonymous added a note to <a>page B2</a> -<a>4 days ago</a>
-                    <ol>
-                        <li>This is where I found a</li>
-                        <li>Fire hydrant looks busted</li>
-                        <li>Best eggs in the city</li>
-                    </ol>
-                </li>
-                <li>
-                    <a>Roger Ramjet</a> borrowed this atlas, and made <a>My Summer Holiday in Dubai</a> (14 pages) <a>yesterday</a>
-                </li>
-            </ul>
-
+            <div id="atlas-activity-stream">
+                <h3>Activity</h3>
+                
+                <ul>
+                    <li>
+                        <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
+                        <br>
+                        <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
+                    </li>
+                    <li>
+                        <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> <a class="date">- 3 weeks ago</a>
+                        <br>
+                        <img>
+                    </li>
+                    <li>
+                        <a>George</a> added 3 notes about <a>page B2</a> <a class="date">- 2 weeks ago</a>
+                        <ol>
+                            <li>This is where I found a</li>
+                            <li>Fire hydrant looks busted</li>
+                            <li>Best eggs in the city</li>
+                        </ol>
+                    </li>
+                    <li>
+                        Someone anonymous added a note to <a>page B2</a> <a class="date">- 4 days ago</a>
+                        <ol>
+                            <li>This is where I found a</li>
+                            <li>Fire hydrant looks busted</li>
+                            <li>Best eggs in the city</li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a>Roger Ramjet</a> borrowed this atlas, and made <a>My Summer Holiday in Dubai</a> (14 pages) <a class="date">- yesterday</a>
+                    </li>
+                </ul>
+            </div>
             
             <hr>
             
@@ -312,8 +424,8 @@
             <h2>Notes</h2>
         
             <ul>
-                {foreach from=$notes item="note"}
-                    <li>
+                 {foreach from=$notes item="note"}
+                     <li>
                         <i>{$note.note|escape}</i> on <a href="scan.php?id={$note.scan_id|escape}">scan {$note.scan_id|escape}</a>
                     </li>
                 {/foreach}
