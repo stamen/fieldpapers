@@ -697,7 +697,9 @@
                         var note_height = polygon_note.offsetHeight;
                         var note_width = polygon_note.offsetWidth;
                         
-                        polygon_note.style.left = current_polygon_bbox.x - .125 * note_width + 'px';
+                        console.log(current_polygon_bbox);
+                        
+                        polygon_note.style.left = current_polygon_bbox.x + .5 * current_polygon_bbox.width - .5 * note_width + 'px';
                         polygon_note.style.top = current_polygon_bbox.y - note_height - offsetY + 'px';
                     }
                     
