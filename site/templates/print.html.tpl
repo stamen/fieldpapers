@@ -209,6 +209,64 @@
                     {/literal}
             </script>
             
+            <div id="atlas-overview-map">Atlas Overview Map</div>
+            
+            <h2>Location Name</h2>
+            
+            <div id="atlas-index-map-holder">
+                <div id="atlas-index-map"></div>
+
+                <h3>Atlas Title</h3>
+                <p id="page-count">Page Count</p>
+                <p id="borrow-link">Borrow this Atlas</p>
+                <p id="download-link">Download PDF</p>
+            </div>
+            
+            <div id="export-column">
+                <h4>Export Geodata</h4>
+                <ul>
+                    <li><a>GeoJSON</a> 24KB</li>
+                    <li><a>GeoTIFF</a> 24KB</li>
+                </ul>
+            </div>
+            
+            <h3>Activity</h3>
+            
+            <ul id="atlas-activity-stream">
+                <li>
+                    <a>George</a> made this atlas of <a>Dubai</a> -<a>3 weeks ago</a>
+                    <br>
+                    18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a>
+                </li>
+                <li>
+                    <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> -<a>3 weeks ago</a>
+                    <br>
+                    <img>
+                </li>
+                <li>
+                    <a>George</a> added 3 notes about <a>page B2</a> -<a>2 weeks ago</a>
+                    <ol>
+                        <li>This is where I found a</li>
+                        <li>Fire hydrant looks busted</li>
+                        <li>Best eggs in the city</li>
+                    </ol>
+                </li>
+                <li>
+                    Someone anonymous added a note to <a>page B2</a> -<a>4 days ago</a>
+                    <ol>
+                        <li>This is where I found a</li>
+                        <li>Fire hydrant looks busted</li>
+                        <li>Best eggs in the city</li>
+                    </ol>
+                </li>
+                <li>
+                    <a>Roger Ramjet</a> borrowed this atlas, and made <a>My Summer Holiday in Dubai</a> (14 pages) <a>yesterday</a>
+                </li>
+            </ul>
+
+            
+            <hr>
+            
             <div class="overview_print" id="overview_map"></div>
             <h1>
                 Untitled
