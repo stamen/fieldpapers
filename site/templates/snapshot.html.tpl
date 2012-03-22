@@ -51,45 +51,24 @@
             margin: 0px 15px 0px 0px;
         }
         
-        .radio_portrait {
-            background: url("{/literal}{$base_dir}{literal}/img/button-portrait-off.png") no-repeat;
+        .radio_shape {
+            background: url("{/literal}{$base_dir}{literal}/img/icon-shape.png") no-repeat;
             display: inline-block;
-            padding: 2px 2px 2px 2px;
+            padding: 2px 2px 6px 2px;
             margin-left: 5px;
             position: relative;
             top: 3px;
-            width: 19px;
-            height: 25px;
+            width: 31px;
+            height: 23px;
             cursor: pointer;
         }
         
-        .radio_portrait_selected {
-            background: url("{/literal}{$base_dir}{literal}/img/button-portrait-selected.png") no-repeat;
-            display: inline-block;
-            padding: 2px 2px 2px 2px;
-            margin-left: 5px;
-            position: relative;
-            top: 3px;
-            width: 19px;
-            height: 25px;
-            cursor: pointer;
-        }
-        
-        .radio_landscape {
-            background: url("{/literal}{$base_dir}{literal}/img/button-landscape-off.png") no-repeat;
+        .radio_pin {
+            background: url("{/literal}{$base_dir}{literal}/img/icon-pin-black.png") no-repeat;
             display: inline-block;
             padding: 2px 0px 2px 2px;
-            width: 25px;
-            height: 19px;
-            cursor: pointer;
-        }
-        
-        .radio_landscape_selected {
-            background: url("{/literal}{$base_dir}{literal}/img/button-landscape-selected.png") no-repeat;
-            display: inline-block;
-            padding: 2px 0px 2px 2px;
-            width: 25px;
-            height: 19px;
+            width: 15px;
+            height: 26px;
             cursor: pointer;
         }
         
@@ -227,8 +206,8 @@
                             <span id="toolbar_title">
                                 <b>Add</b>
                             </span>
-                            <div class="radio_landscape_selected" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
-                            <div class="radio_portrait" id="polygon_button" title="Add Polygon" onclick="addPolygon();"></div>
+                            <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
+                            <div class="radio_shape" id="polygon_button" title="Add Polygon" onclick="addPolygon();"></div>
                             <input id="next_button" type="button" value="Finished" onclick="finishedRedirect()">
                         </div>
                     </div>
@@ -358,6 +337,8 @@
                     
                     function changeNoteButtonStyle(type)
                     {  
+                        console.log('Changing button style.');
+                        /*
                         if (type === 'polygon')
                         {
                             document.getElementById('polygon_button').setAttribute("class", "radio_portrait_selected");
@@ -366,6 +347,7 @@
                             document.getElementById('polygon_button').setAttribute("class", "radio_portrait");
                             document.getElementById('marker_button').setAttribute("class", "radio_landscape_selected");
                         }
+                        */
                     }
                     
                     function displaySavedNotes() 
