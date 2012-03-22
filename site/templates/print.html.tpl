@@ -75,6 +75,7 @@
             #atlas-index-map-holder .borrow,
             #atlas-index-map-holder .download
             {
+                z-index: 4;
                 position: absolute;
                 width: auto;
                 height: 18px;
