@@ -920,6 +920,8 @@
                         // Handling Note Data
                         ////
                         
+                        // A new note
+                        
                         var note_data = {
                             'note': '',
                             'marker_number': markerNumber,
@@ -1549,7 +1551,7 @@
                         
                         saved_polygons[active_polygon].note_data.note = document.getElementById('polygon_textarea').value;
                         
-                        console.log('note_data', saved_polygons[active_polygon].note_data);
+                        var saved_polygon_index = active_polygon;
                         
                         reqwest({
                             url: post_url,
@@ -1557,7 +1559,8 @@
                             data: saved_polygons[active_polygon].note_data,
                             type: 'json',
                             success: function (resp) {
-                              console.log('response', resp);
+                              console.log('response', resp.note_data.marker_number);
+                              setMarkerNumber(resp.note_data.marker_number, saved_polygon_index);
                             }
                         });
                         
@@ -1565,6 +1568,13 @@
                         
                         return false; 
                     }
+                    
+                    
+                    function setMarkerNumber(marker_number, index)
+                    {
+                        saved_polygons[index].note_data.marker_number = marker_number;
+                    }
+                    
                     
                     function finishedRedirect()
                     {   
