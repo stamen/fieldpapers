@@ -70,6 +70,8 @@ ALTER TABLE prints ADD COLUMN progress FLOAT NULL AFTER composed;
 ALTER TABLE prints DROP COLUMN layout;
 ALTER TABLE prints ADD COLUMN layout ENUM('half-page', 'full-page') DEFAULT 'full-page' AFTER orientation;
 
+ALTER TABLE prints ADD COLUMN title TEXT AFTER id;
+
 
 
 DROP TABLE IF EXISTS pages;
