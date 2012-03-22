@@ -247,17 +247,17 @@
     function get_print_pages(&$dbh, $print_id)
     {
         $q = sprintf("SELECT print_id, page_number, text,
-                     provider, preview_url,
-                     north, south, east, west, zoom,
-                     (north + south) / 2 AS latitude,
-                     (east + west) / 2 AS longitude,
-                     UNIX_TIMESTAMP(created) AS created,
-                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
-                     country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                     user_id
-              FROM pages
-              WHERE print_id = %s",
-             $dbh->quoteSmart($print_id));
+                             provider, preview_url,
+                             north, south, east, west, zoom,
+                             (north + south) / 2 AS latitude,
+                             (east + west) / 2 AS longitude,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                             user_id
+                      FROM pages
+                      WHERE print_id = %s",
+                     $dbh->quoteSmart($print_id));
     
         $res = $dbh->query($q);
         
