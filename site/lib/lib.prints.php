@@ -67,7 +67,7 @@
         
         $q = sprintf("SELECT paper_size, orientation, provider,
                              pdf_url, preview_url, geotiff_url,
-                             id, north, south, east, west, zoom,
+                             id, title, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
@@ -120,7 +120,7 @@
         $q = sprintf("SELECT layout, atlas_pages,
                              paper_size, orientation, provider,
                              pdf_url, preview_url, geotiff_url,
-                             id, form_id, north, south, east, west, zoom,
+                             id, title, form_id, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
                              UNIX_TIMESTAMP(created) AS created,
@@ -168,7 +168,15 @@
 
         $update_clauses = array();
 
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'paper_size', 'orientation', 'layout', 'provider', 'pdf_url', 'preview_url', 'geotiff_url', 'atlas_pages', 'form_id', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid', 'progress') as $field)
+        $field_names = array(
+            'title', 'north', 'south', 'east', 'west', 'zoom', 'paper_size',
+            'orientation', 'layout', 'provider', 'pdf_url', 'preview_url',
+            'geotiff_url', 'atlas_pages', 'form_id', 'user_id',
+            'country_name', 'country_woeid', 'region_name', 'region_woeid',
+            'place_name', 'place_woeid', 'progress'
+            );
+
+        foreach($field_names as $field)
             if(!is_null($print[$field]))
                 if($print[$field] != $old_print[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($print[$field]));
