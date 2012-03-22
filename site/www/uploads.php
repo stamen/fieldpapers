@@ -16,13 +16,16 @@
         );
     
     $scans = get_scans($context->db, $scan_args, 50);
+    $users = array();
     
     foreach($scans as $i => $scan)
     {   
-        $user = get_user($context->db, $scans[$i]['user_id']);
+        $user_id = $print['user_id'];
         
-        $scans[$i]['user_name'] = $user['name'] ? $user['name'] : 'Anonymous';
-        $scans[$i]['city_name'] = $scan['place_name'] ? $scan['place_name'] : 'Unknown City';
+        if(is_null($users[$user_id]))
+            $users[$user_id] = get_user($context->db, $user_id);
+        
+        $scans[$i]['user'] = $users[$user_id];
     }
     
     $context->sm->assign('scans', $scans);
