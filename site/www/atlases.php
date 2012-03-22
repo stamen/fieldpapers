@@ -15,6 +15,7 @@
         'user' => preg_match('/^\w+$/', $_GET['user']) ? $_GET['user'] : null
         );
     
+    $title = get_args_title($context->db, $print_args);
     $prints = get_prints($context->db, $print_args, 50);
     $users = array();
 
@@ -31,6 +32,7 @@
         $prints[$i]['user'] = $users[$user_id];
     }
     
+    $context->sm->assign('title', $title);
     $context->sm->assign('prints', $prints);
     
     if($context->type == 'text/html') {

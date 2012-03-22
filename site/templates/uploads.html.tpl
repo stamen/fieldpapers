@@ -8,6 +8,7 @@
 <body>
     {include file="navigation.htmlf.tpl"}
     <div class="container">
+        <h1>Snapshots {$title|escape}</h1>
         <h2><a href="{$base_dir}/atlases.php">Atlases</a> | Uploads</h2>
         
         {foreach from=$scans item="scan" name="index"}

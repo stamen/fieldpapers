@@ -235,6 +235,38 @@
         return array(max(0, $count), max(0, $offset), max(0, $perpage), max(1, $page));
     }
     
+    function get_args_title(&$dbh, $args)
+    {
+        $parts = array();
+    
+        if(isset($args['date']) && $time = strtotime($args['date']))
+        {
+            $date = date('M jS, Y', $time);
+            $parts[] = "on $date";
+        }
+        
+        if(isset($args['month']) && $time = strtotime("{$args['month']}-01"))
+        {
+            $month = date('F Y', $time);
+            $parts[] = "during $month";
+        }
+        
+        if(isset($args['place']))
+        {
+            $place_info = woeid_placeinfo($args['place']);
+            $place_name = nice_placename($place_info[4]);
+            $parts[] = "in $place_name";
+        }
+        
+        if(isset($args['user']) && $user = get_user($dbh, $args['user']))
+        {
+            $user_name = empty($user['name']) ? 'someone' : $user['name'];
+            $parts[] = "by $user_name";
+        }
+        
+        return join(' ', $parts);
+    }
+    
     if(!function_exists('json_encode'))
     {
         function json_encode($value)
@@ -649,6 +681,40 @@
         }
         
         return null;
+    }
+    
+    function woeid_placeinfo($woeid)
+    {
+        $req = new HTTP_Request('http://api.flickr.com/services/rest/');
+        $req->addQueryString('method', 'flickr.places.getInfo');
+        $req->addQueryString('woe_id', $woeid);
+        $req->addQueryString('format', 'php_serial');
+        $req->addQueryString('api_key', FLICKR_KEY);
+
+        $res = $req->sendRequest();
+        
+        if(PEAR::isError($res))
+            return array(null, null, null, null, null, null);
+
+        $rsp = unserialize($req->getResponseBody());
+        
+        if(is_array($rsp) && is_array($rsp['place']))
+        {
+            $place_type = $rsp['place']['place_type'];
+            $place = $rsp['place'][$place_type];
+            
+            list($place_name, $place_woeid) = array($place['_content'], $place['woeid']);
+            
+            list($country, $region) = array($rsp['place']['country'], $rsp['place']['region']);
+            
+            if(is_array($country))
+                list($country_name, $country_woeid) = array($country['_content'], $country['woeid']);
+            
+            if(is_array($region))
+                list($region_name, $region_woeid) = array($region['_content'], $region['woeid']);
+        }
+        
+        return array($country_name, $country_woeid, $region_name, $region_woeid, $place_name, $place_woeid);
     }
     
     function latlon_placeinfo($lat, $lon, $zoom)
