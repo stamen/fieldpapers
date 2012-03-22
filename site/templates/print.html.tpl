@@ -439,7 +439,7 @@
             <div id="atlas-index-map-holder">
                 <div id="atlas-index-map"><div id="atlas-index-map-canvas"></div></div>
                 
-                <h3 class="title">{$print.title|escape}</h3>
+                <h3 class="title">{if $print.title}{$print.title|escape}{else}Untitled{/if}</h3>
                 <p class="count">
                     {if $pages|@count == 1}
                         One page
