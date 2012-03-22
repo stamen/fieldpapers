@@ -203,13 +203,12 @@
     */
     function compose_from_postvars(&$dbh, $post, $user_id)
     {
-        header('Content-Type: text/plain');
-        
         $extents = $post['pages'];
         $paper_size = isset($post['paper_size']) ? $post['paper_size'] : 'letter';
         $orientation = isset($post['orientation']) ? $post['orientation'] : 'portrait';
         $layout = isset($post['layout']) ? $post['layout'] : 'full-page';
         $provider = $post['provider'];
+        $title = $post['atlas_title'];
         
         //
         // "orientation" above refers to the *map*, so if we want half-size
@@ -237,6 +236,7 @@
         
         $print = add_print(&$dbh, $user_id);
         
+        $print['title'] = $title;
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
         $print['layout'] = $message['layout'];

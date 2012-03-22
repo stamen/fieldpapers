@@ -15,7 +15,7 @@
                 <a href="{$base_dir}/print.php?id={$print.id}">
                 <img src="{$print.preview_url}" alt="printed page" 
                 name="atlasPage" width="100%" id="atlasPage"></a>
-                <span class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">Untitled</a></span>
+                <span class="atlasName"><a href="{$base_dir}/print.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a></span>
                 <span class="atlasOwner">by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user_name}</a></span>,
 
                 {if $print.place_name}
