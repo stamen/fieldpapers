@@ -186,9 +186,11 @@
     <div class="container">
         {if $print.composed}
             <script>
+            var atlas_pages = {$pages_json};
             {literal}
                 var canvas,
                     print_extent,
+                    atlas_page_objects = [],
                     page_extent;
                     
                 function redrawExtent(map, MM, north, south, east, west)
@@ -200,14 +202,39 @@
                     
                     var new_width = new_ne_point.x - new_nw_point.x;
                     var new_height = new_se_point.y - new_ne_point.y;
-                           
-                    print_extent.remove();
-                            
-                    print_extent = canvas.rect(new_nw_point.x, new_nw_point.y, new_width, new_height);
+                    
                     print_extent.attr({
-                        stroke: "#050505",
-                        "stroke-width": 4
+                        x: new_nw_point.x,
+                        y: new_nw_point.y,
+                        width: new_width,
+                        height: new_height
                     });
+                }
+                
+                function redrawPageExtents(map, MM, page_data, pages)
+                {
+                    for (var i=0; i < page_data.length; i++) 
+                    {
+                        var north = page_data[i].north;
+                        var west = page_data[i].west;
+                        var south = page_data[i].south;
+                        var east = page_data[i].east;
+                            
+                        var new_nw_point = map.locationPoint(new MM.Location(north, west));
+                        var new_ne_point = map.locationPoint(new MM.Location(north, east));
+                        var new_se_point = map.locationPoint(new MM.Location(south, east));
+                        var new_sw_point = map.locationPoint(new MM.Location(south, west));
+                        
+                        var new_width = new_ne_point.x - new_nw_point.x;
+                        var new_height = new_se_point.y - new_ne_point.y;
+                    
+                        pages[i].attr({
+                            x: new_nw_point.x,
+                            y: new_nw_point.y,
+                            width: new_width,
+                            height: new_height
+                        });
+                    }         
                 }
                 
                 function redrawPageExtent(map, MM, north, south, east, west)
@@ -306,23 +333,55 @@
                             stroke: "#050505",
                             "stroke-width": 4
                         });
+                                                
+                        ////
+                        // Draw the page grid for the main atlas page
+                        ////
+                        
+                        for (var i = 0; i < atlas_pages.length; i++)
+                        {
+                            var north_page = atlas_pages[i].north;
+                            var west_page = atlas_pages[i].west;
+                            var south_page = atlas_pages[i].south;
+                            var east_page = atlas_pages[i].east;
+                            
+                            var nw_page_point = map.locationPoint(new MM.Location(north_page, west_page));
+                            var ne_page_point = map.locationPoint(new MM.Location(north_page, east_page));
+                            var se_page_point = map.locationPoint(new MM.Location(south_page, east_page));
+                            var sw_page_point = map.locationPoint(new MM.Location(south_page, west_page));
+                            
+                            var page_width = ne_page_point.x - nw_page_point.x;
+                            var page_height = se_page_point.y - ne_page_point.y;
+                            
+                            atlas_page_extent = canvas.rect(nw_page_point.x, nw_page_point.y, page_width, page_height);
+                            atlas_page_extent.attr({
+                                stroke: "#050505",
+                                "stroke-width": 2
+                            });
+                            
+                            atlas_page_objects.push(atlas_page_extent);
+                        }
                         
                         map.addCallback('panned', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
+                            redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
                         });
                         
                         map.addCallback('zoomed', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
+                            redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
                         });
                         
                         map.addCallback('centered', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
+                            redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
                         });
                         
                         map.addCallback('extentset', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
+                            redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
                         });
-                        
+                                                
                         ////
                         // Draw individual pages
                         ////
