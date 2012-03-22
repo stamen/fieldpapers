@@ -12,18 +12,20 @@
         
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
-                <a href="{$base_dir}/print.php?id={$print.id}">
-                <img src="{$print.preview_url}" alt="printed page" 
-                name="atlasPage" width="100%" id="atlasPage"></a>
-                <a href="{$base_dir}/print.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
-                by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user_name}</a>,
+                <a href="{$base_dir}/print.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" width="100%"></a>
+
+                {if $print.user.name}
+                    <a href="{$base_dir}/print.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
+                    by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user.name}</a>,
+
+                {else}
+                    <a href="{$base_dir}/print.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>,
+                {/if}
 
                 {if $print.place_name}
                     <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>, 
                     <a href="{$base_dir}/atlases.php?place={$print.region_woeid}">{$print.region_name|nice_placename}</a>, 
                     <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
-                {else}
-                    Unknown Place
                 {/if}
 
                 {if $print.number_of_pages == 1}
