@@ -218,7 +218,9 @@
                     page_label_objects = [],
                     page_label_background_objects = [],
                     text_locs = [],
-                    page_extent;
+                    page_extent,
+                    text_offset = 6,
+                    text_dimensions = null;
                                                         
                 function redrawExtent(map, MM, north, south, east, west)
                 {
@@ -284,19 +286,21 @@
                 }
                 
                 function changeTextPosition(map, MM, atlas_pages, page_label_background_objects, page_label_objects)
-                {                    
+                {                                                                                                       
                     for (var i=0; i < page_label_objects.length; i++)
                     {
                         var new_loc = map.locationPoint(text_locs[i]);
-                        
-                        page_label_background_objects[i].attr({
-                            x: new_loc.x - 20,
-                            y: new_loc.y - 10
-                        });
-                        
+                                                
                         page_label_objects[i].attr({
                             x: new_loc.x,
                             y: new_loc.y
+                        });
+                        
+                        text_dimensions = page_label_objects[i].getBBox();
+                        
+                        page_label_background_objects[i].attr({
+                            x: new_loc.x - text_dimensions.width + text_offset,
+                            y: new_loc.y - .5 * text_dimensions.height
                         });
                     }
                 }
@@ -436,17 +440,7 @@
                                                     y: nw_page_point.y + .5 * page_height};
                             
                             text_locs.push(map.pointLocation(text_coordinates));
-                            
-                            // TODO: Account for text width
-                            var page_label_background = canvas.rect(text_coordinates.x - 20,
-                                                                    text_coordinates.y - 10,
-                                                                    40,
-                                                                    20);
-                            
-                            page_label_background.attr({fill: "#FFF",
-                                                        "stroke-width": 0
-                                                      });
-                                                    
+                                                                                
                             var page_label = canvas.text(text_coordinates.x, 
                                                          text_coordinates.y, 
                                                          atlas_pages[i].page_number);
@@ -455,6 +449,19 @@
                                              "font-family": 'Arial',
                                              "font-weight": 'bold',
                                              "cursor": "pointer"});
+                            
+                            var text_dimensions = page_label.getBBox();
+                            
+                            var page_label_background = canvas.rect(text_coordinates.x - text_dimensions.width + text_offset,
+                                                                    text_coordinates.y - .5 * text_dimensions.height,
+                                                                    text_dimensions.width*2 - 2 * text_offset,
+                                                                    text_dimensions.height);
+                            
+                            page_label_background.toBack();
+                            
+                            page_label_background.attr({fill: "#FFF",
+                                                        "stroke-width": 0
+                                                      });
                             
                             //var page_label_set = canvas.set();
                             //page_label_set.push(atlas_page_objects, page_label_objects);
