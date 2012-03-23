@@ -10,6 +10,9 @@
     
     $atlas_data = array();
     
+    if($_POST['atlas_location'])
+        $atlas_data['atlas_location'] = $_POST['atlas_location'];
+
     if($_POST['atlas_title'])
         $atlas_data['atlas_title'] = $_POST['atlas_title'];
 

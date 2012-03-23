@@ -20,19 +20,28 @@
 
     if($_POST['query'])
     {
-        $latlon = placename_latlon($_POST['query']);
-        
-        if(!is_array($latlon))
+        if(preg_match('/^(-?\d+(\.\d+)?)\s+(-?\d+(\.\d+)?)(\s+(\d+))?$/', trim($_POST['query']), $m))
         {
-            $redirect_href = sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
+            $latlon = array($m[1], $m[3]);
+            $zoom = $m[6] ? $m[6] : 10;
+        
+        } else {
+            $latlon = placename_latlon($_POST['query']);
             
-            header('HTTP/1.1 303');
-            header("Location: $redirect_href");
-            exit();
+            if(!is_array($latlon))
+            {
+                $redirect_href = sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
+                
+                header('HTTP/1.1 303');
+                header("Location: $redirect_href");
+                exit();
+            }
+            
+            $zoom = 10;
         }
         
         $context->sm->assign('center', join(',', $latlon));
-        $context->sm->assign('zoom', 10);
+        $context->sm->assign('zoom', $zoom);
     }
 
     /*
