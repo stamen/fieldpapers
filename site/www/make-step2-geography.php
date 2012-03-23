@@ -8,8 +8,50 @@
     
     /**** ... ****/
     
-    // Used to use POST variable
-    if ($_GET['mbtiles_id'])
+    $atlas_data = array();
+    
+    if($_POST['atlas_provider'])
+        $atlas_data['atlas_provider'] = $_POST['atlas_provider'];
+
+    if($_POST['atlas_title'])
+        $atlas_data['atlas_title'] = $_POST['atlas_title'];
+
+    if($_POST['atlas_text'])
+        $atlas_data['atlas_text'] = $_POST['atlas_text'];
+
+    $context->sm->assign('atlas_data', $atlas_data);
+
+    if($_POST['query'])
+    {
+        if(preg_match('/^(-?\d+(\.\d+)?)\s+(-?\d+(\.\d+)?)(\s+(\d+))?$/', trim($_POST['query']), $m))
+        {
+            $latlon = array($m[1], $m[3]);
+            $zoom = $m[6] ? $m[6] : 10;
+        
+        } else {
+            $latlon = placename_latlon($_POST['query']);
+            
+            if(!is_array($latlon))
+            {
+                $redirect_href = sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
+                
+                header('HTTP/1.1 303');
+                header("Location: $redirect_href");
+                exit();
+            }
+            
+            $zoom = 10;
+        }
+        
+        $context->sm->assign('center', join(',', $latlon));
+        $context->sm->assign('zoom', $zoom);
+    }
+
+    /*
+    
+    // breaking this for the moment
+    
+    if($_GET['mbtiles_id'])
     {        
         $mbtiles = get_mbtiles_by_id($context->db, $_GET['mbtiles_id']);
                 
@@ -22,13 +64,8 @@
                               'max_zoom' =>      $mbtiles['max_zoom']
                               );
         $context->sm-> assign('mbtiles_data', $mbtiles_data); 
-
-    } else {
-        $center = $_GET['center'];
-        $zoom = 10;
-        $context->sm-> assign('center', $center);
-        $context->sm-> assign('zoom', $zoom);
     }
+    */
         
     header("Content-Type: text/html; charset=UTF-8");
     print $context->sm->fetch("make-step2-geography.html.tpl");

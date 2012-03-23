@@ -44,23 +44,8 @@
             remove_row_button_height = 22,
             controlRadius = 23;
             
-        function setProvider(provider)
+        function setProvider(tileURL)
         {        
-            if (provider === "Satellite + Labels")
-            {
-                var tileURL = 'http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg';
-            } else if (provider === "Satellite Only") {
-                var tileURL = 'http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg';
-            } else if (provider === "Black & White") {
-                var tileURL = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
-            } else if (provider === "Open Street Map") {
-                var tileURL = 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png';
-            } else if (provider === '{/literal}{$mbtiles_data.uploaded_file}{literal}') {
-                var tileURL = '{/literal}{$mbtiles_data.provider}{literal}';
-            }
-            
-            document.getElementById('provider').value = tileURL;
-            
             map_layer.setProvider(new MM.TemplatedMapProvider(tileURL));
         }
         
@@ -419,16 +404,8 @@
             ////
             var MM = com.modestmaps;
             
-            {/literal}
-            {if $mbtiles_data}{literal}
-                var provider = new MM.TemplatedMapProvider('{/literal}{$mbtiles_data.provider}{literal}');
-                document.getElementById('provider').value = '{/literal}{$mbtiles_data.provider}{literal}';
-            {/literal}
-            {else}{literal}
-                var provider = new MM.TemplatedMapProvider('http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png');
-                document.getElementById('provider').value = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
-            {/literal}
-            {/if}{literal}
+            var providerURL = document.forms['compose_print'].elements['provider'].value,
+                provider = new MM.TemplatedMapProvider(providerURL);
             
             map_layer = new MM.Layer(provider);
             
@@ -1179,13 +1156,18 @@
                         <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>
                         
                         <select style="width: 150px; top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
-                            {if $mbtiles_data}
-                                <option>{$mbtiles_data.uploaded_file}</option>
+                            {if $atlas_data.atlas_provider}
+                                <option value="{$atlas_data.atlas_provider|escape}">{$atlas_data.atlas_provider|escape}</option>
                             {/if}
-                            <option>Black & White</option>
-                            <option>Satellite + Labels</option>
-                            <option>Open Street Map</option>
-                            <option>Satellite Only</option>
+                            {if $mbtiles_data}
+                                <option value="{$mbtiles_data.uploaded_file|escape}">{$mbtiles_data.uploaded_file|escape}</option>
+                            {/if}
+                            {literal}
+                                <option value="http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png">Black &amp; White</option>
+                                <option value="http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg">Satellite + Labels</option>
+                                <option value="http://tile.openstreetmap.org/{Z}/{X}/{Y}.png">Open Street Map</option>
+                                <option value="http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg">Satellite Only</option>
+                            {/literal}
                         </select>
                         
                         <span id="page_count_container">
@@ -1214,7 +1196,14 @@
                 <input type="hidden" id="page_zoom" name="page_zoom">
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
-                <input type="hidden" id="provider" name="provider">
+                
+                {if $atlas_data.atlas_title}
+                    <input name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}" type="hidden">
+                {/if}
+                
+                {if $atlas_data.atlas_text}
+                    <input name="atlas_text" value="{$atlas_data.atlas_text|escape:hexentity}" type="hidden">
+                {/if}
             </form>
             <div id="zoom-container">
                 <span id="zoom-in" style="display: none;">
