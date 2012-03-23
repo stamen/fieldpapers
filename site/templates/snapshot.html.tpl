@@ -476,10 +476,10 @@
                         {   
                             var vertex_display_object = canvas.circle(vertices[i].x,
                                                                       vertices[i].y,
-                                                                      5);
+                                                                      8);
                             
                             vertex_display_object.attr({fill: '#FFF',
-                                                        "stroke-width": 2
+                                                        "stroke-width": 3
                                                        });
                                                                                     
                             vertex_display_objects.push(vertex_display_object);
@@ -811,7 +811,9 @@
                             start_x = e.pageX - 10;
                             start_y = e.pageY - document.getElementById('nav').offsetHeight - 13;
                             
-                            drawn_path_vertex = canvas.circle(start_x, start_y, 5);
+                            drawn_path_vertex = canvas.circle(start_x, 
+                                                              start_y, 
+                                                              8);
                             
                             drawn_path_vertex.attr({fill: '#FFF',
                                                     "stroke-width": 3
@@ -831,8 +833,11 @@
                             
                             drawn_path_vertex = canvas.circle(e.pageX - 10, 
                                                               e.pageY - document.getElementById('nav').offsetHeight - 13, 
-                                                              5);
-                            drawn_path_vertex.attr('fill', '#050505');
+                                                              8);
+                            
+                            drawn_path_vertex.attr({fill: '#FFF',
+                                                    "stroke-width": 3
+                            });
                             
                             previous_paths.push(prev_path);
                             drawn_path_vertices.push(drawn_path_vertex);
@@ -1010,10 +1015,10 @@
                         {   
                             var vertex_display_object = canvas.circle(vertices[i].x,
                                                                       vertices[i].y,
-                                                                      5);
+                                                                      8);
                             
                             vertex_display_object.attr({fill: '#FFF',
-                                                        "stroke-width": 2
+                                                        "stroke-width": 3
                                                        });
                                                                                     
                             vertex_display_objects.push(vertex_display_object);
@@ -1159,10 +1164,10 @@
                         {   
                             var vertex_display_object = canvas.circle(vertices[i].x,
                                                                       vertices[i].y,
-                                                                      5);
+                                                                      8);
                             
                             vertex_display_object.attr({fill: '#FFF',
-                                                        "stroke-width": 2
+                                                        "stroke-width": 3
                                                        });
                                                                                     
                             vertex_display_objects.push(vertex_display_object);
