@@ -342,7 +342,6 @@
                     
                     function changeNoteButtonStyle(type)
                     {  
-                        console.log('Changing button style.');
                         /*
                         if (type === 'polygon')
                         {
@@ -367,7 +366,6 @@
                                     lat = {/literal}{$note.latitude}{literal},
                                     lon = {/literal}{$note.longitude}{literal};
                                 
-                                console.log(note,note_num,lat,lon);
                                 addSavedNote(note,note_num,lat,lon);
                             }
                         {/literal}{/foreach}{literal}
@@ -386,8 +384,6 @@
                                 'type': 'POINT',
                             };
                             
-                            console.log(note_geometry);
-                            
                             if (note_geometry.substring(0,7) == 'POLYGON')
                             {  
                                 note_data.type = 'POLYGON';
@@ -405,8 +401,6 @@
                                     }
                                 }
                                 
-                                console.log(polygon_loc_vertices);
-                                
                                 var polygon_vertices = [];
                                 for (var i = 0; i < polygon_loc_vertices.length; i++)
                                 {
@@ -415,8 +409,6 @@
                                     
                                     polygon_vertices[i] = p_point;
                                 }
-                                
-                                console.log(polygon_vertices);
                                 
                                 loadPolygon(note_data, polygon_vertices);
                             }
@@ -647,7 +639,6 @@
                     
                     function changePolygon(index)
                     {
-                        console.log(index);
                         if (active_polygon != -1)
                         {
                             savePolygon(active_polygon);
@@ -704,16 +695,12 @@
                         var note_height = polygon_note.offsetHeight;
                         var note_width = polygon_note.offsetWidth;
                         
-                        console.log(current_polygon_bbox);
-                        
                         polygon_note.style.left = current_polygon_bbox.x + .5 * current_polygon_bbox.width - .5 * note_width + 'px';
                         polygon_note.style.top = current_polygon_bbox.y - note_height - offsetY + 'px';
                     }
                     
                     function redrawPolygon(vertices, control_midpoints, vertex_display_objects, control_midpoint_display_objects, polygon, polygon_location_data, control_point_location_data)
-                    {   
-                        console.log('before', vertices);
-                        console.log('before', polygon_location_data);
+                    {  
                         // Update Vertices
                         for (var i = 0; i < vertices.length; i++)
                         {
@@ -721,7 +708,6 @@
                             vertices[i].x = polygon_point_data.x;
                             vertices[i].y = polygon_point_data.y;
                         }
-                         console.log('after', vertices);
                         
                         for (var i = 0; i < control_midpoints.length; i++)
                         {
@@ -990,10 +976,6 @@
                                                     y: .5*(vertices[i-1].y + vertices[j].y)
                                                   });
                         }
-                        
-                        console.log('control midpoints');
-                        console.log(control_midpoints);
-                    
                     }
                                  
                     function addVertices()
@@ -1348,7 +1330,6 @@
                     
                     function setVertices(e,index,x,y)
                     {
-                        //console.log(index); // Don't remove this
                         vertices[index].x = x;
                         vertices[index].y = y;
                         
@@ -1366,7 +1347,6 @@
                     function handleScrolling(e)
                     {
                         pre_scroll_y = circle.attr('cy');
-                        //console.log(pre_scroll_y);
                         moveControl(e);
                     }
                     
@@ -1395,7 +1375,6 @@
                             */
                             
                         } else {
-                            console.log(map_element.offsetTop);
                             circle.attr({
                                 //cx: e.pageX - map_element.offsetLeft,
                                 //cy: e.pageY - map_element.offsetTop
@@ -1429,7 +1408,7 @@
                         previous_paths = [];
                         
                         circle = canvas.circle(20,20,6);
-                        circle.attr({fill: '#0066FF',
+                        circle.attr({fill: '#000',
                                      "stroke-width": 0
                                     });
                         
@@ -1478,12 +1457,6 @@
                         
                         saved_polygon_location_data[active_polygon] = polygon_location_data;
                         saved_control_location_data[active_polygon] = control_location_data;
-                        
-                        //console.log('save polygon location data');
-                        //console.log(polygon_location_data);
-                        
-                        console.log(active_polygon);
-                        console.log(saved_polygon_location_data[active_polygon]);
                     }
                     
                     map.addCallback('panned', function(m) {
@@ -1560,11 +1533,7 @@
                     }
                     
                     function submitPolygonNote()
-                    {
-                        console.log('submit polygon note');
-                        
-                        console.log('active_polygon', active_polygon);
-                        
+                    {                        
                         if (active_polygon === -1)
                         {
                             return;
@@ -1572,9 +1541,7 @@
                         
                         savePolygon(active_polygon);
                         
-                        var geometry_string = 'POLYGON ((';       
-                        
-                        console.log('saved_polygon_location_data', saved_polygon_location_data);                 
+                        var geometry_string = 'POLYGON ((';         
                         
                         for (var i = 0; i < saved_polygon_location_data[active_polygon].length; i++)
                         {
@@ -1585,8 +1552,6 @@
                                 geometry_string = geometry_string + saved_polygon_location_data[active_polygon][i].lon + ' '  + saved_polygon_location_data[active_polygon][i].lat + ', ';
                             }
                         }
-                        
-                        console.log('geometry_string', geometry_string);
                         
                         saved_polygons[active_polygon].note_data.geometry = geometry_string;
                         
@@ -1623,9 +1588,7 @@
                     
                     
                     function deletePolygonNote()
-                    {
-                        console.log('Delete Polygon.');
-                        
+                    {   
                         if (active_polygon === -1)
                         {
                             return;
@@ -1665,24 +1628,6 @@
                     function finishedRedirect()
                     {   
                         window.location = redirect_url;
-                        /*
-                        var post_url = '{/literal}{$base_dir}{literal}/save-scan-notes.php?scan_id={/literal}{$scan.id}{literal}';
-                      
-                        var base_url = '{/literal}{$base_dir}{literal}';
-                        var print_id = '{/literal}{$scan.print_id}{literal}';
-                        var print_page_number = '{/literal}{$scan.print_page_number}{literal}';
-                        
-                        if (print_page_number)
-                        {
-                            var url = base_url + '/print.php?id=' + print_id + '/' + print_page_number;
-                            window.location = url;
-                        } else if (print_id) {
-                            var url = base_url + '/print.php?id=' + print_id;
-                            window.location = url;
-                        } else {
-                            console.log('There was an error in redirection.');
-                        }
-                        */
                     }
                                         
                     var zoom_in = document.getElementById("zoom-in");
