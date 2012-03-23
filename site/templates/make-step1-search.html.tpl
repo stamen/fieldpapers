@@ -36,6 +36,10 @@
                         {/if}
                         <input type="submit" name="action" value="Start There">
                         
+                        {if $atlas_data.atlas_provider}
+                            <input name="atlas_provider" value="{$atlas_data.atlas_provider|escape:hexentity}" type="hidden">
+                        {/if}
+                        
                         {if $atlas_data.atlas_title}
                             <input name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}" type="hidden">
                         {/if}

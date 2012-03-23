@@ -1156,8 +1156,11 @@
                         <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>
                         
                         <select style="width: 150px; top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
+                            {if $atlas_data.atlas_provider}
+                                <option value="{$atlas_data.atlas_provider|escape}">{$atlas_data.atlas_provider|escape}</option>
+                            {/if}
                             {if $mbtiles_data}
-                                <option value="{$mbtiles_data.uploaded_file|escape}">{$mbtiles_data.uploaded_file}</option>
+                                <option value="{$mbtiles_data.uploaded_file|escape}">{$mbtiles_data.uploaded_file|escape}</option>
                             {/if}
                             {literal}
                                 <option value="http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png">Black &amp; White</option>
