@@ -227,11 +227,10 @@
                     east = {$print.east|json_encode};
                     zoom = {$pages[0].zoom|json_encode};
                 
-                var zoom_in_active = base_url + '/img/button-zoom-in-on.png';
-                var zoom_in_inactive = base_url + '/img/button-zoom-in-off.png';
-                
-                var zoom_out_active = base_url + '/img/button-zoom-out-on.png';
-                var zoom_out_inactive = base_url + '/img/button-zoom-out-off.png';
+                var zoom_in_active = base_url + '/img/button-zoom-in-on.png',
+                    zoom_in_inactive = base_url + '/img/button-zoom-in-off.png',
+                    zoom_out_active = base_url + '/img/button-zoom-out-on.png',
+                    zoom_out_inactive = base_url + '/img/button-zoom-out-off.png';
             </script>
             
             <div id="atlas-overview-map-holder">
