@@ -28,13 +28,25 @@
             <div class="smallContainer" style="text-align: center;">
                 <h2>Where in the world is your atlas?</h2>
                 <p>                                            
-                    <form id="search-form" action="{$base_dir}/make-step1-search.php" method="post">
+                    <form id="search-form" action="{$base_dir}/make-step2-geography.php" method="post">
                         <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
-                               placeholder="Type in a location">
+                               placeholder="Type in a location" value="{$atlas_data.atlas_location|escape:hexentity}">
                         {if $error}
                             <p style="color: #C33;">We could not find that place. Please try again.</p>
                         {/if}
                         <input type="submit" name="action" value="Start There">
+                        
+                        {if $atlas_data.atlas_provider}
+                            <input name="atlas_provider" value="{$atlas_data.atlas_provider|escape:hexentity}" type="hidden">
+                        {/if}
+                        
+                        {if $atlas_data.atlas_title}
+                            <input name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}" type="hidden">
+                        {/if}
+                        
+                        {if $atlas_data.atlas_text}
+                            <input name="atlas_text" value="{$atlas_data.atlas_text|escape:hexentity}" type="hidden">
+                        {/if}
                     </form>
                 </p>
                 {if $user_mbtiles}
