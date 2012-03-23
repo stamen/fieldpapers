@@ -53,7 +53,7 @@
                     <label for="atlas_title" style="font-size: 22px;">Give Your Atlas a Name</label>
                     <br>
                     <input style="margin-top: 10px; color: grey;" type="text" id='title_input' name="atlas_title" size="60"
-                           placeholder="Untitled">
+                           {if $atlas_data.atlas_title} value="{$atlas_data.atlas_title|escape:hexentity}" {else} placeholder="Untitled" {/if} >
                 </p>
                 <p>
                     <label for="atlas_text" style="font-size: 16px"><b>Page Text</b> (<i>This is Optional.</i>)</label>

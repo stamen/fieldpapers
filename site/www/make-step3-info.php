@@ -15,6 +15,9 @@
         'provider' => $_POST['provider'],
         'pages' => (is_array($_POST['pages']) ? $_POST['pages'] : array())
         );
+    
+    if($_POST['atlas_title'])
+        $atlas_data['atlas_title'] = $_POST['atlas_title'];
 
     $context->sm->assign('atlas_data', $atlas_data);
     

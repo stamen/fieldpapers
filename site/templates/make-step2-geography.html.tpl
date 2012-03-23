@@ -1215,6 +1215,10 @@
                 <input type="hidden" id="paper_size" name="paper_size">
                 <input type="hidden" id="orientation" name="orientation">
                 <input type="hidden" id="provider" name="provider">
+                
+                {if $atlas_data.atlas_title}
+                    <input name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}" type="hidden">
+                {/if}
             </form>
             <div id="zoom-container">
                 <span id="zoom-in" style="display: none;">
