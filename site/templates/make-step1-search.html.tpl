@@ -30,7 +30,7 @@
                 <p>                                            
                     <form id="search-form" action="{$base_dir}/make-step2-geography.php" method="post">
                         <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
-                               placeholder="Type in a location">
+                               placeholder="Type in a location" value="{$atlas_data.atlas_location|escape:hexentity}">
                         {if $error}
                             <p style="color: #C33;">We could not find that place. Please try again.</p>
                         {/if}
