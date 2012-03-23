@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>Atlas</title>
+    <style type="text/css" title="text/css">
+    <!--
+    
+        body
+        {
+            width: 40em;
+        }
+        
+        body, input[type="text"], textarea
+        {
+            font-size: 16px;
+            font-family: sans-serif;
+        }
+        
+        a { white-space: nowrap; }
+    
+        dt
+        {
+            font-family: monospace;
+            font-weight: bold;
+        }
+        
+        dd
+        {
+            margin-bottom: 1em;
+        }
+        
+        input[type="text"], textarea
+        {
+            width: 30em;
+        }
+    
+    -->
+    </style>
+</head>
+<body>
+    <h1>Making Canned Atlases</h1>
+
+    <p>
+        It’s easy to create “canned” Field Papers atlases by providing
+        extra details up-front that are used as default values throughout
+        the Make process.
+    </p>
+    
+    <p>
+        Each setting below can be posted via plain HTML form to
+        <a href="http://fieldpapers.org/make-step1-search.php">fieldpapers.org</a>;
+        all are optional.
+    </p>
+    
+    <form action="http://fieldpapers.org/make-step1-search.php" method="post">
+        <dl>
+            <dt>atlas_title</dt>
+            <dd>
+                <input name="atlas_title" type="text" size="40" placeholder="Atlas title">
+            </dd>
+        
+            <dt>atlas_text</dt>
+            <dd>
+                <textarea name="atlas_text" rows="4" cols="40" placeholder="Atlas page content"></textarea>
+            </dd>
+        
+            <dt>atlas_location</dt>
+            <dd>
+                Latitude, longitude, and optional zoom. Use <a href="http://www.getlatlon.com/">getlatlon.com</a> to make new ones.<br>
+                <input name="atlas_location" type="text" size="40" placeholder="Location and zoom"><br>
+                Examples:<br>
+                <samp>37.8045 -122.2712 15</samp><br>
+                <samp>37.8045 -122.2712</samp>
+            </dd>
+        
+            <dt>atlas_provider</dt>
+            <dd>
+                URL template.<br>
+                <input name="atlas_provider" type="text" size="40" placeholder="Tile URL template"><br>
+                Example:<br>
+                <samp>http://tile.openstreetmap.org/{Z}/{X}/{Y}.png</samp>
+            </dd>
+        </dl>
+        <p>
+            <input type="submit">
+        </p>
+    </form>
+</body>
+</html>
+
