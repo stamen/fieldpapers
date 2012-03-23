@@ -39,6 +39,10 @@
                         {if $atlas_data.atlas_title}
                             <input name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}" type="hidden">
                         {/if}
+                        
+                        {if $atlas_data.atlas_text}
+                            <input name="atlas_text" value="{$atlas_data.atlas_text|escape:hexentity}" type="hidden">
+                        {/if}
                     </form>
                 </p>
                 {if $user_mbtiles}

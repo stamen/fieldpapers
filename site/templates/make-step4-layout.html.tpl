@@ -52,16 +52,19 @@
         <span style="font-size: 22px;">Choose a Layout</span>
         
         <div style="margin-top: 20px">
-        <div class="homeThird">
-            <label for="maps_only">
-                <img src="{$base_dir}/img/image-make-maps-only.png" alt="Make Maps Only">
-            </label>
-            <div style="text-align: left; margin-left: 90px;">
-                <input style="margin-right: 10px" type="radio" name="layout" id="maps_only" value="full-page" checked>
-                Maps Only
-                <br><span style="font-size: .8em; color: #666; margin-left: 30px;">one per page</span>
+        
+        {if !$atlas_data.atlas_text}
+            <div class="homeThird">
+                <label for="maps_only">
+                    <img src="{$base_dir}/img/image-make-maps-only.png" alt="Make Maps Only">
+                </label>
+                <div style="text-align: left; margin-left: 90px;">
+                    <input style="margin-right: 10px" type="radio" name="layout" id="maps_only" value="full-page" checked>
+                    Maps Only
+                    <br><span style="font-size: .8em; color: #666; margin-left: 30px;">one per page</span>
+                </div>
             </div>
-        </div>
+        {/if}
         {*
         <div class="homeThird">
             <label for="maps_notes_own">
@@ -79,7 +82,7 @@
                 <img src="{$base_dir}/img/image-make-maps-notes-2up.png" alt="Maps and Notes on the Same Page">
             </label>
             <div style="text-align: left; margin-left: 90px;">
-                <input style="margin-right: 10px" type="radio" name="layout" id="maps_notes_same" value="half-page">
+                <input style="margin-right: 10px" type="radio" name="layout" id="maps_notes_same" value="half-page" {if $atlas_data.atlas_text}checked{/if}>
                 Maps + Notes
                 <br><span style="font-size: .8em; color: #666; margin-left: 30px;">on same page</span>
             </div>

@@ -19,6 +19,9 @@
     if($_POST['atlas_title'])
         $atlas_data['atlas_title'] = $_POST['atlas_title'];
 
+    if($_POST['atlas_text'])
+        $atlas_data['atlas_text'] = $_POST['atlas_text'];
+
     $context->sm->assign('atlas_data', $atlas_data);
     
     if($context->type == 'text/html') {
