@@ -203,8 +203,28 @@
     <div class="container">
         {if $print.composed}
             <script>
-            var atlas_pages = {$pages_json};
             var base_url = {$base_dir|json_encode};
+            var selected_page = {$print.selected_page|json_encode} || null;
+            
+            {if $print.selected_page}
+                var overview_provider = {$print.selected_page.provider|json_encode};
+                var main_provider = {$print.selected_page.provider|json_encode};
+                
+                var north_page = {$pages[0].north|json_encode};
+                var west_page = {$pages[0].west|json_encode};
+                var south_page = {$pages[0].south|json_encode};
+                var east_page = {$pages[0].east|json_encode};
+            {else}
+                var overview_provider = {$pages[0].provider|json_encode};
+                var main_provider = {$pages[0].provider|json_encode};
+                var atlas_pages = {$pages|@json_encode};
+            {/if}
+            
+            var north = {$print.north|json_encode},
+                west = {$print.west|json_encode},
+                south = {$print.south|json_encode},
+                east = {$print.east|json_encode};
+                zoom = {$pages[0].zoom|json_encode};
             
             var zoom_in_active = base_url + '/img/button-zoom-in-on.png';
             var zoom_in_inactive = base_url + '/img/button-zoom-in-off.png';
@@ -309,17 +329,6 @@
                         var map = null,
                         MM = com.modestmaps;
                         
-                        {/literal}
-            
-                        {if $print.selected_page}
-                            var overview_provider = '{$print.selected_page.provider}';
-                            var main_provider = '{$print.selected_page.provider}';
-                        {else}
-                            var overview_provider = '{$pages[0].provider}';
-                            var main_provider = '{$pages[0].provider}';
-                        {/if}
-            
-                        {literal}
                             var zoom_in = document.getElementById("zoom-in");
                             var zoom_out = document.getElementById("zoom-out");
                                         
@@ -368,14 +377,7 @@
                         
                         // Map 2
                         var map = new MM.Map("atlas-index-map", main_map_layers, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
-                        
-                        var north = '{/literal}{$print.north}{literal}';
-                        var west = '{/literal}{$print.west}{literal}';
-                        var south = '{/literal}{$print.south}{literal}';
-                        var east = '{/literal}{$print.east}{literal}';
-                        
-                        var zoom = '{/literal}{$pages[0].zoom}{literal}';
-                        
+                                                
                         var extents = [new MM.Location(north, west), new MM.Location(south, east)];
                         
                         map.setExtent(extents);
@@ -471,8 +473,6 @@
                             page_label_background_objects.push(page_label_background);
                             
                             var start_zoom = map.getZoom();
-                            
-                            //var set_zoom = start_zoom + 1;
                             
                             atlas_page_objects[i].click(function(nw, ne, se, sw) {
                                 return function ()
@@ -590,12 +590,8 @@
                         // Draw individual pages
                         ////
                         
-                        {/literal}{if $print.selected_page}{literal}
-                            var north_page = '{/literal}{$pages[0].north}{literal}';
-                            var west_page = '{/literal}{$pages[0].west}{literal}';
-                            var south_page = '{/literal}{$pages[0].south}{literal}';
-                            var east_page = '{/literal}{$pages[0].east}{literal}';
-                            
+                        if (selected_page)
+                        {                           
                             var nw_page_point = map.locationPoint(new MM.Location(north_page, west_page));
                             var ne_page_point = map.locationPoint(new MM.Location(north_page, east_page));
                             var se_page_point = map.locationPoint(new MM.Location(south_page, east_page));
@@ -626,7 +622,7 @@
                             map.addCallback('extentset', function(m) {
                                 redrawPageExtent(m, MM, north_page, south_page, east_page, west_page);
                             });
-                         {/literal}{/if}{literal}
+                        }
                     }
                     {/literal}
             </script>

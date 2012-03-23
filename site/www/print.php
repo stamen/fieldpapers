@@ -20,10 +20,7 @@
     } else {
         $pages = get_print_pages($context->db, $print_id);
     }
-    
-    $pages_json = json_encode($pages);
-    $context->sm->assign('pages_json', $pages_json);
-    
+        
     $context->sm->assign('pages', $pages);
     
     if($user = get_user($context->db, $print['user_id']))
