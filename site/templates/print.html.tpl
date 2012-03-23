@@ -9,8 +9,6 @@
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
-        <script type="text/javascript" src="https://raw.github.com/mapbox/easey/gh-pages/src/easey.js"></script>
-        <script type="text/javascript" src="https://raw.github.com/mapbox/easey/gh-pages/src/easey.handlers.js"></script>
     {/if}
     <style type="text/css">
         {literal}
@@ -181,20 +179,6 @@
             border: 1px solid #ddd;
         }
         
-        #zoom-container {
-            width: 46px;
-            height: 92px;
-            position: absolute;
-            padding: 8px 0px 0px 20px;
-            z-index: 3;
-            top: 66px;
-            left: 0;
-        }
-        
-        #zoom-in, #zoom-out {
-            cursor: pointer;
-        }
-        
         {/literal}
     </style>
 </head>
@@ -204,22 +188,12 @@
         {if $print.composed}
             <script>
             var atlas_pages = {$pages_json};
-            var base_url = {$base_dir|json_encode};
-            
-            var zoom_in_active = base_url + '/img/button-zoom-in-on.png';
-            var zoom_in_inactive = base_url + '/img/button-zoom-in-off.png';
-            
-            var zoom_out_active = base_url + '/img/button-zoom-out-on.png';
-            var zoom_out_inactive = base_url + '/img/button-zoom-out-off.png';
             {literal}
                 var canvas,
                     print_extent,
                     atlas_page_objects = [],
-                    page_label_objects = [],
-                    page_label_background_objects = [],
-                    text_locs = [],
                     page_extent;
-                                                        
+                    
                 function redrawExtent(map, MM, north, south, east, west)
                 {
                     var new_nw_point = map.locationPoint(new MM.Location(north, west));
@@ -240,7 +214,7 @@
                 
                 function redrawPageExtents(map, MM, page_data, pages)
                 {
-                    for (var i=0; i < page_data.length - 1; i++) 
+                    for (var i=0; i < page_data.length; i++) 
                     {
                         var north = page_data[i].north;
                         var west = page_data[i].west;
@@ -283,24 +257,6 @@
                     });
                 }
                 
-                function changeTextPosition(map, MM, atlas_pages, page_label_background_objects, page_label_objects)
-                {                    
-                    for (var i=0; i < page_label_objects.length; i++)
-                    {
-                        var new_loc = map.locationPoint(text_locs[i]);
-                        
-                        page_label_background_objects[i].attr({
-                            x: new_loc.x - 20,
-                            y: new_loc.y - 10
-                        });
-                        
-                        page_label_objects[i].attr({
-                            x: new_loc.x,
-                            y: new_loc.y
-                        });
-                    }
-                }
-                
                 function loadMaps() {
                         var map = null,
                         MM = com.modestmaps;
@@ -315,25 +271,7 @@
                             var main_provider = '{$pages[0].provider}';
                         {/if}
             
-                        {literal}
-                            var zoom_in = document.getElementById("zoom-in");
-                            var zoom_out = document.getElementById("zoom-out");
-                                        
-                            var zoom_in_button = document.getElementById('zoom-in-button');
-                            zoom_in.onmouseover = function() { zoom_in_button.src = zoom_in_active; };
-                            zoom_in.onmouseout = function() { zoom_in_button.src = zoom_in_inactive; };
-                            
-                            zoom_in.onclick = function() { map.zoomIn(); return false; };
-                            
-                            var zoom_out_button = document.getElementById('zoom-out-button');
-                            zoom_out.onmouseover = function() { zoom_out_button.src = zoom_out_active; };
-                            zoom_out.onmouseout = function() { zoom_out_button.src = zoom_out_inactive; };
-                            
-                            zoom_out.onclick = function() { map.zoomOut(); return false; };
-                            
-                            document.getElementById('zoom-out').style.display = 'inline';
-                            document.getElementById('zoom-in').style.display = 'inline';
-                      
+                        {literal}                    
                             var overview_map_layers = [];
                             var main_map_layers = [];
                             
@@ -401,182 +339,48 @@
                         // Draw the page grid for the main atlas page
                         ////
                         
-                        for (var i = 0; i < atlas_pages.length-1; i++)
+                        for (var i = 0; i < atlas_pages.length; i++)
                         {
                             var north_page = atlas_pages[i].north;
                             var west_page = atlas_pages[i].west;
                             var south_page = atlas_pages[i].south;
                             var east_page = atlas_pages[i].east;
                             
-                            var nw_loc = new MM.Location(north_page, west_page);
-                            var ne_loc = new MM.Location(north_page, east_page);
-                            var se_loc = new MM.Location(south_page, east_page);
-                            var sw_loc = new MM.Location(south_page, west_page);
-                            
-                            var nw_page_point = map.locationPoint(nw_loc);
-                            var ne_page_point = map.locationPoint(ne_loc);
-                            var se_page_point = map.locationPoint(se_loc);
-                            var sw_page_point = map.locationPoint(sw_loc);
+                            var nw_page_point = map.locationPoint(new MM.Location(north_page, west_page));
+                            var ne_page_point = map.locationPoint(new MM.Location(north_page, east_page));
+                            var se_page_point = map.locationPoint(new MM.Location(south_page, east_page));
+                            var sw_page_point = map.locationPoint(new MM.Location(south_page, west_page));
                             
                             var page_width = ne_page_point.x - nw_page_point.x;
                             var page_height = se_page_point.y - ne_page_point.y;
                             
                             atlas_page_extent = canvas.rect(nw_page_point.x, nw_page_point.y, page_width, page_height);
                             atlas_page_extent.attr({
-                                cursor: "pointer",
                                 stroke: "#050505",
-                                "stroke-width": 1,
-                                fill: "#FFF",
-                                "fill-opacity": .3
+                                "stroke-width": 2
                             });
                             
-                            // draw text
-                            
-                            var text_coordinates = {x: nw_page_point.x + .5 * page_width,
-                                                    y: nw_page_point.y + .5 * page_height};
-                            
-                            text_locs.push(map.pointLocation(text_coordinates));
-                            
-                            // TODO: Account for text width
-                            var page_label_background = canvas.rect(text_coordinates.x - 20,
-                                                                    text_coordinates.y - 10,
-                                                                    40,
-                                                                    20);
-                            
-                            page_label_background.attr({fill: "#FFF",
-                                                        "stroke-width": 0
-                                                      });
-                                                    
-                            var page_label = canvas.text(text_coordinates.x, 
-                                                         text_coordinates.y, 
-                                                         atlas_pages[i].page_number);
-                                                         
-                            page_label.attr({"font-size": 18, 
-                                             "font-family": 'Arial',
-                                             "font-weight": 'bold',
-                                             "cursor": "pointer"});
-                            
-                            //var page_label_set = canvas.set();
-                            //page_label_set.push(atlas_page_objects, page_label_objects);
-                                                        
                             atlas_page_objects.push(atlas_page_extent);
-                            page_label_objects.push(page_label);
-                            page_label_background_objects.push(page_label_background);
-                            
-                            var start_zoom = map.getZoom();
-                            
-                            //var set_zoom = start_zoom + 1;
-                            
-                            atlas_page_objects[i].click(function(nw, ne, se, sw) {
-                                return function ()
-                                {
-                                    //map.setExtent([nw, ne, se, sw]);
-                                    if (map.getZoom() <= start_zoom) {
-                                        easey.slow(map, {location: new MM.Location(.5*(nw.lat+sw.lat), .5*(nw.lon+ne.lon)),
-                                                         zoom: start_zoom + 2
-                                                         }
-                                                  );
-                                    } else {
-                                        easey.slow(map, {location: new MM.Location(.5*(nw.lat+sw.lat), .5*(nw.lon+ne.lon))
-                                                         }
-                                                   );
-                                    }
-                                }
-                            }(nw_loc, ne_loc, se_loc, sw_loc));
-                            
-                            page_label_objects[i].click(function(nw, ne, se, sw) {
-                                return function ()
-                                {
-                                    if (map.getZoom() <= start_zoom) {
-                                        easey.slow(map, {location: new MM.Location(.5*(nw.lat+sw.lat), .5*(nw.lon+ne.lon)),
-                                                         zoom: start_zoom + 2
-                                                         }
-                                                  );
-                                    } else {
-                                        easey.slow(map, {location: new MM.Location(.5*(nw.lat+sw.lat), .5*(nw.lon+ne.lon))
-                                                         }
-                                                   );
-                                    }
-                                }
-                            }(nw_loc, ne_loc, se_loc, sw_loc));
-                        }
-                        
-                        for (var i=0; i < atlas_page_objects.length; i++)
-                        {                             
-                            atlas_page_objects[i].mouseover(function(index) {
-                                return function() {
-                                    this.attr({
-                                        fill: "#09F",
-                                        "fill-opacity": 1
-                                    });
-                                    
-                                    page_label_objects[index].attr({
-                                        fill: "#FFF"
-                                    });
-                                    
-                                    page_label_background_objects[index].attr({
-                                        fill: ""
-                                    });
-                                }
-                            }(i));
-                            
-                            page_label_objects[i].mouseover(function(index) {
-                                return function() {
-                                    this.attr({
-                                        fill: "#FFF"
-                                    });
-                                    
-                                    atlas_page_objects[index].attr({
-                                        fill: "#09F",
-                                        "fill-opacity": 1
-                                    });
-                                    
-                                    page_label_background_objects[index].attr({
-                                        fill: ""
-                                    });
-                                }
-                            }(i));
-                            
-                            atlas_page_objects[i].mouseout(function(index) {
-                                return function() {
-                                    this.attr({
-                                        fill: "#FFF",
-                                        "fill-opacity": .3
-                                    });
-                                    
-                                    page_label_objects[index].attr({
-                                        fill: "#000"
-                                    });
-                                    
-                                    page_label_background_objects[index].attr({
-                                        fill: "#FFF"
-                                    });
-                                }
-                            }(i));
                         }
                         
                         map.addCallback('panned', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
                             redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
-                            changeTextPosition(map, MM, atlas_pages, page_label_background_objects, page_label_objects);
                         });
                         
                         map.addCallback('zoomed', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
                             redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
-                            changeTextPosition(map, MM, atlas_pages, page_label_background_objects, page_label_objects);
                         });
                         
                         map.addCallback('centered', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
                             redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
-                            changeTextPosition(map, MM, atlas_pages, page_label_background_objects, page_label_objects);
                         });
                         
                         map.addCallback('extentset', function(m) {
                             redrawExtent(m, MM, north, south, east, west);
                             redrawPageExtents(map, MM, atlas_pages, atlas_page_objects);
-                            changeTextPosition(map, MM, atlas_pages, page_label_background_objects, page_label_objects);
                         });
                                                 
                         ////
@@ -645,17 +449,6 @@
                         {$pages|@count} pages
                     {/if}
                 </p>
-                
-                <div id="zoom-container">
-                    <span id="zoom-in" style="display: none;">
-                    <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button"
-                              width="46" height="46">
-                    </span>
-                    <span id="zoom-out" style="display: none;">
-                        <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button"
-                                  width="46" height="46">
-                    </span>
-                </div>
 
                 {* TODO: <p class="borrow">Borrow this Atlas</p> *}
                 <p class="download"><a href="{$print.pdf_url}">Download PDF {* TODO: <span class="size">17MB</span> *}</a></p>
