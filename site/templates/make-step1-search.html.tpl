@@ -28,7 +28,7 @@
             <div class="smallContainer" style="text-align: center;">
                 <h2>Where in the world is your atlas?</h2>
                 <p>                                            
-                    <form id="search-form" action="{$base_dir}/make-step1-search.php" method="post">
+                    <form id="search-form" action="{$base_dir}/make-step2-geography.php" method="post">
                         <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
                                placeholder="Type in a location">
                         {if $error}
