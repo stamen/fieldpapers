@@ -9,11 +9,13 @@
         body
         {
             width: 40em;
+            background-color: #eee;
         }
         
         body, input[type="text"], textarea
         {
             font-size: 16px;
+            line-height: 24px;
             font-family: sans-serif;
         }
         
@@ -33,6 +35,11 @@
         input[type="text"], textarea
         {
             width: 30em;
+        }
+        
+        samp
+        {
+            font-size: 90%;
         }
     
     -->
@@ -69,17 +76,22 @@
             <dd>
                 Latitude, longitude, and optional zoom. Use <a href="http://www.getlatlon.com/">getlatlon.com</a> to make new ones.<br>
                 <input name="atlas_location" type="text" size="40" placeholder="Location and zoom"><br>
-                Examples:<br>
-                <samp>37.8045 -122.2712 15</samp><br>
-                <samp>37.8045 -122.2712</samp>
+                Examples:
+                <br><samp>37.8045, -122.2712 15</samp>
+                <br><samp>37.8045 -122.2712, 15</samp>
+                <br><samp>37.8045,-122.2712</samp>
+                <br><samp>37.8045 -122.2712</samp>
             </dd>
         
             <dt>atlas_provider</dt>
             <dd>
                 URL template.<br>
                 <input name="atlas_provider" type="text" size="40" placeholder="Tile URL template"><br>
-                Example:<br>
-                <samp>http://tile.openstreetmap.org/{Z}/{X}/{Y}.png</samp>
+                Examples:
+                <br><samp>http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png</samp> (Black &amp; White)
+                <br><samp>http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg</samp> (Satellite + Labels)
+                <br><samp>http://tile.openstreetmap.org/{Z}/{X}/{Y}.png</samp> (Open Street Map)
+                <br><samp>http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg</samp> (Satellite Only)
             </dd>
         </dl>
         <p>
