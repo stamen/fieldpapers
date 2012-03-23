@@ -215,6 +215,7 @@
                         <div id="polygon_note" class="hide">
                             <textarea id="polygon_textarea" style="background-color: white">Note</textarea>
                             <button type="button" id="polygon_ok_button" onclick="submitPolygonNote();">OK</button>
+                            <button type="button" id="polygon_delete_button" onclick="deletePolygonNote();">Delete</button>
                         </div>
                     </form>
                     <div id="zoom-container">
@@ -234,6 +235,13 @@
                 {/if}
     
                 <script type="text/javascript">
+                    var scan_id = {$scan.id|json_encode};
+                    var base_url = {$base_dir|json_encode};
+                    var post_url = base_url + '/save-scan-notes.php?scan_id=' + scan_id;
+                    var base_provider = {$scan.base_url|json_encode};
+                    var redirect_url = {$scan.print_href|json_encode};
+                    var geojpeg_bounds = {$scan.geojpeg_bounds|json_encode};
+                
                 // <![CDATA[{literal}
                     
                     var MM;
@@ -291,14 +299,12 @@
                     ///
                     var markerNumber = -1;
                     var unsignedMarkerNumber = 1;
-                    var scan_id = {/literal}'{$scan.id}'{literal};
-                    var post_url = '{/literal}{$base_dir}{literal}/save-scan-notes.php?scan_id={/literal}{$scan.id}{literal}';   
-                    
+                                        
                         MM = com.modestmaps;
-                        var provider = '{/literal}{$scan.base_url}{literal}/{Z}/{X}/{Y}.jpg';
+                        var provider = base_provider + '/{Z}/{X}/{Y}.jpg';
                         map = new MM.Map("map", new MM.TemplatedMapProvider(provider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
                         
-                    var bounds = '{/literal}{$scan.geojpeg_bounds}{literal}'.split(','),
+                    var bounds = geojpeg_bounds.split(','),
                         north = parseFloat(bounds[0]),
                         west = parseFloat(bounds[1]),
                         south = parseFloat(bounds[2]),
@@ -432,8 +438,10 @@
                         control_midpoint_display_objects = [];
                         
                         new_polygon = canvas.path('');
-                        new_polygon.attr("fill", "#050505");
-                        new_polygon.attr("opacity", .3);
+                        new_polygon.attr({fill: "#f3e50c", 
+                                          "fill-opacity": .25,
+                                          "stroke-opacity": 1,
+                                          "stroke-width": 2}); // Working?
                         
                         readVertices(polygon_vertices);
                         
@@ -471,9 +479,11 @@
                         {   
                             var vertex_display_object = canvas.circle(vertices[i].x,
                                                                       vertices[i].y,
-                                                                      7);
+                                                                      5);
                             
-                            vertex_display_object.attr('fill', '#050505');
+                            vertex_display_object.attr({fill: '#FFF',
+                                                        "stroke-width": 2
+                                                       });
                                                                                     
                             vertex_display_objects.push(vertex_display_object);
                         }
@@ -533,9 +543,11 @@
                         {   
                             var control_midpoint_display_object = canvas.circle(control_midpoints[i].x,
                                                                                 control_midpoints[i].y,
-                                                                                7);
+                                                                                5);
                             
-                            control_midpoint_display_object.attr('fill', '#FFF');
+                            control_midpoint_display_object.attr({fill: '#FFF',
+                                                                  "stroke-width": 1
+                                                                });
                                                                                     
                             control_midpoint_display_objects.push(control_midpoint_display_object);
                         }
@@ -602,13 +614,19 @@
                         active_polygon = saved_polygons.length - 1;
                         updateTextArea(note_data.note);
                         
-                        new_polygon.attr('fill', '#FFFF33');
+                        new_polygon.attr({fill: '#F3e50c',
+                                          "stroke-width": 2,
+                                          "fill-opacity": 1
+                                         });
                         showPolygonNote();
                     }
                     
                     function savePolygon(index)
                     {
-                        new_polygon.attr('fill', '#050505');
+                        new_polygon.attr({fill: '#F3e50c',
+                                          "stroke-width": 2,
+                                          "fill-opacity": 1
+                                         });
                         
                         saved_polygons[index].vertices = vertices;
                         saved_polygons[index].vertex_display_objects = vertex_display_objects;
@@ -633,7 +651,11 @@
                         if (active_polygon != -1)
                         {
                             savePolygon(active_polygon);
-                            new_polygon.attr('fill', '#050505');
+                            
+                            new_polygon.attr({fill: '#F3e50c',
+                              "stroke-width": 2,
+                              "fill-opacity": 1
+                             });
                         }
                         
                         active_polygon = index;
@@ -651,7 +673,11 @@
                             control_midpoint_display_objects[i].show();
                         }
                         
-                        new_polygon.attr('fill', '#FFFF33');
+                        new_polygon.attr({fill: '#F3e50c',
+                          "stroke-width": 2,
+                          "fill-opacity": 1
+                         });
+                                         
                         showPolygonNote();
                     }
                     
@@ -794,8 +820,11 @@
                             start_x = e.pageX - 10;
                             start_y = e.pageY - document.getElementById('nav').offsetHeight - 13;
                             
-                            drawn_path_vertex = canvas.circle(start_x, start_y, 7);
-                            drawn_path_vertex.attr('fill', '#050505');
+                            drawn_path_vertex = canvas.circle(start_x, start_y, 5);
+                            
+                            drawn_path_vertex.attr({fill: '#FFF',
+                                                    "stroke-width": 3
+                                                  });
                             
                             drawn_path_vertices.push(drawn_path_vertex);
                             
@@ -807,9 +836,11 @@
                         if (new_path && path_string)
                         {
                             prev_path = canvas.path(path_string);
-                            prev_path.attr("stroke-width", 4);
+                            prev_path.attr("stroke-width", 2);
                             
-                            drawn_path_vertex = canvas.circle(e.pageX - 10,e.pageY - document.getElementById('nav').offsetHeight - 13, 7);
+                            drawn_path_vertex = canvas.circle(e.pageX - 10, 
+                                                              e.pageY - document.getElementById('nav').offsetHeight - 13, 
+                                                              5);
                             drawn_path_vertex.attr('fill', '#050505');
                             
                             previous_paths.push(prev_path);
@@ -853,7 +884,9 @@
                         master_path_piece = "L" + center_x + ',' + center_y;
                         
                         new_path = canvas.path(path_string);
-                        new_path.attr({"stroke-width": 2, "stroke-opacity": .75});
+                        new_path.attr({"stroke-width": 3, 
+                                        "stroke-opacity": 1
+                                     });
                     }
                     
                     /*
@@ -898,8 +931,12 @@
                         new_master_path = new_master_path + 'L' + start_x + ',' + start_y + 'Z';
                         
                         new_polygon = canvas.path(new_master_path);
-                        new_polygon.attr("fill", "#050505");
-                        new_polygon.attr("opacity", .3);
+                        
+                        new_polygon.attr({fill: "#f3e50c", 
+                                          "fill-opacity": .25, 
+                                          "stroke-opacity": 1,
+                                          "stroke-width": 2
+                                        });
                         
                         new_path.remove();
                         
@@ -986,9 +1023,11 @@
                         {   
                             var vertex_display_object = canvas.circle(vertices[i].x,
                                                                       vertices[i].y,
-                                                                      7);
+                                                                      5);
                             
-                            vertex_display_object.attr('fill', '#050505');
+                            vertex_display_object.attr({fill: '#FFF',
+                                                        "stroke-width": 2
+                                                       });
                                                                                     
                             vertex_display_objects.push(vertex_display_object);
                         }
@@ -1048,9 +1087,11 @@
                         {   
                             var control_midpoint_display_object = canvas.circle(control_midpoints[i].x,
                                                                                 control_midpoints[i].y,
-                                                                                7);
+                                                                                5);
                             
-                            control_midpoint_display_object.attr('fill', '#FFF');
+                            control_midpoint_display_object.attr({fill: '#FFF',
+                                                                  "stroke-width": 1
+                                                                });
                                                                                     
                             control_midpoint_display_objects.push(control_midpoint_display_object);
                         }
@@ -1131,9 +1172,11 @@
                         {   
                             var vertex_display_object = canvas.circle(vertices[i].x,
                                                                       vertices[i].y,
-                                                                      7);
+                                                                      5);
                             
-                            vertex_display_object.attr('fill', '#050505');
+                            vertex_display_object.attr({fill: '#FFF',
+                                                        "stroke-width": 2
+                                                       });
                                                                                     
                             vertex_display_objects.push(vertex_display_object);
                         }
@@ -1192,9 +1235,11 @@
                         {   
                             var control_midpoint_display_object = canvas.circle(control_midpoints[i].x,
                                                                                 control_midpoints[i].y,
-                                                                                7);
+                                                                                5);
                             
-                            control_midpoint_display_object.attr('fill', '#FFF');
+                              control_midpoint_display_object.attr({fill: '#FFF',
+                                                                    "stroke-width": 1
+                                                                  });
                                                                                     
                             control_midpoint_display_objects.push(control_midpoint_display_object);
                         }
@@ -1383,8 +1428,10 @@
                         new_path = null;
                         previous_paths = [];
                         
-                        circle = canvas.circle(20,20,7);
-                        circle.attr('fill', '#0066FF');
+                        circle = canvas.circle(20,20,6);
+                        circle.attr({fill: '#0066FF',
+                                     "stroke-width": 0
+                                    });
                         
                         circle.hide();
                         
@@ -1575,9 +1622,48 @@
                     }
                     
                     
+                    function deletePolygonNote()
+                    {
+                        console.log('Delete Polygon.');
+                        
+                        if (active_polygon === -1)
+                        {
+                            return;
+                        }
+                        
+                        savePolygon(active_polygon);
+                        
+                        if (window.confirm("Are you sure you want to delete this saved note?"))
+                        {
+                            saved_polygons[active_polygon].note_data.removed = 1;
+                            
+                            var saved_polygon_index = active_polygon;
+                            
+                            reqwest({
+                                url: post_url,
+                                method: 'post',
+                                data: saved_polygons[active_polygon].note_data,
+                                type: 'json',
+                                success: function (resp) {
+                                  console.log('response', resp);
+                                  removeDeletedPolygonDisplay(saved_polygon_index);
+                                }
+                            });
+                            
+                            active_polygon = -1;
+                            
+                        }
+                    
+                        return false;
+                    }
+                    
+                    function removeDeletedPolygonDisplay(active_polygon)
+                    {
+                        saved_polygons[active_polygon]['polygon'].hide();
+                    }
+                    
                     function finishedRedirect()
                     {   
-                        var redirect_url = '{/literal}{$scan.print_href|escape}{literal}';
                         window.location = redirect_url;
                         /*
                         var post_url = '{/literal}{$base_dir}{literal}/save-scan-notes.php?scan_id={/literal}{$scan.id}{literal}';
