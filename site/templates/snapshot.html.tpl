@@ -616,7 +616,7 @@
                         
                         new_polygon.attr({fill: '#F3e50c',
                                           "stroke-width": 2,
-                                          "fill-opacity": 1
+                                          "fill-opacity": .25
                                          });
                         showPolygonNote();
                     }
@@ -625,7 +625,7 @@
                     {
                         new_polygon.attr({fill: '#F3e50c',
                                           "stroke-width": 2,
-                                          "fill-opacity": 1
+                                          "fill-opacity": .25
                                          });
                         
                         saved_polygons[index].vertices = vertices;
@@ -654,7 +654,7 @@
                             
                             new_polygon.attr({fill: '#F3e50c',
                               "stroke-width": 2,
-                              "fill-opacity": 1
+                              "fill-opacity": .25
                              });
                         }
                         
@@ -675,7 +675,7 @@
                         
                         new_polygon.attr({fill: '#F3e50c',
                           "stroke-width": 2,
-                          "fill-opacity": 1
+                          "fill-opacity": .25
                          });
                                          
                         showPolygonNote();
