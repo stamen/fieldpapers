@@ -241,6 +241,11 @@
                     var base_provider = {$scan.base_url|json_encode};
                     var redirect_url = {$scan.print_href|json_encode};
                     var geojpeg_bounds = {$scan.geojpeg_bounds|json_encode};
+                    
+                    var zoom_in_active = base_url + '/img/button-zoom-in-on.png',
+                        zoom_in_inactive = base_url + '/img/button-zoom-in-off.png',
+                        zoom_out_active = base_url + '/img/button-zoom-out-on.png',
+                        zoom_out_inactive = base_url + '/img/button-zoom-out-off.png';
                 
                 // <![CDATA[{literal}
                     
@@ -1632,18 +1637,20 @@
                                         
                     var zoom_in = document.getElementById("zoom-in");
                     var zoom_out = document.getElementById("zoom-out");
-                                
+                        
                     var zoom_in_button = document.getElementById('zoom-in-button');
-                    zoom_in.onmouseover = function() { zoom_in_button.src = "{/literal}{$base_dir}{literal}/img/button-zoom-in-on.png"; };
-                    zoom_in.onmouseout = function() { zoom_in_button.src = "{/literal}{$base_dir}{literal}/img/button-zoom-in-off.png"; };
+                    zoom_in.onmouseover = function() { zoom_in_button.src = zoom_in_active; };
+                    zoom_in.onmouseout = function() { zoom_in_button.src = zoom_in_inactive; };
                     
                     zoom_in.onclick = function() { map.zoomIn(); return false; };
                     
                     var zoom_out_button = document.getElementById('zoom-out-button');
-                    zoom_out.onmouseover = function() { zoom_out_button.src = "{/literal}{$base_dir}{literal}/img/button-zoom-out-on.png"; };
-                    zoom_out.onmouseout = function() { zoom_out_button.src = "{/literal}{$base_dir}{literal}/img/button-zoom-out-off.png"; };
+                    zoom_out.onmouseover = function() { zoom_out_button.src = zoom_out_active; };
+                    zoom_out.onmouseout = function() { zoom_out_button.src = zoom_out_inactive; };
                     
-                    zoom_out.onclick = function() { map.zoomOut(); return false; };                
+                    zoom_out.onclick = function() { map.zoomOut(); return false; };
+            
+                          
                 // {/literal}]]>
                 </script>                    
             </div>                    
