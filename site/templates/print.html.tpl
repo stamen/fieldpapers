@@ -9,8 +9,8 @@
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
-        <script type="text/javascript" src="https://raw.github.com/mapbox/easey/gh-pages/src/easey.js"></script>
-        <script type="text/javascript" src="https://raw.github.com/mapbox/easey/gh-pages/src/easey.handlers.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/easey.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/easey.handlers.js"></script>
     {/if}
     <style type="text/css">
         {literal}
