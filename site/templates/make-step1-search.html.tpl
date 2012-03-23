@@ -35,6 +35,10 @@
                             <p style="color: #C33;">We could not find that place. Please try again.</p>
                         {/if}
                         <input type="submit" name="action" value="Start There">
+                        
+                        {if $atlas_data.atlas_title}
+                            <input name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}" type="hidden">
+                        {/if}
                     </form>
                 </p>
                 {if $user_mbtiles}

@@ -8,6 +8,13 @@
     
     /**** ... ****/
     
+    $atlas_data = array();
+    
+    if($_POST['atlas_title'])
+        $atlas_data['atlas_title'] = $_POST['atlas_title'];
+
+    $context->sm->assign('atlas_data', $atlas_data);
+
     if($_GET['error'] == 'no_response')
     {
         $context->sm->assign('error', $_GET['error']);

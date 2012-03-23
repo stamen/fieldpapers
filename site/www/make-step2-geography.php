@@ -8,19 +8,34 @@
     
     /**** ... ****/
     
+    $atlas_data = array();
+    
+    if($_POST['atlas_title'])
+        $atlas_data['atlas_title'] = $_POST['atlas_title'];
+
+    $context->sm->assign('atlas_data', $atlas_data);
+
     if($_POST['query'])
     {
         $latlon = placename_latlon($_POST['query']);
         
-        $redirect_href = is_array($latlon)
-            ? sprintf('http://%s%s/make-step2-geography.php?center=%s', get_domain_name(), get_base_dir(), join(',', $latlon))
-            : sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
+        if(!is_array($latlon))
+        {
+            $redirect_href = sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
+            
+            header('HTTP/1.1 303');
+            header("Location: $redirect_href");
+            exit();
+        }
         
-        header('HTTP/1.1 303');
-        header("Location: $redirect_href");
-        exit();
+        $context->sm->assign('center', join(',', $latlon));
+        $context->sm->assign('zoom', 10);
     }
 
+    /*
+    
+    // breaking this for the moment
+    
     if($_GET['mbtiles_id'])
     {        
         $mbtiles = get_mbtiles_by_id($context->db, $_GET['mbtiles_id']);
@@ -34,13 +49,8 @@
                               'max_zoom' =>      $mbtiles['max_zoom']
                               );
         $context->sm-> assign('mbtiles_data', $mbtiles_data); 
-
-    } else {
-        $center = $_GET['center'];
-        $zoom = 10;
-        $context->sm-> assign('center', $center);
-        $context->sm-> assign('zoom', $zoom);
     }
+    */
         
     header("Content-Type: text/html; charset=UTF-8");
     print $context->sm->fetch("make-step2-geography.html.tpl");
