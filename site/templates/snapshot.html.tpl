@@ -621,7 +621,7 @@
                     function savePolygon(index)
                     {
                         new_polygon.attr({fill: '#F3e50c',
-                                          "stroke-width": 2,
+                                          "stroke-width": 4,
                                           "fill-opacity": .25
                                          });
                         
