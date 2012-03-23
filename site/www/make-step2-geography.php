@@ -8,8 +8,20 @@
     
     /**** ... ****/
     
-    // Used to use POST variable
-    if ($_GET['mbtiles_id'])
+    if($_POST['query'])
+    {
+        $latlon = placename_latlon($_POST['query']);
+        
+        $redirect_href = is_array($latlon)
+            ? sprintf('http://%s%s/make-step2-geography.php?center=%s', get_domain_name(), get_base_dir(), join(',', $latlon))
+            : sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
+        
+        header('HTTP/1.1 303');
+        header("Location: $redirect_href");
+        exit();
+    }
+
+    if($_GET['mbtiles_id'])
     {        
         $mbtiles = get_mbtiles_by_id($context->db, $_GET['mbtiles_id']);
                 
