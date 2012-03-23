@@ -8,24 +8,27 @@
     
     /**** ... ****/
     
+    $atlas_data = array();
+    
+    if($_POST['atlas_location'])
+        $atlas_data['atlas_location'] = $_POST['atlas_location'];
+
+    if($_POST['atlas_provider'])
+        $atlas_data['atlas_provider'] = $_POST['atlas_provider'];
+
+    if($_POST['atlas_title'])
+        $atlas_data['atlas_title'] = $_POST['atlas_title'];
+
+    if($_POST['atlas_text'])
+        $atlas_data['atlas_text'] = $_POST['atlas_text'];
+
+    $context->sm->assign('atlas_data', $atlas_data);
+
     if($_GET['error'] == 'no_response')
     {
         $context->sm->assign('error', $_GET['error']);
     }
     
-    if($_POST['query'])
-    {
-        $latlon = placename_latlon($_POST['query']);
-        
-        $redirect_href = is_array($latlon)
-            ? sprintf('http://%s%s/make-step2-geography.php?center=%s', get_domain_name(), get_base_dir(), join(',', $latlon))
-            : sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
-        
-        header('HTTP/1.1 303');
-        header("Location: $redirect_href");
-        exit();
-    }
-
     $user_mbtiles = get_mbtiles_by_user_id($context->db, $context->user['id']);
     
     if ($user_mbtiles)
