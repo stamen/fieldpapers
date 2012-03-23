@@ -8,31 +8,28 @@
 <body>
     {include file="navigation.htmlf.tpl"}
     <div class="container">
+        <h1>Snapshots {$title|escape}</h1>
         <h2><a href="{$base_dir}/atlases.php">Atlases</a> | Uploads</h2>
         
         {foreach from=$scans item="scan" name="index"}
             <div class="atlasThumb">
-                <a href="{$base_dir}/snapshot.php?id={$scan.id}">
-                <img src="{$scan.base_url}/preview.jpg" alt="scanned page" 
-                name="atlasPage" width="100%" id="atlasPage"></a>
-                <span class="atlasName"><a href="{$base_dir}/snapshot.php?id={$scan.id}">Untitled</a></span>
-                <span class="atlasOwner">by <a href="{$base_dir}/uploads.php?user={$scan.user_id}">{$scan.user_name}</a></span>,
+                <a href="{$base_dir}/snapshot.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scanned page" width="100%"></a>
 
-                {if $scan.place_woeid}
-                    <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
-                {/if}
-                {if $scan.region_woeid}
-                    <a href="{$base_dir}/uploads.php?place={$scan.region_woeid}">{$scan.region_name|nice_placename}</a>,
-                {/if}
-                {if $scan.country_woeid}
-                    <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>,
+                {if $scan.user.name}
+                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{if $scan.title}{$scan.title|escape}{else}Untitled{/if}</a>
+                    by <a href="{$base_dir}/uploads.php?user={$scan.user_id}">{$scan.user.name}</a>,
+
                 {else}
-                    Unknown Place,
+                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{if $scan.title}{$scan.title|escape}{else}Untitled{/if}</a>,
                 {/if}
 
-                <span class="atlasMeta">                    
-                    <a href="{$base_dir}/uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a>
-                </span>
+                {if $scan.place_name}
+                    <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>, 
+                    <a href="{$base_dir}/uploads.php?place={$scan.region_woeid}">{$scan.region_name|nice_placename}</a>, 
+                    <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>
+                {/if}
+
+                <a href="{$base_dir}/uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a>.
             </div>
         {/foreach}
         
