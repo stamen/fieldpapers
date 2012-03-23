@@ -212,7 +212,6 @@
                         </div>
                     </div>
                     <form id="scan-form">
-                        <br><br><br><br><br><br>
                         <div id="polygon_note" class="hide">
                             <textarea id="polygon_textarea" style="background-color: white">Note</textarea>
                             <button type="button" id="polygon_ok_button" onclick="submitPolygonNote();">OK</button>
