@@ -830,6 +830,8 @@
                         {
                             prev_path = canvas.path(path_string);
                             prev_path.attr("stroke-width", 2);
+
+                            prev_path.toBack();
                             
                             drawn_path_vertex = canvas.circle(e.pageX - 10, 
                                                               e.pageY - document.getElementById('nav').offsetHeight - 13, 
@@ -883,6 +885,8 @@
                         new_path.attr({"stroke-width": 3, 
                                         "stroke-opacity": 1
                                      });
+                        
+                        new_path.toBack();
                     }
                     
                     /*
