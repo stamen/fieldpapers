@@ -23,10 +23,10 @@
 
     if($_POST['query'])
     {
-        if(preg_match('/^(-?\d+(\.\d+)?)\s+(-?\d+(\.\d+)?)(\s+(\d+))?$/', trim($_POST['query']), $m))
+        if(preg_match('/^(-?\d+(?:\.\d+)?)[,\s]+(-?\d+(?:\.\d+)?)(?:[,\s]+(\d+))?$/', trim($_POST['query']), $m))
         {
-            $latlon = array($m[1], $m[3]);
-            $zoom = $m[6] ? $m[6] : 10;
+            $latlon = array($m[1], $m[2]);
+            $zoom = $m[3] ? $m[3] : 10;
         
         } else {
             $latlon = placename_latlon($_POST['query']);
