@@ -9,11 +9,13 @@
         body
         {
             width: 40em;
+            background-color: #eee;
         }
         
         body, input[type="text"], textarea
         {
             font-size: 16px;
+            line-height: 24px;
             font-family: sans-serif;
         }
         
@@ -33,6 +35,11 @@
         input[type="text"], textarea
         {
             width: 30em;
+        }
+        
+        samp
+        {
+            font-size: 90%;
         }
     
     -->
@@ -69,17 +76,22 @@
             <dd>
                 Latitude, longitude, and optional zoom. Use <a href="http://www.getlatlon.com/">getlatlon.com</a> to make new ones.<br>
                 <input name="atlas_location" type="text" size="40" placeholder="Location and zoom"><br>
-                Examples:<br>
-                <samp>37.8045 -122.2712 15</samp><br>
-                <samp>37.8045 -122.2712</samp>
+                Examples:
+                <br><samp>37.8045, -122.2712 15</samp>
+                <br><samp>37.8045 -122.2712, 15</samp>
+                <br><samp>37.8045,-122.2712</samp>
+                <br><samp>37.8045 -122.2712</samp>
             </dd>
         
             <dt>atlas_provider</dt>
             <dd>
                 URL template.<br>
                 <input name="atlas_provider" type="text" size="40" placeholder="Tile URL template"><br>
-                Example:<br>
-                <samp>http://tile.openstreetmap.org/{Z}/{X}/{Y}.png</samp>
+                Examples:
+                <br><samp>http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png</samp> (<a href="http://tile.stamen.com/toner-lite/12/656/1582.png">Black &amp; White</a>)
+                <br><samp>http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg</samp> (<a href="http://tile.stamen.com/boner/12/656/1582.jpg">Satellite + Labels</a>)
+                <br><samp>http://tile.openstreetmap.org/{Z}/{X}/{Y}.png</samp> (<a href="http://tile.openstreetmap.org/12/656/1582.png">OpenStreetMap</a>)
+                <br><samp>http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg</samp> (<a href="http://tile.stamen.com/bing-lite/12/656/1582.jpg">Satellite Only</a>)
             </dd>
         </dl>
         <p>
