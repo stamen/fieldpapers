@@ -19,6 +19,3 @@ var bounds = geojpeg_bounds.split(','),
 
 map.setExtent(extents);
 map.zoomIn();
-
-document.getElementById('zoom-out').style.display = 'inline';
-document.getElementById('zoom-in').style.display = 'inline';
