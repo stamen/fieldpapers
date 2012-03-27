@@ -279,6 +279,24 @@
         return $row;
     }
     
+    function get_scan_notes_count(&$dbh, $scan_id)
+    {
+        $q = sprintf("SELECT COUNT(note_number)
+                      FROM scan_notes
+                      WHERE scan_id = %s
+                      AND note_number IS NOT NULL",
+                      $dbh->quoteSmart($scan_id));
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+        
+        return $row;   
+    }
+    
     function get_scan_notes(&$dbh, $args, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
