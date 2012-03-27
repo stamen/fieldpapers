@@ -18,7 +18,8 @@
         $context->sm->assign('print', $print);
     }
     
-    $notes = get_scan_notes($context->db, array('scan' => $scan['id']));
+    $note_count = get_scan_notes_count($context->db, $scan_id);
+    $notes = get_scan_notes($context->db, array('scan' => $scan['id']), $note_count);
     $context->sm->assign('notes', $notes);
     
     $form = get_form($context->db, $print['form_id']);
