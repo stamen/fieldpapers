@@ -52,7 +52,7 @@
             $context->db->query('COMMIT');
             
             $json_response['status'] = 201;
-            //$json_response['marker_number'] = $note_number;
+            $json_response['marker_number'] = $note_number;
             $json_response['note_data'] = $note;
             $json_response['message'] = 'New marker note created.';
         } else {
