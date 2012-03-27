@@ -206,7 +206,7 @@ function createPolygon(note_data)
     updateTextArea(note_data.note);
     
     new_polygon.attr({fill: '#F3e50c',
-                      "stroke-width": 4,
+                      "stroke-width": 2,
                       "fill-opacity": .25
                      });
     showPolygonNote();
