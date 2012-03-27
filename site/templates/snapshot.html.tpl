@@ -224,11 +224,11 @@
                         </div>
                     </form>
                     <div id="zoom-container">
-                        <span id="zoom-in" style="display: none;">
+                        <span id="zoom-in" style="display: inline;">
                         <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button"
                                   width="46" height="46">
                         </span>
-                        <span id="zoom-out" style="display: none;">
+                        <span id="zoom-out" style="display: inline;">
                             <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button"
                                       width="46" height="46">
                         </span>
