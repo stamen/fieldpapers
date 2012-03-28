@@ -18,7 +18,7 @@ function loadPolygon(note_data, polygon_vertices)
     new_polygon.attr({fill: "#f3e50c", 
                       "fill-opacity": .25,
                       "stroke-opacity": 1,
-                      "stroke-width": 4}); // Working?
+                      "stroke-width": 3}); // Working?
     
     readVertices(polygon_vertices);
     
@@ -215,7 +215,7 @@ function createPolygon(note_data)
 function savePolygon(index)
 {
     new_polygon.attr({fill: '#F3e50c',
-                      "stroke-width": 4,
+                      "stroke-width": 3,
                       "fill-opacity": .25
                      });
     
@@ -251,7 +251,7 @@ function changePolygon(index)
         savePolygon(active_polygon);
         
         new_polygon.attr({fill: '#F3e50c',
-          "stroke-width": 4,
+          "stroke-width": 3,
           "fill-opacity": .25
          });
     }
