@@ -1,10 +1,12 @@
+var draw_mode = false;
+
 canvas = Raphael("canvas");
 
 function loadPolygon(note_data, polygon_vertices)
 {
     if (active_polygon != -1)
     {
-        savePolygon(active_polygon);
+        savePolygon(active_polygon, true);
     }
     
     active_polygon = -1;
@@ -18,11 +20,13 @@ function loadPolygon(note_data, polygon_vertices)
     new_polygon.attr({fill: "#f3e50c", 
                       "fill-opacity": .25,
                       "stroke-opacity": 1,
-                      "stroke-width": 3}); // Working?
+                      "stroke-width": 3,
+                      cursor: "pointer"
+                     }); // Working?
     
     readVertices(polygon_vertices);
     
-    createPolygon(note_data);
+    createPolygon(note_data, false);
     
     savePolygonLocationData(vertices, control_midpoints);
     
@@ -39,12 +43,20 @@ function loadPolygon(note_data, polygon_vertices)
     
     last_saved_polygon_location_data[active_polygon] = last_saved_vertex_locations;
     
+    new_polygon.mouseover(function(index) {
+                        return function() { if (active_polygon == -1 && !active_marker && !draw_mode) {polygonMouseOver(index);} }
+                      }(saved_polygons.length -1));
+                      
+    new_polygon.mouseout(function(index) {
+                    return function() { if (active_polygon == -1 && !active_marker && !draw_mode) { polygonMouseOut(index);} }
+                  }(saved_polygons.length -1));
+    
     new_polygon.click(function(index) {
-                        return function() { changePolygon(index); }
+                        return function() { if (active_polygon == -1 && !active_marker && !draw_mode) {changePolygon(index);} }
                     }(saved_polygons.length - 1));
     
     // Inactivate the loaded polygons
-    savePolygon(active_polygon);
+    savePolygon(active_polygon, true);
     active_polygon = -1;
     document.getElementById('polygon_textarea').value = '';
 }
@@ -188,7 +200,7 @@ function readVertices(polygon_vertices)
 }
 
 
-function createPolygon(note_data)
+function createPolygon(note_data, new_note)
 {
     // Adding active polygon
     var polygon_to_add = {'vertices': vertices,
@@ -197,6 +209,7 @@ function createPolygon(note_data)
                           'control_midpoints': control_midpoints,
                           'control_midpoint_display_objects': control_midpoint_display_objects,
                           'removed': 0,
+                          'new_note': new_note,
                           'note_data': note_data
                           };
     
@@ -207,12 +220,13 @@ function createPolygon(note_data)
     
     new_polygon.attr({fill: '#F3e50c',
                       "stroke-width": 2,
-                      "fill-opacity": .25
+                      "fill-opacity": .25,
+                      cursor: "pointer"
                      });
-    showPolygonNote();
+    showPolygonNote(new_note);
 }
 
-function savePolygon(index)
+function savePolygon(index, reset_cursor)
 {
     new_polygon.attr({fill: '#F3e50c',
                       "stroke-width": 3,
@@ -225,7 +239,12 @@ function savePolygon(index)
     saved_polygons[index].control_midpoints = control_midpoints;
     saved_polygons[index].control_midpoint_display_objects = control_midpoint_display_objects;
     
-    saved_polygons[index].note_data.note = document.getElementById('polygon_textarea').value;
+    if (saved_polygons[index].new_note)
+    {
+        saved_polygons[index].note_data.note = document.getElementById('new_polygon_textarea').value;
+    } else {
+        saved_polygons[index].note_data.note = document.getElementById('polygon_textarea').value;
+    }
     
     var last_saved_vertex_locations = [];
     var last_saved_control_locations = [];
@@ -241,14 +260,53 @@ function savePolygon(index)
     
     last_saved_polygon_location_data[index] = last_saved_vertex_locations;
     
-    hidePolygonNote();
+    hidePolygonNote(saved_polygons[index].new_note);
+    
+    if (reset_cursor)
+    {
+        for (var i = 0; i < saved_polygons.length; i++)
+        {
+            if (saved_polygons[i] != null)
+            {
+                saved_polygons[i].polygon.attr('cursor', 'pointer');
+            }
+        }
+    }
+}
+
+function polygonMouseOver(index)
+{
+    updateTipTextArea(saved_polygons[index].note_data.note);
+
+    var highlighted_polygon = saved_polygons[index].polygon;
+    
+    highlighted_polygon.attr({fill: '#0099FF',
+                            "fill-opacity": .5
+                            });
+    
+    showPolygonTip(highlighted_polygon);
+}
+
+function polygonMouseOut(index)
+{
+    var highlighted_polygon = saved_polygons[index].polygon;
+    
+    // remove note
+    highlighted_polygon.attr({fill: '#F3e50c',
+      "stroke-width": 3,
+      "fill-opacity": .25
+     });
+     
+     hidePolygonTip();
 }
 
 function changePolygon(index)
 {
+    hidePolygonTip();
+    
     if (active_polygon != -1)
     {
-        savePolygon(active_polygon);
+        savePolygon(active_polygon, false);
         
         new_polygon.attr({fill: '#F3e50c',
           "stroke-width": 3,
@@ -277,31 +335,70 @@ function changePolygon(index)
         control_midpoint_display_objects[i].show();
     }
     
+    for (var i = 0; i < saved_polygons.length; i++)
+    {
+        if (i != active_polygon && saved_polygons[i] != null)
+        {
+            saved_polygons[i].polygon.attr('cursor', 'default');
+        }
+    }
+    
     new_polygon.attr({fill: '#F3e50c',
       "stroke-width": 2,
       "fill-opacity": .25
      });
                      
-    showPolygonNote();
+    showPolygonNote(false);
 }
 
-function showPolygonNote()
-{                        
-    var polygon_note = document.getElementById('polygon_note');
-    polygon_note.className = 'show';
+function showPolygonTip(highlighted_polygon)
+{
+    var polygon_tip = document.getElementById('polygon_tip');
+    polygon_tip.className = 'show';
     
-    changePolygonNotePosition();
+    changePolygonTipPosition(highlighted_polygon);
 }
 
-function hidePolygonNote()
-{
-    var polygon_note = document.getElementById('polygon_note');
-    polygon_note.className = 'hide';
+function showPolygonNote(new_note)
+{   
+    if (new_note)
+    {
+        var new_polygon_note = document.getElementById('new_polygon_note');
+        new_polygon_note.className = 'show';
+    } else {
+        var polygon_note = document.getElementById('polygon_note');
+        polygon_note.className = 'show';
+    }
+    
+    changePolygonNotePosition(new_note);
 }
 
-function changePolygonNotePosition()
+function hidePolygonNote(new_note)
 {
-    var polygon_note = document.getElementById('polygon_note');
+    if (new_note)
+    {
+        var new_polygon_note = document.getElementById('new_polygon_note');
+        new_polygon_note.className = 'hide';
+    } else {
+        var polygon_note = document.getElementById('polygon_note');
+        polygon_note.className = 'hide';
+    }
+}
+
+function hidePolygonTip()
+{
+    var polygon_tip = document.getElementById('polygon_tip');
+    polygon_tip.className = 'hide';
+}
+
+function changePolygonNotePosition(new_note)
+{
+    if (new_note)
+    {
+        var polygon_note = document.getElementById('new_polygon_note');
+    } else {
+        var polygon_note = document.getElementById('polygon_note');
+    }
     
     var offsetY = 20;
     var current_polygon_bbox = new_polygon.getBBox();
@@ -310,6 +407,19 @@ function changePolygonNotePosition()
     
     polygon_note.style.left = current_polygon_bbox.x + .5 * current_polygon_bbox.width - .5 * note_width + 'px';
     polygon_note.style.top = current_polygon_bbox.y - note_height - offsetY + 'px';
+}
+
+function changePolygonTipPosition(highlighted_polygon)
+{
+    var polygon_tip = document.getElementById('polygon_tip');
+    
+    var offsetY = 5;
+    var current_polygon_bbox = highlighted_polygon.getBBox();
+    var tip_height = polygon_tip.offsetHeight;
+    var tip_width = polygon_tip.offsetWidth;
+    
+    polygon_tip.style.left = current_polygon_bbox.x + .5 * current_polygon_bbox.width - .5 * tip_width + 'px';
+    polygon_tip.style.top = current_polygon_bbox.y - tip_height - offsetY + 'px';
 }
 
 function redrawPolygon(vertices, control_midpoints, vertex_display_objects, control_midpoint_display_objects, polygon, polygon_location_data, control_point_location_data)
@@ -408,7 +518,7 @@ function handlePath(e)
     // Possibly not necessary
     if (active_polygon != -1)
     {
-        savePolygon(active_polygon);
+        savePolygon(active_polygon, true);
         active_polygon = -1;
     }
     
@@ -511,10 +621,12 @@ function exitPolygonModeWithoutSave()
 function setPolygon(e)
 {
     e.stopPropagation();
+    
+    draw_mode = false;
 
     if (active_polygon != -1)
     {
-        savePolygon(active_polygon);
+        savePolygon(active_polygon, true);
     }
     
     active_polygon = -1;
@@ -575,7 +687,7 @@ function setPolygon(e)
     
     markerNumber--;
     
-    createPolygon(note_data);
+    createPolygon(note_data, true);
     
     savePolygonLocationData(vertices, control_midpoints);
     
@@ -592,9 +704,17 @@ function setPolygon(e)
     
     last_saved_polygon_location_data[active_polygon] = last_saved_vertex_locations;
     
-    // Give the polygon a click handler to toggle activity
+    // Give the polygon a click handler to toggle activity    
+    new_polygon.mouseover(function(index) {
+                            return function() { if (active_polygon == -1 && !active_marker && !draw_mode) {polygonMouseOver(index);} }
+                          }(saved_polygons.length -1));
+    
+    new_polygon.mouseout(function(index) {
+                    return function() { if (active_polygon == -1 && !active_marker && !draw_mode) {polygonMouseOut(index);} }
+                  }(saved_polygons.length -1));
+    
     new_polygon.click(function(index) { 
-                        return function() { changePolygon(index); }
+                        return function() { if (active_polygon == -1 && !active_marker && !draw_mode) {changePolygon(index);} }
                       }(saved_polygons.length - 1));
     
     circle.remove();
@@ -1026,11 +1146,19 @@ function moveControl(e)
 
 function addPolygon()
 {   
+    if (draw_mode)
+    {
+        alert('You are already trying to draw a polygon.');
+        return;
+    }
+    
+    draw_mode = true;
+    
     changeNoteButtonStyle('polygon');
     
     if (active_polygon != -1)
     {
-        savePolygon(active_polygon);
+        savePolygon(active_polygon, true);
         active_polygon = -1;
     }
                                           
@@ -1045,7 +1173,7 @@ function addPolygon()
     
     circle = canvas.circle(20,20,6);
     circle.attr({fill: '#000',
-                 "stroke-width": 0
+                 stroke: "none"
                 });
     
     circle.hide();
@@ -1113,7 +1241,17 @@ map.addCallback('extentset', function(m) {
 
 function updateTextArea(note)
 {
-    document.getElementById('polygon_textarea').value = note;
+    if (saved_polygons[active_polygon].new_note)
+    {
+        document.getElementById('new_polygon_textarea').value = note;
+    } else {
+        document.getElementById('polygon_textarea').value = note;
+    }
+}
+
+function updateTipTextArea(note)
+{
+    document.getElementById('polygon_tip').innerHTML = note;
 }
 
 function compute_area_of_polygon(vertices)
@@ -1175,7 +1313,7 @@ function submitPolygonNote()
         return;
     }
     
-    savePolygon(active_polygon);
+    savePolygon(active_polygon, true);
     
     var geometry_string = 'POLYGON ((';         
     
@@ -1196,7 +1334,12 @@ function submitPolygonNote()
     saved_polygons[active_polygon].note_data.lat = centroid.lat;
     saved_polygons[active_polygon].note_data.lon = centroid.lon;
     
-    saved_polygons[active_polygon].note_data.note = document.getElementById('polygon_textarea').value;
+    if (saved_polygons[active_polygon].new_note)
+    {
+        saved_polygons[active_polygon].note_data.note = document.getElementById('new_polygon_textarea').value;
+    } else {
+        saved_polygons[active_polygon].note_data.note = document.getElementById('polygon_textarea').value;
+    }
     
     var saved_polygon_index = active_polygon;
     
@@ -1210,6 +1353,8 @@ function submitPolygonNote()
           setMarkerNumber(resp.note_data.note_number, saved_polygon_index);
         }
     });
+    
+    saved_polygons[active_polygon].new_note = false;
     
     active_polygon = -1;
     
@@ -1250,10 +1395,26 @@ function redrawActivePolygonFromLocationData(polygon_location_data)
     
     redrawPathOnVertexDrag(temp_vertices);
     replaceVertices(temp_vertices);
-    savePolygon(active_polygon);
+    savePolygon(active_polygon, true);
     active_polygon = -1;
 }
 
+function deleteNewPolygonNote()
+{   
+    if (active_polygon === -1)
+    {
+        return;
+    }
+    
+    savePolygon(active_polygon, true);
+        
+    removeDeletedPolygonDisplay(active_polygon);
+    hidePolygonNote(true);
+    
+    active_polygon = -1;
+
+    return false;
+}
 
 function deletePolygonNote()
 {   
@@ -1262,7 +1423,7 @@ function deletePolygonNote()
         return;
     }
     
-    savePolygon(active_polygon);
+    savePolygon(active_polygon, true);
     
     if (window.confirm("Are you sure you want to delete this saved note?"))
     {
