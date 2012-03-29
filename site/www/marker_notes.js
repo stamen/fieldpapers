@@ -1,3 +1,5 @@
+var active_marker = false;
+
 function MarkerNote(map, post_url)
 {
     this.location = map.getCenter();
@@ -18,13 +20,14 @@ function MarkerNote(map, post_url)
     img.src = 'img/icon_x_mark_new.png';
     div.appendChild(img);
     
-    var br = document.createElement('br');
-    div.appendChild(br);
+    //var br = document.createElement('br');
+    //div.appendChild(br);
     
     var textarea = document.createElement('textarea');
     textarea.id = "notes";
-    //textarea.value = ''; // ?
+    //textarea.value = ' '; // ?
     textarea.name = 'marker[' + markerNumber + '][note]';
+    textarea.style.width = '150px';
     textarea.className = 'show';
     div.appendChild(textarea);
     
@@ -55,6 +58,8 @@ function MarkerNote(map, post_url)
                 }
             });
             
+            active_marker = false;
+            
             return false; 
         }
     }
@@ -69,8 +74,9 @@ function MarkerNote(map, post_url)
     }
     
     var removeMarkerNote = function()
-    {                                                        
+    {                    
         div.parentNode.removeChild(div);
+        active_marker = false;
     }
     
     var ok_button = document.createElement('button');
@@ -86,6 +92,24 @@ function MarkerNote(map, post_url)
     remove_button.className = 'show';
     remove_button.onclick = removeMarkerNote;
     div.appendChild(remove_button);
+    
+    
+    var marker_height = 30;
+    var marker_width = 30;
+    var offsetX = 5;
+    var offsetY = 10;
+    
+    textarea.style.position = "absolute";
+    textarea.style.left = -.5*(parseFloat(textarea.style.width)) + .5*marker_width + 'px';
+    textarea.style.top = -1*marker_height - 20 - offsetY + 'px';
+    
+    ok_button.style.position = "absolute";
+    ok_button.style.left = -.5*(parseFloat(textarea.style.width)) + .5*32 + 'px';
+    ok_button.style.top = -1*marker_height + 'px';
+    
+    remove_button.style.position = "absolute";
+    remove_button.style.left = -.5*(parseFloat(textarea.style.width)) + 32 + 25 +'px';
+    remove_button.style.top = -1*marker_height + 'px';
     
     var input_lat = document.createElement('input');
     input_lat.value = this.location.lat.toFixed(6);
@@ -162,12 +186,24 @@ function MarkerNote(map, post_url)
     map.addCallback('panned', updatePosition);
     map.addCallback('zoomed', updatePosition);
     updatePosition();
-    
+        
     return div;
 }
 
 function addMarkerNote()
-{
+{   
+    if (active_polygon != -1 || active_marker)
+    {
+        alert('Please finish editing your active marker.');
+        return;
+    }
+    
+    if (draw_mode)
+    {
+        alert('Please finish your creating polygon note before adding a new marker note.');
+        return;
+    }
+    
     if (arguments[0] == 'marker')
     {
         changeNoteButtonStyle('marker'); 
@@ -175,6 +211,8 @@ function addMarkerNote()
     
     var markerDiv = new MarkerNote(map, post_url);
     document.getElementById('scan-form').appendChild(markerDiv);
+    
+    active_marker = true;
 }
                     
 function SavedMarker(map,note,note_num,lat,lon)
@@ -260,11 +298,13 @@ function SavedMarker(map,note,note_num,lat,lon)
             remove_button.className = 'hide';
         }
         
+        active_marker = false;
+        
         return false;
     }
     
     var submitNote = function()
-    {
+    {   
         console.log('data', data);
         console.log('post_url', post_url);
         reqwest({
@@ -285,6 +325,8 @@ function SavedMarker(map,note,note_num,lat,lon)
               changeMarkerDisplay(resp);
             }
         });
+        
+        active_marker = false;
         
         return false;
     }
@@ -369,17 +411,27 @@ function SavedMarker(map,note,note_num,lat,lon)
     
     img.onmouseover = function(e)
     {
-        img.src = 'img/icon_x_mark_hover.png';
-        
-        if (textarea.className == 'hide' && ok_button.className == 'hide' && remove_button.className == 'hide' && cancel_button.className == 'hide')
+        if (textarea.className == 'hide' && ok_button.className == 'hide' && remove_button.className == 'hide' && cancel_button.className == 'hide' && active_polygon == -1 && !active_marker && !draw_mode)
         {
+            img.src = 'img/icon_x_mark_hover.png';
+            
+            var marker_height = 30;
+            var marker_width = 30;
+            var offsetY = 5;
+            
             saved_note.className = 'show';
+            saved_note.style.position = "absolute";
+            saved_note.style.left = -.5*saved_note.offsetWidth + .5 * marker_width + 'px';
+            saved_note.style.top = -1*saved_note.offsetHeight - offsetY + 'px';
+        } else {
+            img.style.cursor = 'default';
         }
     }
     
     img.onmouseout = function(e)
     {
         img.src = 'img/icon_x_mark.png';
+        img.style.cursor = 'move';
         
         if (saved_note.className = 'show')
         {
@@ -389,8 +441,13 @@ function SavedMarker(map,note,note_num,lat,lon)
                             
     img.onmousedown = function(e)
     {
-        hidePolygonNote();
+        if (active_polygon != -1 || active_marker || draw_mode)
+        {
+            return;
+        }
         
+        active_marker = true;
+                
         var marker_start = {x: div.offsetLeft, y: div.offsetTop},
             mouse_start = {x: e.clientX, y: e.clientY};                   
                 
@@ -413,6 +470,26 @@ function SavedMarker(map,note,note_num,lat,lon)
             ok_button.className = 'show';
             cancel_button.className = 'show';
             remove_button.className = 'show';
+            
+            var marker_height = 30;
+            var offsetX = 5;
+            var offsetY = 10;
+            
+            textarea.style.position = "absolute";
+            textarea.style.left = -.5*textarea.offsetWidth + .5 * marker_height + 'px';
+            textarea.style.top = -1*textarea.offsetHeight - ok_button.offsetHeight - .5*offsetY + 'px';
+            
+            ok_button.style.position = "absolute";
+            ok_button.style.left = -.5*textarea.offsetWidth + .5 * marker_height + 'px';
+            ok_button.style.top = -1*textarea.offsetHeight + ok_button.offsetHeight - offsetY + 'px';
+            
+            cancel_button.style.position = "absolute";
+            cancel_button.style.left = -.5*textarea.offsetWidth + .5 * marker_height + ok_button.offsetWidth + offsetX + 'px';
+            cancel_button.style.top = -1*textarea.offsetHeight + ok_button.offsetHeight - offsetY + 'px';
+            
+            remove_button.style.position = "absolute";
+            remove_button.style.left = -.5*textarea.offsetWidth + .5 * marker_height + ok_button.offsetWidth + cancel_button.offsetWidth + 2*offsetX + 'px';
+            remove_button.style.top = -1*textarea.offsetHeight + ok_button.offsetHeight - offsetY + 'px';
         }
         
         return false;
