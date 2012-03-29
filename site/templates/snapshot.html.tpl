@@ -128,6 +128,15 @@
             z-index: 5;
         }
         
+        #new_polygon_note
+        {
+            background-color: #fff;
+            border: 1px solid #050505;
+            padding: 5px;
+            position: absolute;
+            z-index: 5;
+        }
+        
         #scan-form .marker img
         {
             cursor: move;
@@ -160,6 +169,10 @@
         #polygon_textarea {
             width: 200px;
         }
+        
+        #new_polygon_textarea {
+            width: 200px;
+        }
 
         #remove, #remove_new, #ok, #ok_new, #cancel {
             float: left;
@@ -173,6 +186,22 @@
             font-weight: normal;
             font-size: .8em;
             width: 100px;
+            
+            border-bottom: 2px solid #000;
+        }
+        
+        #polygon_tip {
+            background-color: white;
+            margin: 2px;
+            padding: 10px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: normal;
+            font-size: .8em;
+            width: 100px;
+            border-bottom: 2px solid #000;
+            
+            position: absolute;
+            z-index: 5;
         }
         
     /* {/literal}]]> */
@@ -182,63 +211,50 @@
     {include file="navigation.htmlf.tpl"}
     <div id="container" style="position: relative">
             {if $scan && $scan.decoded}
-            
                 <p>
                     <div class="buttonBar">
                         <button type="button" onClick= "addPolygon()">Add Polygon Note</button>
                         <button type="button" onClick= "addMarkerNote()">Add Marker Note</button>
                     </div>
                 </p>
-            
-                {if $form.form_url}
+                <div id="atlas_inputs_container">
+                    <div class="atlas_inputs">
+                        <span id="toolbar_title">
+                            <b>Add</b>
+                        </span>
+                        <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
+                        <div class="radio_shape" id="polygon_button" title="Add Polygon" onclick="addPolygon();"></div>
+                        <input id="next_button" type="button" value="Finished" onclick="finishedRedirect()">
+                    </div>
+                </div>
                 <form id="scan-form">
-                    <textarea id="textarea_note" class="hide" style="background-color: white">Note</textarea>
-                    <input type="button" value="OK" onclick="submitPolygonNote();" />
+                    <div id="polygon_tip" class="hide">Note</div>
+                    <div id="new_polygon_note" class="hide">
+                        <textarea id="new_polygon_textarea" style="background-color: white"></textarea>
+                        <button type="button" id="new_polygon_ok_button" onclick="submitPolygonNote();">OK</button>
+                        <button type="button" id="new_polygon_delete_button" onclick="deleteNewPolygonNote();">Delete</button>    
+                    </div>
+                    <div id="polygon_note" class="hide">
+                        <textarea id="polygon_textarea" style="background-color: white">Note</textarea>
+                        <button type="button" id="polygon_ok_button" onclick="submitPolygonNote();">OK</button>
+                        <button type="button" id="polygon_ok_button" onclick="resetPolygonNote();">Cancel</button>
+                        <button type="button" id="polygon_delete_button" onclick="deletePolygonNote();">Delete</button>    
+                    </div>
                 </form>
-                    <div class="mapFormHolder">
-                        <div class="fieldSet">
-                            <iframe align="middle" frameborder="0" src="{$form.form_url}"></iframe>
-                        </div>
-                        <div class="page_map small" id="map">
-                            <div id="canvas"></div>
-                        </div>
-                    </div>
-                    
-                {else}
-                    <div id="atlas_inputs_container">
-                        <div class="atlas_inputs">
-                            <span id="toolbar_title">
-                                <b>Add</b>
-                            </span>
-                            <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
-                            <div class="radio_shape" id="polygon_button" title="Add Polygon" onclick="addPolygon();"></div>
-                            <input id="next_button" type="button" value="Finished" onclick="finishedRedirect()">
-                        </div>
-                    </div>
-                    <form id="scan-form">
-                        <div id="polygon_note" class="hide">
-                            <textarea id="polygon_textarea" style="background-color: white">Note</textarea>
-                            <button type="button" id="polygon_ok_button" onclick="submitPolygonNote();">OK</button>
-                            <button type="button" id="polygon_ok_button" onclick="resetPolygonNote();">Cancel</button>
-                            <button type="button" id="polygon_delete_button" onclick="deletePolygonNote();">Delete</button>
-                        </div>
-                    </form>
-                    <div id="zoom-container">
-                        <span id="zoom-in" style="display: inline;">
-                        <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button"
+                <div id="zoom-container">
+                    <span id="zoom-in" style="display: inline;">
+                    <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button"
+                              width="46" height="46">
+                    </span>
+                    <span id="zoom-out" style="display: inline;">
+                        <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button"
                                   width="46" height="46">
-                        </span>
-                        <span id="zoom-out" style="display: inline;">
-                            <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button"
-                                      width="46" height="46">
-                        </span>
-                    </div>
-                    <div id="map">
-                        <div id="canvas"></div>
-                    </div>
-                                
-                {/if}
-    
+                    </span>
+                </div>
+                <div id="map">
+                    <div id="canvas"></div>
+                </div>
+                                    
                 <script type="text/javascript">
                     var scan_id = {$scan.id|json_encode};
                     var base_url = {$base_dir|json_encode};
