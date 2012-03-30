@@ -36,6 +36,7 @@
             $note['note'] = $marker['note'];
             $note['latitude'] = $marker['lat'];
             $note['longitude'] = $marker['lon'];
+            $note['user_id'] = $marker['user_id'];
             
             if ($marker['type'] && $marker['type'] == 'POLYGON')
             {
@@ -44,7 +45,7 @@
                 $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
             }
             
-            $note['user_id'] = $context->user['id'];
+            //$note['user_id'] = $context->user['id'];
             $note['marker_number'] = $note_number;
             
             set_scan_note($context->db, $note);
@@ -99,7 +100,8 @@
                 $note['geometry'] = sprintf('POINT(%.6f %.6f)', $marker['lon'], $marker['lat']);
             }
             
-            $note['user_id'] = $context->user['id'];
+            //$note['user_id'] = $context->user['id'];
+            $note['user_id'] = $marker['user_id'];
                             
             set_scan_note($context->db, $note);
             
