@@ -1258,11 +1258,11 @@ function updateTipTextArea(note, user, created)
     if (created && user)
     {
         var date = new Date(created*1000);
-        var day = date.getDay();
+        var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
         
-        var formatted_date = day + '/' + month + '/' + year;
+        var formatted_date = (parseInt(month) + 1) + '/' + day + '/' + year;
     
         document.getElementById('polygon_tip').innerHTML = note + '<br><br>' + formatted_date;
     } else {
@@ -1391,7 +1391,7 @@ function submitPolygonNote()
         type: 'json',
         success: function (resp) {
           console.log('response', resp);
-          setMarkerNumber(resp.note_data.note_number, saved_polygon_index);
+          updateMarker(resp.note_data.note_number,resp.note_data.created,saved_polygon_index);
         }
     });
     
@@ -1403,12 +1403,14 @@ function submitPolygonNote()
 }
 
 
-function setMarkerNumber(marker_number, index)
+function updateMarker(marker_number, created, index)
 {
     console.log('marker_number', marker_number);
     console.log('index', index);
     
     saved_polygons[index].note_data.marker_number = marker_number;
+    
+    saved_polygons[index].note_data.created = created;
 }
 
 function resetPolygonNote()

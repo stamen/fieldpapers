@@ -415,22 +415,20 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
         {
             img.src = 'img/icon_x_mark_hover.png';
             
-            
-            
             if (data.created)
             {
                 var date = new Date(data.created*1000);
-                var day = date.getDay();
+                var day = date.getDate();
                 var month = date.getMonth();
                 var year = date.getFullYear();
                 
-                var formatted_date = day + '/' + month + '/' + year;
+                var formatted_date = (parseInt(month) + 1) + '/' + day + '/' + year;
         
                 saved_note.innerHTML = data.note + '<br><br>' + formatted_date;
             } else {
                 saved_note.innerHTML = data.note;
             }
-            
+                        
             var marker_width = 30;
             var offsetY = 5;
             
