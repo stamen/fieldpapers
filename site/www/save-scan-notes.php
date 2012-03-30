@@ -48,9 +48,11 @@
             //$note['user_id'] = $context->user['id'];
             $note['marker_number'] = $note_number;
             
-            set_scan_note($context->db, $note);
+            $inserted_note = set_scan_note($context->db, $note);
             
             $context->db->query('COMMIT');
+            
+            $note['created'] = $inserted_note['created'];
             
             $json_response['status'] = 201;
             $json_response['marker_number'] = $note_number;
@@ -103,9 +105,11 @@
             //$note['user_id'] = $context->user['id'];
             $note['user_id'] = $marker['user_id'];
                             
-            set_scan_note($context->db, $note);
+            $updated_note = set_scan_note($context->db, $note);
             
             $context->db->query('COMMIT');
+            
+            $note['created'] = $updated_note['created'];
             
             $json_response['status'] = 200;
             $json_response['marker_number'] = $note['note_number'];
