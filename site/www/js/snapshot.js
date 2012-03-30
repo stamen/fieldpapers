@@ -96,6 +96,8 @@ function loadSavedNotes()
             'lon': notes[i]['longitude'],
             'note': notes[i]['note'],
             'marker_number': notes[i]['note_number'],
+            'user_id': notes[i]['user_id'],
+            'created': notes[i]['created'],
             'type': 'POINT'
         };
         
@@ -104,9 +106,11 @@ function loadSavedNotes()
             var note = notes[i]['note'],
                 note_num = notes[i]['note_number'],
                 lat = notes[i]['latitude'],
-                lon = notes[i]['longitude'];
+                lon = notes[i]['longitude'],
+                user = notes[i]['user_id'],
+                created = notes[i]['created'];
             
-            addSavedNote(note,note_num,lat,lon);
+            addSavedNote(note,user,created,note_num,lat,lon);
             
         } else if (note_geometry.substring(0,7) == 'POLYGON')
         {  
