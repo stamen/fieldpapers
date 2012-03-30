@@ -147,7 +147,9 @@ function finishedRedirect()
 {   
     window.location = redirect_url;
 }
-                    
+
+// Handle mouse interaction for zoom controls
+     
 var zoom_in = document.getElementById("zoom-in");
 var zoom_out = document.getElementById("zoom-out");
     
@@ -162,3 +164,13 @@ zoom_out.onmouseover = function() { zoom_out_button.src = zoom_out_active; };
 zoom_out.onmouseout = function() { zoom_out_button.src = zoom_out_inactive; };
 
 zoom_out.onclick = function() { map.zoomOut(); return false; };
+
+// Handle mouse interaction for toolbar controls
+
+var marker_button = document.getElementById("marker_button");
+marker_button.onmouseover = function() { marker_button.setAttribute("class", "radio_pin_selected"); };
+marker_button.onmouseout = function() { marker_button.setAttribute("class", "radio_pin"); };
+
+var polygon_button = document.getElementById("polygon_button");
+polygon_button.onmouseover = function() { polygon_button.setAttribute("class", "radio_shape_selected"); };
+polygon_button.onmouseout = function() { polygon_button.setAttribute("class", "radio_shape"); };
