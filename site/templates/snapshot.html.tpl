@@ -27,7 +27,7 @@
         }
         
         .atlas_inputs {
-            padding: 0px 10px 0px 0px;
+            padding: 0px 0px 0px 0px;
             margin: -25px auto 0 auto;
             background-color: #FFF;
             border-top: 2px solid #000;
@@ -50,37 +50,52 @@
             font-weight: bold;
             position: relative;
         }
-        
-        .radio_shape {
-            background: url("{/literal}{$base_dir}{literal}/img/icon-shape.png") no-repeat;
+                
+        .radio_pin {
+            background: url("{/literal}{$base_dir}{literal}/img/icon-toolbar-x-off.png") no-repeat;
             display: inline-block;
-            
-            /*padding: 2px 2px 6px 2px;*/
             padding: 0px;
-            margin: 0px 20px 10px 10px;
-            /*margin-left: 5px;*/
-            position: relative;
-            top: -3px;
+            margin: 10px 8px 10px 10px;
             width: 31px;
-            height: 23px;
+            height: 31px;
             cursor: pointer;
         }
         
-        .radio_pin {
-            background: url("{/literal}{$base_dir}{literal}/img/icon_x_mark.png") no-repeat;
+        .radio_pin_selected {
+            background: url("{/literal}{$base_dir}{literal}/img/icon-toolbar-x-on.png") no-repeat;
             display: inline-block;
             /*padding: 2px 0px 2px 2px;*/
             padding: 0px;
-            margin: 10px;
-            width: 30px;
-            height: 30px;
+            margin: 10px 8px 10px 10px;
+            width: 31px;
+            height: 31px;
+            cursor: pointer;
+        }
+        
+        .radio_shape {
+            background: url("{/literal}{$base_dir}{literal}/img/icon-toolbar-shape-off.png") no-repeat;
+            display: inline-block;
+            padding: 0px;
+            margin: 0px 20px 10px 0px;
+            width: 31px;
+            height: 31px;
+            cursor: pointer;
+        }
+        
+        .radio_shape_selected {
+            background: url("{/literal}{$base_dir}{literal}/img/icon-toolbar-shape-on.png") no-repeat;
+            display: inline-block;
+            padding: 0px;
+            margin: 0px 20px 10px 0px;
+            width: 31px;
+            height: 31px;
             cursor: pointer;
         }
         
         #next_button {
             font-size: 13px;
             position: relative;
-            top: -18px;
+            top: -22px;
             margin: 0px 0px 0px 0px;
         }
         
@@ -290,7 +305,7 @@
             {if $scan && $scan.decoded}
                 <div id="atlas_inputs_container">
                     <div class="atlas_inputs">
-                        <div style="display: inline-block; float: left; background-color: black; width: auto; height: auto; padding: 13px;">
+                        <div style="display: inline-block; float: left; background-color: black; width: auto; height: auto; padding: 14px;">
                             <span id="toolbar_title" style="color: #FFF">
                                 A3
                             </span>
