@@ -13,6 +13,16 @@
     $scan = get_scan($context->db, $scan_id);
     $context->sm->assign('scan', $scan);
     
+    if ($scan['print_id'])
+    {
+        $print_id = $scan['print_id'];
+    } elseif (preg_match('#=(\w+)%#', $scan['print_href'], $matches))
+    {
+            $print_id = $matches[1];
+    }
+    
+    $context->sm->assign('print_id', $print_id);
+    
     if($scan['print_id'] && $print = get_print($context->db, $scan['print_id']))
     {
         $context->sm->assign('print', $print);
