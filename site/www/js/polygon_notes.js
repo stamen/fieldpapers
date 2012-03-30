@@ -1328,6 +1328,19 @@ function submitPolygonNote()
     {
         return;
     }
+
+    if (saved_polygons[active_polygon].new_note)
+    {
+        if (document.getElementById('new_polygon_textarea').value.trim() == ''){
+            alert('Please fill out your note!');
+            return false;
+        }
+    } else {
+        if (document.getElementById('polygon_textarea').value.trim() == ''){
+            alert('Please fill out your note!');
+            return false;
+        }
+    }
     
     savePolygon(active_polygon, true);
     
@@ -1354,8 +1367,18 @@ function submitPolygonNote()
     
     if (saved_polygons[active_polygon].new_note)
     {
+        if (document.getElementById('new_polygon_textarea').value.trim() == ''){
+            alert('Please fill out your note!');
+            return false;
+        }
+        
         saved_polygons[active_polygon].note_data.note = document.getElementById('new_polygon_textarea').value;
     } else {
+        if (document.getElementById('polygon_textarea').value.trim() == ''){
+            alert('Please fill out your note!');
+            return false;
+        }
+        
         saved_polygons[active_polygon].note_data.note = document.getElementById('polygon_textarea').value;
     }
     
