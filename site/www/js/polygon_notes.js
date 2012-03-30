@@ -276,7 +276,7 @@ function savePolygon(index, reset_cursor)
 
 function polygonMouseOver(index)
 {
-    updateTipTextArea(saved_polygons[index].note_data.note);
+    updateTipTextArea(saved_polygons[index].note_data.note, saved_polygons[index].note_data.user_id, saved_polygons[index].note_data.created);
 
     var highlighted_polygon = saved_polygons[index].polygon;
     
@@ -527,7 +527,7 @@ function handlePath(e)
         var map_element = document.getElementById('map');
     
         start_x = e.pageX - 10;
-        start_y = e.pageY - document.getElementById('nav').offsetHeight - 13;
+        start_y = e.pageY - document.getElementById('nav').offsetHeight;
         
         drawn_path_vertex = canvas.circle(start_x, 
                                           start_y, 
@@ -552,7 +552,7 @@ function handlePath(e)
         prev_path.toBack();
         
         drawn_path_vertex = canvas.circle(e.pageX - 10, 
-                                          e.pageY - document.getElementById('nav').offsetHeight - 13, 
+                                          e.pageY - document.getElementById('nav').offsetHeight, 
                                           8);
         
         drawn_path_vertex.attr({fill: '#FFF',
@@ -578,7 +578,7 @@ function turnOnPath(e)
     //orig_y = e.pageY - map_element.offsetTop;
     
     orig_x = e.pageX - 10;
-    orig_y = e.pageY - document.getElementById('nav').offsetHeight - 13;
+    orig_y = e.pageY - document.getElementById('nav').offsetHeight;
 }
 
 function drawNewPath(e)
@@ -594,7 +594,7 @@ function drawNewPath(e)
     //var center_y = e.pageY - map_element.offsetTop;
     
     var center_x = e.pageX - 10;
-    var center_y = e.pageY - document.getElementById('nav').offsetHeight - 13;
+    var center_y = e.pageY - document.getElementById('nav').offsetHeight;
     
     path_string = "M" + orig_x + ',' + orig_y + "L" + center_x + ',' + center_y;
     master_path_piece = "L" + center_x + ',' + center_y;
@@ -1135,7 +1135,7 @@ function moveControl(e)
             //cx: e.pageX - map_element.offsetLeft,
             //cy: e.pageY - map_element.offsetTop
             cx: e.pageX - 10,
-            cy: e.pageY - document.getElementById('nav').offsetHeight - 13
+            cy: e.pageY - document.getElementById('nav').offsetHeight
         });                        
     }
     
@@ -1227,6 +1227,10 @@ map.addCallback('panned', function(m) {
     redrawPolygonsAndVertices();
 });
 
+map.addCallback('resized', function(m) {
+    redrawPolygonsAndVertices();
+});
+
 map.addCallback('zoomed', function(m) {
     redrawPolygonsAndVertices();
 });
@@ -1249,9 +1253,21 @@ function updateTextArea(note)
     }
 }
 
-function updateTipTextArea(note)
+function updateTipTextArea(note, user, created)
 {
-    document.getElementById('polygon_tip').innerHTML = note;
+    if (created && user)
+    {
+        var date = new Date(created*1000);
+        var day = date.getDay();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        
+        var formatted_date = day + '/' + month + '/' + year;
+    
+        document.getElementById('polygon_tip').innerHTML = note + '<br><br>' + formatted_date;
+    } else {
+        document.getElementById('polygon_tip').innerHTML = note;
+    }
 }
 
 function compute_area_of_polygon(vertices)
@@ -1333,6 +1349,8 @@ function submitPolygonNote()
     
     saved_polygons[active_polygon].note_data.lat = centroid.lat;
     saved_polygons[active_polygon].note_data.lon = centroid.lon;
+    
+    saved_polygons[active_polygon].note_data.user_id = current_user_id;
     
     if (saved_polygons[active_polygon].new_note)
     {
