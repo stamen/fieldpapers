@@ -12,18 +12,26 @@
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
         <script type="text/javascript" src="{$base_dir}/reqwest.min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/easey.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/easey.handlers.js"></script>
         <script type="text/javascript" src="{$base_dir}/marker_notes.js"></script>
     {/if}
     <style type="text/css" title="text/css">
     /* <![CDATA[{literal} */
+    
+        body {
+           background: #fff;
+           color: #000;
+           font-family: Helvetica, sans-serif;
+           margin: 0;
+           padding: 0px;
+           border: 0;
+        }
         
         #atlas_inputs_container {
-            /*height: 0px;*/
             position: absolute;
             z-index: 2;
             width: 100%;
-            /*top:0;*/
-            /*text-align: center;*/
         }
         
         .atlas_inputs {
@@ -33,18 +41,8 @@
             border-top: 2px solid #000;
             width: 460px;
             height: auto;
-            /*border: 1px solid #FF0000;*/
         }
-    
-        /*
-        #area_title_container {
-            display: inline-block;
-            width: 1em;
-            margin: 0px 45px 10px 0px;
-            text-align: left;
-        }
-        */
-        
+            
         #toolbar_title {
             font-size: 24px;
             font-weight: bold;
@@ -106,7 +104,6 @@
            background-color: #000;
            overflow: hidden;
            z-index: 1;
-        
         }
             
         #map {
@@ -139,55 +136,23 @@
             z-index: 3;
         }
     
-        #marker-container
-        {
+        #marker-container {
             position: absolute;
             z-index: 4;
         }
         
-        #marker-container .marker
-        {
+        .marker {
             position: absolute;
         }
-        
-        #marker_note
-        {
+                
+        #new_marker_note, #new_polygon_note, #polygon_note, #marker_note {
             background-color: #000;
-            /*border: 1px solid #050505;*/
             padding: 0px;
             position: absolute;
             z-index: 5;
         }
         
-        #polygon_note
-        {
-            background-color: #000;
-            /*border: 1px solid #050505;*/
-            padding: 0px;
-            position: absolute;
-            z-index: 5;
-        }
-        
-        #new_polygon_note
-        {
-            background-color: #000;
-            /*border: 1px solid #050505;*/
-            padding: 0px;
-            position: absolute;
-            z-index: 5;
-        }
-        
-        #new_marker_note
-        {
-            background-color: #000;
-            /*border: 1px solid #050505;*/
-            padding: 0px;
-            position: absolute;
-            z-index: 5;
-        }
-        
-        #marker-container .marker img
-        {
+        #marker-container .marker img {
             cursor: move;
         }
         
@@ -198,102 +163,48 @@
         .show {
             display: block;
         }
-        
-        #notes {
-            margin: 0;
-        }
-        
-        #textarea_note {
-            margin: 0;
-            position: absolute;
-            z-index: 4;
-        }
-        
-        #textarea_note_button {
-            margin: 0;
-            position: absolute;
-            z-index: 4;
-        }
-        
-        #marker_textarea {
+                
+        #new_polygon_textarea, #polygon_textarea, #new_marker_textarea, #marker_textarea {
             width: 200px;
-            height: 100px;
             padding: 5px;
             margin: 0px;
-            background-color: #FFC;
+            background-color: #FFC; 
             border: none; 
+            height: 100px; 
+            min-width: 200px;
+        }
+                
+        #marker_tip, #polygon_tip {
+            background-color: white;
+            margin: 2px;
+            padding: 10px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: normal;
+            font-size: .8em;
+            width: 150px;
+            max-width: 150px
+            height: auto;
+            border-bottom: 2px solid #000;
+            position: absolute;
+            z-index: 5;
+            white-space: pre;
+            word-wrap: break-word;
         }
         
-        #new_marker_textarea {
-            width: 200px;
-            padding: 5px;
-            margin: 0px;
+        .note_container {
+            background-color: #000; 
+            margin-top: 0%; 
+            margin-bottom: 0%; 
+            height: auto;
         }
         
-        #polygon_textarea {
-            width: 200px;
-            padding: 5px;
-            margin: 0px;
-        }
-        
-        #new_polygon_textarea {
-            width: 200px;
-            padding: 5px;
-            margin: 0px;
-        }
-        
-        #remove, #remove_new, #ok, #ok_new, #cancel {
+        .note_buttons {
+            margin:5% 5px 5% 5px; 
             float: left;
         }
         
-        #saved_note {
-            background-color: white;
-            margin: 2px;
-            padding: 10px;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-weight: normal;
-            font-size: .8em;
-            width: 150px;
-            height: auto;
-            border-bottom: 2px solid #000;
-            z-index: 5;
-        }
-        
-        #polygon_tip {
-            background-color: white;
-            margin: 2px;
-            padding: 10px;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-weight: normal;
-            font-size: .8em;
-            width: 150px;
-            height: auto;
-            border-bottom: 2px solid #000;
-            
-            position: absolute;
-            z-index: 5;
-        }
-        
-        #marker_tip {
-            background-color: white;
-            margin: 2px;
-            padding: 10px;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-weight: normal;
-            font-size: .8em;
-            width: 150px;
-            height: auto;
-            border-bottom: 2px solid #000;
-            
-            position: absolute;
-            z-index: 5;
-        }
-        
-        #button_container {
-            background-color: #000; 
-            padding: 5px; 
-            position: relative; 
-            top: -3px;
+        .note_buttons.right {
+            float: right;
         }
         
     /* {/literal}]]> */
@@ -343,35 +254,35 @@
                     
                     <div id="marker_tip" class="hide">Note</div>
                     <div id="new_marker_note" class="hide">
-                        <textarea id="new_marker_textarea" style="background-color: #FFC; border: none; height: 100px;"></textarea>
-                        <div style="background-color: #000; padding: 5px; position: relative; top: -3px;">
-                            <button type="button" id="new_marker_ok_button">OK</button>
-                            <button type="button" id="new_marker_delete_button">Delete</button>    
+                        <textarea id="new_marker_textarea"></textarea>
+                        <div class="note_container">
+                            <button type="button" id="new_marker_ok_button" class="note_buttons">OK</button>
+                            <button type="button" id="new_marker_delete_button" class="note_buttons">Delete</button>    
                         </div>
                     </div>
                     <div id="marker_note" class="hide">
-                        <textarea id="marker_textarea" style="background-color: #FFC; border: none; height: 100px;">Note</textarea>
-                        <div style="background-color: #000; padding: 5px; position: relative; top: -3px;">
-                            <button type="button" id="marker_ok_button">OK</button>
-                            <button type="button" id="marker_cancel_button">Cancel</button>
-                            <button type="button" id="marker_delete_button" style="float: right;" onclick="deletePolygonNote();">Delete</button>
+                        <textarea id="marker_textarea">Note</textarea>
+                        <div class="note_container">
+                            <button type="button" id="marker_ok_button" class="note_buttons">OK</button>
+                            <button type="button" id="marker_cancel_button" class="note_buttons">Cancel</button>
+                            <button type="button" id="marker_delete_button" class="note_buttons right" onclick="deletePolygonNote();">Delete</button>
                         </div>
                     </div>
 
                     <div id="polygon_tip" class="hide">Note</div>
                     <div id="new_polygon_note" class="hide">
-                        <textarea id="new_polygon_textarea" style="background-color: #FFC; border: none; height: 100px;"></textarea>
-                        <div style="background-color: #000; padding: 5px; position: relative; top: -3px;">
-                            <button type="button" id="new_polygon_ok_button" onclick="submitPolygonNote();">OK</button>
-                            <button type="button" id="new_polygon_delete_button" onclick="deleteNewPolygonNote();">Delete</button>    
+                        <textarea id="new_polygon_textarea"></textarea>
+                        <div class="note_container">
+                            <button type="button" id="new_polygon_ok_button" class="note_buttons" onclick="submitPolygonNote();">OK</button>
+                            <button type="button" id="new_polygon_delete_button" class="note_buttons" onclick="deleteNewPolygonNote();">Delete</button>    
                         </div>
                     </div>
                     <div id="polygon_note" class="hide">
-                        <textarea id="polygon_textarea" style="background-color: #FFC; border: none; height: 100px;">Note</textarea>
-                        <div style="background-color: #000; padding: 5px; position: relative; top: -3px;">
-                            <button type="button" id="polygon_ok_button" onclick="submitPolygonNote();">OK</button>
-                            <button type="button" id="polygon_ok_button" onclick="resetPolygonNote();">Cancel</button>
-                            <button type="button" id="polygon_delete_button" style="float: right;" onclick="deletePolygonNote();">Delete</button>
+                        <textarea id="polygon_textarea">Note</textarea>
+                        <div class="note_container">
+                            <button type="button" id="polygon_ok_button" class="note_buttons" onclick="submitPolygonNote();">OK</button>
+                            <button type="button" id="polygon_cancel_button" class="note_buttons" onclick="resetPolygonNote();">Cancel</button>
+                            <button type="button" id="polygon_delete_button" class="note_buttons right" onclick="deletePolygonNote();">Delete</button>
                         </div>
                     </div>
                 </div>
