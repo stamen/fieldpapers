@@ -1,5 +1,10 @@
 var draw_mode = false;
 
+var vertex_radius = 7;
+var vertex_stroke_width = 3;
+var control_midpoint_radius = 5;
+var control_midpoint_stroke_width = 1;
+
 canvas = Raphael("canvas");
 
 function loadPolygon(note_data, polygon_vertices)
@@ -81,12 +86,21 @@ function readVertices(polygon_vertices)
     {   
         var vertex_display_object = canvas.circle(vertices[i].x,
                                                   vertices[i].y,
-                                                  8);
+                                                  vertex_radius);
         
-        vertex_display_object.attr({fill: '#FFF',
-                                    "stroke-width": 3
+        vertex_display_object.attr({fill: "#FFF",
+                                    "stroke-width": vertex_stroke_width,
+                                    cursor: "pointer"
                                    });
-                                                                
+                                   
+        vertex_display_object.mouseover(function() {
+            this.attr({fill: "#000"});                     
+        });
+        
+        vertex_display_object.mouseout(function() {
+            this.attr({fill: "#FFF"});                     
+        });
+                                                                            
         vertex_display_objects.push(vertex_display_object);
     }
     
@@ -110,7 +124,7 @@ function readVertices(polygon_vertices)
                     setVertices(e,index,this.attr('cx'), this.attr('cy'));
                     updateMidpoints(index);
                     
-                    changePolygonNotePosition()
+                    changePolygonNotePosition(false);
                 };
             }(i),
             
@@ -128,6 +142,7 @@ function readVertices(polygon_vertices)
             function (index) {
                 return function() {
                     savePolygonLocationData(vertices, control_midpoints);
+                    changePolygonNotePosition(true);
                 }
             }(i)
         );
@@ -145,11 +160,20 @@ function readVertices(polygon_vertices)
     {   
         var control_midpoint_display_object = canvas.circle(control_midpoints[i].x,
                                                             control_midpoints[i].y,
-                                                            5);
+                                                            control_midpoint_radius);
         
         control_midpoint_display_object.attr({fill: '#FFF',
-                                              "stroke-width": 1
+                                              "stroke-width": control_midpoint_stroke_width,
+                                              cursor: "pointer"
                                             });
+                                            
+        control_midpoint_display_object.mouseover(function() {
+            this.attr({fill: "#000"});                     
+        });
+        
+        control_midpoint_display_object.mouseout(function() {
+            this.attr({fill: "#FFF"});                     
+        });
                                                                 
         control_midpoint_display_objects.push(control_midpoint_display_object);
     }
@@ -172,7 +196,7 @@ function readVertices(polygon_vertices)
                     
                     setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                     
-                    changePolygonNotePosition()
+                    changePolygonNotePosition(false);
                 };
             }(i),
             
@@ -193,6 +217,7 @@ function readVertices(polygon_vertices)
                 return function() {
                     replaceVertices(temp_vertices);
                     savePolygonLocationData(vertices, control_midpoints);
+                    changePolygonNotePosition(true);
                 }
             }(i)
         );
@@ -223,7 +248,7 @@ function createPolygon(note_data, new_note)
                       "fill-opacity": .25,
                       cursor: "pointer"
                      });
-    showPolygonNote(new_note);
+    //showPolygonNote(new_note);
 }
 
 function savePolygon(index, reset_cursor)
@@ -370,7 +395,7 @@ function showPolygonNote(new_note)
         polygon_note.className = 'show';
     }
     
-    changePolygonNotePosition(new_note);
+    changePolygonNotePosition(true);
 }
 
 function hidePolygonNote(new_note)
@@ -391,9 +416,14 @@ function hidePolygonTip()
     polygon_tip.className = 'hide';
 }
 
-function changePolygonNotePosition(new_note)
+function changePolygonNotePosition(checkoverflow)
 {
-    if (new_note)
+    if (active_polygon == -1)
+    {
+        return;
+    }
+    
+    if (saved_polygons[active_polygon].new_note)
     {
         var polygon_note = document.getElementById('new_polygon_note');
     } else {
@@ -407,6 +437,14 @@ function changePolygonNotePosition(new_note)
     
     polygon_note.style.left = current_polygon_bbox.x + .5 * current_polygon_bbox.width - .5 * note_width + 'px';
     polygon_note.style.top = current_polygon_bbox.y - note_height - offsetY + 'px';
+    
+    // Check overflow
+    if (checkoverflow)
+    {
+        checkMapOverflow({x: polygon_note.offsetLeft, y: polygon_note.offsetTop}, 
+                         {x: polygon_note.offsetLeft + note_width, y: polygon_note.offsetTop + note_height}
+                        );
+    }
 }
 
 function changePolygonTipPosition(highlighted_polygon)
@@ -482,7 +520,7 @@ function redrawPolygonsAndVertices()
     if (active_polygon != -1)
     {
         redrawPolygon(vertices, control_midpoints, vertex_display_objects, control_midpoint_display_objects, new_polygon, saved_polygon_location_data[active_polygon], saved_control_location_data[active_polygon])
-        changePolygonNotePosition();
+        changePolygonNotePosition(true);
     }
     
     for (var i = 0; i < saved_polygons.length; i++)
@@ -526,7 +564,7 @@ function handlePath(e)
     {
         var map_element = document.getElementById('map');
     
-        start_x = e.pageX - 10;
+        start_x = e.pageX;
         start_y = e.pageY - document.getElementById('nav').offsetHeight;
         
         drawn_path_vertex = canvas.circle(start_x, 
@@ -551,7 +589,7 @@ function handlePath(e)
 
         prev_path.toBack();
         
-        drawn_path_vertex = canvas.circle(e.pageX - 10, 
+        drawn_path_vertex = canvas.circle(e.pageX, 
                                           e.pageY - document.getElementById('nav').offsetHeight, 
                                           8);
         
@@ -577,7 +615,7 @@ function turnOnPath(e)
     //orig_x = e.pageX - map_element.offsetLeft;
     //orig_y = e.pageY - map_element.offsetTop;
     
-    orig_x = e.pageX - 10;
+    orig_x = e.pageX;
     orig_y = e.pageY - document.getElementById('nav').offsetHeight;
 }
 
@@ -593,7 +631,7 @@ function drawNewPath(e)
     //var center_x = e.pageX - map_element.offsetLeft;
     //var center_y = e.pageY - map_element.offsetTop;
     
-    var center_x = e.pageX - 10;
+    var center_x = e.pageX;
     var center_y = e.pageY - document.getElementById('nav').offsetHeight;
     
     path_string = "M" + orig_x + ',' + orig_y + "L" + center_x + ',' + center_y;
@@ -688,6 +726,7 @@ function setPolygon(e)
     markerNumber--;
     
     createPolygon(note_data, true);
+    showPolygonNote(true);
     
     savePolygonLocationData(vertices, control_midpoints);
     
@@ -761,11 +800,20 @@ function addVertices()
     {   
         var vertex_display_object = canvas.circle(vertices[i].x,
                                                   vertices[i].y,
-                                                  8);
+                                                  vertex_radius);
         
         vertex_display_object.attr({fill: '#FFF',
-                                    "stroke-width": 3
+                                    "stroke-width": vertex_stroke_width,
+                                    cursor: "pointer"
                                    });
+        
+        vertex_display_object.mouseover(function() {
+            this.attr({fill: "#000"});                     
+        });
+        
+        vertex_display_object.mouseout(function() {
+            this.attr({fill: "#FFF"});                     
+        });
                                                                 
         vertex_display_objects.push(vertex_display_object);
     }
@@ -790,7 +838,7 @@ function addVertices()
                     setVertices(e,index,this.attr('cx'), this.attr('cy'));
                     updateMidpoints(index);
                     
-                    changePolygonNotePosition();
+                    changePolygonNotePosition(false);
                 };
             }(i),
             
@@ -808,6 +856,7 @@ function addVertices()
             function (index) {
                 return function() {
                     savePolygonLocationData(vertices, control_midpoints);
+                    changePolygonNotePosition(true);
                 }
             }(i)
         );
@@ -825,11 +874,20 @@ function addVertices()
     {   
         var control_midpoint_display_object = canvas.circle(control_midpoints[i].x,
                                                             control_midpoints[i].y,
-                                                            5);
+                                                            control_midpoint_radius);
         
         control_midpoint_display_object.attr({fill: '#FFF',
-                                              "stroke-width": 1
+                                              "stroke-width": control_midpoint_stroke_width,
+                                              cursor: "pointer"
                                             });
+        
+        control_midpoint_display_object.mouseover(function() {
+            this.attr({fill: "#000"});                     
+        });
+        
+        control_midpoint_display_object.mouseout(function() {
+            this.attr({fill: "#FFF"});                     
+        });
                                                                 
         control_midpoint_display_objects.push(control_midpoint_display_object);
     }
@@ -852,7 +910,7 @@ function addVertices()
                     
                     setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                     
-                    changePolygonNotePosition();
+                    changePolygonNotePosition(false);
                 };
             }(i),
             
@@ -873,6 +931,7 @@ function addVertices()
                 return function() {
                     replaceVertices(temp_vertices);
                     savePolygonLocationData(vertices, control_midpoints);
+                    changePolygonNotePosition(true);
                 }
             }(i)
         );
@@ -910,11 +969,20 @@ function replaceVertices(vertex_points)
     {   
         var vertex_display_object = canvas.circle(vertices[i].x,
                                                   vertices[i].y,
-                                                  8);
+                                                  vertex_radius);
         
         vertex_display_object.attr({fill: '#FFF',
-                                    "stroke-width": 3
+                                    "stroke-width": vertex_stroke_width,
+                                    cursor: "pointer"
                                    });
+        
+        vertex_display_object.mouseover(function() {
+            this.attr({fill: "#000"});                     
+        });
+        
+        vertex_display_object.mouseout(function() {
+            this.attr({fill: "#FFF"});                     
+        });
                                                                 
         vertex_display_objects.push(vertex_display_object);
     }
@@ -939,7 +1007,7 @@ function replaceVertices(vertex_points)
                     setVertices(e,index,this.attr('cx'), this.attr('cy'));
                     updateMidpoints(index);
                     
-                    changePolygonNotePosition();
+                    changePolygonNotePosition(false);
                 };
             }(i),
             
@@ -957,6 +1025,7 @@ function replaceVertices(vertex_points)
             function (index) {
                 return function() {
                     savePolygonLocationData(vertices, control_midpoints);
+                    changePolygonNotePosition(true);
                 }
             }(i)
         );
@@ -973,11 +1042,20 @@ function replaceVertices(vertex_points)
     {   
         var control_midpoint_display_object = canvas.circle(control_midpoints[i].x,
                                                             control_midpoints[i].y,
-                                                            5);
+                                                            control_midpoint_radius);
         
           control_midpoint_display_object.attr({fill: '#FFF',
-                                                "stroke-width": 1
+                                                "stroke-width": control_midpoint_stroke_width,
+                                                cursor: "pointer"
                                               });
+        
+        control_midpoint_display_object.mouseover(function() {
+            this.attr({fill: "#000"});                     
+        });
+        
+        control_midpoint_display_object.mouseout(function() {
+            this.attr({fill: "#FFF"});                     
+        });
                                                                 
         control_midpoint_display_objects.push(control_midpoint_display_object);
     }
@@ -997,7 +1075,7 @@ function replaceVertices(vertex_points)
                     
                     setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                     
-                    changePolygonNotePosition();
+                    changePolygonNotePosition(false);
                 };
             }(i),
             
@@ -1017,8 +1095,8 @@ function replaceVertices(vertex_points)
             function (index) {
                 return function() {
                     replaceVertices(temp_vertices);
-                    
                     savePolygonLocationData(vertices, control_midpoints);
+                    changePolygonNotePosition(true);
                 }
             }(i)
         );
@@ -1134,7 +1212,7 @@ function moveControl(e)
         circle.attr({
             //cx: e.pageX - map_element.offsetLeft,
             //cy: e.pageY - map_element.offsetTop
-            cx: e.pageX - 10,
+            cx: e.pageX,
             cy: e.pageY - document.getElementById('nav').offsetHeight
         });                        
     }
@@ -1224,6 +1302,7 @@ function savePolygonLocationData(vertices, control_midpoints)
 }
 
 map.addCallback('panned', function(m) {
+    console.log('panned');
     redrawPolygonsAndVertices();
 });
 
