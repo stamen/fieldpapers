@@ -522,6 +522,8 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
         marker.location = map.pointLocation(marker_end);
         data.lat = marker.location.lat.toFixed(6);
         data.lon = marker.location.lon.toFixed(6);
+        
+        updatePosition();
     
         document.onmousemove = null;
         return false;
@@ -551,6 +553,13 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
             var editable_saved_note = document.getElementById('marker_note');
             editable_saved_note.style.left = div.offsetLeft - .5*editable_saved_note.offsetWidth + .5*marker_width + 'px';
             editable_saved_note.style.top = div.offsetTop - editable_saved_note.offsetHeight - offsetY + 'px';
+            
+
+    
+            // Check overflow
+            checkMapOverflow({x: editable_saved_note.offsetLeft, y: editable_saved_note.offsetTop}, 
+                             {x: editable_saved_note.offsetLeft + editable_saved_note.offsetWidth, y: editable_saved_note.offsetTop + editable_saved_note.offsetHeight}
+                            );
         }
     }
     
