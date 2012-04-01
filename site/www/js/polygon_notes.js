@@ -726,9 +726,10 @@ function setPolygon(e)
     markerNumber--;
     
     createPolygon(note_data, true);
-    showPolygonNote(true);
     
     savePolygonLocationData(vertices, control_midpoints);
+    
+    showPolygonNote(true);
     
     // Ability to cancel an edit
     
