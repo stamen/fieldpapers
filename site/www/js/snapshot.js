@@ -58,11 +58,13 @@ var unsignedMarkerNumber = 1;
 
 loadSavedNotes();
 
-function setMapHeight()
+setDisplayContainerHeight();
+
+function setDisplayContainerHeight()
 {   
     var map_height = window.innerHeight - document.getElementById('nav').offsetHeight;
     
-    document.getElementById('map').style.height = map_height + 'px';
+    document.getElementById('display_container').style.height = map_height + 'px';
     
     // Reset Canvas
     if (canvas)
@@ -147,6 +149,67 @@ function finishedRedirect()
 {   
     window.location = redirect_url;
 }
+
+function checkMapOverflow(topLeftPoint, bottomRightPoint)
+{
+    var map_extent = map.getExtent();
+    var map_top_left_point = map.locationPoint(map_extent[0]);
+    var map_bottom_right_point = map.locationPoint(map_extent[1]);
+    
+    // Create 4 Boolean values for overflow tests
+    var left_overflow = topLeftPoint.x < map_top_left_point.x;
+    var top_overflow = topLeftPoint.y < map_top_left_point.y;
+    var right_overflow = bottomRightPoint.x > map_bottom_right_point.x;
+    var bottom_overflow = bottomRightPoint.y > map_bottom_right_point.y;
+    
+    if (left_overflow || top_overflow || right_overflow || bottom_overflow)
+    {
+        var pan_delta_x = 0;
+        var pan_delta_y = 0;
+        
+        if (right_overflow && bottom_overflow)
+        {
+            pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x;
+            pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y;
+        } else if (right_overflow && top_overflow) {
+            pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x;
+            pan_delta_y = map_top_left_point.y - topLeftPoint.y;
+        } else if (left_overflow && top_overflow) {
+            pan_delta_x = map_top_left_point.x - topLeftPoint.x;
+            pan_delta_y = map_top_left_point.y - topLeftPoint.y;
+        } else if (left_overflow && bottom_overflow) {
+            pan_delta_x = map_top_left_point.x - topLeftPoint.x;
+            pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y;
+        } else if (left_overflow) {
+            pan_delta_x = map_top_left_point.x - topLeftPoint.x;
+        } else if (top_overflow) {
+            pan_delta_y = map_top_left_point.y - topLeftPoint.y;
+        } else if (right_overflow) {
+            pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x;
+        } else if (bottom_overflow) {
+            pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y;
+        }
+        
+        var map_center = map.getCenter();
+        console.log('map_center', map_center);
+        var map_center_point = map.locationPoint(map_center);
+        
+        // Calculate new center point
+        map_center_point.x = map_center_point.x - pan_delta_x;
+        map_center_point.y = map_center_point.y - pan_delta_y;
+        
+        var new_map_center_loc = map.pointLocation(map_center_point);
+        
+        //easey.slow(map, {location: new_map_center_loc});
+        //map.setCenter(new_map_center_loc);
+        map.panBy(pan_delta_x, pan_delta_y);
+    } else {
+        return;
+    }
+}
+
+// Window Callbacks
+window.onresize = setDisplayContainerHeight;
 
 // Handle mouse interaction for zoom controls
      
