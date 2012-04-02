@@ -462,4 +462,59 @@
         return json_encode($geojson);
     }
     
+    function scan_to_geojson_feature($scan)
+    {
+        $north = floatval($scan['page']['north']);
+        $south = floatval($scan['page']['south']);
+        $east = floatval($scan['page']['east']);
+        $west = floatval($scan['page']['west']);
+        
+        $feature = array(
+            'type' => 'Feature',
+            'properties' => array(
+                'type' => 'snapshot',
+                'href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($scan['id']),
+                'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
+                'person_href' => null,
+                'created' => gmdate('r', $scan['created'])
+            ),
+            'geometry' => array(
+                'type' => 'Polygon',
+                'coordinates' => array(array(
+                    array($west, $south),
+                    array($west, $north),
+                    array($east, $north),
+                    array($east, $south),
+                    array($west, $south)
+                ))
+            )
+        );
+        
+        if($scan['user_name'])
+            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($scan['user_id']);
+        
+        return $feature;
+    }
+    
+    function scan_note_to_geojson_feature($note)
+    {
+        $feature = array(
+            'type' => 'Feature',
+            'properties' => array(
+                'type' => 'note',
+                'person_href' => null,
+                'snapshot_href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($note['scan_id']),
+                'created' => gmdate('r', $note['created']),
+                'note_number' => intval($note['note_number']),
+                'note' => $note['note']
+            ),
+            'geometry' => wkt_to_geometry($note['geometry'])
+        );
+        
+        if($note['user_name'])
+            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($note['user_id']);
+        
+        return $feature;
+    }
+    
 ?>

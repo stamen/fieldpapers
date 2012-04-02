@@ -270,15 +270,12 @@
                 <p class="download"><a href="{$print.pdf_url}">Download PDF {* TODO: <span class="size">17MB</span> *}</a></p>
             </div>
             
-            {* TODO: this
             <div id="atlas-export-column">
                 <h4>Export Geodata</h4>
                 <ul>
-                    <li><a>GeoJSON</a> 24KB</li>
-                    <li><a>GeoTIFF</a> 24KB</li>
+                    <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=json">GeoJSON</a></li>
                 </ul>
             </div>
-            *}
             
             <div id="atlas-activity-stream">
                 <h3>Activity</h3>
