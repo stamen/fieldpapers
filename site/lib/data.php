@@ -737,12 +737,14 @@
             {
                 $res = $rsp['ResultSet']['Results'][0];
                 
-                if ($res['line1'])
+                if ($res['street'])
                 {
                     $zoom = 14;
-                } elseif ($res['line2']) {
-                    $zoom = 10;
-                } elseif ($res['line4']) {
+                } elseif ($res['city']) {
+                    $zoom = 12;
+                } elseif ($res['state']) {
+                    $zoom = 8;
+                } elseif ($res['country']) {
                     $zoom = 6;
                 } else {
                     $zoom = 10;
