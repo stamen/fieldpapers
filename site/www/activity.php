@@ -40,15 +40,16 @@
     {
         $note_args = array('scans' => array());
         
-        foreach($scans as $scan)
+        foreach($scans as $i => $scan)
         {
+            $scans[$i]['print'] = $print;
             $note_args['scans'][] = $scan['id'];
             $user_id = $scan['user_id'];
             
             if(is_null($users[$user_id]))
                 $users[$user_id] = get_user($context->db, $user_id);
             
-            $scan['user_name'] = $users[$user_id]['name'];
+            $scans[$i]['user_name'] = $users[$user_id]['name'];
         }
         
         $notes = get_scan_notes($context->db, $note_args);
@@ -61,7 +62,7 @@
             if(is_null($users[$user_id]))
                 $users[$user_id] = get_user($context->db, $user_id);
             
-            $note['user_name'] = $users[$user_id]['name'];
+            $notes[$i]['user_name'] = $users[$user_id]['name'];
         }
 
         $context->sm->assign('scans', $scans);
@@ -106,10 +107,10 @@
         foreach($activity as $action)
         {
             if($action['type'] == 'print') {
-                $geojson['features'][] = 'print';
+                //$geojson['features'][] = 'print';
 
             } elseif($action['type'] == 'scan') {
-                $geojson['features'][] = 'scan';
+                $geojson['features'][] = scan_to_geojson_feature($action['scan']);
 
             } elseif($action['type'] == 'note') {
                 $geojson['features'][] = scan_note_to_geojson_feature($action['note']);
