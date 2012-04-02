@@ -6,17 +6,26 @@
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <style type="text/css">
         {literal}
+            #subnav_container {
+                display: inline-block;
+                border-top: 2px solid #000; 
+                width: 290px;
+            }
+                        
             .subnav {
                display: inline-block;
                padding-left: 10px;
                padding-top: 10px;
                margin-left: 0px;
-               border-top: 2px solid #000;
                width: 75px;
                text-align: left;
-               
                color: #CCC;
                font-size: 12px;
+            }
+            
+            .subnav.info {
+               border-left: 1px dashed #666;
+               border-right: 1px dashed #666;
             }
             
             .subnav.layout {
@@ -28,24 +37,26 @@
 <body>      
     {include file="navigation.htmlf.tpl"}
     <div style="width: 100%; text-align: center;">
-        <span class="subnav area">
-            <span id="area">
-                <span>1.</span><br>
-                <span><b>AREA</b></span>
+        <div id="subnav_container">
+            <span class="subnav area">
+                <span id="area">
+                    <span>1.</span><br>
+                    <span><b>AREA</b></span>
+                </span>
             </span>
-        </span>
-        <span class="subnav info">
-            <span>
-                <span>2.</span><br>
-                <span><b>INFO</b></span>
+            <span class="subnav info">
+                <span>
+                    <span>2.</span><br>
+                    <span><b>INFO</b></span>
+                </span>
             </span>
-        </span>
-        <span class="subnav layout">
-            <span>
-                <span>3.</span><br>
-                <span><b>LAYOUT</b></span>
+            <span class="subnav layout">
+                <span>
+                    <span>3.</span><br>
+                    <span><b>LAYOUT</b></span>
+                </span>
             </span>
-        </span>
+        </div>
     </div>
     <div class="container">
     <form id="compose_print" action="{$base_dir}/compose-atlas.php" method="POST">    
