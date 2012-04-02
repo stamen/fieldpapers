@@ -37,12 +37,12 @@
         $scan['has_geojpeg'] = $_POST['has_geojpeg'];
         $scan['has_stickers'] = $_POST['has_stickers'];
         
-        if($_POST['print_href']) {
-            $scan['print_href'] = $_POST['print_href'];
-        
-        } else {
+        if($_POST['print_id'] && $_POST['print_page_number']) {
             $scan['print_id'] = $_POST['print_id'];
             $scan['print_page_number'] = $_POST['print_page_number'];
+        
+        } else {
+            $scan['print_href'] = $_POST['print_href'];
         }
         
         if(preg_match('/^-?\d+(\.\d+)?(,-?\d+(\.\d+)?){3}$/', $_POST['geojpeg_bounds']))
