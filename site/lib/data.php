@@ -713,6 +713,47 @@
         return null;
     }
     
+    /**
+    * @param    $name   Query string for Placefinder API
+    * @return   array   Latitude, Longitude, zoom level
+    */
+    function placefinder_placename_latlonzoom($name)
+    {        
+        $req = new HTTP_Request('http://where.yahooapis.com/geocode?q=' . urlencode($name));
+        $req->addQueryString('flags', 'J');
+        $req->addQueryString('appid', GEOPLANET_APPID);
+
+        $res = $req->sendRequest();
+
+        if(PEAR::isError($res))
+            return null;
+
+        if($req->getResponseCode() == 200)
+        {
+            $rsp = json_decode($req->getResponseBody(), true);
+            
+            if($rsp && $rsp['ResultSet'] && $rsp['ResultSet']['Results'] && $rsp['ResultSet']['Results'][0])
+            {
+                $res = $rsp['ResultSet']['Results'][0];
+                
+                if ($res['line1'])
+                {
+                    $zoom = 14;
+                } elseif ($res['line2']) {
+                    $zoom = 10;
+                } elseif ($res['line4']) {
+                    $zoom = 6;
+                } else {
+                    $zoom = 10;
+                }
+                
+                return array($res['latitude'], $res['longitude'], $zoom);
+            }
+        }
+        
+        return null;
+    }
+    
     function woeid_placeinfo($woeid)
     {
         $req = new HTTP_Request('http://api.flickr.com/services/rest/');
