@@ -218,16 +218,16 @@
                     <div class="atlas_inputs">
                         <div style="display: inline-block; float: left; background-color: black; width: auto; height: auto; padding: 14px;">
                             <span id="toolbar_title" style="color: #FFF">
-                                A3
+                                {$print_page_number|escape}
                             </span>
                         </div>
                         <div style="display: inline-block; float: left; padding: 8px;">
                             <span style="color: #666; font-size: 13px;">
-                                Add notes to page A3 of 16 from
+                                Add notes to page {$print_page_number|escape} of {$page_count|escape} from
                             </span>
                             <br/>
                             <span style="color: #000; font-size: 13px;">
-                                <a style="text-decoration: none" href="{$base_dir}/print.php?id={$print_id}">ATLAS NAME</a>
+                                <a style="text-decoration: none" href="{$base_dir}/print.php?id={$print_id}">{$title|escape}</a>
                             </span>
                         </div>
                         <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
