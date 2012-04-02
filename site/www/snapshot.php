@@ -12,21 +12,43 @@
     
     $scan = get_scan($context->db, $scan_id);
     $context->sm->assign('scan', $scan);
-    
-    if ($scan['print_id'])
+        
+    if ($scan['print_id'] && $scan['print_page_number'])
     {
         $print_id = $scan['print_id'];
-    } elseif (preg_match('#=(\w+)%#', $scan['print_href'], $matches))
-    {
-            $print_id = $matches[1];
+        $print_page_number = $scan['print_page_number'];
+    } elseif ($scan['print_href']) {
+        $parsed_print_href = parse_url($scan['print_href']);
+        parse_str($parsed_print_href['query'], $href_fragment);
+        
+        if(preg_match('#(\w+)\/(\w+)#', $href_fragment['id'], $m))
+        {
+            $print_id = $m[1];
+            $print_page_number = $m[2];
+        }
     }
-    
+        
     $context->sm->assign('print_id', $print_id);
+    $context->sm->assign('print_page_number', $print_page_number);
     
-    if($scan['print_id'] && $print = get_print($context->db, $scan['print_id']))
+    if($print_id && $print = get_print($context->db, $print_id))
     {
         $context->sm->assign('print', $print);
     }
+    
+    //Get the title of the print associated with the scan
+    if ($print['title'])
+    {
+        $title = $print['title'];
+    } else {
+        $title = 'Untitled';
+    }
+    
+    $context->sm->assign('title', $title);
+    
+    // Get the number of pages for the print
+    $pages = get_print_pages($context->db, $print_id);
+    $context->sm->assign('page_count', count($pages));
     
     $note_count = get_scan_notes_count($context->db, $scan_id);
     $notes = get_scan_notes($context->db, array('scan' => $scan['id']), $note_count);
