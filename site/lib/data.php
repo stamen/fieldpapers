@@ -720,6 +720,7 @@
     function placefinder_placename_latlonzoom($name)
     {        
         $req = new HTTP_Request('http://where.yahooapis.com/geocode?q=' . urlencode($name));
+        $req->addQueryString('count', '1');
         $req->addQueryString('flags', 'J');
         $req->addQueryString('appid', GEOPLANET_APPID);
 
