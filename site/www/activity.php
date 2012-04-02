@@ -117,6 +117,7 @@
         
     if($context->type == 'application/geo+json' || $context->type == 'application/json') { 
         header("Content-Type: application/geo+json; charset=UTF-8");
+        header('Content-Disposition: attachment; filename="activity-'.$print['id'].'.json"');
         echo activity_to_geojson($activity)."\n";
 
     } else {
