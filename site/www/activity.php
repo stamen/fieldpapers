@@ -21,6 +21,7 @@
         $pages = get_print_pages($context->db, $print_id);
     }
         
+    $print['pages'] = $pages;
     $context->sm->assign('pages', $pages);
     
     if($user = get_user($context->db, $print['user_id']))
@@ -94,20 +95,13 @@
     {
         $geojson = array(
             'type' => 'FeatureCollection',
-            /*
-            'properties' => array(
-                'paper_size' => $print['paper_size'],
-                'orientation' => $print['orientation'],
-                'layout' => $print['layout']
-            ),
-            */
             'features' => array()
         );
         
         foreach($activity as $action)
         {
             if($action['type'] == 'print') {
-                //$geojson['features'][] = 'print';
+                $geojson['features'][] = print_to_geojson_feature($action['print']);
 
             } elseif($action['type'] == 'scan') {
                 $geojson['features'][] = scan_to_geojson_feature($action['scan']);
@@ -115,31 +109,6 @@
             } elseif($action['type'] == 'note') {
                 $geojson['features'][] = scan_note_to_geojson_feature($action['note']);
             }
-        }
-        
-        return json_encode($geojson);
-        
-        foreach($pages as $page)
-        {
-            $north = floatval($page['north']);
-            $south = floatval($page['south']);
-            $west = floatval($page['west']);
-            $east = floatval($page['east']);
-        
-            $feature = array(
-                'type' => 'Feature',
-                'properties' => array('provider' => $page['provider'], 'zoom' => intval($page['zoom'])),
-                'geometry' => array(
-                    'type' => 'Polygon',
-                    'coordinates' => array(array(
-                        array($west, $north), array($east, $north),
-                        array($east, $south), array($west, $south),
-                        array($west, $north)
-                    ))
-                )
-            );
-            
-            $geojson['features'][] = $feature;
         }
         
         return json_encode($geojson);
