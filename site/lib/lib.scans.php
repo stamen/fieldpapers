@@ -464,17 +464,17 @@
     
     function scan_to_geojson_feature($scan)
     {
-        $north = floatval($scan['print']['north']);
-        $south = floatval($scan['print']['south']);
-        $east = floatval($scan['print']['east']);
-        $west = floatval($scan['print']['west']);
+        $north = floatval($scan['page']['north']);
+        $south = floatval($scan['page']['south']);
+        $east = floatval($scan['page']['east']);
+        $west = floatval($scan['page']['west']);
         
         $feature = array(
             'type' => 'Feature',
             'properties' => array(
                 'type' => 'snapshot',
                 'href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($scan['id']),
-                'atlas_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
+                'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
                 'person_href' => null,
                 'created' => gmdate('r', $scan['created'])
             ),

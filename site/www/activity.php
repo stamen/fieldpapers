@@ -44,6 +44,7 @@
         foreach($scans as $i => $scan)
         {
             $scans[$i]['print'] = $print;
+            $scans[$i]['page'] = get_print_page($context->db, $scan['print_id'], $scan['print_page_number']);
             $note_args['scans'][] = $scan['id'];
             $user_id = $scan['user_id'];
             
