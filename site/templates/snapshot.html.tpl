@@ -12,8 +12,6 @@
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
         <script type="text/javascript" src="{$base_dir}/reqwest.min.js"></script>
-        <script type="text/javascript" src="{$base_dir}/js/easey.js"></script>
-        <script type="text/javascript" src="{$base_dir}/js/easey.handlers.js"></script>
         <script type="text/javascript" src="{$base_dir}/marker_notes.js"></script>
     {/if}
     <style type="text/css" title="text/css">
