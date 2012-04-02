@@ -4,22 +4,9 @@
     <title>Search - fieldpapers.org</title>
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
+    <script type="text/javascript" src="{$base_dir}/js/make_search.js"></script>
     <script type="text/javascript">
-        {literal}            
-            function changeFormAction(index)
-            {
-                var mbtiles_info = document.getElementById('mbtiles_selection').options[index].value;
-                
-                var mbtiles_info = mbtiles_info.split('_');
-            
-                var id = mbtiles_info[0];
-                var y = mbtiles_info[1];
-                var x = mbtiles_info[2];
-                var z = mbtiles_info[3];
-
-                document.getElementById('mbtiles_form').action = '{/literal}{$base_dir}{literal}/make-step2-geography.php?\mbtiles_id=' + id + '&coordinates=' + y + '/' + x + '/' + z;
-            }
-        {/literal}
+        var base_url = {$base_dir|json_encode};
     </script>
 </head>
     <body>
