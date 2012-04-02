@@ -29,11 +29,11 @@
             $zoom = $m[3] ? $m[3] : 10;
         
         } else {
-            $latloncode = placename_latloncode($_POST['query']);
+            $latlonzoom = placefinder_placename_latlonzoom($_POST['query']);
             //header('Content-type: text/javascript');
-            //print_r($latloncode);
+            //print_r($latlonzoom);
             
-            if(!is_array($latloncode))
+            if(!is_array($latlonzoom))
             {
                 $redirect_href = sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
                 
@@ -42,28 +42,8 @@
                 exit();
             }
             
-            $latlon = array($latloncode[0], $latloncode[1]);
-            $code = $latloncode[2];
-            
-            // Handle zoom level
-            if ($code == 29)
-            {
-                $zoom = 3;
-            } elseif ($code == 12 || $code == 19) {
-                $zoom = 4;
-            } elseif ($code == 8 || $code == 24) {
-                $zoom = 6;
-            } elseif ($code == 9) {
-                $zoom = 8;
-            } elseif($code == 10 || $code == 11) {
-                $zoom = 9;
-            } elseif ($code == 7) {
-                $zoom = 10;
-            } elseif ($code == 22 || $code == 20) {
-                $zoom = 14;
-            } else {
-                $zoom = 10;
-            }
+            $latlon = array($latlonzoom[0], $latlonzoom[1]);
+            $zoom = $latlonzoom[2];
         }
         
         $context->sm->assign('center', join(',', $latlon));
@@ -75,8 +55,7 @@
         header("Location: $redirect_href");
     }
 
-    /*
-    
+    /*    
     // breaking this for the moment
     
     if($_GET['mbtiles_id'])
