@@ -462,4 +462,23 @@
         return json_encode($geojson);
     }
     
+    function scan_note_to_geojson_feature($note)
+    {
+        $feature = array(
+            'type' => 'Feature',
+            'properties' => array(
+                'person_href' => null,
+                'created' => gmdate('r', $note['created']),
+                'note_number' => intval($note['note_number']),
+                'note' => $note['note'],
+            ),
+            'geometry' => $note['geometry']
+        );
+        
+        if($note['user_name'])
+            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($note['user_id']);
+        
+        return $feature;
+    }
+    
 ?>
