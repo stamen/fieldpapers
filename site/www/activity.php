@@ -8,7 +8,7 @@
     
     /**** ... ****/
     
-    $print_id = $_GET['id'] ? $_GET['id'] : null;
+    $print_id = $_GET['print'] ? $_GET['print'] : null;
     
     $print = get_print($context->db, $print_id);
     
@@ -21,6 +21,7 @@
         $pages = get_print_pages($context->db, $print_id);
     }
         
+    $print['pages'] = $pages;
     $context->sm->assign('pages', $pages);
     
     if($user = get_user($context->db, $print['user_id']))
@@ -40,15 +41,17 @@
     {
         $note_args = array('scans' => array());
         
-        foreach($scans as $scan)
+        foreach($scans as $i => $scan)
         {
+            $scans[$i]['print'] = $print;
+            $scans[$i]['page'] = get_print_page($context->db, $scan['print_id'], $scan['print_page_number']);
             $note_args['scans'][] = $scan['id'];
             $user_id = $scan['user_id'];
             
             if(is_null($users[$user_id]))
                 $users[$user_id] = get_user($context->db, $user_id);
             
-            $scan['user_name'] = $users[$user_id]['name'];
+            $scans[$i]['user_name'] = $users[$user_id]['name'];
         }
         
         $notes = get_scan_notes($context->db, $note_args);
@@ -61,7 +64,7 @@
             if(is_null($users[$user_id]))
                 $users[$user_id] = get_user($context->db, $user_id);
             
-            $note['user_name'] = $users[$user_id]['name'];
+            $notes[$i]['user_name'] = $users[$user_id]['name'];
         }
 
         $context->sm->assign('scans', $scans);
@@ -88,20 +91,33 @@
     
     array_multisort($times, SORT_ASC, $activity);
     $context->sm->assign('activity', $activity);
+    
+    function activity_to_geojson($activity)
+    {
+        $geojson = array(
+            'type' => 'FeatureCollection',
+            'features' => array()
+        );
         
-    if($context->type == 'text/html') {
-        header("Content-Type: text/html; charset=UTF-8");
-        print $context->sm->fetch("print.html.tpl");
-    
-    } elseif($context->type == 'application/paperwalking+xml') { 
-        header("Content-Type: application/paperwalking+xml; charset=UTF-8");
-        header("Access-Control-Allow-Origin: *");
-        print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
-        print $context->sm->fetch("print.xml.tpl");
-    
-    } elseif($context->type == 'application/geo+json' || $context->type == 'application/json') { 
+        foreach($activity as $action)
+        {
+            if($action['type'] == 'print') {
+                $geojson['features'][] = print_to_geojson_feature($action['print']);
+
+            } elseif($action['type'] == 'scan') {
+                $geojson['features'][] = scan_to_geojson_feature($action['scan']);
+
+            } elseif($action['type'] == 'note') {
+                $geojson['features'][] = scan_note_to_geojson_feature($action['note']);
+            }
+        }
+        
+        return json_encode($geojson);
+    }
+        
+    if($context->type == 'application/geo+json' || $context->type == 'application/json') { 
         header("Content-Type: application/geo+json; charset=UTF-8");
-        echo print_to_geojson($print, $pages)."\n";
+        echo activity_to_geojson($activity)."\n";
 
     } else {
         header('HTTP/1.1 400');
