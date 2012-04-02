@@ -99,7 +99,7 @@
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
         print $context->sm->fetch("print.xml.tpl");
     
-    } elseif($context->type == 'application/geo+json') { 
+    } elseif($context->type == 'application/geo+json' || $context->type == 'application/json') { 
         header("Content-Type: application/geo+json; charset=UTF-8");
         echo print_to_geojson($print, $pages)."\n";
 
