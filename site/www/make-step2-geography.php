@@ -29,9 +29,11 @@
             $zoom = $m[3] ? $m[3] : 10;
         
         } else {
-            $latlon = placename_latlon($_POST['query']);
+            $latloncode = placename_latloncode($_POST['query']);
+            //header('Content-type: text/javascript');
+            //print_r($latloncode);
             
-            if(!is_array($latlon))
+            if(!is_array($latloncode))
             {
                 $redirect_href = sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
                 
@@ -40,11 +42,37 @@
                 exit();
             }
             
-            $zoom = 10;
+            $latlon = array($latloncode[0], $latloncode[1]);
+            $code = $latloncode[2];
+            
+            // Handle zoom level
+            if ($code == 29)
+            {
+                $zoom = 3;
+            } elseif ($code == 12 || $code == 19) {
+                $zoom = 4;
+            } elseif ($code == 8 || $code == 24) {
+                $zoom = 6;
+            } elseif ($code == 9) {
+                $zoom = 8;
+            } elseif($code == 10 || $code == 11) {
+                $zoom = 9;
+            } elseif ($code == 7) {
+                $zoom = 10;
+            } elseif ($code == 22 || $code == 20) {
+                $zoom = 14;
+            } else {
+                $zoom = 10;
+            }
         }
         
         $context->sm->assign('center', join(',', $latlon));
         $context->sm->assign('zoom', $zoom);
+        
+        $redirect_href = sprintf('http://%s%s/make-step2-geography.php?zoom=%s&lat=%s&lon=%s', get_domain_name(), get_base_dir(), $zoom, $latlon[0], $latlon[1]);
+
+        header('HTTP/1.1 303');
+        header("Location: $redirect_href");
     }
 
     /*
@@ -66,7 +94,16 @@
         $context->sm-> assign('mbtiles_data', $mbtiles_data); 
     }
     */
+    
+    if($_GET['lat'] && $_GET['lon'] && $_GET['zoom'])
+    {
+        $center = array($_GET['lat'], $_GET['lon']);
+        $zoom = $_GET['zoom'];
         
+        $context->sm->assign('center', join(',', $center));
+        $context->sm->assign('zoom', $zoom);
+    }
+            
     header("Content-Type: text/html; charset=UTF-8");
     print $context->sm->fetch("make-step2-geography.html.tpl");
     
