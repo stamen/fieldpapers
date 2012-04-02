@@ -809,4 +809,32 @@
         return array(null, null, null, null, null, null);
     }
     
+    function wkt_to_geometry($wkt)
+    {
+        switch(true)
+        {
+            case preg_match('/^POINT *\((\S+) (\S+)\)$/i', $wkt, $p):
+                return array(
+                    'type' => 'Point',
+                    'coordinates' => array(floatval($p[1]), floatval($p[2]))
+                );
+            
+            case preg_match('/^POLYGON *\(\((.+)\)\)$/i', $wkt, $m):
+                preg_match_all('/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/', $m[1], $p, PREG_SET_ORDER);
+                
+                $ring = array();
+                
+                foreach($p as $lonlat)
+                    $ring[] = array(floatval($lonlat[1]), floatval($lonlat[2]));
+                
+                return array(
+                    'type' => 'Polygon',
+                    'coordinates' => array($ring)
+                );
+            
+            default:
+                return null;
+        }
+    }
+    
 ?>
