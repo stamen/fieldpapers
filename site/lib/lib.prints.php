@@ -387,7 +387,7 @@
                 'type' => 'atlas',
                 'person_href' => null,
                 'href' => 'http://'.get_domain_name().get_base_dir().'/atlas.php?id='.urlencode($print['id']),
-                'created' => gmdate('r', $print['created'])
+                'created' => date('r', $print['created'])
             ),
             'geometry' => array(
                 'type' => 'MultiPolygon',
@@ -419,6 +419,40 @@
             $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($print['user_id']);
         
         return $feature;
+    }
+
+    function print_to_csv_row($print)
+    {
+        $row = array(
+            'type' => 'atlas',
+            'href' => 'http://'.get_domain_name().get_base_dir().'/atlas.php?id='.urlencode($print['id']),
+            'created' => '"'.date('r', $print['created']).'"',
+            'person_href' => '',
+            'geometry' => '',
+            'atlas_page_href' => '',
+            'snapshot_href' => '',
+            'note' => ''
+        );
+        
+        if($print['user_name'])
+            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($print['user_id']);
+
+        $polys = array();
+        
+        foreach($print['pages'] as $page)
+        {
+            $north = floatval($page['north']);
+            $south = floatval($page['south']);
+            $east = floatval($page['east']);
+            $west = floatval($page['west']);
+            
+            $polys[] = sprintf('((%.6f %.6f,%.6f %.6f,%.6f %.6f,%.6f %.6f,%.6f %.6f))',
+                               $west, $south, $west, $north, $east, $north, $east, $south, $west, $south);
+        }
+        
+        $row['geometry'] = sprintf('"MULTIPOLYGON(%s)"', join(', ', $polys));
+        
+        return join(',', array_values($row));
     }
 
 ?>

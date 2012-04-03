@@ -271,9 +271,10 @@
             </div>
             
             <div id="atlas-export-column">
-                <h4>Export Geodata</h4>
+                <h4>Export Data</h4>
                 <ul>
                     <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=json">GeoJSON</a></li>
+                    <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=csv">Plain Text (CSV)</a></li>
                 </ul>
             </div>
             
