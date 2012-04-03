@@ -297,7 +297,7 @@
         return $row;   
     }
     
-    function get_scan_notes(&$dbh, $args, $page)
+    function get_scan_notes(&$dbh, $args, $page=9999)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
