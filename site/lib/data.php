@@ -121,7 +121,7 @@
     {
         $acceptable_types = is_array($acceptable_types)
             ? $acceptable_types
-            : array('application/paperwalking+xml', 'application/json', 'application/geo+json', 'text/html');
+            : array('application/paperwalking+xml', 'application/json', 'application/geo+json', 'text/html', 'text/csv');
         
         if($accept_type_header == 'xml')
             return 'application/paperwalking+xml';
@@ -134,6 +134,9 @@
         
         if($accept_type_header == 'geojson')
             return 'application/geo+json';
+        
+        if($accept_type_header == 'csv')
+            return 'text/csv';
         
         // break up string into pieces (types and q factors)
         preg_match_all('#([\*a-z]+/([\*\+a-z]+)?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?#i', $accept_type_header, $type_parse);

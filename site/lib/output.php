@@ -229,4 +229,49 @@
         die($message);
     }
 
+    function activity_to_geojson($activity)
+    {
+        $geojson = array(
+            'type' => 'FeatureCollection',
+            'features' => array()
+        );
+        
+        foreach($activity as $action)
+        {
+            if($action['type'] == 'print') {
+                $geojson['features'][] = print_to_geojson_feature($action['print']);
+
+            } elseif($action['type'] == 'scan') {
+                $geojson['features'][] = scan_to_geojson_feature($action['scan']);
+
+            } elseif($action['type'] == 'note') {
+                $geojson['features'][] = scan_note_to_geojson_feature($action['note']);
+            }
+        }
+        
+        return json_encode($geojson);
+    }
+        
+    function activity_to_csv($activity)
+    {
+        $lines = array();
+    
+        foreach($activity as $action)
+        {
+            if($action['type'] == 'print') {
+                $lines[] = print_to_csv_row($action['print']);
+
+            } elseif($action['type'] == 'scan') {
+                $lines[] = scan_to_csv_row($action['scan']);
+
+            } elseif($action['type'] == 'note') {
+                $lines[] = scan_note_to_csv_row($action['note']);
+            }
+        }
+        
+        array_unshift($lines, 'type,href,created,person_href,geometry,atlas_page_href,snapshot_href,note');
+        
+        return join("\n", $lines);
+    }
+        
 ?>
