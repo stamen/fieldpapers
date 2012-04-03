@@ -92,32 +92,15 @@
     array_multisort($times, SORT_ASC, $activity);
     $context->sm->assign('activity', $activity);
     
-    function activity_to_geojson($activity)
-    {
-        $geojson = array(
-            'type' => 'FeatureCollection',
-            'features' => array()
-        );
-        
-        foreach($activity as $action)
-        {
-            if($action['type'] == 'print') {
-                $geojson['features'][] = print_to_geojson_feature($action['print']);
+    if($context->type == 'text/csv') { 
+        header("Content-Type: text/csv");
+        header('Content-Disposition: filename="activity-'.$print['id'].'.csv"');
+        echo activity_to_csv($activity)."\n";
 
-            } elseif($action['type'] == 'scan') {
-                $geojson['features'][] = scan_to_geojson_feature($action['scan']);
-
-            } elseif($action['type'] == 'note') {
-                $geojson['features'][] = scan_note_to_geojson_feature($action['note']);
-            }
-        }
-        
-        return json_encode($geojson);
-    }
-        
-    if($context->type == 'application/geo+json' || $context->type == 'application/json') { 
+    } elseif($context->type == 'application/geo+json' || $context->type == 'application/json') { 
         header("Content-Type: application/geo+json; charset=UTF-8");
-        echo activity_to_geojson($activity)."\n";
+        header('Content-Disposition: filename="activity-'.$print['id'].'.json"');
+        echo activity_to_csv($activity);
 
     } else {
         header('HTTP/1.1 400');
