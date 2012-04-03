@@ -27,7 +27,7 @@ a:hover, a:active, a:focus { text-decoration: none;}
 .fltlft { float: left;}
 .clearfloat { clear:both;height:0;font-size: 1px;line-height: 0px;}
 
-.navbar {width: 960px; margin-right:auto; margin-left:auto; vertical-align: center; }
+.navbar {width: 960px; margin-right:auto; margin-left:auto; vertical-align: center; position: relative;}
 #nav { height: 80px; padding-top: 20px; }
 .logo {width: 300px; margin-left: 10px; margin-right: 10px; float: left; text-align: left; padding-top: 5px; border: none;}
 .navbar ul {list-style:none; float: left;}
@@ -91,21 +91,28 @@ button, #remove, #remove_new { margin-right: 10px; }
 #footer { width: 960px; margin-right: auto; margin-left: auto; text-align: left; clear: both; padding-top: 100px; font-size: 0.825em; }
 
 #subnav_container {
-    position: relative;
+    position: absolute;
     display: inline-block;
     border-top: 2px solid #000;
     left: 360px;
+    z-index: 2;
+    background-color: #FFF;
 }
          
 .subnav {
    display: inline-block;
    padding-left: 10px;
    padding-top: 10px;
+   padding-bottom: 4px;
    margin-left: 0px;
    width: 75px;
    text-align: left;
    color: #CCC;
    font-size: 12px;
+}
+
+.subnav .label {
+    display: inline-block;
 }
 
 .subnav.info {
@@ -115,4 +122,11 @@ button, #remove, #remove_new { margin-right: 10px; }
 
 .subnav.active {
     color: #000;
+}
+
+#page_count_container {
+    display: inline-block;
+    width: 2em;
+    margin: 0px 20px 0px 20px;
+    text-align: center;
 }
