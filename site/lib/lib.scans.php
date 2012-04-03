@@ -344,6 +344,31 @@
         return $rows;
     }
     
+    function get_all_scan_notes(&$dbh, $scan_id)
+    {        
+        $q = sprintf('SELECT scan_id, note_number, note,
+                             latitude, longitude, geometry,
+                             UNIX_TIMESTAMP(created) AS created,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                             user_id
+                      FROM scan_notes
+                      WHERE scan_id=%s
+                      ORDER BY created DESC',
+                     $dbh->quoteSmart($scan_id));
+    
+        $res = $dbh->query($q);
+        
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $rows = array();
+        
+        while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+            $rows[] = $row;
+        
+        return $rows;
+    }
+    
     function add_scan_note(&$dbh, $scan_id, $note_number)
     {
         $q = sprintf('INSERT INTO scan_notes
