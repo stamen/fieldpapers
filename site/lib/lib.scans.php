@@ -476,7 +476,7 @@
                 'href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($scan['id']),
                 'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
                 'person_href' => null,
-                'created' => gmdate('r', $scan['created'])
+                'created' => date('r', $scan['created'])
             ),
             'geometry' => array(
                 'type' => 'Polygon',
@@ -504,7 +504,7 @@
                 'type' => 'note',
                 'person_href' => null,
                 'snapshot_href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($note['scan_id']),
-                'created' => gmdate('r', $note['created']),
+                'created' => date('r', $note['created']),
                 'note_number' => intval($note['note_number']),
                 'note' => $note['note']
             ),
@@ -522,7 +522,7 @@
         $row = array(
             'type' => 'snapshot',
             'href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($scan['id']),
-            'created' => '"'.gmdate('r', $scan['created']).'"',
+            'created' => '"'.date('r', $scan['created']).'"',
             'person_href' => '',
             'geometry' => '',
             'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
@@ -549,7 +549,7 @@
         $row = array(
             'type' => 'note',
             'href' => '',
-            'created' => '"'.gmdate('r', $note['created']).'"',
+            'created' => '"'.date('r', $note['created']).'"',
             'person_href' => '',
             'geometry' => '"'.$note['geometry'].'"',
             'atlas_page_href' => '',

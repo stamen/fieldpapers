@@ -387,7 +387,7 @@
                 'type' => 'atlas',
                 'person_href' => null,
                 'href' => 'http://'.get_domain_name().get_base_dir().'/atlas.php?id='.urlencode($print['id']),
-                'created' => gmdate('r', $print['created'])
+                'created' => date('r', $print['created'])
             ),
             'geometry' => array(
                 'type' => 'MultiPolygon',
@@ -426,7 +426,7 @@
         $row = array(
             'type' => 'atlas',
             'href' => 'http://'.get_domain_name().get_base_dir().'/atlas.php?id='.urlencode($print['id']),
-            'created' => '"'.gmdate('r', $print['created']).'"',
+            'created' => '"'.date('r', $print['created']).'"',
             'person_href' => '',
             'geometry' => '',
             'atlas_page_href' => '',
