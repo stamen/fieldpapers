@@ -7,9 +7,10 @@
     <style type="text/css">
         {literal}
             #subnav_container {
+                position: relative;
                 display: inline-block;
-                border-top: 2px solid #000; 
-                width: 290px;
+                border-top: 2px solid #000;
+                left: 360px;
             }
                      
             .subnav {
@@ -33,7 +34,7 @@
 </head>
 <body>      
     {include file="navigation.htmlf.tpl"}
-    <div style="width: 100%; text-align: center;">
+    <div class="navbar">
         <div id="subnav_container">
             <span class="subnav area">
                 <span id="area">
