@@ -418,50 +418,6 @@
         }
     }
     
-    function scan_notes_to_geojson($notes)
-    {
-        $geojson = array(
-            'type' => 'FeatureCollection',
-            'features' => array()
-        );
-        
-        $base_href = 'http://'.get_domain_name().get_base_dir();
-        
-        foreach($notes as $note)
-        {
-            $scan = $note['scan'];
-        
-            $feature = array(
-                'type' => 'Feature',
-                'id' => "{$note['scan_id']}/{$note['note_number']}",
-                'properties' => array(
-                    'note' => $note['note'],
-                    'number' => intval($note['note_number']),
-                    'created' => date('c', $note['created']),
-
-                    'scan_id' => $note['scan_id'],
-                    'scan_href' => "{$base_href}/snapshot.php?id={$note['scan_id']}",
-                    'scan_description' => $scan['description'],
-                    'scan_place_woeid' => $scan['place_woeid'],
-                    'scan_region_woeid' => $scan['region_woeid'],
-                    'scan_country_woeid' => $scan['country_woeid'],
-                    'scan_place_name' => $scan['place_name'],
-                    'scan_region_name' => $scan['region_name'],
-                    'scan_country_name' => $scan['country_name'],
-                    'scan_created' => date('c', $scan['created'])
-                ),
-                'geometry' => array(
-                    'type' => 'Point',
-                    'coordinates' => array(floatval($note['longitude']), floatval($note['latitude']))
-                )
-            );
-            
-            $geojson['features'][] = $feature;
-        }
-        
-        return json_encode($geojson);
-    }
-    
     function scan_to_geojson_feature($scan)
     {
         $north = floatval($scan['page']['north']);
