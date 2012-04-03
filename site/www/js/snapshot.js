@@ -62,7 +62,7 @@ setDisplayContainerHeight();
 
 function setDisplayContainerHeight()
 {   
-    var map_height = window.innerHeight - document.getElementById('nav').offsetHeight;
+    var map_height = window.innerHeight - document.getElementById('nav').offsetHeight - 20;
     
     document.getElementById('display_container').style.height = map_height + 'px';
     
