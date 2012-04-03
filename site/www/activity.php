@@ -93,14 +93,14 @@
     $context->sm->assign('activity', $activity);
     
     if($context->type == 'text/csv') { 
-        header("Content-Type: text/csv");
+        header("Content-Type: text/csv; charset=UTF-8");
         header('Content-Disposition: filename="activity-'.$print['id'].'.csv"');
         echo activity_to_csv($activity)."\n";
 
     } elseif($context->type == 'application/geo+json' || $context->type == 'application/json') { 
         header("Content-Type: application/geo+json; charset=UTF-8");
-        header('Content-Disposition: filename="activity-'.$print['id'].'.json"');
-        echo activity_to_csv($activity);
+        header('Content-Disposition: filename="activity-'.$print['id'].'.geojson"');
+        echo activity_to_geojson($activity);
 
     } else {
         header('HTTP/1.1 400');
