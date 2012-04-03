@@ -565,7 +565,7 @@ function handlePath(e)
         var map_element = document.getElementById('map');
     
         start_x = e.pageX;
-        start_y = e.pageY - document.getElementById('nav').offsetHeight;
+        start_y = e.pageY - document.getElementById('nav').offsetHeight - 20;
         
         drawn_path_vertex = canvas.circle(start_x, 
                                           start_y, 
@@ -590,7 +590,7 @@ function handlePath(e)
         prev_path.toBack();
         
         drawn_path_vertex = canvas.circle(e.pageX, 
-                                          e.pageY - document.getElementById('nav').offsetHeight, 
+                                          e.pageY - document.getElementById('nav').offsetHeight - 20, 
                                           8);
         
         drawn_path_vertex.attr({fill: '#FFF',
@@ -616,7 +616,7 @@ function turnOnPath(e)
     //orig_y = e.pageY - map_element.offsetTop;
     
     orig_x = e.pageX;
-    orig_y = e.pageY - document.getElementById('nav').offsetHeight;
+    orig_y = e.pageY - document.getElementById('nav').offsetHeight - 20;
 }
 
 function drawNewPath(e)
@@ -632,7 +632,7 @@ function drawNewPath(e)
     //var center_y = e.pageY - map_element.offsetTop;
     
     var center_x = e.pageX;
-    var center_y = e.pageY - document.getElementById('nav').offsetHeight;
+    var center_y = e.pageY - document.getElementById('nav').offsetHeight - 20;
     
     path_string = "M" + orig_x + ',' + orig_y + "L" + center_x + ',' + center_y;
     master_path_piece = "L" + center_x + ',' + center_y;
@@ -1214,7 +1214,7 @@ function moveControl(e)
             //cx: e.pageX - map_element.offsetLeft,
             //cy: e.pageY - map_element.offsetTop
             cx: e.pageX,
-            cy: e.pageY - document.getElementById('nav').offsetHeight
+            cy: e.pageY - document.getElementById('nav').offsetHeight - 20
         });                        
     }
     
