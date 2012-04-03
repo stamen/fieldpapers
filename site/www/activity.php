@@ -115,10 +115,37 @@
         return json_encode($geojson);
     }
         
-    if($context->type == 'application/geo+json' || $context->type == 'application/json') { 
+    function activity_to_csv($activity)
+    {
+        $lines = array();
+    
+        foreach($activity as $action)
+        {
+            if($action['type'] == 'print') {
+                $lines[] = print_to_csv_row($action['print']);
+
+            } elseif($action['type'] == 'scan') {
+                $lines[] = scan_to_csv_row($action['scan']);
+
+            } elseif($action['type'] == 'note') {
+                $lines[] = scan_note_to_csv_row($action['note']);
+            }
+        }
+        
+        array_unshift($lines, 'type,href,created,person_href,geometry,atlas_page_href,snapshot_href,note');
+        
+        return join("\n", $lines);
+    }
+        
+    if($context->type == 'text/csv') { 
+        header("Content-Type: text/csv");
+        header('Content-Disposition: filename="activity-'.$print['id'].'.csv"');
+        echo activity_to_csv($activity)."\n";
+
+    } elseif($context->type == 'application/geo+json' || $context->type == 'application/json') { 
         header("Content-Type: application/geo+json; charset=UTF-8");
-        header('Content-Disposition: attachment; filename="activity-'.$print['id'].'.json"');
-        echo activity_to_geojson($activity)."\n";
+        header('Content-Disposition: filename="activity-'.$print['id'].'.json"');
+        echo activity_to_csv($activity);
 
     } else {
         header('HTTP/1.1 400');
