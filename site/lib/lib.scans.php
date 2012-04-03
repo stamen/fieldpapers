@@ -546,8 +546,10 @@
     
     function scan_note_to_csv_row($note)
     {
+        preg_match('/^(\w+)\b/', $note['geometry'], $p);
+    
         $row = array(
-            'type' => 'note',
+            'type' => 'note '.strtolower($p[1]),
             'href' => '',
             'created' => '"'.date('r', $note['created']).'"',
             'person_href' => '',
