@@ -495,7 +495,7 @@
         
         return $feature;
     }
-    
+
     function scan_note_to_geojson_feature($note)
     {
         $feature = array(
@@ -515,6 +515,52 @@
             $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($note['user_id']);
         
         return $feature;
+    }
+
+    function scan_to_csv_row($scan)
+    {
+        $row = array(
+            'type' => 'snapshot',
+            'href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($scan['id']),
+            'created' => '"'.gmdate('r', $scan['created']).'"',
+            'person_href' => '',
+            'geometry' => '',
+            'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
+            'snapshot_href' => '',
+            'note' => ''
+        );
+        
+        if($scan['user_name'])
+            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($scan['user_id']);
+
+        $north = floatval($scan['page']['north']);
+        $south = floatval($scan['page']['south']);
+        $east = floatval($scan['page']['east']);
+        $west = floatval($scan['page']['west']);
+        
+        $row['geometry'] = sprintf('"POLYGON((%.6f %.6f,%.6f %.6f,%.6f %.6f,%.6f %.6f,%.6f %.6f))"',
+                                    $west, $south, $west, $north, $east, $north, $east, $south, $west, $south);
+        
+        return join(',', array_values($row));
+    }
+    
+    function scan_note_to_csv_row($note)
+    {
+        $row = array(
+            'type' => 'note',
+            'href' => '',
+            'created' => '"'.gmdate('r', $note['created']).'"',
+            'person_href' => '',
+            'geometry' => '"'.$note['geometry'].'"',
+            'atlas_page_href' => '',
+            'snapshot_href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($note['scan_id']),
+            'note' => '"'.$note['note'].'"'
+        );
+        
+        if($scan['user_name'])
+            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($scan['user_id']);
+        
+        return join(',', array_values($row));
     }
     
 ?>
