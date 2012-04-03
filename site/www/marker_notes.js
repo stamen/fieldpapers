@@ -57,6 +57,8 @@ function MarkerNote(map, post_url)
     
     var changeMarkerDisplay = function(resp)
     {
+        new_marker_text_area.value = '';
+        
         div.parentNode.removeChild(div);
         
         var new_marker_note = document.getElementById('new_marker_note');

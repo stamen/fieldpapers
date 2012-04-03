@@ -51,6 +51,18 @@
     $context->sm->assign('page_count', count($pages));
     
     $notes = get_scan_notes($context->db, array('scan' => $scan['id']));
+    
+    foreach($notes as $key=>$value)
+    {
+        $user = get_user($context->db,$notes[$key][user_id]);
+        if ($user['name'])
+        {
+            $notes[$key]['user_name'] = $user['name'];
+        } else {
+            $notes[$key]['user_name'] = 'Anonymous';
+        }
+    }
+        
     $context->sm->assign('notes', $notes);
     
     $form = get_form($context->db, $print['form_id']);

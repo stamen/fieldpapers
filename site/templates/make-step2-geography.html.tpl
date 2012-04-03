@@ -43,7 +43,7 @@
         }
         #map {
            width: 100%;
-           position: relative;
+           position: absolute;
            overflow: hidden;
            z-index: 1;
         }
@@ -91,14 +91,7 @@
             margin: 0px 45px 10px 0px;
             text-align: left;
         }
-        
-        #page_count_container {
-            display: inline-block;
-            width: 2em;
-            margin: 0px 20px 10px 20px;
-            text-align: center;
-        }
-        
+                
         #page_plural {
             font-size: 0.675em;
             line-height 1.5em;
@@ -162,59 +155,79 @@
             height: 19px;
             cursor: pointer;
         }
+        
+        #area {
+            width: auto;
+            padding-right: 10px;
+            padding-bottom: 0px;
+        }
+        
+        #area .label {
+            margin-right: 10px;
+        }
+        
+        .subnav .controls {
+            position: relative;
+            margin-top: -4px;
+            display: inline-block;
+        }
         {/literal}
     </style>
 </head>
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
-        <div id="container" style="position: relative">
+        <div id="container" style="position: relative; padding-top: 20px;">
             <form id="compose_print" method="post" action="{$base_dir}/make-step3-info.php">
-                <div id="atlas_inputs_container">
-                    <div class="atlas_inputs">
-                        <span id="area_title_container">
-                            <span style="font-weight: normal; font-size: .9em;">1.</span><br>
-                            <span><b>AREA</b></span>
+                <div class="navbar">
+                    <div id="subnav_container" style="margin-top: -20px;">
+                        <span id="area" class="subnav area active">
+                            <span class="label">
+                                <span >1.</span><br>
+                                <span><b>AREA</b></span>
+                            </span>
+                            
+                            <span class="controls">
+                                <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
+                                <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>
+                                
+                                <select style="width: 150px; top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
+                                    {if $atlas_data.atlas_provider}
+                                        <option value="{$atlas_data.atlas_provider|escape}">{$atlas_data.atlas_provider|escape}</option>
+                                    {/if}
+                                    {if $mbtiles_data}
+                                        <option value="{$mbtiles_data.uploaded_file|escape}">{$mbtiles_data.uploaded_file|escape}</option>
+                                    {/if}
+                                    {literal}
+                                        <option value="http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png">Black &amp; White</option>
+                                        <option value="http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg">Satellite + Labels</option>
+                                        <option value="http://tile.openstreetmap.org/{Z}/{X}/{Y}.png">Open Street Map</option>
+                                        <option value="http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg">Satellite Only</option>
+                                    {/literal}
+                                </select>
+                                
+                                <span id="page_count_container">
+                                    <span id="page_count"><b>1</b></span><br>
+                                    <span id="page_plural">PAGE</span>
+                                </span>
+                                
+                                <input id="next_button" type="submit" value="Next">
+                            </span>                           
                         </span>
-                        
-                        <div class="radio_landscape_selected" id="landscape_button" title="Landscape" onclick="changeOrientation('landscape');"></div>
-                        <div class="radio_portrait" id="portrait_button" title="Portrait" onclick="changeOrientation('portrait');"></div>
-                        
-                        <select style="width: 150px; top: -8px; margin-left: 10px; position: relative;" name="provider" onchange="setProvider(this.value);">
-                            {if $atlas_data.atlas_provider}
-                                <option value="{$atlas_data.atlas_provider|escape}">{$atlas_data.atlas_provider|escape}</option>
-                            {/if}
-                            {if $mbtiles_data}
-                                <option value="{$mbtiles_data.uploaded_file|escape}">{$mbtiles_data.uploaded_file|escape}</option>
-                            {/if}
-                            {literal}
-                                <option value="http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png">Black &amp; White</option>
-                                <option value="http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg">Satellite + Labels</option>
-                                <option value="http://tile.openstreetmap.org/{Z}/{X}/{Y}.png">Open Street Map</option>
-                                <option value="http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg">Satellite Only</option>
-                            {/literal}
-                        </select>
-                        
-                        <span id="page_count_container">
-                            <span class="section" id="page_count"><b>1</b></span><br>
-                            <span id="page_plural">PAGE</span>
-                        </span>
-                        
-                        <input id="next_button" type="submit" value="Next">
-                        
-                        <span id="atlas_info">
-                            <span id="area_title_container">
-                                <span style="font-weight: normal; font-size: .9em;">2.</span><br>
+                        <span class="subnav info">
+                            <span class="label">
+                                <span>2.</span><br>
                                 <span><b>INFO</b></span>
                             </span>
                         </span>
-                        <span id="atlas_layout">
-                            <span id="area_title_container">
-                                <span style="font-weight: normal; font-size: .9em;">3.</span><br>
+                        <span class="subnav layout">
+                            <span class="label">
+                                <span>3.</span><br>
                                 <span><b>LAYOUT</b></span>
                             </span>
                         </span>
                     </div>
                 </div>
+
                 <input type="hidden" name="action" value="compose">
                 <div id="form_data_div"></div>
                 <input type="hidden" id="page_zoom" name="page_zoom">

@@ -33,12 +33,17 @@
         }
         
         .atlas_inputs {
-            padding: 0px 0px 0px 0px;
-            margin: -25px auto 0 auto;
+            padding-right: 10px;
+            /*margin: -25px auto 0 auto;*/
             background-color: #FFF;
             border-top: 2px solid #000;
-            width: 460px;
+            /*width: 460px;*/
+            width: auto;
             height: auto;
+            position: absolute;
+            z-index: 2;
+            left: 360px;
+            margin-top: -20px;
         }
             
         #toolbar_title {
@@ -210,11 +215,11 @@
 </head>
 <body> 
     {include file="navigation.htmlf.tpl"}
-    <div id="container" style="position: relative">
-            {if $scan && $scan.decoded}
-                <div id="atlas_inputs_container">
+            <div id="container" style="position: relative; padding-top: 20px;">
+                        {if $scan && $scan.decoded}
+                <div class="navbar">
                     <div class="atlas_inputs">
-                        <div style="display: inline-block; float: left; background-color: black; width: auto; height: auto; padding: 14px;">
+                        <div style="display: inline-block; float: left; background-color: black; padding: 14px;">
                             <span id="toolbar_title" style="color: #FFF">
                                 {$print_page_number|escape}
                             </span>

@@ -4,36 +4,10 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Add Form - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
-    <style type="text/css">
-        {literal}
-            #subnav_container {
-                display: inline-block;
-                border-top: 2px solid #000; 
-                width: 290px;
-            }
-                     
-            .subnav {
-               display: inline-block;
-               padding-left: 10px;
-               padding-top: 10px;
-               margin-left: 0px;
-               width: 75px;
-               text-align: left;
-               color: #CCC;
-               font-size: 12px;
-            }
-            
-            .subnav.info {
-               color: #000;
-               border-left: 1px dashed #666;
-               border-right: 1px dashed #666;
-            }
-        {/literal}
-    </style>
 </head>
 <body>      
     {include file="navigation.htmlf.tpl"}
-    <div style="width: 100%; text-align: center;">
+    <div class="navbar">
         <div id="subnav_container">
             <span class="subnav area">
                 <span id="area">
@@ -41,7 +15,7 @@
                     <span><b>AREA</b></span>
                 </span>
             </span>
-            <span class="subnav info">
+            <span class="subnav info active">
                 <span>
                     <span>2.</span><br>
                     <span><b>INFO</b></span>
