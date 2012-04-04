@@ -301,7 +301,7 @@ function savePolygon(index, reset_cursor)
 
 function polygonMouseOver(index)
 {
-    updateTipTextArea(saved_polygons[index].note_data.note, saved_polygons[index].note_data.user_id, saved_polygons[index].note_data.created);
+    updateTipTextArea(saved_polygons[index].note_data.note, saved_polygons[index].note_data.username, saved_polygons[index].note_data.created);
 
     var highlighted_polygon = saved_polygons[index].polygon;
     
@@ -1335,6 +1335,10 @@ function updateTextArea(note)
 
 function updateTipTextArea(note, user, created)
 {
+    if (!user)
+    {
+        user = 'Anonymous';
+    }
     if (created && user)
     {
         var date = new Date(created*1000);
@@ -1344,7 +1348,7 @@ function updateTipTextArea(note, user, created)
         
         var formatted_date = (parseInt(month) + 1) + '/' + day + '/' + year;
     
-        document.getElementById('polygon_tip').innerHTML = note + '<br><br>' + formatted_date;
+        document.getElementById('polygon_tip').innerHTML = note + '<br><br>' + user + ', ' + formatted_date;
     } else {
         document.getElementById('polygon_tip').innerHTML = note;
     }
@@ -1471,7 +1475,7 @@ function submitPolygonNote()
         type: 'json',
         success: function (resp) {
           console.log('response', resp);
-          updateMarker(resp.note_data.note_number,resp.note_data.created,saved_polygon_index);
+          updateMarker(resp.note_data.note_number,resp.note_data.username,resp.note_data.created,saved_polygon_index);
         }
     });
     
@@ -1483,13 +1487,13 @@ function submitPolygonNote()
 }
 
 
-function updateMarker(marker_number, created, index)
+function updateMarker(marker_number, username, created, index)
 {
     console.log('marker_number', marker_number);
     console.log('index', index);
     
     saved_polygons[index].note_data.marker_number = marker_number;
-    
+    saved_polygons[index].note_data.username = username;
     saved_polygons[index].note_data.created = created;
 }
 
