@@ -37,7 +37,7 @@
     
     $print['user_name'] = $users[$user_id]['name'];
     
-    if($scans = get_scans($context->db, array('print' => $print['id'])))
+    if($scans = get_scans($context->db, array('print' => $print['id']), 9999))
     {
         $note_args = array('scans' => array());
         
@@ -54,7 +54,7 @@
             $scans[$i]['user_name'] = $users[$user_id]['name'];
         }
         
-        $notes = get_scan_notes($context->db, $note_args);
+        $notes = get_scan_notes($context->db, $note_args, 9999);
         
         foreach($notes as $i => $note)
         {
