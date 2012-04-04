@@ -309,15 +309,19 @@
 
                             {elseif $event.type == "scan"}
                                 {assign var="scan" value=$event.scan}
-
+                                
                                 {if $scan.user_name}
                                     <a href="{$base_dir}/person.php?id={$scan.user_id|escape}">{$scan.user_name|escape}</a>
                                 {else}
                                     Someone anonymous
                                 {/if}
                                 uploaded a <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">snapshot of page {$scan.print_page_number|escape}</a>
+                                {if $scan.has_geotiff == 'yes'}
+                                    (<a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">GeoTIFF</a>)
+                                {/if}
                                 <a href="{$base_dir}/uploads.php?month={"Y-m"|@date:$scan.created}" class="date">- {$scan.age|nice_relativetime|escape}</a>
                                 <br>
+                                
                                 <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
 
                                 {*
