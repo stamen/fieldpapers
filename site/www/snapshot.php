@@ -12,7 +12,7 @@
     
     $scan = get_scan($context->db, $scan_id);
     $context->sm->assign('scan', $scan);
-        
+            
     if ($scan['print_id'] && $scan['print_page_number'])
     {
         $print_id = $scan['print_id'];
@@ -45,33 +45,33 @@
     }
     
     $context->sm->assign('title', $title);
+        
+    $form = get_form($context->db, $print['form_id']);
+    $context->sm->assign('form', $form);
+    
+    if($user = get_user($context->db, $context->user['id']))
+    {
+        $context->sm->assign('user', $user);
+    }
     
     // Get the number of pages for the print
     $pages = get_print_pages($context->db, $print_id);
     $context->sm->assign('page_count', count($pages));
     
-    $notes = get_all_scan_notes($context->db, $scan['id']);
+    $notes = get_scan_notes($context->db, array('scan' => $scan['id']));
     
     foreach($notes as $key=>$value)
     {
         $user = get_user($context->db,$notes[$key][user_id]);
         if ($user['name'])
         {
-            $notes[$key]['user_name'] = $user['name'];
+            $notes[$key]['username'] = $user['name'];
         } else {
-            $notes[$key]['user_name'] = 'Anonymous';
+            $notes[$key]['username'] = '';
         }
     }
         
     $context->sm->assign('notes', $notes);
-    
-    $form = get_form($context->db, $print['form_id']);
-    $context->sm->assign('form', $form);
-    
-    if($user = get_user($context->db, $scan['user_id']))
-    {
-        $context->sm->assign('user', $user);
-    }
     
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
