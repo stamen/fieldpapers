@@ -16,7 +16,14 @@
         if(strtolower($header) == 'content-type')
         {
             $is_json = preg_match('#\b(text|application)/json\b#i', $value);
+            $json_content = file_get_contents('php://input');
         }
+    }
+    
+    if(!$is_json && isset($_FILES['geojson_file']) && is_uploaded_file($_FILES['geojson_file']['tmp_name']))
+    {
+        $is_json = true;
+        $json_content = file_get_contents($_FILES['geojson_file']['tmp_name']);
     }
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -24,8 +31,7 @@
         $context->db->query('START TRANSACTION');
         
         if($is_json) {
-            $json = json_decode(file_get_contents('php://input'), true);
-            $print = compose_from_geojson($context->db, file_get_contents('php://input'));
+            $print = compose_from_geojson($context->db, $json_content);
 
         } else {
             $atlas_postvars = $_POST;
