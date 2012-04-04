@@ -13,7 +13,6 @@
         <ol>
             <li><a href="{$base_dir}/atlases.php?user={$user.id}">Atlases</a></li>
             <li><a href="{$base_dir}/uploads.php?user={$user.id}">Uploads</a></li>
-            <li>Notes (<a href="{$base_dir}/notes.php?user={$user.id}&amp;type=json">GeoJSON</a>)</li>
         </ol>
         
         {include file="footer.htmlf.tpl"}
