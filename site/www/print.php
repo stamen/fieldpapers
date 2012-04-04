@@ -36,7 +36,7 @@
     
     $print['user_name'] = $users[$user_id]['name'];
     
-    if($scans = get_scans($context->db, array('print' => $print['id'])))
+    if($scans = get_scans($context->db, array('print' => $print['id']), 9999))
     {
         $note_args = array('scans' => array());
         
