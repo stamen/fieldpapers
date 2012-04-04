@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>Atlas</title>
+    <style type="text/css" title="text/css">
+    <!--
+    
+        body
+        {
+            width: 40em;
+            background-color: #eee;
+        }
+        
+        body, input[type="text"], textarea
+        {
+            font-size: 16px;
+            line-height: 24px;
+            font-family: sans-serif;
+        }
+        
+        a { white-space: nowrap; }
+    
+        dt
+        {
+            font-family: monospace;
+            font-weight: bold;
+        }
+        
+        dd
+        {
+            margin-bottom: 1em;
+        }
+        
+        input[type="text"], textarea
+        {
+            width: 30em;
+        }
+        
+        samp
+        {
+            font-size: 90%;
+        }
+    
+    -->
+    </style>
+</head>
+<body>
+    <h1>Making Atlases From GeoJSON</h1>
+
+    <p>
+        It’s possible to generate atlases from raw GeoJSON files. This can be
+        done in one of two ways. A GeoJSON file can posted as an attached file to
+        <a href="http://fieldpapers.org/compose-atlas.php">fieldpapers.org</a>,
+        named “geojson_file”:
+    </p>
+    
+    <form action="http://fieldpapers.org/compose-atlas.php" method="post" enctype="multipart/form-data">
+        <dl>
+            <dt>geojson_file</dt>
+            <dd>
+                <input name="geojson_file" type="file">
+            </dd>
+        </dl>
+        <p>
+            <input type="submit">
+        </p>
+    </form>
+
+    <p>
+        Alternatively, raw GeoJSON content can be posted to
+        <a href="http://fieldpapers.org/compose-atlas.php">fieldpapers.org</a>
+        as a form value, named “geojson_data”:
+    </p>
+    
+    <form action="http://fieldpapers.org/compose-atlas.php" method="post" enctype="multipart/form-data">
+        <dl>
+            <dt>geojson_data</dt>
+            <dd>
+                <textarea name="geojson_data" rows="8" cols="40">{
+  "properties":
+  {
+    "paper_size": "letter",
+    "orientation": "portrait"
+  },
+  "type": "FeatureCollection",
+  "features":
+  [
+    {
+      "properties":
+      {
+        "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
+        "zoom": 17
+      },
+      "type": "Feature",
+      "geometry":
+      {
+        "type": "Polygon",
+        "coordinates": [[ [-122.293647, 37.817211], [-122.293647, 37.801750], [-122.278198, 37.801750], [-122.278198, 37.817211], [-122.293647, 37.817211] ]]
+      }
+    },
+    {
+      "properties":
+      {
+        "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
+        "zoom": 17
+      },
+      "type": "Feature",
+      "geometry":
+      {
+        "type": "Point",
+        "coordinates": [-122.281694, 37.822091]
+      }
+    }
+  ]
+}
+</textarea>
+            </dd>
+        </dl>
+        <p>
+            <input type="submit">
+        </p>
+    </form>
+</body>
+</html>
+
