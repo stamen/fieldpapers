@@ -210,6 +210,18 @@
             float: right;
         }
         
+        #atlas_link {
+            font-size: 13px;
+        }
+        
+        #atlas_link a {
+            color: #09F; 
+            text-decoration: none;
+        }
+        
+        #atlas_link a:hover, a:active, a:focus {
+            color: #09F; 
+        }
     /* {/literal}]]> */
     </style>
 </head>
@@ -229,8 +241,8 @@
                                 Add notes to page {$print_page_number|escape} of {$page_count|escape} from
                             </span>
                             <br/>
-                            <span style="font-size: 13px;">
-                                <a style="text-decoration: none;" href="{$base_dir}/print.php?id={$print_id}">{$title|escape}</a>
+                            <span id="atlas_link">
+                                <a href="{$base_dir}/print.php?id={$print_id}">{$title|escape}</a>
                             </span>
                         </div>
                         <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
