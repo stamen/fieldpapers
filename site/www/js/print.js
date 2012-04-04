@@ -28,7 +28,14 @@ function redrawExtent(map, MM, north, south, east, west)
 
 function redrawPageExtents(map, MM, page_data, pages)
 {
-    for (var i=0; i < page_data.length - 1; i++) 
+    if (page_data.length == 1)
+    {
+        var page_limit = page_data.length;
+    } else {
+        var page_limit = page_data.length - 1;
+    }
+    
+    for (var i=0; i < page_limit; i++) 
     {
         var north = page_data[i].north;
         var west = page_data[i].west;
@@ -173,7 +180,14 @@ function loadMaps() {
         // Draw the page grid for the main atlas page
         ////
         
-        for (var i = 0; i < atlas_pages.length-1; i++)
+        if (atlas_pages.length == 1)
+        {
+            var page_limit = atlas_pages.length
+        } else {
+            var page_limit = atlas_pages.length - 1;
+        }
+        
+        for (var i = 0; i < page_limit; i++)
         {
             var north_page = atlas_pages[i].north;
             var west_page = atlas_pages[i].west;
