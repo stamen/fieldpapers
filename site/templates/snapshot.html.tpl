@@ -42,8 +42,8 @@
             height: auto;
             position: absolute;
             z-index: 2;
-            left: 360px;
-            margin-top: -20px;
+            left: 220px;
+            margin-top: -30px;
         }
             
         #toolbar_title {
@@ -215,7 +215,7 @@
 </head>
 <body> 
     {include file="navigation.htmlf.tpl"}
-            <div id="container" style="position: relative; padding-top: 20px;">
+            <div id="container" style="position: relative; padding-top: 30px;">
                         {if $scan && $scan.decoded}
                 <div class="navbar">
                     <div class="atlas_inputs">
