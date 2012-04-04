@@ -258,7 +258,7 @@
             
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
                                         'number' => $key,
-                                        'provider' => $provider, 
+                                        'provider' => $provider,
                                         'bounds' => $bounds,
                                         'text' => $text
                                         );
@@ -287,7 +287,7 @@
 
         // create pages based on message contents
         
-        foreach($message['pages'] as $value)
+        foreach($message['pages'] as $i => $value)
         {
             $page = add_print_page($dbh, $print['id'], $value['number']);
             
@@ -303,6 +303,11 @@
             $page['provider'] = $value['provider'];
             
             set_print_page($dbh, $page);
+            
+            // add grid overlay to the printed output of each non-index page:
+            
+            if($value['role'] != 'index')
+                $message['pages'][$i]['provider'] = "{$value['provider']},http://tiles.teczno.com/utm/{Z}/{X}/{Y}.png";
         }
         
         // Deal with WOEIDs
