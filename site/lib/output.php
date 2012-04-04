@@ -273,5 +273,52 @@
         
         return join("\n", $lines);
     }
+    
+    function activity_to_shpzip($activity, $file_id)
+    {
+        $activity_points = array();
+        $activity_polygons = array();
+        
+        foreach($activity as $action)
+        {
+            if($action['type'] == 'note' && preg_match('/^point/i', $action['note']['geometry'])) {
+                $activity_points[] = $action;
+
+            } else {
+                $activity_polygons[] = $action;
+            }
+        }
+        
+        $dirname = trim(shell_exec('mktemp -d /tmp/shapefile.XXXXXX'));
+        chmod($dirname, 0777);
+        
+        $ogr2ogr = OGR2OGR_PATH;
+        
+        if($fh = fopen("{$dirname}/points.json", 'w'))
+        {
+            fwrite($fh, activity_to_geojson($activity_points));
+            fclose($fh);
+            
+            shell_exec("{$ogr2ogr} -nlt POINT {$dirname}/points-{$file_id}.shp {$dirname}/points.json");
+            unlink("{$dirname}/points.json");
+        }
+        
+        if($fh = fopen("{$dirname}/polygons.json", 'w'))
+        {
+            fwrite($fh, activity_to_geojson($activity_polygons));
+            fclose($fh);
+            
+            shell_exec("{$ogr2ogr} -nlt MULTIPOLYGON {$dirname}/polygons-{$file_id}.shp {$dirname}/polygons.json");
+            unlink("{$dirname}/polygons.json");
+        }
+        
+        $zip = ZIP_PATH;
+
+        shell_exec("{$zip} -j {$dirname}/shapefiles.zip {$dirname}/*");
+        $zip_content = file_get_contents("{$dirname}/shapefiles.zip");
+        shell_exec("rm -rf {$dirname}");
+        
+        return $zip_content;
+    }
         
 ?>

@@ -26,8 +26,9 @@
     // Displays a "go away" message for any page when turned off.
     define('MASTER_ON_OFF_SWITCH', 1);
     
-    // Path where ogr2ogr binary can be found, for shapefile downloads.
+    // Path where ogr2ogr and zip binaries can be found, for shapefile downloads.
     define('OGR2OGR_PATH', '');
+    define('ZIP_PATH', '');
     
     // List of tile providers as a multi-line string.
     // Each line is a URL followed by a space followed by a text description.

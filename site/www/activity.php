@@ -92,7 +92,12 @@
     array_multisort($times, SORT_ASC, $activity);
     $context->sm->assign('activity', $activity);
     
-    if($context->type == 'text/csv') { 
+    if($_GET['type'] == 'shp') {
+        header('Content-Type: application/zip');
+        header('Content-Disposition: filename="activity-'.$print['id'].'.zip"');
+        echo activity_to_shpzip($activity, $print['id']);
+
+    } elseif($context->type == 'text/csv') { 
         header("Content-Type: text/csv; charset=UTF-8");
         header('Content-Disposition: filename="activity-'.$print['id'].'.csv"');
         echo activity_to_csv($activity)."\n";

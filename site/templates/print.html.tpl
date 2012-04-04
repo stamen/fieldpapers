@@ -275,6 +275,10 @@
                 <ul>
                     <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=json">GeoJSON</a></li>
                     <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=csv">Plain Text (CSV)</a></li>
+                    
+                    {if $constants.OGR2OGR_PATH && $constants.ZIP_PATH}
+                        <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=shp">Shapefile</a></li>
+                    {/if}
                 </ul>
             </div>
             
