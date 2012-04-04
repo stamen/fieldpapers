@@ -280,7 +280,7 @@ function loadMaps() {
                 return function() {
                     this.attr({
                         fill: "#09F",
-                        "fill-opacity": 1
+                        "fill-opacity": .2
                     });
                     
                     page_label_objects[index].attr({
@@ -288,7 +288,7 @@ function loadMaps() {
                     });
                     
                     page_label_background_objects[index].attr({
-                        fill: ""
+                        fill: "#09F"
                     });
                 }
             }(i));
@@ -301,11 +301,11 @@ function loadMaps() {
                     
                     atlas_page_objects[index].attr({
                         fill: "#09F",
-                        "fill-opacity": 1
+                        "fill-opacity": .2
                     });
                     
                     page_label_background_objects[index].attr({
-                        fill: ""
+                        fill: "#09F"
                     });
                 }
             }(i));
