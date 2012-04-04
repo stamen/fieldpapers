@@ -66,7 +66,12 @@ function MarkerNote(map, post_url)
     
         var note = resp.note_data;
         
-        addSavedNote(note.note,note.user_id,note.created,note.marker_number,note.latitude,note.longitude);
+        if (!note.username)
+        {
+            note.username = 'Anonymous';
+        }
+        
+        addSavedNote(note.note,note.username,note.created,note.marker_number,note.latitude,note.longitude);
     }
     
     var removeMarkerNote = function()
@@ -249,7 +254,7 @@ function addMarkerNote()
     active_marker = true;
     note_displayed = true;
 }
-                    
+
 function SavedMarker(map,note,user,created,note_num,lat,lon)
 {
     var note_displayed = false;
@@ -261,6 +266,7 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
         'lon': parseFloat(lon),
         'marker_number': note_num,
         'user_id': current_user_id,
+        'user': user,
         'created': created,
         'note': note
     };
@@ -426,7 +432,7 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
                 
                 var formatted_date = (parseInt(month) + 1) + '/' + day + '/' + year;
         
-                saved_note.innerHTML = data.note + '<br><br>' + formatted_date;
+                saved_note.innerHTML = data.note + '<br><br>' + user + ', ' + formatted_date;
             } else {
                 saved_note.innerHTML = data.note;
             }
