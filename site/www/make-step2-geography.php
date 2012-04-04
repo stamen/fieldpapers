@@ -55,9 +55,6 @@
         header("Location: $redirect_href");
     }
 
-    /*    
-    // breaking this for the moment
-    
     if($_GET['mbtiles_id'])
     {        
         $mbtiles = get_mbtiles_by_id($context->db, $_GET['mbtiles_id']);
@@ -72,7 +69,6 @@
                               );
         $context->sm-> assign('mbtiles_data', $mbtiles_data); 
     }
-    */
     
     if($_GET['lat'] && $_GET['lon'] && $_GET['zoom'])
     {

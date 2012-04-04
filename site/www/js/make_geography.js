@@ -392,9 +392,15 @@ function initUI () {
     // Map
     ////
     var MM = com.modestmaps;
-    
-    var providerURL = document.forms['compose_print'].elements['provider'].value,
-        provider = new MM.TemplatedMapProvider(providerURL);
+
+    if (mbtiles_data)
+    {
+        var providerURL = mbtiles_data['provider'],
+            provider = new MM.TemplatedMapProvider(providerURL);
+    } else {
+        var providerURL = document.forms['compose_print'].elements['provider'].value,
+            provider = new MM.TemplatedMapProvider(providerURL);
+    }
     
     map_layer = new MM.Layer(provider);
     
