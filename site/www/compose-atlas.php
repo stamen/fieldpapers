@@ -55,6 +55,9 @@
         
         $context->db->query('COMMIT');
         
+        if(is_null($print))
+            die_with_code(400, "Missing... Something.");
+        
         $print_url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($print['id']);
         header("Location: {$print_url}");
     }
