@@ -22,7 +22,7 @@
             button_drag_active = base_url + "/img/button-move-atlas-on.png",
             button_drag_inactive = base_url + "/img/button-move-atlas-off.png";
         
-        var mbtiles_data = {$mbtiles_data|json_encode} || null,
+        var mbtiles_data = {$mbtiles_data|@json_encode} || null,
             center = {$center|json_encode} || null,
             zoom = {$zoom|json_encode} || null;
     </script>
@@ -195,7 +195,7 @@
                                         <option value="{$atlas_data.atlas_provider|escape}">{$atlas_data.atlas_provider|escape}</option>
                                     {/if}
                                     {if $mbtiles_data}
-                                        <option value="{$mbtiles_data.uploaded_file|escape}">{$mbtiles_data.uploaded_file|escape}</option>
+                                        <option value="{$mbtiles_data.provider|escape}">{$mbtiles_data.uploaded_file|escape}</option>
                                     {/if}
                                     {literal}
                                         <option value="http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png">Black &amp; White</option>
