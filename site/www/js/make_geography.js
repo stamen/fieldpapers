@@ -417,8 +417,6 @@ function initUI () {
         var map_coordinates = new MM.Coordinate(map_center_y, map_center_x, map_zoom);
         
         var map_center = map.coordinateLocation(map_coordinates);
-        
-        map.setZoomRange(mbtiles_data['min_zoom'], mbtiles_data['max_zoom']);
     } else {
         center = center.split(',');
         var map_center = new MM.Location(parseFloat(center[0]), parseFloat(center[1]));
