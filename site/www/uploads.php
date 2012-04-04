@@ -27,6 +27,9 @@
             $users[$user_id] = get_user($context->db, $user_id);
         
         $scans[$i]['user'] = $users[$user_id];
+        
+        if($scan['print_id'])
+            $scans[$i]['print'] = get_print($context->db, $scan['print_id']);
     }
     
     $context->sm->assign('title', $title);

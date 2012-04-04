@@ -14,13 +14,25 @@
         {foreach from=$scans item="scan" name="index"}
             <div class="atlasThumb">
                 <a href="{$base_dir}/snapshot.php?id={$scan.id}"><img src="{$scan.base_url}/preview.jpg" alt="scanned page" width="100%"></a>
+                
+                {capture assign="scan_title"}
+                    {if $scan.print && $scan.print.title && $scan.print_page_number}
+                        Page {$scan.print_page_number} of {$scan.print.title|escape}
+                    {elseif $scan.print && $scan.print.title}
+                        {$scan.print.title|escape}
+                    {elseif $scan.print_page_number}
+                        Page {$scan.print_page_number} of untitled atlas
+                    {else}
+                        Untitled atlas
+                    {/if}
+                {/capture}
 
                 {if $scan.user.name}
-                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{if $scan.title}{$scan.title|escape}{else}Untitled{/if}</a>
+                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{$scan_title|escape}</a>
                     by <a href="{$base_dir}/uploads.php?user={$scan.user_id}">{$scan.user.name}</a>,
 
                 {else}
-                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{if $scan.title}{$scan.title|escape}{else}Untitled{/if}</a>,
+                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{$scan_title|escape}</a>,
                 {/if}
 
                 {if $scan.place_name}
