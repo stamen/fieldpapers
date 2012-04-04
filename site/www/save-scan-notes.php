@@ -38,6 +38,14 @@
             $note['longitude'] = $marker['lon'];
             $note['user_id'] = $marker['user_id'];
             
+            $user = get_user($context->db,$marker['user_id']);
+            
+            if ($user['name']) {
+                $note['username'] = $user['name'];
+            } else {
+                $note['username'] = '';
+            }
+            
             if ($marker['type'] && $marker['type'] == 'POLYGON')
             {
                 $note['geometry'] = $marker['geometry'];
@@ -104,6 +112,13 @@
             
             //$note['user_id'] = $context->user['id'];
             $note['user_id'] = $marker['user_id'];
+            $user = get_user($context->db,$marker['user_id']);
+            
+            if ($user['name']) {
+                $note['username'] = $user['name'];
+            } else {
+                $note['username'] = '';
+            }
                             
             $updated_note = set_scan_note($context->db, $note);
             
