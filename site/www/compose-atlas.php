@@ -26,6 +26,12 @@
         $json_content = file_get_contents($_FILES['geojson_file']['tmp_name']);
     }
     
+    if(!$is_json && isset($_POST['geojson_data']))
+    {
+        $is_json = true;
+        $json_content = $_POST['geojson_data'];
+    }
+    
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {       
         $context->db->query('START TRANSACTION');

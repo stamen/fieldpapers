@@ -63,6 +63,55 @@
             <input type="submit">
         </p>
     </form>
+    
+    <form action="http://fieldpapers.org/compose-atlas.php" method="post" enctype="multipart/form-data">
+        <dl>
+            <dt>geojson_data</dt>
+            <dd>
+                <textarea name="geojson_data" rows="8" cols="40">{
+  "properties":
+  {
+    "paper_size": "letter",
+    "orientation": "portrait"
+  },
+  "type": "FeatureCollection",
+  "features":
+  [
+    {
+      "properties":
+      {
+        "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
+        "zoom": 17
+      },
+      "type": "Feature",
+      "geometry":
+      {
+        "type": "Polygon",
+        "coordinates": [[ [-122.293647, 37.817211], [-122.293647, 37.801750], [-122.278198, 37.801750], [-122.278198, 37.817211], [-122.293647, 37.817211] ]]
+      }
+    },
+    {
+      "properties":
+      {
+        "provider": "http:\/\/tile.openstreetmap.org\/{Z}\/{X}\/{Y}.png",
+        "zoom": 17
+      },
+      "type": "Feature",
+      "geometry":
+      {
+        "type": "Point",
+        "coordinates": [-122.281694, 37.822091]
+      }
+    }
+  ]
+}
+</textarea>
+            </dd>
+        </dl>
+        <p>
+            <input type="submit">
+        </p>
+    </form>
 </body>
 </html>
 
