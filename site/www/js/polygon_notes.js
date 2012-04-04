@@ -569,7 +569,7 @@ function handlePath(e)
         
         drawn_path_vertex = canvas.circle(start_x, 
                                           start_y, 
-                                          8);
+                                          vertex_radius);
         
         drawn_path_vertex.attr({fill: '#FFF',
                                 "stroke-width": 3
@@ -591,7 +591,7 @@ function handlePath(e)
         
         drawn_path_vertex = canvas.circle(e.pageX, 
                                           e.pageY - document.getElementById('nav').offsetHeight - 30, 
-                                          8);
+                                          vertex_radius);
         
         drawn_path_vertex.attr({fill: '#FFF',
                                 "stroke-width": 3
