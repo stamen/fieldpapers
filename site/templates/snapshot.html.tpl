@@ -11,8 +11,8 @@
     {else}
         <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
-        <script type="text/javascript" src="{$base_dir}/reqwest.min.js"></script>
-        <script type="text/javascript" src="{$base_dir}/marker_notes.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/reqwest.min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/marker_notes.js"></script>
     {/if}
     <style type="text/css" title="text/css">
     /* <![CDATA[{literal} */
