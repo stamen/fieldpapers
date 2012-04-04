@@ -34,10 +34,8 @@
         
         .atlas_inputs {
             padding-right: 10px;
-            /*margin: -25px auto 0 auto;*/
             background-color: #FFF;
             border-top: 2px solid #000;
-            /*width: 460px;*/
             width: auto;
             height: auto;
             position: absolute;
@@ -65,7 +63,6 @@
         .radio_pin_selected {
             background: url("{/literal}{$base_dir}{literal}/img/icon-toolbar-x-on.png") no-repeat;
             display: inline-block;
-            /*padding: 2px 0px 2px 2px;*/
             padding: 0px;
             margin: 10px 8px 10px 10px;
             width: 31px;
