@@ -25,7 +25,7 @@
            padding: 0px;
            border: 0;
         }
-        
+                
         #atlas_inputs_container {
             position: absolute;
             z-index: 2;
@@ -184,14 +184,14 @@
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-weight: normal;
             font-size: .8em;
-            width: 150px;
-            max-width: 150px
+            /*width: 150px;*/
+            min-width: 150px;
             height: auto;
             border-bottom: 2px solid #000;
             position: absolute;
             z-index: 5;
             white-space: pre;
-            word-wrap: break-word;
+            /*word-wrap: break-word;*/
         }
         
         .note_container {
@@ -229,8 +229,8 @@
                                 Add notes to page {$print_page_number|escape} of {$page_count|escape} from
                             </span>
                             <br/>
-                            <span style="color: #000; font-size: 13px;">
-                                <a style="text-decoration: none" href="{$base_dir}/print.php?id={$print_id}">{$title|escape}</a>
+                            <span style="font-size: 13px;">
+                                <a style="text-decoration: none;" href="{$base_dir}/print.php?id={$print_id}">{$title|escape}</a>
                             </span>
                         </div>
                         <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
