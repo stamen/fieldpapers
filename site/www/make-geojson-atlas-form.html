@@ -49,7 +49,10 @@
     <h1>Making Atlases From GeoJSON</h1>
 
     <p>
-        
+        It’s possible to generate atlases from raw GeoJSON files. This can be
+        done in one of two ways. A GeoJSON file can posted as an attached file to
+        <a href="http://fieldpapers.org/compose-atlas.php">fieldpapers.org</a>,
+        named “geojson_file”:
     </p>
     
     <form action="http://fieldpapers.org/compose-atlas.php" method="post" enctype="multipart/form-data">
@@ -63,6 +66,12 @@
             <input type="submit">
         </p>
     </form>
+
+    <p>
+        Alternatively, raw GeoJSON content can be posted to
+        <a href="http://fieldpapers.org/compose-atlas.php">fieldpapers.org</a>
+        as a form value, named “geojson_data”:
+    </p>
     
     <form action="http://fieldpapers.org/compose-atlas.php" method="post" enctype="multipart/form-data">
         <dl>
