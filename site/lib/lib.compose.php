@@ -203,6 +203,9 @@
     */
     function compose_from_postvars(&$dbh, $post, $user_id)
     {
+        if(!is_array($extents))
+            return null;
+    
         $extents = $post['pages'];
         $paper_size = isset($post['paper_size']) ? $post['paper_size'] : 'letter';
         $orientation = isset($post['orientation']) ? $post['orientation'] : 'portrait';
@@ -353,9 +356,7 @@
         $json = json_decode($data, true);
         
         if(!is_geojson($json))
-        {
-            die_with_code(400, 'Bad GeoJSON input');
-        }
+            return null;
         
         //
         // Move on to the actual business of converting GeoJSON to an atlas.
