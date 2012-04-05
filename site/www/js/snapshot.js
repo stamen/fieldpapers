@@ -1,43 +1,38 @@
-var circle;
-var follow_mouse = true;
-var draw_path = false;
-var drawn_path_vertex;
-var path_string = '';
-var orig_x;
-var orig_y;
-var new_path = null;
+var circle,
+    follow_mouse = true,
+    draw_path = false,
+    drawn_path_vertex,
+    path_string = '',
+    orig_x,
+    orig_y,
+    new_path = null,
+    master_path = '',
+    master_path_piece = '';
 
-var master_path = '';
-var master_path_piece = '';
-
-var start = true;
-var start_x,
+var start = true,
+    start_x,
     start_y;
     
-var pre_scroll_y;
+var pre_scroll_y,
+    previous_paths = [],
+    drawn_path_vertices = [];
 
-var previous_paths = [];
-var drawn_path_vertices = [];
+var vertices = [],
+    temp_vertices = [],
+    vertex_display_objects = [],
+    control_midpoints = [],
+    control_midpoint_display_objects = [];
 
-var vertices = [];
-var temp_vertices = [];
-var vertex_display_objects = [];
-var control_midpoints = [];
-var control_midpoint_display_objects = [];
-
-var new_polygon;
-
-var polygon_location_data = [];
-
-var saved_polygons = [];
-
-var active_polygon = -1;
-
-var saved_polygon_location_data = [],
+var new_polygon,
+    polygon_location_data = [],
+    saved_polygons = [],
+    active_polygon = -1,
+    saved_polygon_location_data = [],
     saved_control_location_data = [],
-    last_saved_polygon_location_data = [];
-
-var polygon_notes = [];
+    last_saved_polygon_location_data = [],
+    polygon_notes = [],
+    markerNumber = -1,
+    unsignedMarkerNumber = 1;
 
 var initialXs, 
     initialYs,
@@ -45,17 +40,7 @@ var initialXs,
     initialMidpointYs;
 
 var delta = {dx: 0, dy: 0};
-
-///
-// Dealing with Marker Notes and Polygon Notes
-///
-var markerNumber = -1;
-var unsignedMarkerNumber = 1;
                     
-//setMapHeight();
-// Window Callbacks
-//window.onresize = setMapHeight;
-
 loadSavedNotes();
 
 setDisplayContainerHeight();
@@ -71,20 +56,6 @@ function setDisplayContainerHeight()
     {                
         canvas.setSize(window.innerWidth, map_height);
     }
-}
-
-function changeNoteButtonStyle(type)
-{  
-    /*
-    if (type === 'polygon')
-    {
-        document.getElementById('polygon_button').setAttribute("class", "radio_portrait_selected");
-        document.getElementById('marker_button').setAttribute("class", "radio_landscape");
-    } else if (type === 'marker') {
-        document.getElementById('polygon_button').setAttribute("class", "radio_portrait");
-        document.getElementById('marker_button').setAttribute("class", "radio_landscape_selected");
-    }
-    */
 }
 
 function loadSavedNotes() 
