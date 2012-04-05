@@ -58,6 +58,20 @@ function setDisplayContainerHeight()
     }
 }
 
+function changeNoteButtonStyle(type)
+{  
+    /*
+    if (type === 'polygon')
+    {
+        document.getElementById('polygon_button').setAttribute("class", "radio_portrait_selected");
+        document.getElementById('marker_button').setAttribute("class", "radio_landscape");
+    } else if (type === 'marker') {
+        document.getElementById('polygon_button').setAttribute("class", "radio_portrait");
+        document.getElementById('marker_button').setAttribute("class", "radio_landscape_selected");
+    }
+    */
+}
+
 function loadSavedNotes() 
 { 
     for (var i = 0; i < notes.length; i++)
