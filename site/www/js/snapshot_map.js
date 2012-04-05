@@ -17,8 +17,6 @@ var bounds = geojpeg_bounds.split(','),
     east = parseFloat(bounds[3]),
     extents = [new MM.Location(north, west), new MM.Location(south, east)];
 
-//map.setCenterZoom(new MM.Location(.5*(north+south), .5*(east+west)), 12);
-
 map.setExtent(extents);
 map.zoomIn();
 map.panBy(0,40);
