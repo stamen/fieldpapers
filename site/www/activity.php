@@ -14,16 +14,6 @@
     
     $context->sm->assign('print', $print);
     
-    if($print['selected_page']) {
-        $pages = array($print['selected_page']);
-
-    } else {
-        $pages = get_print_pages($context->db, $print_id);
-    }
-        
-    $print['pages'] = $pages;
-    $context->sm->assign('pages', $pages);
-    
     if($user = get_user($context->db, $print['user_id']))
     {
         $context->sm->assign('user', $user);
