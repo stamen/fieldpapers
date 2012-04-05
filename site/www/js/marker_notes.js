@@ -31,19 +31,16 @@ function MarkerNote(map, post_url)
             alert('Please fill out your note!');
             return false;
         } else {
-            console.log(data);
-            console.log(post_url);
-            
             reqwest({
                 url: post_url,
                 method: 'post',
                 data: data,
                 type: 'json',
                 error: function(err) {
-                    console.log(err);
+                    console.log('error', err);
                 },
                 success: function (resp) {
-                  console.log('resp', resp);
+                  //console.log('resp', resp);
                   changeMarkerDisplay(resp);
                 }
             });
@@ -329,8 +326,6 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     
     var submitNote = function()
     {   
-        console.log('data', data);
-        console.log('post_url', post_url);
         reqwest({
             url: post_url,
             method: 'post',
@@ -368,7 +363,6 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     
     var hidePolygonNote = function()
     {
-        console.log('hide polygon note');
         if (active_polygon != -1)
         {
             savePolygon(active_polygon);
@@ -490,7 +484,6 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     
         editable_saved_note_textarea.onchange = function () { 
             data.note = this.value;
-            console.log('text change');
         };
         
         var marker_width = 30;
@@ -504,8 +497,6 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
             mouse_start = {x: e.clientX, y: e.clientY};
         
         var note_start = {x: editable_saved_note.offsetLeft, y: editable_saved_note.offsetTop};
-        
-        console.log('note_start', note_start);           
                 
         document.onmousemove = function(e)
         {                                
