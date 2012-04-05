@@ -307,7 +307,12 @@
                                     {else}
                                         {$print.page_count} pages
                                     {/if}
-                                    + [style name]
+                                    
+                                    {foreach from=$providers item="provider"}
+                                        {if $print.provider == $provider.0}
+                                            + {$provider.1|lower|escape}
+                                        {/if}
+                                    {/foreach}
                                     + {$print.orientation|escape}
                                     + {$print.layout|escape}
                                 </span>
