@@ -341,6 +341,102 @@
         return get_print_page($dbh, $page['print_id'], $page['page_number']);
     }
     
+    function get_print_activity(&$dbh, $print_id, $group_notes)
+    {
+        $print = get_print($dbh, $print_id);
+        
+        $users = array();
+        $user_id = $print['user_id'];
+        
+        if(is_null($users[$user_id]))
+            $users[$user_id] = get_user($dbh, $user_id);
+        
+        $print['user_name'] = $users[$user_id]['name'];
+        
+        if($scans = get_scans($dbh, array('print' => $print['id']), 9999))
+        {
+            $note_args = array('scans' => array());
+            
+            foreach($scans as $i => $scan)
+            {
+                $note_args['scans'][] = $scan['id'];
+                $user_id = $scan['user_id'];
+                
+                if(is_null($users[$user_id]))
+                    $users[$user_id] = get_user($dbh, $user_id);
+                
+                $scans[$i]['user_name'] = $users[$user_id]['name'];
+            }
+            
+            $notes = get_scan_notes($dbh, $note_args);
+            
+            foreach($notes as $i => $note)
+            {
+                $notes[$i]['scan'] = $scan;
+                $user_id = $note['user_id'];
+                
+                if(is_null($users[$user_id]))
+                    $users[$user_id] = get_user($dbh, $user_id);
+                
+                $notes[$i]['user_name'] = $users[$user_id]['name'];
+            }
+    
+        } else {
+            $notes = array();
+        }
+        
+        $activity = array(array('type' => 'print', 'print' => $print));
+        $times = array($print['created']);
+    
+        foreach($scans as $scan)
+        {
+            $activity[] = array('type' => 'scan', 'scan' => $scan);
+            $times[] = $scan['created'];
+        }
+            
+        foreach($notes as $note)
+        {
+            $activity[] = array('type' => 'note', 'note' => $note);
+            $times[] = $note['created'];
+        }
+        
+        array_multisort($times, SORT_ASC, $activity);
+        
+        if($group_notes)
+        {
+            $scan_note_indexes = array();
+            
+            // group notes into lists by scan, ending on the latest
+            for($i = count($activity) - 1; $i >= 0; $i--)
+            {
+                if($activity[$i]['type'] != 'note')
+                    continue;
+                
+                $note = $activity[$i]['note'];
+                $group = "{$note['scan']['id']}-{$note['user_id']}";
+                
+                if(isset($scan_note_indexes[$group])) {
+                    //
+                    // Add this note to the existing array in the activity list.
+                    //
+                    $index = $scan_note_indexes[$group];
+                    array_unshift($activity[$index]['notes'], $note);
+                    $activity[$i] = array('type' => false);
+                
+                } else {
+                    //
+                    // Most-recent note by this person on this scan;
+                    // prepare an array of notes in the activity list.
+                    //
+                    $scan_note_indexes[$group] = $i;
+                    $activity[$i] = array('type' => 'notes', 'notes' => array($note));
+                }
+            }
+        }
+        
+        return $activity;
+    }
+    
     function print_to_geojson($print, $pages)
     {
         $geojson = array(
