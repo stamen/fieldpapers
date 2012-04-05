@@ -973,7 +973,7 @@ function initUI () {
     zoom_out.onmouseover = function() { zoom_out_button.src = zoom_out_active; };
     zoom_out.onmouseout = function() { zoom_out_button.src = zoom_out_inactive; };
     
-    zoom_out.onclick = function() { map.zoomOut(); return false; };
+    zoom_out.onclick = function() { map.setCenterZoom(map.getCenter(),map.getZoom()-1); return false; };
     
     // Window Callbacks
     window.onresize = setMapHeight;
