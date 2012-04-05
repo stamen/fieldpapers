@@ -1194,9 +1194,7 @@ function moveControl(e)
     //var prev_scroll_top;
     
     if (e.type == "scroll")
-    {
-        console.log('scrolling');
-        
+    {        
         /*
         var scroll_delta = document.body.scrollTop - prev_scroll_top;
         
@@ -1303,7 +1301,6 @@ function savePolygonLocationData(vertices, control_midpoints)
 }
 
 map.addCallback('panned', function(m) {
-    console.log('panned');
     redrawPolygonsAndVertices();
 });
 
@@ -1488,19 +1485,14 @@ function submitPolygonNote()
 
 
 function updateMarker(marker_number, username, created, index)
-{
-    console.log('marker_number', marker_number);
-    console.log('index', index);
-    
+{    
     saved_polygons[index].note_data.marker_number = marker_number;
     saved_polygons[index].note_data.username = username;
     saved_polygons[index].note_data.created = created;
 }
 
 function resetPolygonNote()
-{
-    console.log('active polygon', active_polygon);
-                            
+{                           
     saved_polygon_location_data[active_polygon] = last_saved_polygon_location_data[active_polygon];
     
     document.getElementById('polygon_textarea').value = saved_polygons[active_polygon].note_data.note;
@@ -1566,7 +1558,7 @@ function deletePolygonNote()
             data: saved_polygons[saved_polygon_index].note_data,
             type: 'json',
             success: function (resp) {
-              console.log('response', resp);
+              //console.log('response', resp);
               removeDeletedPolygonDisplay(saved_polygon_index);
             }
         });

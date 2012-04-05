@@ -171,7 +171,6 @@ function checkMapOverflow(topLeftPoint, bottomRightPoint)
         }
         
         var map_center = map.getCenter();
-        console.log('map_center', map_center);
         var map_center_point = map.locationPoint(map_center);
         
         // Calculate new center point
