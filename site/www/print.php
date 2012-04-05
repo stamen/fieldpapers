@@ -11,17 +11,17 @@
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     
     $print = get_print($context->db, $print_id);
+    $pages = get_print_pages($context->db, $print_id);
+    $print['page_count'] = count($pages);
     
     $context->sm->assign('print', $print);
     
     if($print['selected_page']) {
-        $pages = array($print['selected_page']);
+        $context->sm->assign('pages', array($print['selected_page']));
 
     } else {
-        $pages = get_print_pages($context->db, $print_id);
+        $context->sm->assign('pages', $pages);
     }
-        
-    $context->sm->assign('pages', $pages);
     
     if($user = get_user($context->db, $print['user_id']))
     {
