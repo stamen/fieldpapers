@@ -260,6 +260,7 @@
             $text = trim(sprintf("%s\n\n%s", $post['atlas_title'], $post['atlas_text']));
             
             $message['pages'][] = array('zoom' => $mmap->coordinate->zoom,
+                                        'layout' => $print['layout'],
                                         'number' => $key,
                                         'provider' => $provider,
                                         'bounds' => $bounds,
@@ -278,6 +279,7 @@
             $mmap = create_mmap_from_bounds($paper_size, $orientation, $print['north'], $print['west'], $print['south'], $print['east'], $layout);
             
             $index = array('number' => 'i',
+                           'layout' => 'full-page',
                            'zoom' => $mmap->coordinate->zoom,
                            'bounds' => get_mmap_bounds($mmap, 0.1),
                            'provider' => $provider,
@@ -485,6 +487,7 @@
             $page = add_print_page($dbh, $print['id'], $_page['number']);
             $page['text'] = $_page['text'];
             
+            $page['layout'] = $print['layout']; // TODO: this should be settable per-page
             $page['provider'] = $_page['provider'];
             $page['zoom'] = $_page['zoom'];
         
