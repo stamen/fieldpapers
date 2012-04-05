@@ -454,10 +454,12 @@
 
     function scan_note_to_geojson_feature($note)
     {
+        preg_match('/^(\w+)\b/', $note['geometry'], $p);
+    
         $feature = array(
             'type' => 'Feature',
             'properties' => array(
-                'type' => 'note',
+                'type' => 'note '.strtolower($p[1]),
                 'person_href' => null,
                 'snapshot_href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($note['scan_id']),
                 'created' => date('r', $note['created']),
