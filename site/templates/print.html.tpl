@@ -287,8 +287,8 @@
                 
                 <ul>
                     {foreach from=$activity item="event"}
-                        <li>
-                            {if $event.type == "print"}
+                        {if $event.type == "print"}
+                            <li>
                                 {assign var="print" value=$event.print}
 
                                 {if $print.user_name}
@@ -306,8 +306,10 @@
                                 <br>
                                 <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
                                 *}
+                            </li>
 
-                            {elseif $event.type == "scan"}
+                        {elseif $event.type == "scan"}
+                            <li>
                                 {assign var="scan" value=$event.scan}
                                 
                                 {if $scan.user_name}
@@ -329,8 +331,37 @@
                                 <br>
                                 <img>
                                 *}
+                            </li>
 
-                            {elseif $event.type == "note"}
+                        {elseif $event.type == "notes"}
+                            <li>
+                                {assign var="notes" value=$event.notes}
+                                {assign var="note" value=$notes.0}
+                                {assign var="scan" value=$note.scan}
+                                {assign var="count" value=$notes|@count}
+                                
+                                {if $note.user_name}
+                                    <a href="{$base_dir}/person.php?id={$note.user_id|escape}">{$note.user_name|escape}</a>
+                                {else}
+                                    Someone anonymous
+                                {/if}
+                                
+                                {if $count == 1}
+                                    added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">a note about page {$scan.print_page_number|escape}</a>
+                                {else}
+                                    added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">{$count} notes about page {$scan.print_page_number|escape}</a>
+                                {/if}
+                                <a class="date">- {$note.age|nice_relativetime|escape}</a>
+                                
+                                <ol>
+                                    {foreach from=$notes item="note"}
+                                        <li>{$note.note|escape}</li>
+                                    {/foreach}
+                                </ol>
+                            </li>
+
+                        {elseif $event.type == "note"}
+                            <li>
                                 {assign var="note" value=$event.note}
                                 {assign var="scan" value=$note.scan}
 
@@ -360,8 +391,8 @@
                                     <li>Best eggs in the city</li>
                                 </ol>
                                 *}
-                            {/if}
-                        </li>
+                            </li>
+                        {/if}
                     {/foreach}
                 </ul>
             </div>
