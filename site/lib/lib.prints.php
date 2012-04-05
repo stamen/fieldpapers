@@ -413,7 +413,7 @@
                     continue;
                 
                 $note = $activity[$i]['note'];
-                $group = "{$note['scan']['id']}-{$note['user_id']}";
+                $group = "{$note['scan']['id']}-{$note['user_name']}";
                 
                 if(isset($scan_note_indexes[$group])) {
                     //
