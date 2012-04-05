@@ -23,12 +23,7 @@
         $context->sm->assign('pages', $pages);
     }
     
-    if($user = get_user($context->db, $print['user_id']))
-    {
-        $context->sm->assign('user', $user);
-    }
-    
-    $context->sm->assign('activity', get_print_activity($context->db, $print_id));
+    $context->sm->assign('activity', get_print_activity($context->db, $print_id, true));
     $context->sm->assign('providers', get_map_providers());
         
     if($context->type == 'text/html') {

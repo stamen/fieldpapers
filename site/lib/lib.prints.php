@@ -341,7 +341,7 @@
         return get_print_page($dbh, $page['print_id'], $page['page_number']);
     }
     
-    function get_print_activity(&$dbh, $print_id)
+    function get_print_activity(&$dbh, $print_id, $group_notes)
     {
         $print = get_print($dbh, $print_id);
         
@@ -402,32 +402,35 @@
         
         array_multisort($times, SORT_ASC, $activity);
         
-        $scan_note_indexes = array();
-        
-        // group notes into lists by scan, ending on the latest
-        for($i = count($activity) - 1; $i >= 0; $i--)
+        if($group_notes)
         {
-            if($activity[$i]['type'] != 'note')
-                continue;
+            $scan_note_indexes = array();
             
-            $note = $activity[$i]['note'];
-            $group = "{$note['scan']['id']}-{$note['user_id']}";
-            
-            if(isset($scan_note_indexes[$group])) {
-                //
-                // Add this note to the existing array in the activity list.
-                //
-                $index = $scan_note_indexes[$group];
-                array_unshift($activity[$index]['notes'], $note);
-                $activity[$i] = array('type' => false);
-            
-            } else {
-                //
-                // Most-recent note by this person on this scan;
-                // prepare an array of notes in the activity list.
-                //
-                $scan_note_indexes[$group] = $i;
-                $activity[$i] = array('type' => 'notes', 'notes' => array($note));
+            // group notes into lists by scan, ending on the latest
+            for($i = count($activity) - 1; $i >= 0; $i--)
+            {
+                if($activity[$i]['type'] != 'note')
+                    continue;
+                
+                $note = $activity[$i]['note'];
+                $group = "{$note['scan']['id']}-{$note['user_id']}";
+                
+                if(isset($scan_note_indexes[$group])) {
+                    //
+                    // Add this note to the existing array in the activity list.
+                    //
+                    $index = $scan_note_indexes[$group];
+                    array_unshift($activity[$index]['notes'], $note);
+                    $activity[$i] = array('type' => false);
+                
+                } else {
+                    //
+                    // Most-recent note by this person on this scan;
+                    // prepare an array of notes in the activity list.
+                    //
+                    $scan_note_indexes[$group] = $i;
+                    $activity[$i] = array('type' => 'notes', 'notes' => array($note));
+                }
             }
         }
         
