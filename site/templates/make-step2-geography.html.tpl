@@ -110,7 +110,6 @@
            padding-left: 10px;
            margin-left: 10px;
            border-left: 1px dashed #666;
-           
            color: #CCC;
         }
         

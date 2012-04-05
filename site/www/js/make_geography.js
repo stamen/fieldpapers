@@ -40,7 +40,7 @@ function setProvider(tileURL)
 
 function setMapHeight()
 {   
-    var map_height = window.innerHeight - document.getElementById('nav').offsetHeight;
+    var map_height = window.innerHeight - document.getElementById('nav').offsetHeight - 20;
     
     document.getElementById('map').style.height = map_height + 'px';
     
