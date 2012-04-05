@@ -115,6 +115,12 @@ ALTER TABLE pages ADD COLUMN `text` TEXT NULL AFTER page_number;
 ALTER TABLE pages CHANGE COLUMN print_id print_id VARCHAR(8) NOT NULL;
 ALTER TABLE pages CHANGE COLUMN page_number page_number VARCHAR(5) NOT NULL;
 
+ALTER TABLE pages ADD COLUMN layout ENUM('half-page', 'full-page') DEFAULT 'full-page' AFTER page_number;
+
+UPDATE pages, prints
+    SET pages.layout = prints.layout
+    WHERE pages.print_id = prints.id;
+
 
 
 DROP TABLE IF EXISTS scans;

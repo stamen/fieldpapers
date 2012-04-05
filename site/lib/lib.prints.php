@@ -247,7 +247,7 @@
     function get_print_pages(&$dbh, $print_id)
     {
         $q = sprintf("SELECT print_id, page_number, text,
-                             provider, preview_url,
+                             layout, provider, preview_url,
                              north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
@@ -279,7 +279,7 @@
     function get_print_page(&$dbh, $print_id, $page_number)
     {
         $q = sprintf("SELECT print_id, page_number, text,
-                             provider, preview_url,
+                             layout, provider, preview_url,
                              north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
                              (east + west) / 2 AS longitude,
@@ -312,7 +312,7 @@
 
         $update_clauses = array();
 
-        foreach(array('north', 'south', 'east', 'west', 'zoom', 'provider', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid', 'text') as $field)
+        foreach(array('north', 'south', 'east', 'west', 'zoom', 'layout', 'provider', 'preview_url', 'user_id', 'country_name', 'country_woeid', 'region_name', 'region_woeid', 'place_name', 'place_woeid', 'text') as $field)
             if(!is_null($page[$field]))
                 if($page[$field] != $old_page[$field])
                     $update_clauses[] = sprintf('%s = %s', $field, $dbh->quoteSmart($page[$field]));
