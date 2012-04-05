@@ -352,12 +352,12 @@
                         {elseif $event.type == "notes"}
                             <li>
                                 {assign var="notes" value=$event.notes}
-                                {assign var="note" value=$notes.0}
-                                {assign var="scan" value=$note.scan}
+                                {assign var="last_note" value=$notes|@end}
+                                {assign var="scan" value=$last_note.scan}
                                 {assign var="count" value=$notes|@count}
                                 
-                                {if $note.user_name}
-                                    <a href="{$base_dir}/person.php?id={$note.user_id|escape}">{$note.user_name|escape}</a>
+                                {if $last_note.user_name}
+                                    <a href="{$base_dir}/person.php?id={$last_note.user_id|escape}">{$last_note.user_name|escape}</a>
                                 {else}
                                     Someone anonymous
                                 {/if}
@@ -367,7 +367,7 @@
                                 {else}
                                     added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">{$count} notes about page {$scan.print_page_number|escape}</a>
                                 {/if}
-                                <a class="date">- {$note.age|nice_relativetime|escape}</a>
+                                <a class="date">- {$last_note.age|nice_relativetime|escape}</a>
                                 
                                 <ol>
                                     {foreach from=$notes item="note"}
