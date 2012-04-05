@@ -119,6 +119,7 @@
     
     unset($scan_note_indexes);
     $context->sm->assign('activity', $activity);
+    $context->sm->assign('providers', get_map_providers());
         
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
