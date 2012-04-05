@@ -344,8 +344,7 @@ function changeCanvasFillPath(topLeftPoint, bottomRightPoint)
 }
         
 function updatePageExtents(topLeftPoint, bottomRightPoint)
-{   
-    console.log('update');
+{  
     var width_increment = (bottomRightPoint.x - topLeftPoint.x)/num_columns;
     var height_increment = (bottomRightPoint.y -topLeftPoint.y)/num_rows;
     
@@ -468,7 +467,6 @@ function initUI () {
     canvas = Raphael("canvas");
                 
     var center_point = map.locationPoint(map_center);
-    console.log('center_point', center_point);
     
     var page_height = 150,
         canvasOriginX = (center_point.x - page_height * atlas_aspect_ratio) || 160,
