@@ -196,12 +196,9 @@
                                     {if $mbtiles_data}
                                         <option value="{$mbtiles_data.provider|escape}">{$mbtiles_data.uploaded_file|escape}</option>
                                     {/if}
-                                    {literal}
-                                        <option value="http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png">Black &amp; White</option>
-                                        <option value="http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg">Satellite + Labels</option>
-                                        <option value="http://tile.openstreetmap.org/{Z}/{X}/{Y}.png">Open Street Map</option>
-                                        <option value="http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg">Satellite Only</option>
-                                    {/literal}
+                                    {foreach from=$providers item="provider"}
+                                        <option value="{$provider.0|escape}">{$provider.1|escape}</option>
+                                    {/foreach}
                                 </select>
                                 
                                 <span id="page_count_container">

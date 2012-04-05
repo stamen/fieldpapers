@@ -40,7 +40,7 @@
     {
         $note_args = array('scans' => array());
         
-        foreach($scans as $scan)
+        foreach($scans as $i => $scan)
         {
             $note_args['scans'][] = $scan['id'];
             $user_id = $scan['user_id'];
@@ -48,7 +48,7 @@
             if(is_null($users[$user_id]))
                 $users[$user_id] = get_user($context->db, $user_id);
             
-            $scan['user_name'] = $users[$user_id]['name'];
+            $scans[$i]['user_name'] = $users[$user_id]['name'];
         }
         
         $notes = get_scan_notes($context->db, $note_args);
@@ -61,7 +61,7 @@
             if(is_null($users[$user_id]))
                 $users[$user_id] = get_user($context->db, $user_id);
             
-            $note['user_name'] = $users[$user_id]['name'];
+            $notes[$i]['user_name'] = $users[$user_id]['name'];
         }
 
         $context->sm->assign('scans', $scans);
@@ -119,6 +119,7 @@
     
     unset($scan_note_indexes);
     $context->sm->assign('activity', $activity);
+    $context->sm->assign('providers', get_map_providers());
         
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
