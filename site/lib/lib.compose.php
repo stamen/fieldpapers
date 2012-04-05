@@ -203,9 +203,6 @@
     */
     function compose_from_postvars(&$dbh, $post, $user_id)
     {
-        if(!is_array($extents))
-            return null;
-    
         $extents = $post['pages'];
         $paper_size = isset($post['paper_size']) ? $post['paper_size'] : 'letter';
         $orientation = isset($post['orientation']) ? $post['orientation'] : 'portrait';
@@ -213,6 +210,9 @@
         $provider = $post['provider'];
         $title = $post['atlas_title'];
         
+        if(!is_array($extents))
+            return null;
+    
         //
         // "orientation" above refers to the *map*, so if we want half-size
         // we'll need to flip the orientation of the overall printed sheet
