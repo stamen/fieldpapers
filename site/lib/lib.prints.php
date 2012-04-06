@@ -344,6 +344,8 @@
     function get_print_activity(&$dbh, $print_id, $group_notes)
     {
         $print = get_print($dbh, $print_id);
+        $pages = get_print_pages($dbh, $print_id);
+        $print['page_count'] = count($pages);
         
         $users = array();
         $user_id = $print['user_id'];
