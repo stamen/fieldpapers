@@ -7,7 +7,7 @@ var canvas,
     page_extent,
     text_offset = 6,
     text_dimensions = null;
-                                        
+                                    
 function redrawExtent(map, MM, north, south, east, west)
 {
     var new_nw_point = map.locationPoint(new MM.Location(north, west));
@@ -100,49 +100,49 @@ function changeTextPosition(map, MM, atlas_pages, page_label_background_objects,
 
 function loadMaps() {
         var map = null,
-        MM = com.modestmaps;
+            MM = com.modestmaps;
         
-            var zoom_in = document.getElementById("zoom-in");
-            var zoom_out = document.getElementById("zoom-out");
-                        
-            var zoom_in_button = document.getElementById('zoom-in-button');
-            zoom_in.onmouseover = function() { zoom_in_button.src = zoom_in_active; };
-            zoom_in.onmouseout = function() { zoom_in_button.src = zoom_in_inactive; };
-            
-            zoom_in.onclick = function() { map.zoomIn(); return false; };
-            
-            var zoom_out_button = document.getElementById('zoom-out-button');
-            zoom_out.onmouseover = function() { zoom_out_button.src = zoom_out_active; };
-            zoom_out.onmouseout = function() { zoom_out_button.src = zoom_out_inactive; };
-            
-            zoom_out.onclick = function() { map.zoomOut(); return false; };
-            
-            document.getElementById('zoom-out').style.display = 'inline';
-            document.getElementById('zoom-in').style.display = 'inline';
-      
-            var overview_map_layers = [];
-            var main_map_layers = [];
-            
-            if (overview_provider.search(','))
-            {
-                var overview_providers = overview_provider.split(',');
-                for (var i = 0; i < overview_providers.length; i++) {
-                    // Create layers
-                    overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_providers[i])));
-                }
-            } else {
-                overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_provider)));
+        var zoom_in = document.getElementById("zoom-in");
+        var zoom_out = document.getElementById("zoom-out");
+                    
+        var zoom_in_button = document.getElementById('zoom-in-button');
+        zoom_in.onmouseover = function() { zoom_in_button.src = zoom_in_active; };
+        zoom_in.onmouseout = function() { zoom_in_button.src = zoom_in_inactive; };
+        
+        zoom_in.onclick = function() { map.zoomIn(); return false; };
+        
+        var zoom_out_button = document.getElementById('zoom-out-button');
+        zoom_out.onmouseover = function() { zoom_out_button.src = zoom_out_active; };
+        zoom_out.onmouseout = function() { zoom_out_button.src = zoom_out_inactive; };
+        
+        zoom_out.onclick = function() { map.zoomOut(); return false; };
+        
+        document.getElementById('zoom-out').style.display = 'inline';
+        document.getElementById('zoom-in').style.display = 'inline';
+  
+        var overview_map_layers = [];
+        var main_map_layers = [];
+        
+        if (overview_provider.search(','))
+        {
+            var overview_providers = overview_provider.split(',');
+            for (var i = 0; i < overview_providers.length; i++) {
+                // Create layers
+                overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_providers[i])));
             }
-            
-            if (main_provider.search(','))
-            {
-                var main_providers = main_provider.split(',');
-                for (var i = 0; i < main_providers.length; i++) {
-                    main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_providers[i])));
-                }
-            } else {
-                main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
+        } else {
+            overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_provider)));
+        }
+        
+        if (main_provider.search(','))
+        {
+            var main_providers = main_provider.split(',');
+            for (var i = 0; i < main_providers.length; i++) {
+                main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_providers[i])));
             }
+        } else {
+            main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
+        }
         
         // Map 1
         var overview_map = new MM.Map("atlas-overview-map", overview_map_layers, null, []);
@@ -175,6 +175,26 @@ function loadMaps() {
             stroke: "#050505",
             "stroke-width": 4
         });
+        
+        var map_extent = map.getExtent();
+        var map_top_left_point = map.locationPoint(map_extent[0]);
+        var map_bottom_right_point = map.locationPoint(map_extent[1]);
+        
+        var atlas_x_proportion = (ne_point.x - nw_point.x)/(map_bottom_right_point.x - map_top_left_point.x);
+        var atlas_y_proportion = (ne_point.y - se_point.y)/(map_bottom_right_point.y - map_bottom_right_point.y);
+        
+        var start_zoom = map.getZoom();
+        
+        var max_zoom = null;
+        
+        if (Math.max(atlas_x_proportion, atlas_y_proportion) > .8)
+        {
+            max_zoom = start_zoom;
+        } else if (Math.max(atlas_x_proportion, atlas_y_proportion) > .55) {
+            max_zoom = start_zoom + 1;
+        } else {
+            max_zoom = start_zoom + 2;
+        }
                                 
         ////
         // Draw the page grid for the main atlas page
@@ -216,7 +236,9 @@ function loadMaps() {
                 "fill-opacity": .3
             });
             
-            // draw text
+            ////
+            // Draw text labels
+            ////
             
             var text_coordinates = {x: nw_page_point.x + .5 * page_width,
                                     y: nw_page_point.y + .5 * page_height};
@@ -244,23 +266,17 @@ function loadMaps() {
             page_label_background.attr({fill: "#FFF",
                                         "stroke-width": 0
                                       });
-            
-            //var page_label_set = canvas.set();
-            //page_label_set.push(atlas_page_objects, page_label_objects);
                                         
             atlas_page_objects.push(atlas_page_extent);
             page_label_objects.push(page_label);
             page_label_background_objects.push(page_label_background);
             
-            var start_zoom = map.getZoom();
-            
             atlas_page_objects[i].click(function(nw, ne, se, sw) {
                 return function ()
                 {
-                    //map.setExtent([nw, ne, se, sw]);
                     if (map.getZoom() <= start_zoom) {
                         easey.slow(map, {location: new MM.Location(.5*(nw.lat+sw.lat), .5*(nw.lon+ne.lon)),
-                                         zoom: start_zoom + 2
+                                         zoom: max_zoom
                                          }
                                   );
                     } else {
@@ -276,7 +292,7 @@ function loadMaps() {
                 {
                     if (map.getZoom() <= start_zoom) {
                         easey.slow(map, {location: new MM.Location(.5*(nw.lat+sw.lat), .5*(nw.lon+ne.lon)),
-                                         zoom: start_zoom + 2
+                                         zoom: max_zoom
                                          }
                                   );
                     } else {
@@ -385,7 +401,6 @@ function loadMaps() {
                 stroke: "#FFF",
                 "stroke-width": 4
             });
-            
             
             map.addCallback('panned', function(m) {
                 redrawPageExtent(m, MM, north_page, south_page, east_page, west_page);
