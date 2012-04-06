@@ -23,7 +23,7 @@
         </li>
         {if $request.authenticated}
         	<li>
-                <span class="section"><a href="{$base_dir}/person.php?id={$request.user.id}">{$request.user.name}</a></span><br>
+                <span class="section"><a href="{$base_dir}/atlases.php?user={$request.user.id}">{$request.user.name}</a></span><br>
                 <form id='logout_form' name='logout_form' method='POST' action='{$base_dir}/login.php'>
                     <a href="#" onClick="document.logout_form.submit();"><span class="desc">log out</span></a>
                     <input type='hidden' name='action' value='log out'>
