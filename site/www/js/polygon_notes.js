@@ -1,5 +1,4 @@
 var draw_mode = false;
-
 var vertex_radius = 7;
 var vertex_stroke_width = 3;
 var control_midpoint_radius = 5;
@@ -124,7 +123,7 @@ function readVertices(polygon_vertices)
                     setVertices(e,index,this.attr('cx'), this.attr('cy'));
                     updateMidpoints(index);
                     
-                    changePolygonNotePosition(false);
+                    changePolygonNotePosition(false, false);
                 };
             }(i),
             
@@ -142,7 +141,7 @@ function readVertices(polygon_vertices)
             function (index) {
                 return function() {
                     savePolygonLocationData(vertices, control_midpoints);
-                    changePolygonNotePosition(true);
+                    changePolygonNotePosition(true, false);
                 }
             }(i)
         );
@@ -196,7 +195,7 @@ function readVertices(polygon_vertices)
                     
                     setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                     
-                    changePolygonNotePosition(false);
+                    changePolygonNotePosition(false, false);
                 };
             }(i),
             
@@ -217,7 +216,7 @@ function readVertices(polygon_vertices)
                 return function() {
                     replaceVertices(temp_vertices);
                     savePolygonLocationData(vertices, control_midpoints);
-                    changePolygonNotePosition(true);
+                    changePolygonNotePosition(true, false);
                 }
             }(i)
         );
@@ -395,7 +394,7 @@ function showPolygonNote(new_note)
         polygon_note.className = 'show';
     }
     
-    changePolygonNotePosition(true);
+    changePolygonNotePosition(true, true);
 }
 
 function hidePolygonNote(new_note)
@@ -416,7 +415,7 @@ function hidePolygonTip()
     polygon_tip.className = 'hide';
 }
 
-function changePolygonNotePosition(checkoverflow)
+function changePolygonNotePosition(checkoverflow, add_top_padding)
 {
     if (active_polygon == -1)
     {
@@ -441,9 +440,15 @@ function changePolygonNotePosition(checkoverflow)
     // Check overflow
     if (checkoverflow)
     {
-        checkMapOverflow({x: polygon_note.offsetLeft, y: polygon_note.offsetTop}, 
-                         {x: polygon_note.offsetLeft + note_width, y: polygon_note.offsetTop + note_height}
-                        );
+        if (add_top_padding) {
+            checkMapOverflow({x: polygon_note.offsetLeft, y: polygon_note.offsetTop}, 
+                             {x: polygon_note.offsetLeft + note_width, y: polygon_note.offsetTop + note_height}, 
+                             30);
+        } else {
+            checkMapOverflow({x: polygon_note.offsetLeft, y: polygon_note.offsetTop}, 
+                             {x: polygon_note.offsetLeft + note_width, y: polygon_note.offsetTop + note_height},
+                             0);
+        }
     }
 }
 
@@ -520,7 +525,7 @@ function redrawPolygonsAndVertices()
     if (active_polygon != -1)
     {
         redrawPolygon(vertices, control_midpoints, vertex_display_objects, control_midpoint_display_objects, new_polygon, saved_polygon_location_data[active_polygon], saved_control_location_data[active_polygon])
-        changePolygonNotePosition(true);
+        changePolygonNotePosition(true, false);
     }
     
     for (var i = 0; i < saved_polygons.length; i++)
@@ -839,7 +844,7 @@ function addVertices()
                     setVertices(e,index,this.attr('cx'), this.attr('cy'));
                     updateMidpoints(index);
                     
-                    changePolygonNotePosition(false);
+                    changePolygonNotePosition(false, false);
                 };
             }(i),
             
@@ -857,7 +862,7 @@ function addVertices()
             function (index) {
                 return function() {
                     savePolygonLocationData(vertices, control_midpoints);
-                    changePolygonNotePosition(true);
+                    changePolygonNotePosition(true, false);
                 }
             }(i)
         );
@@ -911,7 +916,7 @@ function addVertices()
                     
                     setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                     
-                    changePolygonNotePosition(false);
+                    changePolygonNotePosition(false, false);
                 };
             }(i),
             
@@ -932,7 +937,7 @@ function addVertices()
                 return function() {
                     replaceVertices(temp_vertices);
                     savePolygonLocationData(vertices, control_midpoints);
-                    changePolygonNotePosition(true);
+                    changePolygonNotePosition(true, false);
                 }
             }(i)
         );
@@ -1008,7 +1013,7 @@ function replaceVertices(vertex_points)
                     setVertices(e,index,this.attr('cx'), this.attr('cy'));
                     updateMidpoints(index);
                     
-                    changePolygonNotePosition(false);
+                    changePolygonNotePosition(false, false);
                 };
             }(i),
             
@@ -1026,7 +1031,7 @@ function replaceVertices(vertex_points)
             function (index) {
                 return function() {
                     savePolygonLocationData(vertices, control_midpoints);
-                    changePolygonNotePosition(true);
+                    changePolygonNotePosition(true, false);
                 }
             }(i)
         );
@@ -1076,7 +1081,7 @@ function replaceVertices(vertex_points)
                     
                     setControlMidpoints(e,index,this.attr('cx'), this.attr('cy'));
                     
-                    changePolygonNotePosition(false);
+                    changePolygonNotePosition(false, false);
                 };
             }(i),
             
@@ -1097,7 +1102,7 @@ function replaceVertices(vertex_points)
                 return function() {
                     replaceVertices(temp_vertices);
                     savePolygonLocationData(vertices, control_midpoints);
-                    changePolygonNotePosition(true);
+                    changePolygonNotePosition(true, false);
                 }
             }(i)
         );
@@ -1542,10 +1547,10 @@ function deletePolygonNote()
         return;
     }
     
-    savePolygon(active_polygon, true);
-    
     if (window.confirm("Are you sure you want to delete this saved note?"))
     {
+        savePolygon(active_polygon, true);
+        
         saved_polygons[active_polygon].note_data.removed = 1;
         
         var saved_polygon_index = active_polygon;
