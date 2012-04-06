@@ -37,7 +37,7 @@
     
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $context->sm->fetch("uploads.html.tpl");
+        print $context->sm->fetch("snapshots.html.tpl");
     
     } else {
         header('HTTP/1.1 400');
