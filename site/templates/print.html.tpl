@@ -292,7 +292,7 @@
                                 {assign var="print" value=$event.print}
 
                                 {if $print.user_name}
-                                    <a href="{$base_dir}/person.php?id={$print.user_id|escape}">{$print.user_name|escape}</a>
+                                    <a href="{$base_dir}/atlases.php?user={$print.user_id|escape}">{$print.user_name|escape}</a>
                                 {else}
                                     Someone anonymous
                                 {/if}
@@ -329,7 +329,7 @@
                                 {assign var="scan" value=$event.scan}
                                 
                                 {if $scan.user_name}
-                                    <a href="{$base_dir}/person.php?id={$scan.user_id|escape}">{$scan.user_name|escape}</a>
+                                    <a href="{$base_dir}/uploads.php?user={$scan.user_id|escape}">{$scan.user_name|escape}</a>
                                 {else}
                                     Someone anonymous
                                 {/if}
@@ -357,7 +357,7 @@
                                 {assign var="count" value=$notes|@count}
                                 
                                 {if $last_note.user_name}
-                                    <a href="{$base_dir}/person.php?id={$last_note.user_id|escape}">{$last_note.user_name|escape}</a>
+                                    <a href="{$base_dir}/uploads.php?user={$last_note.user_id|escape}">{$last_note.user_name|escape}</a>
                                 {else}
                                     Someone anonymous
                                 {/if}
@@ -382,7 +382,7 @@
                                 {assign var="scan" value=$note.scan}
 
                                 {if $note.user_name}
-                                    <a href="{$base_dir}/person.php?id={$note.user_id|escape}">{$note.user_name|escape}</a>
+                                    <a href="{$base_dir}/uploads.php?user={$note.user_id|escape}">{$note.user_name|escape}</a>
                                 {else}
                                     Someone anonymous
                                 {/if}

@@ -514,7 +514,7 @@
         $feature['geometry']['coordinates'] = $polys;
         
         if($print['user_name'])
-            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($print['user_id']);
+            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/atlases.php?user='.urlencode($print['user_id']);
         
         return $feature;
     }
@@ -533,7 +533,7 @@
         );
         
         if($print['user_name'])
-            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/person.php?id='.urlencode($print['user_id']);
+            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/atlases.php?user='.urlencode($print['user_id']);
 
         $polys = array();
         
