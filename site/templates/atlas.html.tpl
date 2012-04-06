@@ -199,7 +199,11 @@
         {/literal}
     </style>
 </head>
+{if $print.composed}
 <body onload="loadMaps()">
+{else}
+<body>
+{/if}
     {include file="navigation.htmlf.tpl"}
     <div class="container">
         {if $print.composed}
