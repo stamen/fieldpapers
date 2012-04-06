@@ -7,7 +7,7 @@
     
     /**** ... ****/
     
-    $url = 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($_GET['print']);
+    $url = 'http://'.get_domain_name().get_base_dir().'/atlas.php?id='.urlencode($_GET['print']);
     $qrc = QRCode::getMinimumQRCode($url, QR_ERROR_CORRECT_LEVEL_Q);
     $img = $qrc->createImage(16, 0);
 

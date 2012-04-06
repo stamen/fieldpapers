@@ -430,7 +430,7 @@
             'properties' => array(
                 'type' => 'snapshot',
                 'href' => 'http://'.get_domain_name().get_base_dir().'/snapshot.php?id='.urlencode($scan['id']),
-                'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
+                'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/atlas.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
                 'person_href' => null,
                 'created' => date('r', $scan['created'])
             ),
@@ -483,7 +483,7 @@
             'created' => '"'.date('r', $scan['created']).'"',
             'person_href' => '',
             'geometry' => '',
-            'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/print.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
+            'atlas_page_href' => 'http://'.get_domain_name().get_base_dir().'/atlas.php?id='.urlencode($scan['print_id'].'/'.$scan['print_page_number']),
             'snapshot_href' => '',
             'note' => ''
         );
