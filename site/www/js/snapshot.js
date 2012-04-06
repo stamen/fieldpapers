@@ -144,10 +144,11 @@ function finishedRedirect()
     window.location = redirect_url;
 }
 
-function checkMapOverflow(topLeftPoint, bottomRightPoint)
+function checkMapOverflow(topLeftPoint, bottomRightPoint, padding)
 {
     var map_extent = map.getExtent();
     var map_top_left_point = map.locationPoint(map_extent[0]);
+    map_top_left_point.y = map_top_left_point.y + padding;
     var map_bottom_right_point = map.locationPoint(map_extent[1]);
     
     // Create 4 Boolean values for overflow tests
