@@ -474,7 +474,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     """
     yield 5
     
-    print_path = 'print.php?' + urlencode({'id': print_id})
+    print_path = 'atlas.php?' + urlencode({'id': print_id})
     print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
     print_info = {}
     

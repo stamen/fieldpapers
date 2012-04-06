@@ -28,13 +28,13 @@
         
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
-        print $context->sm->fetch("print.html.tpl");
+        print $context->sm->fetch("atlas.html.tpl");
     
     } elseif($context->type == 'application/paperwalking+xml') { 
         header("Content-Type: application/paperwalking+xml; charset=UTF-8");
         header("Access-Control-Allow-Origin: *");
         print '<'.'?xml version="1.0" encoding="utf-8"?'.">\n";
-        print $context->sm->fetch("print.xml.tpl");
+        print $context->sm->fetch("atlas.xml.tpl");
     
     } elseif($context->type == 'application/geo+json' || $context->type == 'application/json') { 
         header("Content-Type: application/geo+json; charset=UTF-8");

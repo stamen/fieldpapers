@@ -239,7 +239,7 @@
                             </span>
                             <br/>
                             <span id="atlas_link">
-                                <a href="{$base_dir}/print.php?id={$print_id}">{$title|escape}</a>
+                                <a href="{$base_dir}/atlas.php?id={$print_id}">{$title|escape}</a>
                             </span>
                         </div>
                         <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
@@ -306,7 +306,7 @@
                     var notes = {$notes|@json_encode};
                     var post_url = base_url + '/save-scan-notes.php?scan_id=' + scan_id;
                     var base_provider = {$scan.base_url|json_encode};
-                    var redirect_url = base_url + '/print.php?id=' + {$print_id|json_encode};
+                    var redirect_url = base_url + '/atlas.php?id=' + {$print_id|json_encode};
                     var geojpeg_bounds = {$scan.geojpeg_bounds|json_encode};
                     
                     var current_user_id = {$user.id|json_encode};
