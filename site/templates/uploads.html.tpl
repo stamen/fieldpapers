@@ -28,11 +28,11 @@
                 {/capture}
 
                 {if $scan.user.name}
-                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{$scan_title|escape}</a>
+                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{$scan_title|@trim|escape}</a>
                     by <a href="{$base_dir}/uploads.php?user={$scan.user_id}">{$scan.user.name}</a>,
 
                 {else}
-                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{$scan_title|escape}</a>,
+                    <a href="{$base_dir}/snapshot.php?id={$scan.id}">{$scan_title|@trim|escape}</a>,
                 {/if}
 
                 {if $scan.place_name}
