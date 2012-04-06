@@ -2,8 +2,11 @@ var active_marker = false;
 
 function MarkerNote(map, post_url)
 {
-    var note_displayed = true;
+    var marker_width = 30;
+    var marker_height = 30;
     
+    var note_displayed = true;
+        
     this.location = map.getCenter();
     
     var data = this.data = {
@@ -136,7 +139,7 @@ function MarkerNote(map, post_url)
             data.note = this.value;
         };
         
-        var marker_width = 30;
+        //var marker_width = 30;
         var offsetY = 5;
         
         editable_new_note.style.position = "absolute";
@@ -166,7 +169,7 @@ function MarkerNote(map, post_url)
     
     img.onmouseup = function(e)
     {                                   
-        var marker_end = {x: div.offsetLeft, y: div.offsetTop};
+        var marker_end = {x: div.offsetLeft + .5 * marker_width, y: div.offsetTop + .5 * marker_height};
         
         marker.location = map.pointLocation(marker_end);
         
@@ -181,17 +184,19 @@ function MarkerNote(map, post_url)
     
     var updatePosition = function()
     {
+        console.log(marker_width, marker_height);
         var point = map.locationPoint(marker.location);
         
-        div.style.left = point.x + 'px';
-        div.style.top = point.y + 'px';
+        div.style.left = point.x + - .5 * marker_width + 'px';
+        div.style.top = point.y - .5 * marker_height + 'px';
         
         if (note_displayed)
         {
-            var marker_width = 30;
+            //var marker_width = 30;
             var offsetY = 5;
             
             var editable_new_note = document.getElementById('new_marker_note');
+            //console.log(div.offsetLeft,editable_new_note.offsetWidth,marker_width);
             editable_new_note.style.left = div.offsetLeft - .5*editable_new_note.offsetWidth + .5*marker_width + 'px';
             editable_new_note.style.top = div.offsetTop - editable_new_note.offsetHeight - offsetY + 'px';
         }
@@ -217,6 +222,9 @@ function MarkerNote(map, post_url)
 
 function addMarkerNote()
 {   
+    var marker_width = 30;
+    var marker_height = 30;
+    
     if (active_polygon != -1 || active_marker)
     {
         alert('Please finish editing your active marker.');
@@ -235,13 +243,12 @@ function addMarkerNote()
     }
     
     var markerDiv = new MarkerNote(map, post_url);
-    //var markerDiv = marker.div;
     document.getElementById('marker-container').appendChild(markerDiv);
     
     var editable_new_note = document.getElementById('new_marker_note');
     editable_new_note.className = 'show';
     
-    var marker_width = 30;
+    //var marker_width = 30;
     var offsetY = 5;
         
     editable_new_note.style.position = "absolute";
@@ -254,9 +261,14 @@ function addMarkerNote()
 
 function SavedMarker(map,note,user,created,note_num,lat,lon)
 {
+    var marker_width = 30;
+    var marker_height = 30;
+    
     var note_displayed = false;
     
     this.location = new MM.Location(lat,lon);
+    
+    var last_saved_position = {'lat': lat, 'lon': lon};
     
     var data = this.data = {
         'lat': parseFloat(lat),
@@ -296,27 +308,20 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     }
     
     var resetNote = function()
-    {
-        var orig_point = map.locationPoint(new MM.Location(lat,lon));
-        marker.location = new MM.Location(lat,lon);
+    {        
+        var orig_point = map.locationPoint(new MM.Location(last_saved_position.lat, last_saved_position.lon));
+        marker.location = new MM.Location(last_saved_position.lat, last_saved_position.lon);
     
-        div.style.left = orig_point.x + 'px';
-        div.style.top = orig_point.y + 'px';
+        div.style.left = orig_point.x - .5 * marker_width + 'px';
+        div.style.top = orig_point.y - .5 * marker_height + 'px';
         
         var editable_saved_note_textarea = document.getElementById('marker_textarea');
         editable_saved_note_textarea.innerHTML = note;
-        
-        /*
-        if (textarea.className == 'show' && remove_button.className == 'show' && ok_button.className == 'show' && cancel_button.className == 'show') {
-            textarea.className = 'hide';
-            ok_button.className = 'hide';
-            cancel_button.className = 'hide';
-            remove_button.className = 'hide';
-        }
-        */
-        
+                
         var editable_saved_note = document.getElementById('marker_note');
         editable_saved_note.className = 'hide';
+        
+        img.src = 'img/icon_x_mark.png';
         
         active_marker = false;
         note_displayed = false;
@@ -341,9 +346,14 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
                 alert('There was a problem: ' + resp.message);
               }
               
+              last_saved_position.lat = data.lat;
+              last_saved_position.lon = data.lon;
+              
               changeMarkerDisplay(resp);
             }
         });
+        
+        img.src = 'img/icon_x_mark.png';
         
         active_marker = false;
         
@@ -353,7 +363,7 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     }
     
     var changeMarkerDisplay = function(resp)
-    {        
+    {   
         var editable_saved_note = document.getElementById('marker_note');
         editable_saved_note.className = 'hide';
             
@@ -431,7 +441,7 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
                 saved_note.innerHTML = data.note;
             }
                         
-            var marker_width = 30;
+            //var marker_width = 30;
             var offsetY = 5;
             
             saved_note.className = 'show';
@@ -445,7 +455,13 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     
     img.onmouseout = function(e)
     {
+        if (active_marker) {
+            return;
+        }
+        
         img.src = 'img/icon_x_mark.png';
+        
+        
         img.style.cursor = 'move';
         
         if (saved_note.className = 'show')
@@ -462,6 +478,8 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
         }
         
         active_marker = true;
+        
+        img.src = 'img/icon_x_active_markernote.png';
         
         note_displayed = true;
         
@@ -485,8 +503,8 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
         editable_saved_note_textarea.onchange = function () { 
             data.note = this.value;
         };
-        
-        var marker_width = 30;
+                
+        //var marker_width = 30;
         var offsetY = 5;
         
         editable_saved_note.style.position = "absolute";
@@ -516,13 +534,13 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     
     img.onmouseup = function(e)
     {                            
-        var marker_end = {x: div.offsetLeft, y: div.offsetTop};
+        var marker_end = {x: div.offsetLeft + .5 * marker_width, y: div.offsetTop + .5 * marker_height};
         
         marker.location = map.pointLocation(marker_end);
         data.lat = marker.location.lat.toFixed(6);
         data.lon = marker.location.lon.toFixed(6);
-        
-        updatePosition();
+                
+        updatePositionWithPadding();
     
         document.onmousemove = null;
         return false;
@@ -533,20 +551,21 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
         var point = map.locationPoint(new MM.Location(lat,lon));
         marker.location = new MM.Location(lat,lon);
         
-        div.style.left = point.x + 'px';
-        div.style.top = point.y + 'px';
+        div.style.left = point.x - .5 * marker_width + 'px';
+        div.style.top = point.y - .5 * marker_height + 'px';
     }
     
     var updatePosition = function()
     {
+        //console.log(marker_width, marker_height);
         var point = map.locationPoint(marker.location);
         
-        div.style.left = point.x + 'px';
-        div.style.top = point.y + 'px';
+        div.style.left = point.x - .5 * marker_width + 'px';
+        div.style.top = point.y - .5 * marker_height + 'px';
         
         if (note_displayed)
         {
-            var marker_width = 30;
+            //var marker_width = 30;
             var offsetY = 5;
             
             var editable_saved_note = document.getElementById('marker_note');
@@ -557,8 +576,33 @@ function SavedMarker(map,note,user,created,note_num,lat,lon)
     
             // Check overflow
             checkMapOverflow({x: editable_saved_note.offsetLeft, y: editable_saved_note.offsetTop}, 
-                             {x: editable_saved_note.offsetLeft + editable_saved_note.offsetWidth, y: editable_saved_note.offsetTop + editable_saved_note.offsetHeight}
-                            );
+                             {x: editable_saved_note.offsetLeft + editable_saved_note.offsetWidth, y: editable_saved_note.offsetTop + editable_saved_note.offsetHeight},
+                             0);
+        }
+    }
+    
+    var updatePositionWithPadding = function()
+    {
+        var point = map.locationPoint(marker.location);
+        
+        div.style.left = point.x - .5 * marker_width + 'px';
+        div.style.top = point.y - .5 * marker_height + 'px';
+        
+        if (note_displayed)
+        {
+            //var marker_width = 30;
+            var offsetY = 5;
+            
+            var editable_saved_note = document.getElementById('marker_note');
+            editable_saved_note.style.left = div.offsetLeft - .5*editable_saved_note.offsetWidth + .5*marker_width + 'px';
+            editable_saved_note.style.top = div.offsetTop - editable_saved_note.offsetHeight - offsetY + 'px';
+            
+
+    
+            // Check overflow
+            checkMapOverflow({x: editable_saved_note.offsetLeft, y: editable_saved_note.offsetTop}, 
+                             {x: editable_saved_note.offsetLeft + editable_saved_note.offsetWidth, y: editable_saved_note.offsetTop + editable_saved_note.offsetHeight},
+                             30);
         }
     }
     
