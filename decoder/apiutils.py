@@ -26,10 +26,10 @@ def update_print(apibase, password, print_id, progress):
     params = urlencode(dict(progress=progress, password=password))
     
     req, path = _prepare_http_connection(apibase)
-    req.request('POST', path + '/update-print.php?' + query, params, headers)
+    req.request('POST', path + '/update-atlas.php?' + query, params, headers)
     res = req.getresponse()
     
-    assert res.status == 200, 'POST to update-print.php resulting in status %s instead of 200' % res.status
+    assert res.status == 200, 'POST to update-atlas.php resulting in status %s instead of 200' % res.status
 
     return
 
@@ -48,10 +48,10 @@ def finish_print(apibase, password, print_id, print_info):
     params = urlencode(print_info)
     
     req, path = _prepare_http_connection(apibase)
-    req.request('POST', path + '/finish-print.php?' + query, params, headers)
+    req.request('POST', path + '/finish-atlas.php?' + query, params, headers)
     res = req.getresponse()
     
-    assert res.status == 200, 'POST to finish-print.php resulting in status %s instead of 200' % res.status
+    assert res.status == 200, 'POST to finish-atlas.php resulting in status %s instead of 200' % res.status
 
     return
 
