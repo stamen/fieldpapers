@@ -15,12 +15,12 @@
             <div class="atlasThumb">
                 <a href="{$base_dir}/print.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" width="100%"></a>
 
-                {if $print.user.name}
-                    <a href="{$base_dir}/print.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
-                    by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user.name}</a>,
+                <a href="{$base_dir}/print.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
 
+                {if $print.user.name}
+                    by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user.name}</a>,
                 {else}
-                    <a href="{$base_dir}/print.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>,
+                    by Anonymous,
                 {/if}
 
                 {if $print.place_name}
