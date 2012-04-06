@@ -98,16 +98,16 @@
                         <button type="button" onClick= "addMarkerNote()">Add Marker Note</button>
                     </div>
                     <p>
-                        Uploaded by <a href="uploads.php?user={$scan.user_id}">{$user_name}</a>, 
-                        <a href="uploads.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a><br>
+                        Uploaded by <a href="snapshots.php?user={$scan.user_id}">{$user_name}</a>, 
+                        <a href="snapshots.php?month={"Y-m"|@date:$scan.created}">{$scan.age|nice_relativetime|escape}</a><br>
                         {if $page_number}
                             <b>Page {$page_number}<b>,
                         {/if}
                         Atlas <a href="print.php?id={$scan.print_id}">{$scan.print_id}</a>
                         {if $scan.place_woeid}
-                            <a href="{$base_dir}/uploads.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
+                            <a href="{$base_dir}/snapshots.php?place={$scan.place_woeid}">{$scan.place_name|nice_placename}</a>,
                         {/if}
-                        <a href="{$base_dir}/uploads.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>
+                        <a href="{$base_dir}/snapshots.php?place={$scan.country_woeid}">{$scan.country_name|nice_placename}</a>
                         <span id="polygon-enabled" style="float: right">Polygon drawing currently disabled</span>
                     </p>
                 </p>

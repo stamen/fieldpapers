@@ -447,7 +447,7 @@
         );
         
         if($scan['user_name'])
-            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/uploads.php?user='.urlencode($scan['user_id']);
+            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/snapshots.php?user='.urlencode($scan['user_id']);
         
         return $feature;
     }
@@ -470,7 +470,7 @@
         );
         
         if($note['user_name'])
-            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/uploads.php?user='.urlencode($note['user_id']);
+            $feature['properties']['person_href'] = 'http://'.get_domain_name().get_base_dir().'/snapshots.php?user='.urlencode($note['user_id']);
         
         return $feature;
     }
@@ -489,7 +489,7 @@
         );
         
         if($scan['user_name'])
-            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/uploads.php?user='.urlencode($scan['user_id']);
+            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/snapshots.php?user='.urlencode($scan['user_id']);
 
         $north = floatval($scan['page']['north']);
         $south = floatval($scan['page']['south']);
@@ -518,7 +518,7 @@
         );
         
         if($scan['user_name'])
-            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/uploads.php?user='.urlencode($scan['user_id']);
+            $row['person_href'] = 'http://'.get_domain_name().get_base_dir().'/snapshots.php?user='.urlencode($scan['user_id']);
         
         return join(',', array_values($row));
     }
