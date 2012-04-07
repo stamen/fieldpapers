@@ -24,6 +24,7 @@
         $s->assign('request', array('get' => $_GET,
                                     'post' => $_POST,
                                     'uri' => $_SERVER['REQUEST_URI'],
+                                    'query' => $_SERVER['QUERY_STRING'],
                                     'authenticated' => ($_SESSION['logged_in'] ? true : false),
                                     'user' => $_SESSION['user']));
         

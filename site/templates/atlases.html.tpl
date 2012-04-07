@@ -9,7 +9,7 @@
     {include file="navigation.htmlf.tpl"}
     <div class="container">
         <h1>Atlases {$title|escape}</h1>
-        <h2>Atlases | <a href="{$base_dir}/snapshots.php">Snapshots</a></h2>
+        <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
         
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
