@@ -313,7 +313,7 @@
                                     {/if}
                                     
                                     {foreach from=$providers item="provider"}
-                                        {if $print.provider == $provider.0}
+                                        {if $pages.0.provider == $provider.0}
                                             + {$provider.1|lower|escape}
                                         {/if}
                                     {/foreach}
