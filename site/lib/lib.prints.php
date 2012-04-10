@@ -346,6 +346,7 @@
         $print = get_print($dbh, $print_id);
         $pages = get_print_pages($dbh, $print_id);
         $print['page_count'] = count($pages);
+        $print['pages'] = $pages;
         
         $users = array();
         $user_id = $print['user_id'];
