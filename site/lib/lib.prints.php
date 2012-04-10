@@ -368,6 +368,7 @@
                     $users[$user_id] = get_user($dbh, $user_id);
                 
                 $scans[$i]['user_name'] = $users[$user_id]['name'];
+                $scans[$i]['page'] = get_print_page($dbh, $scan['print_id'], $scan['print_page_number']);
             }
             
             $notes = get_scan_notes($dbh, $note_args);
