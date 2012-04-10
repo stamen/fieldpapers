@@ -73,7 +73,7 @@
             </li>
             <li>
             <p>
-                <strong><a href="https://github.com/stamen/paperwalking">Fork us on Github</a></strong> - Field Papers in an open source project hosted at Github.
+                <strong><a href="https://github.com/stamen/fieldpapers">Fork us on Github</a></strong> - Field Papers in an open source project hosted at Github.
             </p>
             </li>
         </ol>
