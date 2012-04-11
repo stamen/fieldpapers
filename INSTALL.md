@@ -94,3 +94,29 @@ by adding a line to `/etc/crontab` like this:
     * *     * * *   ubuntu  cd /usr/local/fieldpapers/decoder && /usr/bin/lockrun --lockfile=poll.lock -- python poll.py -p password -b http://hostname/ 55
 
 That's it - you're done!
+
+Tweaks, Gotchas
+---------------
+
+Many of PHP's internal settings are restrictive by default, for safety. You'll
+want to modify these for yourself, in Apache's `.htaccess` files or the file
+`/etc/php5/apache2/php.ini` on Ubuntu 10.04 systems. See PHP documentation on
+[runtime configuration](http://www.php.net/manual/en/configuration.php)
+for more information.
+
+* Increase [`upload_max_filesize`](http://php.net/manual/en/ini.core.php#ini.upload-max-filesize)
+  to accept file uploads larger than the default 2MB.
+* Increase [`post_max_size`](http://php.net/manual/en/ini.core.php#ini.post-max-size)
+  to allow room for larger uploaded files.
+
+PHP sessions are brief by default, but a few tweaks can make them more durable.
+
+* Increase [`session.gc_maxlifetime`](http://php.net/manual/en/session.configuration.php#ini.session.gc-maxlifetime)
+  to days or weeks so that visitors stay logged-in for longer periods of time.
+* To make it more efficient to keep sessions available for longer periods of time, set
+  [`session.save_path`](http://php.net/manual/en/session.configuration.php#ini.session.save-path)
+  to use a number of number of directory levels for session files. You'll need
+  to run `ext/session/mod_files.sh` from the PHP source for this to work, and probably set
+  [`session.hash_bits_per_character`](http://php.net/manual/en/session.configuration.php#ini.session.hash-bits-per-character)
+  to `4` just to be safe.
+  
