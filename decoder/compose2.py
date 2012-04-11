@@ -521,7 +521,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
 
             mark = page.get('mark', None) or None
             fuzzy = page.get('fuzzy', None) or None
-            text = str(page.get('text', None) or '')
+            text = unicode(page.get('text', None) or '').encode('utf8')
             role = page.get('role', None) or None
             
             north, west, south, east = page['bounds']
