@@ -119,4 +119,12 @@ PHP sessions are brief by default, but a few tweaks can make them more durable.
   to run `ext/session/mod_files.sh` from the PHP source for this to work, and probably set
   [`session.hash_bits_per_character`](http://php.net/manual/en/session.configuration.php#ini.session.hash-bits-per-character)
   to `4` just to be safe.
-  
+
+When atlases or snapshots fail, the `/tmp` directory can fill up. Add a few
+find-and-delete commands to `/etc/crontab` to keep these files from piling up
+and filling the disk:
+
+    10 *    * * *   ubuntu  find /tmp -cmin +360 -name 'preblobs-*.jpg' -delete
+    20 *    * * *   ubuntu  find /tmp -cmin +360 -name 'highpass-*.jpg' -delete
+    30 *    * * *   ubuntu  find /tmp -cmin +360 -name 'postblob-*.png' -delete
+    40 *    * * *   ubuntu  find /tmp -cmin +360 -name 'cairoutils-*.???' -delete
