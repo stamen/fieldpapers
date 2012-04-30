@@ -382,7 +382,7 @@ function updateAtlasFormFields(pages)
         page_extent.name = "pages[" + pages[i].name + "]";
         page_extent.type = 'hidden';
         page_extent.value = pages[i].value;
-        document.getElementById('form_data_div').appendChild(page_extent);
+        form_data_div.appendChild(page_extent);
     }
 }
 
