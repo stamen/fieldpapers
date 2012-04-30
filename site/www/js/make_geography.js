@@ -53,6 +53,7 @@ function setMapHeight()
     }
 }
 
+/*
 function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
 {   
     var map_extent = map.getExtent();
@@ -137,6 +138,7 @@ function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
         }
     }
 }
+*/
 
 function resetAtlas()
 {
@@ -928,7 +930,7 @@ function initUI () {
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
-        //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); // Needed?
+        // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); // Needed?
                         
         rect.attr({
             height:  page_dimensions.height
