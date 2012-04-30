@@ -33,7 +33,7 @@ edits, as well as distributing the load by making it possible for legible,
 easy notes to be shared and turned into real geographical data. Don't see 
 your street on OpenStreetMap? Please add it! 
 
-Technical bits:
+## Technical bits
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -48,17 +48,13 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-There are two main components here.
+###There are two main components here:###
 
-1. Site
-
-The user-facing website is written in PHP and MySQL, and has been developed
+1. ###Site### - The user-facing website is written in PHP and MySQL, and has been developed
 to work adequately well in a commodity shared hosting environment, such as
 the Pair.com "webmaster" account I use to host Walking Papers.
 
-2. Decoder
-
-The ugly math bits are done in an offline process that consumes a queue
+2. ###Decoder### - The ugly math bits are done in an offline process that consumes a queue
 of freshly-scanned images from the main site, runs them through the
 image-recognition algorithm, and posts back georectified image tiles
 for editing. You can run a bunch of these in parallel to make jobs go
