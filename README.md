@@ -1,6 +1,6 @@
 Field Papers is the codebase behind http://fieldpapers.org.
 
-See INSTALL for a guide to installing Field Papers.
+See [INSTALL.md](https://github.com/stamen/fieldpapers/blob/master/INSTALL.md) for a guide to installing Field Papers.
 
 ## About Field Papers
 
