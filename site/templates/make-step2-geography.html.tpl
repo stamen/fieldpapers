@@ -60,6 +60,7 @@
             height: 92px;
             position: absolute;
             padding: 8px 0px 0px 20px;
+            line-height: 0;
             z-index: 2;
         }
         
@@ -240,12 +241,10 @@
             </form>
             <div id="zoom-container">
                 <span id="zoom-in" style="display: none;">
-                <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button"
-                          width="46" height="46">
+                    <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button" width="46" height="46">
                 </span>
                 <span id="zoom-out" style="display: none;">
-                    <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button"
-                              width="46" height="46">
+                    <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button" width="46" height="46">
                 </span>
             </div>
             <div id="map">
