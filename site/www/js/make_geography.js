@@ -15,7 +15,9 @@ var num_rows,
 var scaleControl,
     dragControl,
     dragControlCoordinates,
-    scaleControlCoordinates;
+    scaleControlCoordinates,
+    topLeftPageCoord,
+    bottomRightPageCoord;
 
 var canvas_fill;
 
@@ -51,6 +53,20 @@ function setMapHeight()
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
     }
+}
+
+function updatePageCoords()
+{
+    topLeftPageCoord = map.pointCoordinate(dragControlCoordinates);
+    bottomRightPageCoord = map.pointCoordinate(scaleControlCoordinates);
+}
+
+function updateFromPageCoords()
+{
+    dragControlCoordinates = map.coordinatePoint(topLeftPageCoord);
+    scaleControlCoordinates = map.coordinatePoint(bottomRightPageCoord);
+    resetAtlas();
+    updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
 }
 
 /*
@@ -142,16 +158,18 @@ function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
 
 function resetAtlas()
 {
-    setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
+    changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+
+    updateAtlasBounds();
 
     dragControl.attr({
-            x: dragControlCoordinates.x,
-            y: dragControlCoordinates.y
+        x: dragControlCoordinates.x,
+        y: dragControlCoordinates.y
     });
 
     scaleControl.attr({
-            x: scaleControlCoordinates.x,
-            y: scaleControlCoordinates.y
+        x: scaleControlCoordinates.x,
+        y: scaleControlCoordinates.y
     });
 
 
@@ -192,10 +210,12 @@ function changeOrientation(orientation) {
 
     scaleControlCoordinates.x = dragControlCoordinates.x + num_columns * new_page_width;
     scaleControlCoordinates.y = dragControlCoordinates.y + num_rows * new_page_height;
-                
+
+    updatePageCoords();
+
     scaleControl.attr({
-            x: scaleControlCoordinates.x,
-            y: scaleControlCoordinates.y
+        x: scaleControlCoordinates.x,
+        y: scaleControlCoordinates.y
     });
 
     changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
@@ -203,7 +223,7 @@ function changeOrientation(orientation) {
     resetAtlasAttributes();
                 
     rect.remove();
-    setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y, scaleControlCoordinates.x, scaleControlCoordinates.y);
+    updateAtlasBounds();
     drawAtlas();
 
     // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
@@ -272,13 +292,14 @@ function resetAtlasAttributes()
     });
 }
 
-function setAtlasBounds(drag_position_x, drag_position_y, scale_position_x, scale_position_y)
+function updateAtlasBounds()
 {
-    page_dimensions.x = drag_position_x;
-    page_dimensions.y = drag_position_y;
+    page_dimensions.x = dragControlCoordinates.x;
+    page_dimensions.y = dragControlCoordinates.y;
 
-    page_dimensions.width = scale_position_x - drag_position_x;
-    page_dimensions.height = scale_position_y - drag_position_y;
+    page_dimensions.width = scaleControlCoordinates.x - dragControlCoordinates.x;
+    page_dimensions.height = scaleControlCoordinates.y - dragControlCoordinates.y;
+
 }
 
 function drawPages(dragControlCoordinates, scaleControlCoordinates,num_rows,num_columns)
@@ -448,20 +469,6 @@ function initUI () {
     document.getElementById("paper_size").value = "letter";
     document.getElementById("orientation").value = "landscape";
                 
-    function updateDragControlCoordinates(dx, dy)
-    {
-        // Make this more general
-        dragControlCoordinates.x = dragControlCoordinates.x + dx;
-        dragControlCoordinates.y = dragControlCoordinates.y + dy;
-    }
-
-    function updateScaleControlCoordinates(dx, dy)
-    {
-        // Make this more general
-        scaleControlCoordinates.x = scaleControlCoordinates.x + dx;
-        scaleControlCoordinates.y = scaleControlCoordinates.y + dy;
-    }
-                              
     /////
     /// Set up the display objects
     /////
@@ -478,8 +485,10 @@ function initUI () {
     page_dimensions = {x: canvasOriginX, y: canvasOriginY, width: page_height*atlas_aspect_ratio, height: page_height};
                     
     // Initialize Coordinate Objects
-    scaleControlCoordinates = {x: page_height*atlas_aspect_ratio + canvasOriginX, y: page_height + canvasOriginY};
     dragControlCoordinates = {x: canvasOriginX, y: canvasOriginY};
+    scaleControlCoordinates = {x: page_height*atlas_aspect_ratio + canvasOriginX, y: page_height + canvasOriginY};
+
+    updatePageCoords();
                 
     horizontal_add = canvas.image(button_add_inactive,
                     canvasOriginX+page_height*atlas_aspect_ratio-.5*page_button_width,
@@ -643,9 +652,10 @@ function initUI () {
         scaleControlCoordinates.x = dragControlCoordinates.x + page_dimensions.width;
         scaleControlCoordinates.y = dragControlCoordinates.y + page_dimensions.height;
 
-        changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+        updatePageCoords();
+        updateAtlasBounds();
 
-        setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x,scaleControlCoordinates.y);
+        changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
         dragControl.attr({
             x: dragControlCoordinates.x,
@@ -743,15 +753,13 @@ function initUI () {
                 y: page_dimensions.y + new_height
             });
 
-            page_dimensions.width = new_width;
-            page_dimensions.height = new_height;
-
-            scaleControlCoordinates.x = page_dimensions.x + page_dimensions.width;
-            scaleControlCoordinates.y = page_dimensions.y + page_dimensions.height;
+            scaleControlCoordinates.x = page_dimensions.x + new_width;
+            scaleControlCoordinates.y = page_dimensions.y + new_height;
 
             changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
-            setAtlasBounds(dragControlCoordinates.x, dragControlCoordinates.y,scaleControlCoordinates.x, scaleControlCoordinates.y);     
+            updatePageCoords();
+            updateAtlasBounds();
                                                    
             rect.remove();
             drawAtlas(scaleControl,dragControl,horizontal_add);
@@ -815,6 +823,8 @@ function initUI () {
             x: scaleControlCoordinates.x
         });
 
+        updatePageCoords();
+
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
         // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
@@ -856,6 +866,8 @@ function initUI () {
             x: scaleControlCoordinates.x
         });
 
+        updatePageCoords();
+
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
         //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); Needed?
@@ -888,6 +900,8 @@ function initUI () {
         scaleControl.attr({
             y: scaleControlCoordinates.y
         });
+
+        updatePageCoords();
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
@@ -927,6 +941,8 @@ function initUI () {
         scaleControl.attr({
             y: scaleControlCoordinates.y
         });
+
+        updatePageCoords();
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
@@ -970,6 +986,7 @@ function initUI () {
     // Map Callbacks
     map.addCallback("zoomed", function(m) {
         document.getElementById("page_zoom").value = map.getZoom();
+        updateFromPageCoords();
     });
 
     /*
@@ -986,13 +1003,21 @@ function initUI () {
     zoom_in.onmouseover = function() { zoom_in_button.src = zoom_in_active; };
     zoom_in.onmouseout = function() { zoom_in_button.src = zoom_in_inactive; };
 
-    zoom_in.onclick = function() { map.zoomIn(); return false; };
+    zoom_in.onclick = function() {
+        map.zoomIn();
+        map.dispatchCallback("zoomed");
+        return false;
+    };
 
     var zoom_out_button = document.getElementById("zoom-out-button");
     zoom_out.onmouseover = function() { zoom_out_button.src = zoom_out_active; };
     zoom_out.onmouseout = function() { zoom_out_button.src = zoom_out_inactive; };
 
-    zoom_out.onclick = function() { map.setCenterZoom(map.getCenter(),map.getZoom()-1); return false; };
+    zoom_out.onclick = function() {
+        map.zoomOut();
+        map.dispatchCallback("zoomed");
+        return false;
+    };
 
     // Window Callbacks
     window.onresize = setMapHeight;
