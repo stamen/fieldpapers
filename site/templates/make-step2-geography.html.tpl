@@ -11,6 +11,8 @@
             zoom_in_inactive = base_url + '/img/button-zoom-in-off.png',
             zoom_out_active = base_url + '/img/button-zoom-out-on.png',
             zoom_out_inactive = base_url + '/img/button-zoom-out-off.png',
+            zoom_return_active = base_url + "/img/button-return-on.png",
+            zoom_return_inactive = base_url + "/img/button-return-off.png",
             button_remove_row_active = base_url + "/img/button-remove-row-on.png",
             button_remove_row_inactive = base_url + "/img/button-remove-row-off.png",
             button_remove_column_active = base_url + "/img/button-remove-column-on.png",
@@ -64,7 +66,9 @@
             z-index: 2;
         }
         
-        #zoom-in, #zoom-out {
+        #zoom-in,
+        #zoom-out,
+        #zoom-return {
             cursor: pointer;
         }
         
@@ -241,10 +245,13 @@
             </form>
             <div id="zoom-container">
                 <span id="zoom-in" style="display: none;">
-                    <img src='{$base_dir}/img/button-zoom-in-off.png' id="zoom-in-button" width="46" height="46">
+                    <img src="{$base_dir}/img/button-zoom-in-off.png" id="zoom-in-button" width="46" height="46">
                 </span>
                 <span id="zoom-out" style="display: none;">
-                    <img src='{$base_dir}/img/button-zoom-out-off.png' id="zoom-out-button" width="46" height="46">
+                    <img src="{$base_dir}/img/button-zoom-out-off.png" id="zoom-out-button" width="46" height="46">
+                </span>
+                <span id="zoom-return">
+                    <img src="{$base_dir}/img/button-return-off.png" id="zoom-return-button" width="46" height="46">
                 </span>
             </div>
             <div id="map">

@@ -996,8 +996,9 @@ function initUI () {
     });
     */
                 
-    var zoom_in = document.getElementById("zoom-in");
-    var zoom_out = document.getElementById("zoom-out");
+    var zoom_in = document.getElementById("zoom-in"),
+        zoom_out = document.getElementById("zoom-out"),
+        zoom_return = document.getElementById("zoom-return");
                 
     var zoom_in_button = document.getElementById("zoom-in-button");
     zoom_in.onmouseover = function() { zoom_in_button.src = zoom_in_active; };
@@ -1015,6 +1016,17 @@ function initUI () {
 
     zoom_out.onclick = function() {
         map.zoomOut();
+        map.dispatchCallback("zoomed");
+        return false;
+    };
+
+    var zoom_return_button = document.getElementById("zoom-return-button");
+    zoom_return.onmouseover = function() { zoom_return_button.src = zoom_return_active; };
+    zoom_return.onmouseout = function() { zoom_return_button.src = zoom_return_inactive; };
+    zoom_return_button.onclick = function() {
+        var northWest = map.coordinateLocation(topLeftPageCoord),
+            southEast = map.coordinateLocation(bottomRightPageCoord);
+        map.setExtent([northWest, southEast]);
         map.dispatchCallback("zoomed");
         return false;
     };
