@@ -69,7 +69,184 @@ function updateFromPageCoords()
     updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
 }
 
+function checkAtlasOverflowOnAdd(topLeftPoint, bottomRightPoint)
+{   
+    var map_extent = map.getExtent();
+    var map_bottom_right_point = map.locationPoint(map_extent[1]);
+
+    var right_overflow = bottomRightPoint.x > map_bottom_right_point.x;
+    var bottom_overflow = bottomRightPoint.y > map_bottom_right_point.y;
+                    
+    if (right_overflow || bottom_overflow)
+    {              
+        var dragControlLocation = map.pointLocation(dragControlCoordinates);
+        var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
+
+        if (right_overflow && bottom_overflow)
+        {
+            var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+            var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+            map.panBy(pan_delta_x, pan_delta_y);
+        } else if (right_overflow) {
+            var pan_delta = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+            map.panBy(pan_delta, 0);
+        } else if (bottom_overflow) {
+            var pan_delta = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+            map.panBy(0, pan_delta);
+        }
+                                    
+        dragControlCoordinates = map.locationPoint(dragControlLocation);
+        scaleControlCoordinates = map.locationPoint(scaleControlLocation);
+
+        changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+
+        resetAtlas();
+    }
+}
+
 /*
+function checkAtlasOverflowOnDrag(topLeftPoint, bottomRightPoint)
+{       
+    var map_extent = map.getExtent();
+    var map_top_left_point = map.locationPoint(map_extent[0]);
+    var map_bottom_right_point = map.locationPoint(map_extent[1]);
+
+    // Create 4 Boolean values for overflow tests
+    var left_overflow = topLeftPoint.x < map_top_left_point.x;
+    var top_overflow = topLeftPoint.y < map_top_left_point.y;
+    var right_overflow = bottomRightPoint.x > map_bottom_right_point.x;
+    var bottom_overflow = bottomRightPoint.y > map_bottom_right_point.y;
+                    
+    if (left_overflow || top_overflow || right_overflow || bottom_overflow)
+    {                 
+        var pan_delta_x = 0;
+        var pan_delta_y = 0;
+    
+        var dragControlLocation = map.pointLocation(dragControlCoordinates);
+        var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
+        
+        if (left_overflow && top_overflow) {
+            pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+            pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+        } else if (left_overflow && bottom_overflow) {
+            pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+            pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+        } else if (left_overflow) {
+            // Number of pixels to pan
+            pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+        } else if (top_overflow) {
+            pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+        } else if (right_overflow && bottom_overflow) {
+            pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+            pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+        } else if (right_overflow && top_overflow) {
+            pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+            pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+        } else if (right_overflow) {
+            pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+        } else if (bottom_overflow) {
+            pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+        }
+        
+        if (((topLeftPoint.x - 3) + pan_delta_x) < map_top_left_point.x) {
+            pan_delta_x = map_top_left_point.x - (topLeftPoint.x - 3);
+        }
+        
+        if (((topLeftPoint.y - controlRadius) + pan_delta_y) < map_top_left_point.y) {
+            pan_delta_y = map_top_left_point.y - (topLeftPoint.x - controlRadius);
+        }
+        
+        map.panBy(pan_delta_x, pan_delta_y);
+                            
+        dragControlCoordinates = map.locationPoint(dragControlLocation);
+        scaleControlCoordinates = map.locationPoint(scaleControlLocation);
+
+        changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+
+        resetAtlas();
+    }
+}
+*/
+
+function checkAtlasOverflowOnDrag(topLeftPoint, bottomRightPoint)
+{   
+    var map_extent = map.getExtent();
+    var map_top_left_point = map.locationPoint(map_extent[0]);
+    var map_bottom_right_point = map.locationPoint(map_extent[1]);
+
+    // Create 4 Boolean values for overflow tests
+    var left_overflow = topLeftPoint.x < map_top_left_point.x;
+    var top_overflow = topLeftPoint.y < map_top_left_point.y;
+    var right_overflow = bottomRightPoint.x > map_bottom_right_point.x;
+    var bottom_overflow = bottomRightPoint.y > map_bottom_right_point.y;
+                    
+    if (left_overflow || top_overflow || right_overflow || bottom_overflow)
+    {                  
+        var dragControlLocation = map.pointLocation(dragControlCoordinates);
+        var scaleControlLocation = map.pointLocation(scaleControlCoordinates);
+
+        var ui_width = scaleControlCoordinates.x - dragControlCoordinates.x;
+        var ui_height = scaleControlCoordinates.y - dragControlCoordinates.y;
+        var map_width = map_bottom_right_point.x - map_top_left_point.x;
+        var map_height = map_bottom_right_point.y - map_top_left_point.y;
+
+        if (((ui_width > map_width) || (ui_height > map_height)) && (top_overflow || left_overflow))
+        {
+            if (left_overflow && top_overflow) {
+                var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+                var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (left_overflow) {
+                // Number of pixels to pan
+                var pan_delta = map_top_left_point.x - topLeftPoint.x + 3;
+                map.panBy(pan_delta,0);
+            } else if (top_overflow) {
+                var pan_delta = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(0, pan_delta);
+            }
+        } else {
+            if (right_overflow && bottom_overflow)
+            {
+                var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (right_overflow && top_overflow) {
+                var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (left_overflow && top_overflow) {
+                var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+                var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (left_overflow && bottom_overflow) {
+                var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+                var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (right_overflow) {
+                var pan_delta = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                map.panBy(pan_delta, 0);
+            } else if (bottom_overflow) {
+                var pan_delta = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                map.panBy(0, pan_delta);
+            } else if (left_overflow) {
+                // Number of pixels to pan
+                var pan_delta = map_top_left_point.x - topLeftPoint.x + 3;
+                map.panBy(pan_delta,0);
+            } else if (top_overflow) {
+                var pan_delta = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(0, pan_delta);
+            }
+        }
+                            
+        dragControlCoordinates = map.locationPoint(dragControlLocation);
+        scaleControlCoordinates = map.locationPoint(scaleControlLocation);
+
+        changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
+
+        resetAtlas();
+    }
+}
+
 function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
 {   
     var map_extent = map.getExtent();
@@ -106,43 +283,37 @@ function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
             var map_width = map_bottom_right_point.x - map_top_left_point.x;
             var map_height = map_bottom_right_point.y - map_top_left_point.y;
 
-            var fraction_of_map = .8;
 
-            if ((ui_width > fraction_of_map * map_width) || (ui_height > fraction_of_map * map_height))
+            if (right_overflow && bottom_overflow)
             {
-                map.setCenterZoom(map.getCenter(),map.getZoom()-1);
-            } else {
-                if (right_overflow && bottom_overflow)
-                {
-                    var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
-                    var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
-                    map.panBy(pan_delta_x, pan_delta_y);
-                } else if (right_overflow && top_overflow) {
-                    var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
-                    var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
-                    map.panBy(pan_delta_x, pan_delta_y);
-                } else if (left_overflow && top_overflow) {
-                    var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
-                    var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
-                    map.panBy(pan_delta_x, pan_delta_y);
-                } else if (left_overflow && bottom_overflow) {
-                    var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
-                    var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
-                    map.panBy(pan_delta_x, pan_delta_y);
-                } else if (left_overflow) {
-                    // Number of pixels to pan
-                    var pan_delta = map_top_left_point.x - topLeftPoint.x + 3;
-                    map.panBy(pan_delta,0);
-                } else if (top_overflow) {
-                    var pan_delta = map_top_left_point.y - topLeftPoint.y + controlRadius;
-                    map.panBy(0, pan_delta);
-                } else if (right_overflow) {
-                    var pan_delta = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
-                    map.panBy(pan_delta, 0);
-                } else if (bottom_overflow) {
-                    var pan_delta = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
-                    map.panBy(0, pan_delta);
-                }
+                var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (right_overflow && top_overflow) {
+                var pan_delta_x = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (left_overflow && top_overflow) {
+                var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+                var pan_delta_y = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (left_overflow && bottom_overflow) {
+                var pan_delta_x = map_top_left_point.x - topLeftPoint.x + 3;
+                var pan_delta_y = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                map.panBy(pan_delta_x, pan_delta_y);
+            } else if (right_overflow) {
+                var pan_delta = map_bottom_right_point.x - bottomRightPoint.x - controlRadius;
+                map.panBy(pan_delta, 0);
+            } else if (bottom_overflow) {
+                var pan_delta = map_bottom_right_point.y - bottomRightPoint.y - controlRadius;
+                map.panBy(0, pan_delta);
+            } else if (left_overflow) {
+                // Number of pixels to pan
+                var pan_delta = map_top_left_point.x - topLeftPoint.x + 3;
+                map.panBy(pan_delta,0);
+            } else if (top_overflow) {
+                var pan_delta = map_top_left_point.y - topLeftPoint.y + controlRadius;
+                map.panBy(0, pan_delta);
             }
                                 
             dragControlCoordinates = map.locationPoint(dragControlLocation);
@@ -154,7 +325,6 @@ function checkAtlasOverflow(topLeftPoint, bottomRightPoint, resize)
         }
     }
 }
-*/
 
 function resetAtlas()
 {
@@ -226,7 +396,8 @@ function changeOrientation(orientation) {
     updateAtlasBounds();
     drawAtlas();
 
-    // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+    checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+    //setTimeout(function() { checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); }, 50);
     updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
 }
 
@@ -709,7 +880,8 @@ function initUI () {
             this.attr("cursor", "move");
 
             document.getElementById("canvas").style.cursor = "default";                                               
-            // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+            //checkAtlasOverflowOnDrag(dragControlCoordinates, scaleControlCoordinates);
+            setTimeout(function() { checkAtlasOverflowOnDrag(dragControlCoordinates, scaleControlCoordinates); }, 50);
             updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
         }
     );
@@ -797,7 +969,8 @@ function initUI () {
             this.attr("cursor", "se-resize");
             document.getElementById("canvas").style.cursor = "default";
 
-            // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+            //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
+            setTimeout(function() { checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); }, 50);
             updatePageExtents(dragControlCoordinates, scaleControlCoordinates);
         }
     );
@@ -827,8 +1000,9 @@ function initUI () {
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
-        // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
-                        
+        //checkAtlasOverflowOnAdd(dragControlCoordinates, scaleControlCoordinates);
+        setTimeout(function() { checkAtlasOverflowOnAdd(dragControlCoordinates, scaleControlCoordinates); }, 50);
+                      
         rect.attr({
             // This is really atlas dimensions at this point.
             width:  page_dimensions.width
@@ -870,7 +1044,7 @@ function initUI () {
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
-        //checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); Needed?
+        checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); //Needed?
                         
         rect.attr({
             width:  page_dimensions.width
@@ -905,8 +1079,9 @@ function initUI () {
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
-        // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates);
-                        
+        //checkAtlasOverflowOnAdd(dragControlCoordinates, scaleControlCoordinates);
+        setTimeout(function() { checkAtlasOverflowOnAdd(dragControlCoordinates, scaleControlCoordinates); }, 50);
+                      
         rect.attr({
             height:  page_dimensions.height
         });
@@ -946,7 +1121,7 @@ function initUI () {
 
         changeCanvasFillPath(dragControlCoordinates, scaleControlCoordinates);
 
-        // checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); // Needed?
+        checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates); // Needed?
                         
         rect.attr({
             height:  page_dimensions.height
@@ -989,12 +1164,12 @@ function initUI () {
         updateFromPageCoords();
     });
 
-    /*
+    
     // check atlas overflow on map resize (but not for now)
     map.addCallback("resized", function(m) {
         checkAtlasOverflow(dragControlCoordinates, scaleControlCoordinates,true);
     });
-    */
+    
                 
     var zoom_in = document.getElementById("zoom-in"),
         zoom_out = document.getElementById("zoom-out"),
