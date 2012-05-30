@@ -245,13 +245,13 @@
             </form>
             <div id="zoom-container">
                 <span id="zoom-in" style="display: none;">
-                    <img src="{$base_dir}/img/button-zoom-in-off.png" id="zoom-in-button" width="46" height="46">
+                    <img src="{$base_dir}/img/button-zoom-in-off.png" id="zoom-in-button" width="46" height="46" title="Zoom In">
                 </span>
                 <span id="zoom-out" style="display: none;">
-                    <img src="{$base_dir}/img/button-zoom-out-off.png" id="zoom-out-button" width="46" height="46">
+                    <img src="{$base_dir}/img/button-zoom-out-off.png" id="zoom-out-button" width="46" height="46" title="Zoom Out">
                 </span>
                 <span id="zoom-return">
-                    <img src="{$base_dir}/img/button-return-off.png" id="zoom-return-button" width="46" height="46">
+                    <img src="{$base_dir}/img/button-return-off.png" id="zoom-return-button" width="46" height="46" title="Return the Atlas to the Center of the Map">
                 </span>
             </div>
             <div id="map">
