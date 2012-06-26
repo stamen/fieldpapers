@@ -5,7 +5,7 @@
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     enforce_api_password($_GET['password']);
     
-    $context = default_context();
+    $context = default_context(False);
     
     /**** ... ****/
     
