@@ -2,7 +2,7 @@
 
     require_once '../lib/lib.everything.php';
     
-    $context = default_context();
+    $context = default_context(True);
         
     ////
     // Path
