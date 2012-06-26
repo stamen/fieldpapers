@@ -5,7 +5,7 @@
     
     enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     
-    $context = default_context(False);
+    $context = default_context(True);
     
     /**** ... ****/
     
