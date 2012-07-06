@@ -36,8 +36,6 @@
             session_set_cookie_params(86400 * 31, get_base_dir());
             session_start();
             
-            error_log("Creating user session: " . session_save_path(), 0);
-            
             $user = cookied_user(&$db);
             
             if(!$user)
@@ -45,8 +43,6 @@
                 $user = add_user(&$db);
                 $_SESSION['user'] = $user;
             }
-        } else {
-            error_log("Not creating user session", 0);
         }
 
         // Smarty is created last because it needs $_SESSION populated
