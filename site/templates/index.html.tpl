@@ -10,6 +10,13 @@
     <div class="container">  
         <h1>Welcome to Field Papers</h1>
         
+        <p>Sorry, but our <strong>search isn't working at the moment.</strong></p>
+        
+        <p>While we work on a fix, you can still browse existing atlases around the world, and stay in touch for updates by following the <a href="https://twitter.com/stamen">@stamen</a> Twitter account.</p>
+        
+        <p>Thanks.</p>
+        
+        <!--
         <div class="homeThird">
             <a href="{$base_dir}/make-step1-search.php"><img src="{$base_dir}/img/graphic-make-large.gif" alt="Hand-drawn graphic to represent making a Field Papers atlas"></a>
             <h3><a href="{$base_dir}/make-step1-search.php">Make yourself an Atlas.</a></h3>
@@ -25,6 +32,7 @@
             <h3><a href="{$base_dir}/snapshots.php">Take pictures of your notes.</a></h3>
             <p><b><a href="{$base_dir}/upload.php">Upload</a></b> pages you've photographed.</p>
         </div>
+        -->
         
         <div class="clearfloat"></div>
         {include file="footer.htmlf.tpl"}
