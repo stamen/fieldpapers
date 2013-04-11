@@ -8,7 +8,7 @@
 <body>         
     {include file="navigation.htmlf.tpl"}
     <div class="container">  
-        <h1>Welcome to Field Papers</h1>
+        <!--<h1>Welcome to Field Papers</h1>-->
         
         <p>Sorry, but our <strong>search isn't working at the moment.</strong></p>
         
