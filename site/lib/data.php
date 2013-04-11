@@ -725,7 +725,9 @@
     */
     function placefinder_placename_latlonzoom($name)
     {        
-        #http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22sfo%22&format=json&diagnostics=true&callback=
+        #Yahoo provides free, non-commercial geocoding up to 2,000 requests per day via YQL tables:
+        #http://developer.yahoo.com/boss/geo/docs/free_YQL.html
+        #http://developer.yahoo.com/yql/console/?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22sfo%22#h=select%20*%20from%20geo.placefinder%20where%20text%3D%22eureka%22
         
         $req = new HTTP_Request("http://query.yahooapis.com/v1/public/yql");
         #NOTE: This is YQL, not SQL, so SQL injection not a worry!?
@@ -734,23 +736,27 @@
         #$req = new HTTP_Request('http://where.yahooapis.com/geocode?q=' . urlencode($name));
         #$req->addQueryString('count', '1');
         #$req->addQueryString('flags', 'J');
+        
+        #TODO: Use oAuth to enable future higher rate limits
+        #https://github.com/yahoo/yos-social-php5
         #$req->addQueryString('appid', GEOPLANET_APPID);
 
         $res = $req->sendRequest();
 
-        if(PEAR::isError($res))
+        if(PEAR::isError($res)) {
             return null;
-
+        }
+        
         if($req->getResponseCode() == 200)
         {
             $rsp = json_decode($req->getResponseBody(), true);
             
-            if($rsp && $rsp['results'] && $rsp['results']['result'])
+            if($rsp && $rsp['query']['results'] && $rsp['query']['results']['Result'])
             {
-                if ( $rsp['results']['result'][0] ) {
-                    $res = $rsp['results']['result'][0];
+                if ( $rsp['query']['results']['Result'][0] ) {
+                    $res = $rsp['query']['results']['Result'][0];
                 } else {
-                    $res = $rsp['results']['result'];
+                    $res = $rsp['query']['results']['Result'];
                 }
                 
                 if ($res['street'])
