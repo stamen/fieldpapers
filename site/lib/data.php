@@ -729,7 +729,7 @@
         
         $req = new HTTP_Request("http://query.yahooapis.com/v1/public/yql");
         #NOTE: This is YQL, not SQL, so SQL injection not a worry!?
-        $req->addQueryString("select * from geo.placefinder where text='$name'" );
+        $req->addQueryString("q","select * from geo.placefinder where text='$name'" );
         $req->addQueryString("format","json");
         #$req = new HTTP_Request('http://where.yahooapis.com/geocode?q=' . urlencode($name));
         #$req->addQueryString('count', '1');
