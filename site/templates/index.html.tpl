@@ -9,15 +9,16 @@
     {include file="navigation.htmlf.tpl"}
     <div class="container">  
         <!--<h1>Welcome to Field Papers</h1>-->
-        
-        <div class="clearfloat"></div>
-        
+                
+        <div style="width:70%; margin: 0px auto;">
+        <br>
         <p>Sorry, but our <strong>search isn't working at the moment.</strong></p>
         
         <p>While we work on a fix, you can still browse existing atlases around the world,<br>
         and stay in touch for updates by following the <a href="https://twitter.com/stamen">@stamen</a> Twitter account.</p>
         
         <p>Thanks.</p>
+        </div>
         
         <!--
         <div class="homeThird">
