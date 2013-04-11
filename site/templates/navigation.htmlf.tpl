@@ -4,11 +4,11 @@
     </div>
     <ul>
         <li>
-            <a href="{$base_dir}/make-step1-search.php">
+            <!--<a href="{$base_dir}/make-step1-search.php">-->
                 <span class="section">MAKE</span><br>
                 <span class="desc">is <span style="background-color:yellow;">temporarily unavailable</span></span>
                 <!--<span class="desc">an atlas to print</span>-->
-            </a>
+            <!--</a>-->
         </li>
         <li>
             <a href="{$base_dir}/upload.php">
