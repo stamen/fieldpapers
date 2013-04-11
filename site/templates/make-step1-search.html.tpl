@@ -13,6 +13,15 @@
         {include file="navigation.htmlf.tpl"}
         <div class="container">
             <div class="smallContainer" style="text-align: center;">
+
+                <p>Sorry, but our <strong>search isn't working at the moment.</strong></p>
+        
+                <p>While we work on a fix, you can still browse existing atlases around the world,<br>
+                and stay in touch for updates by following the <a href="https://twitter.com/stamen">@stamen</a> Twitter account.</p>
+        
+                <p>Thanks.</p>
+
+                <!--
                 <h2>Where in the world is your atlas?</h2>
                 <p>                                            
                     <form id="search-form" action="{$base_dir}/make-step2-geography.php" method="post">
@@ -53,6 +62,8 @@
                         </form>
                     </p>
                 {/if}
+                -->
+                
                 </div>
             {include file="footer.htmlf.tpl"}
         </div>
