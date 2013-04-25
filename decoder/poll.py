@@ -17,8 +17,7 @@ from apiutils import ALL_FINISHED
 
 from decode import Marker
 
-parser = optparse.OptionParser(usage="""poll.py [options]
-""")
+parser = optparse.OptionParser(usage="poll.py [options]")
 
 parser.set_defaults(prints_only=False)
 
