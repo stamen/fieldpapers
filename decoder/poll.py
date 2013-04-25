@@ -23,11 +23,11 @@ parser = optparse.OptionParser(usage="""poll.py [options]
 parser.set_defaults(prints_only=False)
 
 parser.add_option('-p', '--password', dest='password',
-                  help='Paperwalking queue password',
+                  help='API password', default='',
                   action='store')
 
 parser.add_option('-b', '--apibase', dest='apibase',
-                  help='URL root of queue API',
+                  help='API base URL', default='http://localhost/',
                   action='store')
 
 parser.add_option('--prints-only', dest='prints_only',
