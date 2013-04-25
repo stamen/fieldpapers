@@ -237,7 +237,7 @@
                          'pages' =>             array()
                         );            
         
-        $print = add_print(&$dbh, $user_id);
+        $print = add_print($dbh, $user_id);
         
         $print['title'] = $title;
         $print['paper_size'] = $message['paper_size'];
@@ -471,7 +471,7 @@
         // Make room in the database for the new print and all its pages.
         //
         
-        $print = add_print(&$dbh, 'nobody');
+        $print = add_print($dbh, 'nobody');
         
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
