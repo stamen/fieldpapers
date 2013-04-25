@@ -6,6 +6,7 @@
         <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://maps.stamen.com/toner">Toner</a> by Stamen, <a href="http://www.bing.com/maps/">Bing</a> by Microsoft, or a combination thereof.
 </div>
 
+{literal}
 <script>
   (function(i,s,o,g,r,a,m) {
     i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() { 
@@ -23,3 +24,4 @@
   ga('create', 'UA-40440647-1', 'fieldpapers.org');
   ga('send', 'pageview');
 </script>
+{/literal}
