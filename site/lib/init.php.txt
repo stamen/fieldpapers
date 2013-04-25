@@ -43,7 +43,7 @@ http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg	Satellite Only
 PROVIDERS_LIST
 );
 
-    // default latitude, longitude, and zoom - see http://getlatlon.com if in doubt.
+    // default latitude, longitude, and zoom - see http://www.dbsgeo.com/latlon/ if in doubt.
     define('DEFAULT_LATITUDE', 37.791);
     define('DEFAULT_LONGITUDE', -122.343);
     define('DEFAULT_ZOOM', 11);
