@@ -36,11 +36,11 @@
             session_set_cookie_params(86400 * 31, get_base_dir());
             session_start();
             
-            $user = cookied_user(&$db);
+            $user = cookied_user($db);
             
             if(!$user)
             {
-                $user = add_user(&$db);
+                $user = add_user($db);
                 $_SESSION['user'] = $user;
             }
         }
