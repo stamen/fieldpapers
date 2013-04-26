@@ -387,13 +387,11 @@
     
     function postpone_message(&$dbh, $message_id, $timeout)
     {
-        $q = sprintf('UPDATE messages
-                      SET available = NOW() + INTERVAL %d SECOND
-                      WHERE id = %d',
-                     $timeout,
-                     $message_id);
+        $q = 'UPDATE messages
+              SET available = NOW() + INTERVAL ? SECOND
+              WHERE id = ?';
 
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, array($timeout, $message_id));
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
