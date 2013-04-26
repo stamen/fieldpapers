@@ -7,6 +7,7 @@ enforce_master_on_off_switch($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 $context = default_context(false);
 
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
 
 $query = <<<EOQ
 SELECT
