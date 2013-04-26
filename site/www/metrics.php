@@ -35,7 +35,6 @@ while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
         "composed" => date("c", strtotime($row['composed'])),
     );
 }
-$context->close();
 
 echo json_encode($rsp);
 
