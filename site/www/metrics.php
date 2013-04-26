@@ -29,7 +29,11 @@ if (PEAR::isError($res)) {
 $rsp = array();
 
 while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
-    $rsp[] = $row;
+    $rsp[] = array(
+        "pages"    => (int) $row['pages'],
+        "created"  => date("c", strtotime($row['created'])),
+        "composed" => date("c", strtotime($row['composed'])),
+    );
 }
 $context->close();
 
