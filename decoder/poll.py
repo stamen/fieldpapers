@@ -12,7 +12,7 @@ import urlparse
 import optparse
 from itertools import chain
 
-import compose2, decode2, forms
+import compose, decode, forms
 from apiutils import ALL_FINISHED
 
 from decode import Marker
@@ -76,7 +76,7 @@ def decodeScan(apibase, password, message_id, msg):
     url = msg['url']
 
     print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- scan', msg['scan_id']
-    return decode2.main(apibase, password, msg['scan_id'], url)
+    return decode.main(apibase, password, msg['scan_id'], url)
 
 def composePrint(apibase, password, message_id, msg):
     """
@@ -92,7 +92,7 @@ def composePrint(apibase, password, message_id, msg):
             for page in msg['pages']:
                 page['text'] = (page.get('text', '').strip() + '\n\n' + forms.fields_as_text(fields['fields'])).strip()
         
-        print_progress = compose2.main(apibase, password, **kwargs)
+        print_progress = compose.main(apibase, password, **kwargs)
         form_progress = forms.main(apibase, password, msg['form_id'], msg['form_url'], on_fields)
 
         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id'], 'and form', msg['form_id']
@@ -104,7 +104,7 @@ def composePrint(apibase, password, message_id, msg):
                 page['text'] = (page.get('text', '').strip() + '\n\n' + forms.fields_as_text(msg['form_fields'])).strip()
     
         print >> sys.stderr, datetime.datetime.now(), 'Decoding message id', message_id, '- print', msg['print_id']
-        progress = compose2.main(apibase, password, **kwargs)
+        progress = compose.main(apibase, password, **kwargs)
 
     return progress
 

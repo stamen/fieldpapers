@@ -1,187 +1,71 @@
-import os
-import os.path
-import httplib
-import xml.etree.ElementTree
-import json
-
-from math import log
+﻿from sys import argv
+from math import log, pi
+from copy import copy
 from itertools import product
 from urllib import urlopen, urlencode
-from urlparse import urlparse, urljoin, urlunparse
-from tempfile import mkdtemp
-from subprocess import Popen
-from pyproj import Proj
-from mimetypes import guess_type
-from array import array
+from os.path import join as pathjoin, dirname, realpath
+from urlparse import urljoin, urlparse, parse_qs
+from os import close, write, unlink
+from json import dumps as json_encode
+from optparse import OptionParser
 from StringIO import StringIO
+from tempfile import mkstemp
+from shutil import move
 
-import osgeo.gdal as gdal
-import PIL.Image as Image
-import PIL.ImageStat as ImageStat
+from ModestMaps import Map, mapByExtent, mapByExtentZoom, mapByCenterZoom
+from ModestMaps.Providers import TemplatedMercatorProvider
+from ModestMaps.Geo import Location
+from ModestMaps.Core import Point
 
-from apiutils import ALL_FINISHED
-import ModestMaps as mm
+from cairo import ImageSurface
+from PIL import Image
 
-srs = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs'
+from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle, draw_cross, flow_text
+from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
+from apiutils import append_print_file, finish_print, update_print, ALL_FINISHED
+from cairoutils import get_drawing_context
 
-class TemplatedMercatorProvider(mm.Providers.TemplatedMercatorProvider):
-    """ Also speaks Bing tiles.
+cached_fonts = dict()
+
+def get_qrcode_image(print_href):
+    """ Render a QR code to an ImageSurface.
     """
-    def getTileUrls(self, coordinate):
-        """
-        """
-        x, y, z = int(coordinate.column), int(coordinate.row), int(coordinate.zoom)
+    scheme, host, path, p, query, f = urlparse(print_href)
 
-        tiles = [t.replace('{MS-server}', str((x + y) % 8)) for t in self.templates]
-        tiles = [t.replace('{MS-quadtile}', mm.Tiles.toMicrosoft(x, y, z)) for t in tiles]
+    print_path = scheme + '://' + host + path
+    print_id = parse_qs(query).get('id', [''])[0]
+    
+    q = {'print': print_id}
+    u = urljoin(print_path, 'code.php') + '?' + urlencode(q)
+    
+    handle, filename = mkstemp(suffix='.png')
+    
+    try:
+        write(handle, urlopen(u).read())
+        close(handle)
+        
+        img = ImageSurface.create_from_png(filename)
+        
+    finally:
+        unlink(filename)
+    
+    return img
 
-        x, y, z = str(x), str(y), str(z)
-
-        tiles = [t.replace('{X}', x).replace('{Y}', y).replace('{Z}', z) for t in tiles]
-
-        return tiles
-
-def main(apibase, password, print_id, paper_size, orientation=None, layout=None, provider=None, bounds=None, zoom=None, geotiff_url=None):
+def get_mmap_image(mmap):
+    """ Render a Map to an ImageSurface.
     """
-    """
-    yield 60
-    
-    print 'Print:', print_id
-    print 'Paper:', paper_size
+    handle, filename = mkstemp(suffix='.png')
 
-    if orientation and bounds and zoom and provider and layout:
+    try:
+        close(handle)
+        mmap.draw(fatbits_ok=True).save(filename)
+        
+        img = ImageSurface.create_from_png(filename)
     
-        print 'Orientation:', orientation
-        print 'Bounds:', bounds
-        print 'Layout:', layout
-        print 'Provider:', provider
-        print 'Size:', get_preview_map_size(orientation, paper_size)
-        
-        print_data = {'pages': []}
-        print_pages = print_data['pages']
-        
-        north, west, south, east = bounds
-        width, height = get_preview_map_size(orientation, paper_size)
-        
-        northwest = mm.Geo.Location(north, west)
-        southeast = mm.Geo.Location(south, east)
-        
-        # we need it to cover a specific area
-        mmap = mm.mapByExtentZoom(TemplatedMercatorProvider(provider),
-                                  northwest, southeast, zoom)
-                              
-        # but we also we need it at a specific size
-        mmap = mm.Map(mmap.provider, mm.Core.Point(width, height), mmap.coordinate, mmap.offset)
-        
-        out = StringIO()
-        mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-        preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
-        
-        print 'Sent preview.jpg'
-        
-        yield 60
-        
-        zdiff = min(18, zoom + 2) - zoom
-        print 'Zoom diff:', zdiff
-        
-        # we need it to cover a specific area
-        mmap = mm.mapByExtentZoom(TemplatedMercatorProvider(provider),
-                                  northwest, southeast, zoom + zdiff)
-                              
-        # but we also we need it at a specific size
-        mmap = mm.Map(mmap.provider, mm.Core.Point(width * 2**zdiff, height * 2**zdiff), mmap.coordinate, mmap.offset)
-        
-        out = StringIO()
-        mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-        print_url = append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
-        
-        print 'Sent print.jpg'
-        
-        page_nw = mmap.pointLocation(mm.Core.Point(0, 0))
-        page_se = mmap.pointLocation(mmap.dimensions)
-        
-        page_data = {'print': 'print.jpg', 'preview': 'preview.jpg', 'bounds': {}}
-        page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
-        page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-        print_pages.append(page_data)
-        
-        rows, cols = map(int, layout.split(','))
-        
-        if rows > 1 and cols > 1:
-            for (row, col) in product(range(rows), range(cols)):
-                
-                yield 60
-                
-                sub_mmap = get_mmap_page(mmap, row, col, rows, cols)
-                sub_part = '%(row)d,%(col)d' % locals()
-                sub_name = 'print-%(sub_part)s.jpg' % locals()
-        
-                out = StringIO()
-                sub_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-                append_print_file(print_id, sub_name, out.getvalue(), apibase, password)
-                
-                print 'Sent', sub_name
-                
-                prev_cen = sub_mmap.pointLocation(mm.Core.Point(sub_mmap.dimensions.x / 2, sub_mmap.dimensions.y / 2))
-                prev_dim = mm.Core.Point(sub_mmap.dimensions.x / 2**zdiff, sub_mmap.dimensions.y / 2**zdiff)
-                prev_mmap = mm.mapByCenterZoom(sub_mmap.provider, prev_cen, sub_mmap.coordinate.zoom - zdiff, prev_dim)
-                prev_name = 'preview-%(sub_part)s.jpg' % locals()
-        
-                out = StringIO()
-                prev_mmap.draw(fatbits_ok=True).save(out, format='JPEG')
-                append_print_file(print_id, prev_name, out.getvalue(), apibase, password)
-                
-                print 'Sent', prev_name
-                
-                page_nw = sub_mmap.pointLocation(mm.Core.Point(0, 0))
-                page_se = sub_mmap.pointLocation(sub_mmap.dimensions)
-                
-                page_data = {'part': sub_part, 'print': sub_name, 'preview': prev_name, 'bounds': {}}
-                page_data['bounds'].update({'north': page_nw.lat, 'west': page_nw.lon})
-                page_data['bounds'].update({'south': page_se.lat, 'east': page_se.lon})
-                print_pages.append(page_data)
-        
-        print_data_url = append_print_file(print_id, 'print-data.json', json.dumps(print_data, indent=2), apibase, password)
-        print 'Sent', print_data_url
-    
-    elif geotiff_url:
-        
-        # we'll need pages_data, a few other things
-        raise Exception("I'm pretty sure support for geotiffs is currently broken, with the new atlas feature.")
-    
-        print 'URL:', geotiff_url
-        
-        filename = prepare_geotiff(geotiff_url)
-        print_img, preview_img, (north, west, south, east), orientation = adjust_geotiff(filename, paper_size)
-        os.unlink(filename)
-        
-        print_img.save(os.path.dirname(filename)+'/out.jpg')
-        
-        out = StringIO()
-        print_img.save(out, format='JPEG')
-        append_print_file(print_id, 'print.jpg', out.getvalue(), apibase, password)
-        
-        out = StringIO()
-        preview_img.save(out, format='JPEG')
-        preview_url = append_print_file(print_id, 'preview.jpg', out.getvalue(), apibase, password)
-        
-        zoom = infer_zoom(print_img.size[0], print_img.size[1], north, west, south, east)
+    finally:
+        unlink(filename)
 
-    else:
-        print 'Missing orientation, bounds, zoom, provider, layout and geotiff_url'
-        yield ALL_FINISHED
-        return
-    
-    yield 10
-    
-    paper = '%(orientation)s-%(paper_size)s' % locals()
-
-    print 'Finishing...'
-    finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, print_data_url)
-    
-    print '-' * 80
-    
-    yield ALL_FINISHED
+    return img
 
 def get_mmap_page(mmap, row, col, rows, cols):
     """ Get a mmap instance for a sub-page in an atlas layout.
@@ -200,346 +84,527 @@ def get_mmap_page(mmap, row, col, rows, cols):
     x = (col * _w) + (_w / 2) + (col * overlap) + overlap
     y = (row * _h) + (_h / 2) + (row * overlap) + overlap
     
-    location = mmap.pointLocation(mm.Core.Point(x, y))
+    location = mmap.pointLocation(Point(x, y))
     zoom = mmap.coordinate.zoom + (log(rows) / log(2))
     
-    return mm.mapByCenterZoom(mmap.provider, location, zoom, mmap.dimensions)
+    return mapByCenterZoom(mmap.provider, location, zoom, mmap.dimensions)
 
-def prepare_geotiff(geotiff_url):
+def paper_info(paper_size, orientation):
+    """ Return page width, height, differentiating points and aspect ration.
+    """
+    dim = __import__('dimensions')
+    
+    paper_size = {'letter': 'ltr', 'a4': 'a4', 'a3': 'a3'}[paper_size.lower()]
+    width, height = getattr(dim, 'paper_size_%(orientation)s_%(paper_size)s' % locals())
+    point_F = getattr(dim, 'point_F_%(orientation)s_%(paper_size)s' % locals())
+    point_G = getattr(dim, 'point_G_%(orientation)s_%(paper_size)s' % locals())
+    ratio = getattr(dim, 'ratio_%(orientation)s_%(paper_size)s' % locals())
+    
+    return width, height, (point_F, point_G), ratio
+
+def get_preview_map_size(orientation, paper_size):
     """
     """
-    s, h, path, p, q, f = urlparse(geotiff_url)
+    dim = __import__('dimensions')
     
-    dirname = mkdtemp(prefix='compose-')
-    basename = os.path.basename(path)
-    filename1 = dirname + '/' + basename
-    filename2 = dirname + '/' + os.path.splitext(basename)[0] + '.rgb' + os.path.splitext(path)[1]
+    paper_size = {'letter': 'ltr', 'a4': 'a4', 'a3': 'a3'}[paper_size.lower()]
+    width, height = getattr(dim, 'preview_size_%(orientation)s_%(paper_size)s' % locals())
     
-    open(filename1, 'w').write(urlopen(geotiff_url).read())
-    
-    translate_cmd = '/usr/bin/gdal_translate -expand rgb -of GTiff ... ...'.split()
-    translate_cmd[-2:] = filename1, filename2
-    
-    print 'd:', dirname
-    print 'b:', basename
-    print 'f1:', filename1
-    print 'f2:', filename2
-    print ' '.join(translate_cmd)
-    
-    translate_cmd = Popen(translate_cmd)
-    translate_cmd.wait()
-    
-    os.unlink(filename1)
-    
-    return str(filename2)
+    return int(width), int(height)
 
-def geotiff_edge_color(filename):
+def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height):
     """
     """
-    src = gdal.Open(filename)
+    # we need it to cover a specific area
+    mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
+                          
+    # but we also we need it at a specific size
+    mmap = Map(mmap.provider, Point(width, height), mmap.coordinate, mmap.offset)
     
-    print src
-    print src.RasterXSize, src.RasterYSize
-    
-    buffer = 25
-    
-    areas = [(0, 0, src.RasterXSize, buffer),
-             (0, 0, buffer, src.RasterYSize),
-             (0, src.RasterYSize - buffer, src.RasterXSize, buffer),
-             (src.RasterXSize - buffer, 0, buffer, src.RasterYSize)]
-    
-    def bandaverage(band, x, y, w, h):
-        img = Image.fromstring('L', (w, h), band.ReadRaster(x, y, w, h))
-        return ImageStat.Stat(img).mean[0]
-    
-    rgb = []
-    
-    for band in (1, 2, 3):
-        band = src.GetRasterBand(band)
-        avgs = [(bandaverage(band, x, y, w, h), w * h)
-                for (x, y, w, h) in areas]
-    
-        area = sum( [size for (mean, size) in avgs] )
-        average = sum( [(mean * size / area) for (mean, size) in avgs] )
-    
-        rgb.append(int(average))
+    return mmap
 
-    print 'RGB:', rgb
-    
-    return tuple(rgb)
-
-def get_preview_map_size(*paper):
+def add_page_text(ctx, text, x, y, width, height):
     """
     """
-    if paper == ('portrait', 'letter'):
-        return (360, 480 - 24)
-
-    if paper == ('portrait', 'a4'):
-        return (360, 504.897)
-
-    if paper == ('portrait', 'a3'):
-        return (360, 506.200)
-
-    if paper == ('landscape', 'letter'):
-        return (480, 360 - 24)
-
-    if paper == ('landscape', 'a4'):
-        return (480, 303.800)
-
-    if paper == ('landscape', 'a3'):
-        return (480, 314.932)
-
-def warp_geotiff(filename1):
-    """ Return a warped GeoTIFF, its bgcolor, and bounds in mercator coordinates.
-    """
-    rgb = geotiff_edge_color(filename1)
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.move_to(0, 12)
     
-    filename2 = os.path.splitext(filename1)[0] + '.merc' + os.path.splitext(filename1)[1]
+    try:
+        font_file = realpath('fonts/Helvetica.ttf')
     
-    warp_cmd = 'gdalwarp -t_srs ... -dstnodata ... -of GTiff ... ...'.split()
-    warp_cmd[-2:] = filename1, filename2
-    warp_cmd[4] = '%d %d %d' % rgb
-    warp_cmd[2] = srs
-    
-    print 'f1:', filename1
-    print 'f2:', filename2
-    print ' '.join(warp_cmd)
-    
-    warp_cmd = Popen(warp_cmd)
-    warp_cmd.wait()
-    
-    src = gdal.Open(filename2)
-    txn = src.GetGeoTransform()
-    
-    w, h = src.RasterXSize, src.RasterYSize
-    ulx, uly = txn[0], txn[3]
-    lrx, lry = ulx + w * txn[1], uly + h * txn[5]
-    
-    print (w, h), (ulx, uly, lrx, lry)
-    
-    img = Image.open(filename2)
-    
-    os.unlink(filename2)
-    
-    return img, rgb, (ulx, uly, lrx, lry)
-
-def adjust_geotiff(filename, paper_size):
-    """
-    """
-    warped_img, bgcolor, bounds = warp_geotiff(filename)
-    
-    print warped_img, warped_img.size, bounds
-    
-    img_aspect = float(warped_img.size[0]) / float(warped_img.size[1])
-    
-    orientation = (img_aspect < 1.0) and 'portrait' or 'landscape'
-    
-    w, h = get_preview_map_size(orientation, paper_size)
+        if font_file not in cached_fonts:
+            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
         
-    paper_aspect = float(w) / float(h)
-    
-    print w, h
-    
-    print paper_aspect, 'paper aspect'
-    print img_aspect, 'geotiff aspect'
-    
-    merc = Proj(srs)
-    
-    if img_aspect > paper_aspect:
-        # image will need extra filling on top and bottom
-        total_height = int(warped_img.size[0] / paper_aspect)
-        extra_height = total_height - warped_img.size[1]
+        font = cached_fonts[font_file]
 
-        print 'total height', total_height, 'extra height', extra_height
-        
-        print_img = Image.new('RGB', (warped_img.size[0], total_height), bgcolor)
-        print_img.paste(warped_img, (0, extra_height/2))
-        preview_img = print_img.resize((w, h), Image.ANTIALIAS)
-        
-        ulx, uly, lrx, lry = bounds
-        
-        total_span = (lrx - ulx) / paper_aspect
-        extra_span = total_span - (uly - lry)
+    except:
+        # hm.
+        pass
 
-        print 'total span', total_span, 'extra span', extra_span
-        
-        west, north = merc(ulx, uly + extra_span/2, inverse=True)
-        east, south = merc(lrx, lry - extra_span/2, inverse=True)
-        
-        print north, west, south, east
-        
     else:
-        # image will need extra filling on left and right
-        total_width = int(warped_img.size[1] * paper_aspect)
-        extra_width = total_width - warped_img.size[0]
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_font_face(font)
+        ctx.set_font_size(10)
+        
+        flow_text(ctx, width, 12, text)
+    
+    ctx.restore()
 
-        print 'total width', total_width, 'extra width', extra_width
-        
-        print_img = Image.new('RGB', (total_width, warped_img.size[1]), bgcolor)
-        print_img.paste(warped_img, (extra_width/2, 0))
-        preview_img = print_img.resize((w, h))
-        
-        ulx, uly, lrx, lry = bounds
-        
-        total_span = (uly - lry) * paper_aspect
-        extra_span = total_span - (lrx - ulx)
-
-        print 'total span', total_span, 'extra span', extra_span
-        
-        west, north = merc(ulx - extra_span/2, uly, inverse=True)
-        east, south = merc(lrx + extra_span/2, lry, inverse=True)
-        
-        print north, west, south, east
-
-    return print_img, preview_img, (north, west, south, east), orientation
-
-def infer_zoom(width, height, north, west, south, east):
+def get_map_scale(mmap, map_height_pt):
     """
     """
-    mmap = mm.mapByExtent(mm.OpenStreetMap.Provider(),
-                          mm.Geo.Location(north, west), mm.Geo.Location(south, east),
-                          mm.Core.Point(width, height))
+    north = mmap.pointLocation(Point(0, 0)).lat
+    south = mmap.pointLocation(mmap.dimensions).lat
     
-    zoom = int(mmap.coordinate.zoom)
+    vertical_degrees = north - south
+    vertical_meters = 6378137 * pi * 2 * vertical_degrees / 360
+    pts_per_meter = map_height_pt / vertical_meters
     
-    return zoom
+    # a selection of reasonable scale values to show
+    meterses = range(50, 300, 50) + range(300, 1000, 100) + range(1000, 10000, 1000) + range(10000, 100000, 10000) + range(100000, 1000000, 100000) + range(1000000, 10000000, 1000000)
+    
+    for meters in meterses:
+        points = meters * pts_per_meter
+        
+        if points > 100:
+            # stop at an inch and a half or so
+            break
 
-def finish_print(apibase, password, print_id, north, west, south, east, zoom, paper, print_data_url):
+    if meters > 1000:
+        distance = '%d' % (meters / 1000.0)
+        units = 'kilometers'
+    elif meters == 1000:
+        distance = '%d' % (meters / 1000.0)
+        units = 'kilometer'
+    else:
+        distance = '%d' % meters
+        units = 'meters'
+    
+    return points, distance, units
+
+def add_scale_bar(ctx, mmap, map_height_pt):
     """
     """
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
+    size, distance, units = get_map_scale(mmap, map_height_pt)
     
-    if urlparse(print_data_url)[1] == 'localhost':
-        # just use an absolute path for preview URL if it's on localhost
-        parts = urlparse(print_data_url)
-        print_data_url = urlunparse((None, None, parts[2], parts[3], parts[4], parts[5]))
+    ctx.save()
+    ctx.translate(60, map_height_pt - 20)
     
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    draw_box(ctx, -50, -10, size + 10 + 45, 20)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.fill()
     
-    query = urlencode({'id': print_id})
-    params = urlencode({'password': password,
-                        'last_step': 6,
-                        'paper': paper,
-                        'print_data_url': print_data_url,
-                        'north': north, 'west': west,
-                        'south': south, 'east': east,
-                        'zoom': zoom})
-    
-    req = httplib.HTTPConnection(host, port)
-    req.request('POST', path + '/print.php?' + query, params, headers)
-    res = req.getresponse()
-    
-    assert res.status == 200, 'POST to print.php resulting in status %s instead of 200' % res.status
+    #
+    # true north
+    #
 
-    return
+    draw_circle(ctx, -40, 0, 6.7)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.fill()
+    
+    ctx.move_to(-40, -6.7)
+    ctx.line_to(-38.75, -2.2)
+    ctx.line_to(-41.25, -2.2)
+    ctx.line_to(-40, -6.5)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.fill()
+    
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.set_font_size(5.8)
 
-def append_print_file(print_id, file_path, file_contents, apibase, password):
-    """ Upload a file via the API append.php form input provision thingie.
+    ctx.move_to(-25.1, -2.1)
+    ctx.show_text('TRUE')
+    ctx.move_to(-27.6, 4.9)
+    ctx.show_text('NORTH')
+
+    #
+    # scale bar
+    #
+
+    ctx.move_to(0, 2)
+    ctx.line_to(0, 5)
+    ctx.line_to(size, 5)
+    ctx.line_to(size, 2)
+
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.set_line_width(.5)
+    ctx.set_dash([])
+    ctx.stroke()
+
+    ctx.set_font_size(9)
+    zero_width = ctx.text_extents('0')[2]
+    distance_width = ctx.text_extents(distance)[2]
+
+    ctx.move_to(0, 0)
+    ctx.show_text('0')
+    
+    ctx.move_to(size - distance_width, 0)
+    ctx.show_text(distance)
+    
+    ctx.set_font_size(7)
+    units_width = ctx.text_extents(units)[2]
+
+    ctx.move_to(zero_width + (size - zero_width - distance_width)/2 - units_width/2, 0)
+    ctx.show_text(units.upper())
+    
+    ctx.restore()
+
+def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy, indexees):
     """
+    """
+    print 'Adding print page:', href
+    
+    well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
+    well_width_pt, well_height_pt = well_xmax_pt - well_xmin_pt, well_ymax_pt - well_ymin_pt
+    well_aspect_ratio = well_width_pt / well_height_pt
+    
+    #
+    # Offset drawing area to top-left of map area
+    #
+    ctx.translate(well_xmin_pt, well_ymin_pt)
+    
+    #
+    # Build up map area
+    #
+    img = get_mmap_image(mmap)
+    
+    if layout == 'half-page' and well_aspect_ratio > 1:
+        map_width_pt, map_height_pt = well_width_pt/2, well_height_pt
+        add_page_text(ctx, text, map_width_pt + 24, 24, map_width_pt - 48, map_height_pt - 48)
 
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
-    
-    query = urlencode({'print': print_id, 'password': password,
-                       'dirname': os.path.dirname(file_path),
-                       'mimetype': (guess_type(file_path)[0] or '')})
-    
-    req = httplib.HTTPConnection(host, port)
-    req.request('GET', path + '/append.php?' + query)
-    res = req.getresponse()
-    
-    html = xml.etree.ElementTree.parse(res)
-    
-    for form in html.findall('*/form'):
-        form_action = form.attrib['action']
-        
-        inputs = form.findall('.//input')
-        
-        file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
-        
-        fields = [(input.attrib['name'], input.attrib['value'])
-                  for input in inputs
-                  if input.attrib['type'] != 'file' and 'name' in input.attrib]
-        
-        files = [(input.attrib['name'], os.path.basename(file_path), file_contents)
-                 for input in inputs
-                 if input.attrib['type'] == 'file']
+    elif layout == 'half-page' and well_aspect_ratio < 1:
+        map_width_pt, map_height_pt = well_width_pt, well_height_pt/2
+        add_page_text(ctx, text, 32, map_height_pt + 16, map_width_pt - 64, map_height_pt - 32)
 
-        if len(files) == 1:
-            base_url = [el.text for el in form.findall(".//*") if el.get('id', '') == 'base-url'][0]
-            resource_url = urljoin(base_url, file_path)
+    else:
+        map_width_pt, map_height_pt = well_width_pt, well_height_pt
+    
+    place_image(ctx, img, 0, 0, map_width_pt, map_height_pt)
+    
+    #
+    # Draw a dot if need be
+    #
+    if fuzzy is not None:
+        loc = Location(fuzzy[1], fuzzy[0])
+        pt = mmap.locationPoint(loc)
+
+        x = map_width_pt * float(pt.x) / mmap.dimensions.x
+        y = map_height_pt * float(pt.y) / mmap.dimensions.y
+    
+        draw_circle(ctx, x, y, 20)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(2)
+        ctx.set_dash([2, 6])
+        ctx.stroke()
+    
+    #
+    # X marks the spot, if needed
+    #
+    if mark is not None:
+        loc = Location(mark[1], mark[0])
+        pt = mmap.locationPoint(loc)
+
+        x = map_width_pt * float(pt.x) / mmap.dimensions.x
+        y = map_height_pt * float(pt.y) / mmap.dimensions.y
         
-            post_type, post_body = encode_multipart_formdata(fields, files)
+        draw_cross(ctx, x, y, 8, 6)
+        ctx.set_source_rgb(1, 1, 1)
+        ctx.fill()
+        
+        draw_cross(ctx, x, y, 8, 4)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.fill()
+    
+    #
+    # Perhaps some boxes?
+    #
+    page_numbers = []
+    
+    for page in indexees:
+        north, west, south, east = page['bounds']
+        
+        ul = mmap.locationPoint(Location(north, west))
+        lr = mmap.locationPoint(Location(south, east))
+        
+        x1 = map_width_pt * float(ul.x) / mmap.dimensions.x
+        x2 = map_width_pt * float(lr.x) / mmap.dimensions.x
+        y1 = map_height_pt * float(ul.y) / mmap.dimensions.y
+        y2 = map_height_pt * float(lr.y) / mmap.dimensions.y
+        
+        draw_box(ctx, x1, y1, x2-x1, y2-y1)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(1)
+        ctx.set_dash([])
+        ctx.stroke()
+        
+        page_numbers.append((x1, y1, x2, y2, page['number']))
+    
+    #
+    # Calculate positions of registration points
+    #
+    ctx.save()
+    
+    ctx.translate(well_width_pt, well_height_pt)
+    ctx.scale(1/hm2pt_ratio, 1/hm2pt_ratio)
+    
+    reg_points = (point_A, point_B, point_C, point_D, point_E) + points_FG
+    
+    device_points = [ctx.user_to_device(pt.x, pt.y) for pt in reg_points]
+    
+    ctx.restore()
+    
+    #
+    # Draw QR code area
+    #
+    ctx.save()
+    
+    ctx.translate(well_width_pt, well_height_pt)
+    
+    draw_box(ctx, 0, 0, -90, -90)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.fill()
+    
+    place_image(ctx, get_qrcode_image(href), -83, -83, 83, 83)
+    
+    ctx.restore()
+    
+    #
+    # Draw registration points
+    #
+    for (x, y) in device_points:
+        x, y = ctx.device_to_user(x, y)
+    
+        draw_circle(ctx, x, y, .12 * ptpin)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.set_line_width(.5)
+        ctx.set_dash([1.5, 3])
+        ctx.stroke()
+
+    for (x, y) in device_points:
+        x, y = ctx.device_to_user(x, y)
+    
+        draw_circle(ctx, x, y, .12 * ptpin)
+        ctx.set_source_rgb(1, 1, 1)
+        ctx.fill()
+
+    for (x, y) in device_points:
+        x, y = ctx.device_to_user(x, y)
+    
+        draw_circle(ctx, x, y, .06 * ptpin)
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.fill()
+    
+    #
+    # Draw top-left icon
+    #
+    icon = pathjoin(dirname(__file__), 'images/logo.png')
+    img = ImageSurface.create_from_png(icon)
+    place_image(ctx, img, 0, -36, 129.1, 36)
+    
+    try:
+        font_file = realpath('fonts/Helvetica.ttf')
+    
+        if font_file not in cached_fonts:
+            cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
+        
+        font = cached_fonts[font_file]
+    except:
+        # no text for us.
+        pass
+    else:
+        ctx.set_font_face(font)
+        ctx.set_font_size(12)
+        
+        line = href
+        text_width = ctx.text_extents(line)[2]
+        
+        ctx.move_to(well_width_pt - text_width, -6)
+        ctx.show_text(line)
+        
+        add_scale_bar(ctx, mmap, map_height_pt)
+        
+        ctx.set_font_face(font)
+        ctx.set_font_size(18)
+
+        for (x1, y1, x2, y2, number) in page_numbers:
+            number_w, number_h = ctx.text_extents(number)[2:4]
+            offset_x, offset_y = (x1 + x2 - number_w) / 2, (y1 + y2 + number_h) / 2
             
-            s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
-            host, port = (':' in host) and host.split(':') or (host, 80)
-            
-            req = httplib.HTTPConnection(host, port)
-            req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
-            res = req.getresponse()
-            
-            # res.read().startswith("Sorry, encountered error #1 ")
-            
-            assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
+            draw_box(ctx, offset_x - 4, offset_y - number_h - 4, number_w + 8, number_h + 8)
+            ctx.set_source_rgb(1, 1, 1)
+            ctx.fill()
+    
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.move_to(offset_x, offset_y)
+            ctx.show_text(number)
+    
+    ctx.show_page()
 
-            return resource_url
-        
-    raise Exception('Did not find a form with a file input, why is that?')
+parser = OptionParser()
 
-def encode_multipart_formdata(fields, files):
-    """ fields is a sequence of (name, value) elements for regular form fields.
-        files is a sequence of (name, filename, value) elements for data to be uploaded as files
-        Return (content_type, body) ready for httplib.HTTP instance
-        
-        Adapted from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/146306
+parser.set_defaults(bounds=(37.81211263, -122.26755482, 37.80641650, -122.25725514),
+                    zoom=16, paper_size='letter', orientation='landscape',
+                    provider='http://tile.openstreetmap.org/{Z}/{X}/{Y}.png')
+
+papers = 'a3 a4 letter'.split()
+orientations = 'landscape portrait'.split()
+
+parser.add_option('-s', '--paper-size', dest='paper_size',
+                  help='Choice of papers: %s.' % ', '.join(papers),
+                  choices=papers)
+
+parser.add_option('-o', '--orientation', dest='orientation',
+                  help='Choice of orientations: %s.' % ', '.join(orientations),
+                  choices=orientations)
+
+parser.add_option('-b', '--bounds', dest='bounds',
+                  help='Choice of bounds: north, west, south, east.',
+                  type='float', nargs=4)
+
+parser.add_option('-z', '--zoom', dest='zoom',
+                  help='Map zoom level.',
+                  type='int')
+
+parser.add_option('-p', '--provider', dest='provider',
+                  help='Map provider in URL template form.')
+
+def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     """
-    BOUNDARY = '----------multipart-boundary-multipart-boundary-multipart-boundary$'
-    CRLF = '\r\n'
+    """
+    yield 5
+    
+    print_path = 'atlas.php?' + urlencode({'id': print_id})
+    print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
+    print_info = {}
+    
+    #
+    # Prepare a shorthands for pushing data.
+    #
 
-    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
-    bytes = array('c')
+    _append_file = lambda name, body: print_id and append_print_file(print_id, name, body, apibase, password) or None
+    _finish_print = lambda print_info: print_id and finish_print(apibase, password, print_id, print_info) or None
+    _update_print = lambda progress: print_id and update_print(apibase, password, print_id, progress) or None
+    
+    print 'Print:', print_id
+    print 'Paper:', orientation, paper_size, layout
+    
+    #
+    # Prepare output context.
+    #
 
-    for (key, value) in fields:
-        bytes.fromstring('--' + BOUNDARY + CRLF)
-        bytes.fromstring('Content-Disposition: form-data; name="%s"' % key + CRLF)
-        bytes.fromstring(CRLF)
-        bytes.fromstring(value + CRLF)
+    handle, print_filename = mkstemp(suffix='.pdf')
+    close(handle)
+    
+    page_width_pt, page_height_pt, points_FG, hm2pt_ratio = paper_info(paper_size, orientation)
+    print_context, finish_drawing = get_drawing_context(print_filename, page_width_pt, page_height_pt)
+    
+    try:
+        map_xmin_pt = .5 * ptpin
+        map_ymin_pt = 1 * ptpin
+        map_xmax_pt = page_width_pt - .5 * ptpin
+        map_ymax_pt = page_height_pt - .5 * ptpin
+        
+        map_bounds_pt = map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt
+    
+        #
+        # Add pages to the PDF one by one.
+        #
+    
+        for (index, page) in enumerate(pages):
+            _update_print(0.1 + 0.9 * float(index) / len(pages))
 
-    for (key, filename, value) in files:
-        bytes.fromstring('--' + BOUNDARY + CRLF)
-        bytes.fromstring('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename) + CRLF)
-        bytes.fromstring('Content-Type: %s' % (guess_type(filename)[0] or 'application/octet-stream') + CRLF)
-        bytes.fromstring(CRLF)
-        bytes.fromstring(value + CRLF)
+            page_href = print_href and (print_href + '/%(number)s' % page) or None
+        
+            provider = TemplatedMercatorProvider(page['provider'])
+            zoom = page['zoom']
 
-    bytes.fromstring('--' + BOUNDARY + '--' + CRLF)
+            mark = page.get('mark', None) or None
+            fuzzy = page.get('fuzzy', None) or None
+            text = unicode(page.get('text', None) or '').encode('utf8')
+            role = page.get('role', None) or None
+            
+            north, west, south, east = page['bounds']
+            northwest = Location(north, west)
+            southeast = Location(south, east)
+            
+            page_mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
+            
+            yield 60
+            
+            if role == 'index':
+                indexees = [pages[other] for other in range(len(pages)) if other != index]
+            else:
+                indexees = []
+            
+            add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy, indexees)
+            
+            #
+            # Now make a smaller preview map for the page,
+            # 600px looking like a reasonable upper bound.
+            #
+            
+            preview_mmap = copy(page_mmap)
+            
+            while preview_mmap.dimensions.x > 600:
+                preview_zoom = preview_mmap.coordinate.zoom - 1
+                preview_mmap = mapByExtentZoom(provider, northwest, southeast, preview_zoom)
+    
+            yield 15
+            
+            out = StringIO()
+            preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
+            preview_url = _append_file('preview-p%(number)s.jpg' % page, out.getvalue())
+            print_info['pages[%(number)s][preview_url]' % page] = preview_url
+    
+        #
+        # Complete the PDF and upload it.
+        #
+        
+        finish_drawing()
+        
+        pdf_name = 'walking-paper-%s.pdf' % print_id
+        pdf_url = _append_file(pdf_name, open(print_filename, 'r').read())
+        print_info['pdf_url'] = pdf_url
 
-    return content_type, bytes.tostring()
+    except:
+        raise
+    
+    finally:
+        unlink(print_filename)
+    
+    #
+    # Make a small preview map of the whole print coverage area.
+    #
+    
+    provider = TemplatedMercatorProvider(pages[0]['provider'])
+    
+    norths, wests, souths, easts = zip(*[page['bounds'] for page in pages])
+    northwest = Location(max(norths), min(wests))
+    southeast = Location(min(souths), max(easts))
+    
+    dimensions = Point(*get_preview_map_size(orientation, paper_size))
+    
+    preview_mmap = mapByExtent(provider, northwest, southeast, dimensions)
+    
+    yield 15
+
+    out = StringIO()
+    preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
+    preview_url = _append_file('preview.jpg' % page, out.getvalue())
+    print_info['preview_url'] = preview_url
+    
+    #
+    # All done, wrap it up.
+    #
+    
+    _finish_print(print_info)
+    
+    yield ALL_FINISHED
 
 if __name__ == '__main__':
-    src = gdal.Open(sys.argv[1])
+
+    opts, args = parser.parse_args()
     
-    print src
-    print src.RasterXSize, src.RasterYSize
-    
-    buffer = 25
-    
-    areas = [(0, 0, src.RasterXSize, buffer),
-             (0, 0, buffer, src.RasterYSize),
-             (0, src.RasterYSize - buffer, src.RasterXSize, buffer),
-             (src.RasterXSize - buffer, 0, buffer, src.RasterYSize)]
-    
-    def bandaverage(band, x, y, w, h):
-        img = Image.fromstring('L', (w, h), band.ReadRaster(x, y, w, h))
-        return ImageStat.Stat(img).mean[0]
-    
-    for band in (1, 2, 3):
-        band = src.GetRasterBand(band)
-        avgs = [(bandaverage(band, x, y, w, h), w * h)
-                for (x, y, w, h) in areas]
-    
-        area = sum( [size for (mean, size) in avgs] )
-        average = sum( [(mean * size / area) for (mean, size) in avgs] )
-    
-        print int(average)
+    for d in main(None, None, None, opts.paper_size, opts.orientation, None, opts.provider, opts.bounds, opts.zoom):
+        pass
