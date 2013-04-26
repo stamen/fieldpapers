@@ -51,7 +51,7 @@
         
         function close()
         {
-            mysql_close($this->db);
+            $this->db->disconnect();
         }
     }
     
