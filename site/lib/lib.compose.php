@@ -309,8 +309,10 @@
             
             // add grid overlay to the printed output of each non-index page:
             
+            /* Disabled after fixing the URL until UI is available
             if($value['role'] != 'index')
-                $message['pages'][$i]['provider'] = "{$value['provider']},http://tiles.teczno.com/utm/{Z}/{X}/{Y}.png";
+                $message['pages'][$i]['provider'] = "{$value['provider']},http://tile.stamen.com/utm/{Z}/{X}/{Y}.png";
+             */
         }
         
         // Deal with WOEIDs
