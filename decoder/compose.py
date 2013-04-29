@@ -12,7 +12,7 @@ from StringIO import StringIO
 from tempfile import mkstemp
 from shutil import move
 
-from ModestMaps import Map, mapByExtent, mapByExtentZoom, mapByCenterZoom
+from ModestMaps import mapByExtent, mapByExtentZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
 from ModestMaps.Geo import Location
 from ModestMaps.Core import Point
@@ -67,28 +67,6 @@ def get_mmap_image(mmap):
 
     return img
 
-def get_mmap_page(mmap, row, col, rows, cols):
-    """ Get a mmap instance for a sub-page in an atlas layout.
-    """
-    dim = mmap.dimensions
-    
-    # aim for ~5% overlap, vary dep. on total rows/cols
-    overlap = 0.1 / rows
-    overlap *= (dim.x + dim.y) / 2
-    
-    # inner width and height of sub-page
-    _w = (dim.x - (cols + 1) * overlap) / cols
-    _h = (dim.y - (rows + 1) * overlap) / rows
-    
-    # pixel offset of page center
-    x = (col * _w) + (_w / 2) + (col * overlap) + overlap
-    y = (row * _h) + (_h / 2) + (row * overlap) + overlap
-    
-    location = mmap.pointLocation(Point(x, y))
-    zoom = mmap.coordinate.zoom + (log(rows) / log(2))
-    
-    return mapByCenterZoom(mmap.provider, location, zoom, mmap.dimensions)
-
 def paper_info(paper_size, orientation):
     """ Return page width, height, differentiating points and aspect ration.
     """
@@ -111,17 +89,6 @@ def get_preview_map_size(orientation, paper_size):
     width, height = getattr(dim, 'preview_size_%(orientation)s_%(paper_size)s' % locals())
     
     return int(width), int(height)
-
-def map_by_extent_zoom_size(provider, northwest, southeast, zoom, width, height):
-    """
-    """
-    # we need it to cover a specific area
-    mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
-                          
-    # but we also we need it at a specific size
-    mmap = Map(mmap.provider, Point(width, height), mmap.coordinate, mmap.offset)
-    
-    return mmap
 
 def add_page_text(ctx, text, x, y, width, height):
     """
