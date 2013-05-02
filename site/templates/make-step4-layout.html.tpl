@@ -70,6 +70,7 @@
             </div>
         </div>
         <div class="clearfloat"></div>
+        <div class="clearfloat"></div>
         
         <p><input type="checkbox" /> Add a grid overlay to each map</p>
         
@@ -96,7 +97,8 @@
         </div>
     </form>
     </div>
-            {include file="footer.htmlf.tpl"}
-    </div>
+    {include file="footer.htmlf.tpl"}
+
+</div>
 </body>
 </html>

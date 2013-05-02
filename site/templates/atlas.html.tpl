@@ -429,7 +429,8 @@
                 </p>
             </div>
         {/if}        
-        {include file="footer.htmlf.tpl"}
-    </div>
+{include file="footer.htmlf.tpl"}
+
+</div>
 </body>
 </html>
