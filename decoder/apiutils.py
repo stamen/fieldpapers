@@ -115,7 +115,7 @@ def fail_scan(apibase, password, scan_id):
     req.request('POST', path + '/fail-scan.php?' + query, params, headers)
     res = req.getresponse()
     
-    assert res.status == 200, 'POST to fail-scan.php resulting in status %s instead of 200' % res.status
+    # assert res.status == 200, 'POST to fail-scan.php resulting in status %s instead of 200' % res.status
 
     return
 
