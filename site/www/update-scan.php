@@ -14,7 +14,7 @@
     
     if(!$scan)
     {
-        die_with_code(400, "I don't know that scan");
+        die_with_code(404, "I don't know that scan");
     }
     
     if($progress = $_POST['progress'])
