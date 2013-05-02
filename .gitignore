@@ -3,3 +3,9 @@
 .DS_Store
 site/lib/init.php
 tags
+
+# these are symptoms
+decoder/highpass.jpg
+decoder/postblob.jpg
+decoder/preblobs.jpg
+decoder/qrcode.png
