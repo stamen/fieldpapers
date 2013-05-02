@@ -17,7 +17,8 @@ MySQL password a few times, it's fine to leave this blank.
                   mysql-server default-jre-headless \
                   libapache2-mod-php5 php-pear php5-gd php5-mysql \
                   python-beautifulsoup python-cairo python-dev \
-                  python-gdal python-imaging python-numpy python-pip
+                  python-gdal python-imaging python-numpy python-pip \
+                  python-setproctitle
 
 % pip install ModestMaps
 % pip install BlobDetector
