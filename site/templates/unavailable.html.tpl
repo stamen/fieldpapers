@@ -16,7 +16,9 @@
         Field Papers is currently unavailable. Please try back in a few minutes!
     </p>
     
-    {include file="footer.htmlf.tpl"}
+
+
+	{include file="footer.htmlf.tpl"}
     
 </body>
 </html>
