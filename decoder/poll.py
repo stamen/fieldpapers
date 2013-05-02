@@ -11,6 +11,7 @@ import datetime
 import urlparse
 import optparse
 from itertools import chain
+from setproctitle import getproctitle, setproctitle
 
 import compose, decode, forms
 from apiutils import ALL_FINISHED
@@ -114,6 +115,7 @@ def parseForm(apibase, password, message_id, msg):
     return forms.main(apibase, password, msg['form_id'], msg['url'])
 
 if __name__ == '__main__':
+    base_proctitle = getproctitle()
 
     if os.path.dirname(__file__):
         os.chdir(os.path.dirname(__file__))
@@ -130,6 +132,7 @@ if __name__ == '__main__':
         due = time.time() + 60
     
     print >> sys.stderr, 'Polling for %d seconds...' % round(due - time.time())
+    setproctitle("[polling] %s" % base_proctitle)
     
     s, host, path, p, q, f = urlparse.urlparse(options.apibase.rstrip('/'))
     host, port = (':' in host) and host.split(':') or (host, '80')
@@ -151,6 +154,7 @@ if __name__ == '__main__':
             if res.status == 503:
                 retry = int(res.getheader('Retry-After', 60))
                 print >> sys.stderr, 'poll POST to dequeue.php resulted in status 503; will sleep for %d seconds' % retry
+                setproctitle("[503, waiting %ds] %s" % (retry, base_proctitle))
                 time.sleep(retry)
                 continue
             
@@ -178,6 +182,7 @@ if __name__ == '__main__':
                     action = msg.get('action', 'compose')
 
                     if action != 'compose' and prints_only:
+                        # TODO why 15s?
                         updateQueue(apibase, password, message_id, 15)
                         time.sleep(2)
                         continue
@@ -185,12 +190,15 @@ if __name__ == '__main__':
                     print >> sys.stderr, '_' * 80
         
                     if action == 'decode':
+                        setproctitle("[decode] %s" % base_proctitle)
                         progress = decodeScan(apibase, password, message_id, msg)
                     
                     elif action == 'compose':
+                        setproctitle("[compose] %s" % base_proctitle)
                         progress = composePrint(apibase, password, message_id, msg)
                     
                     elif action == 'import form':
+                        setproctitle("[import] %s" % base_proctitle)
                         progress = parseForm(apibase, password, message_id, msg)
                 
                 try:
@@ -226,5 +234,7 @@ if __name__ == '__main__':
         if time.time() >= due:
             break
 
-        # exponential back off
+        # exponential back off when the API is returning errors
+        # (this will be reset after the first successful request)
+        setproctitle("[waiting %d] %s" % (math.pow(2, poll_failures), base_proctitle))
         time.sleep(math.pow(2, poll_failures))

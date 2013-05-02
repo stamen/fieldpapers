@@ -11,6 +11,7 @@ from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
 from shutil import move
+from setproctitle import setproctitle
 
 from ModestMaps import mapByExtent, mapByExtentZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
@@ -479,6 +480,7 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
         #
     
         for (index, page) in enumerate(pages):
+            setproctitle("[page %d]" % index)
             _update_print(0.1 + 0.9 * float(index) / len(pages))
 
             page_href = print_href and (print_href + '/%(number)s' % page) or None
