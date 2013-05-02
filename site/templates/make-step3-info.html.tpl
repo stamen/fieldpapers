@@ -38,14 +38,15 @@
                            placeholder="Untitled" value="{$atlas_data.atlas_title|escape:hexentity}">
                 </p>
                 <p>
-                    <label for="atlas_text" style="font-size: 16px"><b>Page Text</b> (<i>This is Optional.</i>)</label>
+                    <label for="atlas_text" style="font-size: 16px"><b>Page Text</b> (<i>This is optional.</i>)</label>
                 </p>
-                <p>
-                    If you like, you can also add text for each page
-                    in your atlas, like a questionnaire or a site survey form. 
-                </p>
+                <p>Add text to each page in your atlas, like a questionnaire or a site survey form.</p>
                 <p>
                     <textarea name="atlas_text" rows="10" style="font-size: 16px; width: 40em;" placeholder="Text to print with each page of your atlas">{$atlas_data.atlas_text|escape:hexentity}</textarea>
+                </p>
+                
+                <p>
+                	<input type="checkbox"> Make this atlas private. (That means it's only accessible to you, if you're logged in, or by direct URL.)
                 </p>
                 
                 <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
