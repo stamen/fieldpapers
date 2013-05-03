@@ -211,8 +211,8 @@ if __name__ == '__main__':
         
                 except Exception, e:
                     print >> sys.stderr, datetime.datetime.now(), 'Error in message id', message_id, '-', e
-                    raise
                     updateQueue(apibase, password, message_id, ALL_FINISHED)
+                    raise
 
                 ## clean out the queue message
                 #updateQueue(apibase, password, message_id, False)
