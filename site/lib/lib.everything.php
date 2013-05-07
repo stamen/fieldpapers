@@ -15,6 +15,7 @@
     require_once 'lib.forms.php';
     require_once 'lib.mbtiles.php';
     require_once 'lib.prints.php';
+    require_once 'lib.queue.php';
     require_once 'lib.scans.php';
     
     function &default_context($make_session)
