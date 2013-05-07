@@ -2,6 +2,7 @@
 
     putenv("TZ=America/Los_Angeles");
     define('DB_DSN', 'mysql://****:****@****/****');
+    define('REDIS_HOST', 'localhost');
     define('TMP_DIR', dirname(realpath(__FILE__)).'/../tmp');
     define('SERVER_NAME', $_SERVER['SERVER_NAME']); // used in get_domain_name(), probably leave this alone
     

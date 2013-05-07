@@ -15,6 +15,7 @@ MySQL password a few times, it's fine to leave this blank.
 % apt-get update
 % apt-get install build-essential gdal-bin git-core \
                   mysql-server default-jre-headless \
+                  redis-server \
                   libapache2-mod-php5 php-pear php5-gd php5-mysql \
                   python-beautifulsoup python-cairo python-dev \
                   python-gdal python-imaging python-numpy python-pip \
@@ -22,6 +23,9 @@ MySQL password a few times, it's fine to leave this blank.
 
 % pip install ModestMaps
 % pip install BlobDetector
+% pip install celery
+
+% pip install redis
 ```
     
 Field Papers uses server packages from PHP's PEAR collection. The can be
@@ -125,6 +129,12 @@ more information.
   to accept file uploads larger than the default 2MB.
 * Increase [`post_max_size`](http://php.net/manual/en/ini.core.php#ini.post-max-size)
   to allow room for larger uploaded files.
+
+Add Redis to the list of registered PHP extensions:
+
+```bash
+% echo "extension=redis.so" > /etc/php5/conf.d/20-redis.ini
+```
 
 PHP sessions are brief by default, but a few tweaks can make them more durable.
 
