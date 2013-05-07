@@ -18,17 +18,21 @@
                 <a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
 
                 {if $print.user.name}
-                    by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user.name}</a>,
+                    by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user.name}</a>
                 {else}
-                    by Anonymous,
+                    anon
                 {/if}
-
+				
+                <br />
+                
                 {if $print.place_name}
                     <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>, 
                     <a href="{$base_dir}/atlases.php?place={$print.region_woeid}">{$print.region_name|nice_placename}</a>, 
                     <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
                 {/if}
 
+                <br />
+                
                 {if $print.number_of_pages == 1}
                     1 page,
                 {elseif $print.number_of_pages == 2}
@@ -36,8 +40,7 @@
                 {else}
                     {$print.number_of_pages} pages,
                 {/if}
-
-                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>.
+				<a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
             </div>
         {/foreach}
         
