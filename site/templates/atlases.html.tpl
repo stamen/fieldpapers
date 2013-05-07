@@ -4,6 +4,36 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Atlases - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
+    
+<style>
+/* pinterest style columns */
+#columns {
+    -moz-column-count: 3;
+    -moz-column-gap: 10px;
+    -moz-column-fill: auto;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 10px;
+    -webkit-column-fill: auto;
+    column-count: 3;
+    column-gap: 15px;
+    column-fill: auto;
+}	
+
+.atlasPin { 
+	-moz-column-break-inside: avoid; 
+	-webkit-column-break-inside: avoid; 
+	column-break-inside: avoid; 
+	display: inline-block; 
+	margin: 0 2px 15px; 
+	padding: 15px; 
+	border: 2px solid #FAFAFA; 
+	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4); 
+	background: #FEFEFE; 
+	background-image: linear-gradient(45deg, #FFF, #F9F9F9); 
+}
+
+</style>    
+    
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
@@ -11,8 +41,9 @@
         <h1>Atlases {$title|escape}</h1>
         <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
         
+        <div id="columns">
         {foreach from=$prints item="print" name="index"}
-            <div class="atlasThumb">
+            <div class="atlasPin">
                 <a href="{$base_dir}/atlas.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" width="100%"></a>
 
                 <a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
@@ -43,6 +74,7 @@
 				<a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>
             </div>
         {/foreach}
+        </div>
         
 {include file="footer.htmlf.tpl"}
 
