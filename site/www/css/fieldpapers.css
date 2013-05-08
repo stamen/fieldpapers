@@ -1,9 +1,14 @@
 @charset "UTF-8";
 /* CSS Document */
 
+html { font-size: 100%;
+}
+
+
 body {
 	margin-top: 0;
-	font-size: 1em;
+	font-size: 100%;
+	line-height: 125%;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 /*
@@ -12,10 +17,7 @@ ul, ol, dl {
 	margin: 0 50px;
 }
 */
-h1, h2, h3, h4, h5, h6, p {
-	margin-top: 0;
-	padding-right: 10px;
-}
+
 .subHead {
 	font-size: 0.5em;
 	color: #666;
@@ -24,7 +26,9 @@ h1, h2, h3, h4, h5, h6, p {
 small {
 	font-size: 0.75em;
 }
-.grey { color: #666;}
+.grey {
+	color: #666;
+}
 code {
 	background-color: #eee;
 	color: #333;
@@ -141,7 +145,6 @@ h2.pageCount {
 	clear: both;
 	margin-top: 20px;
 }
-
 #columns {
 	column-count: 3;
 	column-gap: 15px;
@@ -166,7 +169,6 @@ h2.pageCount {
 	background-image: linear-gradient(45deg, #FFF, #F9F9F9);
 	color: #666;
 }
-
 .atlasPin img {
 	margin-bottom: 20px;
 }
@@ -279,11 +281,15 @@ button, #remove, #remove_new {
 	width: 960px;
 	margin-right: auto;
 	margin-left: auto;
-	text-align: left;
+	text-align: center;
 	clear: both;
-	padding-top: 100px;
+	margin-top: 60px;
+	margin-bottom: 20px;
 	font-size: 0.825em;
 	line-height: 1.5em;
+}
+#footer small {
+	color: #666;
 }
 #subnav_container {
 	position: absolute;
@@ -328,12 +334,8 @@ button, #remove, #remove_new {
 	color: #ff3333
 }
 .explanation {
-	color: #666;	
+	color: #666;
 }
-
-
-
-
 /* Cribbed/Tweaked From BOOTSTRAP.CSS */
 /*!
  * Bootstrap v2.0.1
@@ -345,64 +347,120 @@ button, #remove, #remove_new {
  * Designed and built with all the love in the world @twitter by @mdo and @fat.
  */
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: bold;
+  color: #333333;
+  text-rendering: optimizelegibility;
+}
+h1 small,
+h2 small,
+h3 small,
+h4 small,
+h5 small,
+h6 small {
+  font-weight: normal;
+  color: #999999;
+}
+h1 {
+  font-size: 30px;
+  line-height: 36px;
+}
+h1 small {
+  font-size: 18px;
+}
+h2 {
+  font-size: 24px;
+  line-height: 36px;
+}
+h2 small {
+  font-size: 18px;
+}
+h3 {
+  line-height: 27px;
+  font-size: 18px;
+}
+h3 small {
+  font-size: 14px;
+}
+h4, h5, h6 {
+  line-height: 18px;
+}
+h4 {
+  font-size: 14px;
+}
+h4 small {
+  font-size: 12px;
+}
+h5 {
+  font-size: 12px;
+}
+h6 {
+  font-size: 11px;
+  color: #999999;
+  text-transform: uppercase;
+}
+
 
 .pagination {
-  height: 36px;
-  margin-left: 280px; 
-  margin-right: auto;
+	height: 36px;
+	margin-left: 280px;
+	margin-bottom: 60px;
 }
 .pagination ul {
-  display: inline-block;
-  *display: inline;
+	display: inline-block;
+ *display: inline;
   /* IE7 inline-block hack */
 
   *zoom: 1;
-  margin-left: 0;
-  margin-bottom: 0;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	margin-left: 0;
+	margin-bottom: 0;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 .pagination li {
-  display: inline;
+	display: inline;
 }
 .pagination a {
-  float: left;
-  padding: 0 14px;
-  line-height: 34px;
-  text-decoration: none;
-  border: 1px solid #ddd;
-  border-left-width: 0;
+	float: left;
+	padding: 0 14px;
+	line-height: 34px;
+	text-decoration: none;
+	border: 1px solid #ddd;
+	border-left-width: 0;
 }
 .pagination a:hover, .pagination .active a {
-  background-color: #f5f5f5;
+	background-color: #f5f5f5;
 }
 .pagination .active a {
-  color: #999999;
-  cursor: default;
+	color: #999999;
+	cursor: default;
 }
 .pagination .disabled a, .pagination .disabled a:hover {
-  color: #999999;
-  background-color: transparent;
-  cursor: default;
+	color: #999999;
+	background-color: transparent;
+	cursor: default;
 }
 .pagination li:first-child a {
-  border-left-width: 1px;
-  -webkit-border-radius: 3px 0 0 3px;
-  -moz-border-radius: 3px 0 0 3px;
-  border-radius: 3px 0 0 3px;
+	border-left-width: 1px;
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
 }
 .pagination li:last-child a {
-  -webkit-border-radius: 0 3px 3px 0;
-  -moz-border-radius: 0 3px 3px 0;
-  border-radius: 0 3px 3px 0;
+	-webkit-border-radius: 0 3px 3px 0;
+	-moz-border-radius: 0 3px 3px 0;
+	border-radius: 0 3px 3px 0;
 }
 .pagination-centered {
-  text-align: center;
+	text-align: center;
 }
 .pagination-right {
-  text-align: right;
+	text-align: right;
 }
