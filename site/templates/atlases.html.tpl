@@ -52,6 +52,7 @@
         <li><a href="#">Next</a></li>
       </ul>
     </div>
+	<div class="clearfloat"></div>
 
     {include file="footer.htmlf.tpl"} 
 </div>
