@@ -42,8 +42,7 @@
 </div>
 
 <!-- If Error -->
-<div id="error">
+<div id="error" style="display:none;">
     <strong><em>Drat.</em></strong> We have a problem.<br />
     <span class="explanation">[Problem message/Error report]</div>
 </div>
-            
