@@ -68,6 +68,6 @@
         
 {include file="footer.htmlf.tpl"}
 
-</div>
+	</div>
 </body>
 </html>
