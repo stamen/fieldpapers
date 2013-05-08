@@ -301,7 +301,7 @@
                                     Someone anonymous
                                 {/if}
                                 made this atlas of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
-                                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
+                                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">{$print.age|nice_relativetime|escape}</a>
                                 <br>
                                 <span class="details">
                                     {if $print.page_count == 1}
@@ -320,12 +320,6 @@
                                     + {$print.orientation|escape}
                                     + {$print.layout|escape}
                                 </span>
-        
-                                {*
-                                <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
-                                <br>
-                                <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
-                                *}
                             </li>
 
                         {elseif $event.type == "scan"}
@@ -345,12 +339,6 @@
                                 <br>
                                 
                                 <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
-
-                                {*
-                                <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> <a class="date">- 3 weeks ago</a>
-                                <br>
-                                <img>
-                                *}
                             </li>
 
                         {elseif $event.type == "notes"}
@@ -391,26 +379,10 @@
                                     Someone anonymous
                                 {/if}
                                 added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">a note about page {$scan.print_page_number|escape}</a>
-                                <a class="date">- {$note.age|nice_relativetime|escape}</a>
+                                <a class="date">{$note.age|nice_relativetime|escape}</a>
                                 <ol>
                                     <li>{$note.note|escape}</li>
                                 </ol>
-
-                                {*
-                                <a>George</a> added 3 notes about <a>page B2</a> <a class="date">- 2 weeks ago</a>
-                                <ol>
-                                    <li>This is where I found a</li>
-                                    <li>Fire hydrant looks busted</li>
-                                    <li>Best eggs in the city</li>
-                                </ol>
-
-                                Someone anonymous added a note to <a>page B2</a> <a class="date">- 4 days ago</a>
-                                <ol>
-                                    <li>This is where I found a</li>
-                                    <li>Fire hydrant looks busted</li>
-                                    <li>Best eggs in the city</li>
-                                </ol>
-                                *}
                             </li>
                         {/if}
                     {/foreach}
