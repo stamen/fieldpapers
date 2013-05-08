@@ -86,8 +86,10 @@
         {/literal}
         
         <div class="clearfloat"></div>
-{include file="footer.htmlf.tpl"}
 
+</div>
+<div class="container">
+	{include file="footer.htmlf.tpl"}
 </div>
 </body>
 </html>
