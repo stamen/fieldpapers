@@ -63,6 +63,10 @@ a:hover, a:active, a:focus {
 	padding-top: 60px;
 	padding-bottom: 50px;
 }
+.smallContainer input,
+.smallContainer textarea {
+	font-size: 18px;
+	}
 .fltrt {
 	float: right;
 }
@@ -75,6 +79,7 @@ a:hover, a:active, a:focus {
 	font-size: 1px;
 	line-height: 0px;
 }
+
 .navbar {
 	width: 960px;
 	margin-right:auto;
