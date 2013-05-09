@@ -63,10 +63,17 @@ a:hover, a:active, a:focus {
 	padding-top: 60px;
 	padding-bottom: 50px;
 }
-.smallContainer input,
-.smallContainer textarea {
+.smallContainer input, .smallContainer textarea {
 	font-size: 18px;
-	}
+}
+.smallLayoutContainer {
+	width: 620px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: left;
+	clear: both;
+	padding-top: 60px;
+}
 .fltrt {
 	float: right;
 }
@@ -79,7 +86,6 @@ a:hover, a:active, a:focus {
 	font-size: 1px;
 	line-height: 0px;
 }
-
 .navbar {
 	width: 960px;
 	margin-right:auto;
@@ -111,7 +117,6 @@ a:hover, a:active, a:focus {
 	float: left;
 	padding-bottom: 20px;
 	line-height: 20px;
-
 }
 .navbar li.in {
 	border-bottom: 2px solid black;
@@ -349,65 +354,53 @@ button, #remove, #remove_new {
  * Designed and built with all the love in the world @twitter by @mdo and @fat.
  */
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: bold;
-  color: #333333;
-  text-rendering: optimizelegibility;
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+	color: #333333;
+	text-rendering: optimizelegibility;
 }
-h1 small,
-h2 small,
-h3 small,
-h4 small,
-h5 small,
-h6 small {
-  font-weight: normal;
-  color: #999999;
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+	font-weight: normal;
+	color: #999999;
 }
 h1 {
-  font-size: 30px;
-  line-height: 36px;
+	font-size: 30px;
+	line-height: 36px;
 }
 h1 small {
-  font-size: 18px;
+	font-size: 18px;
 }
 h2 {
-  font-size: 24px;
-  line-height: 36px;
+	font-size: 24px;
+	line-height: 36px;
 }
 h2 small {
-  font-size: 18px;
+	font-size: 18px;
 }
 h3 {
-  line-height: 27px;
-  font-size: 18px;
+	line-height: 27px;
+	font-size: 18px;
 }
 h3 small {
-  font-size: 14px;
+	font-size: 14px;
 }
 h4, h5, h6 {
-  line-height: 18px;
+	line-height: 18px;
 }
 h4 {
-  font-size: 14px;
+	font-size: 14px;
 }
 h4 small {
-  font-size: 12px;
+	font-size: 12px;
 }
 h5 {
-  font-size: 12px;
+	font-size: 12px;
 }
 h6 {
-  font-size: 11px;
-  color: #999999;
-  text-transform: uppercase;
+	font-size: 11px;
+	color: #999999;
+	text-transform: uppercase;
 }
-
-
 .pagination {
 	height: 36px;
 	margin-left: 280px;
@@ -465,3 +458,4 @@ h6 {
 .pagination-right {
 	text-align: right;
 }
+
