@@ -23,7 +23,7 @@ else:
 from ModestMaps.Core import Point, Coordinate
 
 from geoutils import create_geotiff, list_tiles_for_bounds, extract_tile_for_coord
-from apiutils import append_scan_file, finish_scan, update_scan, fail_scan, get_print_info, ALL_FINISHED
+from apiutils import append_scan_file, finish_scan, update_scan, fail_scan, get_print_info
 from featuremath import MatchedFeature, blobs2features, blobs2feats_limited, blobs2feats_fitted, theta_ratio_bounds
 from imagemath import imgblobs, extract_image, open as imageopen
 from matrixmath import Transform, quad2quad
@@ -326,8 +326,6 @@ def draw_postblobs(postblob_img, blobs_abcde):
 def main(apibase, password, scan_id, url):
     """
     """
-    yield 30
-
     #
     # Prepare a shorthand for pushing data.
     #
@@ -376,8 +374,6 @@ def main(apibase, password, scan_id, url):
         uploaded_file = basename(path)
 
         _update_scan(uploaded_file, 0.2)
-        
-        yield 10
         
         _append_file('highpass.jpg', open(highpass_filename, 'r').read())
         _append_file('preblobs.jpg', open(preblobs_filename, 'r').read())
@@ -484,8 +480,6 @@ def main(apibase, password, scan_id, url):
         else:
             print 'Failed, unable to find a print_id'
             _fail_scan()
-    
-    yield ALL_FINISHED
 
 
 if __name__ == '__main__':

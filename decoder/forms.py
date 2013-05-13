@@ -6,7 +6,7 @@ from urlparse import urljoin
 import json
 
 from BeautifulSoup import BeautifulSoup
-from apiutils import finish_form, fail_form, ALL_FINISHED
+from apiutils import finish_form, fail_form
 
 def fields_as_text(form_fields):
     """
@@ -122,8 +122,6 @@ def get_form_fields(url):
 def main(apibase, password, form_id, url, fields_callback=None):
     """
     """
-    yield 10
-    
     try:
         form_data = get_form_fields(url)
     
@@ -136,8 +134,6 @@ def main(apibase, password, form_id, url, fields_callback=None):
             fields_callback(form_data)
     
         finish_form(apibase, password, form_id, form_data['action'], form_data['method'], form_data['title'], form_data['fields'])
-    
-    yield ALL_FINISHED
     
 if __name__ == '__main__':
     form_url = len(sys.argv) == 2 and sys.argv[1] or 'https://docs.google.com/spreadsheet/viewform?formkey=dFZsNVprWDY3REM3MnpjbW9rTGkzQUE6MQ'

@@ -345,7 +345,9 @@
         
         set_print($dbh, $print);
         $message['print_id'] = $print['id'];
-        add_message($dbh, json_encode($message));
+
+        // queue the task
+        queue_task("poll.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
                 
         return $print;
     }
@@ -508,7 +510,9 @@
         set_print($dbh, $print);
     
         $message['print_id'] = $print['id'];
-        add_message($dbh, json_encode($message));
+
+        // queue the task
+        queue_task("poll.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
         
         return $print;
     }
