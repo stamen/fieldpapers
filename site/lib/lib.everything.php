@@ -34,7 +34,7 @@
         {
             // get the session user if there is one
 
-            session_set_cookie_params(86400 * 31, get_base_dir());
+            session_set_cookie_params(86400 * 31, get_base_dir(), null, false, true);
             session_start();
             
             $user = cookied_user($db);
