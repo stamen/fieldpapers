@@ -319,22 +319,6 @@
         return $columns;
     }
     
-    function add_message(&$dbh, $content)
-    {
-        $q = sprintf('INSERT INTO messages
-                      SET content = %s, available = NOW()',
-                     $dbh->quoteSmart($content));
-
-        error_log(preg_replace('/\s+/', ' ', $q));
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        return true;
-    }
-    
     function add_log(&$dbh, $content)
     {
         $q = sprintf('INSERT INTO logs
@@ -349,52 +333,6 @@
             die_with_code(500, "{$res->message}\n{$q}\n");
 
         return true;
-    }
-    
-    function get_message(&$dbh, $timeout)
-    {
-        $res = $dbh->query('LOCK TABLES messages WRITE');
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        $q = sprintf('SELECT id, content
-                      FROM messages
-                      WHERE available < NOW()
-                        AND deleted = 0
-                      ORDER BY available ASC
-                      LIMIT 1');
-
-        $res = $dbh->query($q);
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-
-        if($msg = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
-            postpone_message($dbh, $msg['id'], $timeout);
-
-        } else {
-            $msg = false;
-        }
-
-        $res = $dbh->query('UNLOCK TABLES');
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
-        
-        return $msg;
-    }
-    
-    function postpone_message(&$dbh, $message_id, $timeout)
-    {
-        $q = 'UPDATE messages
-              SET available = NOW() + INTERVAL ? SECOND
-              WHERE id = ?';
-
-        $res = $dbh->query($q, array($timeout, $message_id));
-        
-        if(PEAR::isError($res)) 
-            die_with_code(500, "{$res->message}\n{$q}\n");
     }
     
     function delete_message(&$dbh, $message_id)
