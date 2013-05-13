@@ -14,7 +14,7 @@ MySQL password a few times, it's fine to leave this blank.
 
 ```bash
 % apt-get update
-% apt-get install build-essential gdal-bin git-core \
+% apt-get install build-essential gdal-bin git-core screen \
                   mysql-server default-jre-headless \
                   redis-server \
                   libapache2-mod-php5 php-pear php5-gd php5-mysql \
@@ -42,8 +42,6 @@ A few other details...
     
 ```bash
 % ln -s /usr/lib/libproj.so.0 /usr/lib/libproj.so
-% curl -o /tmp/lockrun.c http://www.unixwiz.net/tools/lockrun.c
-% gcc /tmp/lockrun.c -o /usr/bin/lockrun
 ```
 
 
@@ -53,7 +51,7 @@ Field Papers
 Download the Field Papers project to `/usr/local/fieldpapers`.
     
 ```bash
-% git clone -b release-1.0 git://github.com/stamen/fieldpapers.git /usr/local/fieldpapers
+% git clone -b v2.0.0 https://github.com/stamen/fieldpapers.git /usr/local/fieldpapers
 % cd /usr/local/fieldpapers/site && make
 ```
 
@@ -86,34 +84,37 @@ API keys, and other details.
 % sensible-editor /usr/local/fieldpapers/site/lib/init.php
 ```
 
-Polling
--------
+Tasks
+-----
 
-Now try Field Papers in a browser to see it work. If you try to make
-a new print, you'll see a note that Field Papers is "Preparing your print".
-Leave the window open for now. You will need to start the back-end Python
-process to create prints and decode scans.
+Field Papers uses [Celery](http://www.celeryproject.org/) to manage
+asynchronous tasks like creating prints and decoding scans. (Celery in turn
+used Redis to communicate between the PHP front-end and the Python tasks.)
 
-Run the poll.py process once with the password you chose above:
+Now try Field Papers in a browser to see it work. If you try to make a new
+print, you'll see a note that Field Papers is "Preparing your print".  Leave
+the window open for now. You will need to start Celery for print tasks to run:
 
 ```bash
-% cd /usr/local/fieldpapers/decoder/
-% python poll.py -p password -b http://hostname/ once
+% cd /usr/local/fieldpapers/decoder
+% celery -A poll worker
 ```
 
 You'll see a few messages scroll by, and eventually the print page will be
 replaced by an image of your selected area and a PDF download link. Print it,
 scan it, or just convert it to a JPEG, and post the image back to your instance
-of Field Papers. Note that it's just sitting there, "queued for processing".
-Run poll.py again to process the scan.
+of Field Papers.
 
-If you've gotten this far, you should have a complete working instance of
-Field Papers. Add the call to poll.py from above to a once-per-minute cronjob,
-by adding a line to `/etc/crontab` like this:
+If you've made it this far, you should have a complete working instance of
+Field Papers. As a last step, add Celery to `upstart` so it will start on boot:
 
+```bash
+% cp conf/celery.conf /etc/init
+% start celery
 ```
-* *     * * *   ubuntu  cd /usr/local/fieldpapers/decoder && /usr/bin/lockrun --lockfile=poll.lock -- python poll.py -p password -b http://hostname/ 55
-```
+
+(It will be running in a `screen` session as the `ubuntu` user, so you can use
+`screen -r celery` to inspect the queue's status.)
 
 That's it - you're done!
 
