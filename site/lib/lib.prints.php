@@ -138,6 +138,10 @@
             die_with_code(500, "{$res->message}\n{$q}\n");
 
         $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+
+        if (empty($row)) {
+            return null;
+        }
         
         // TODO: ditch special-case for provider
         if(empty($row['provider']))
