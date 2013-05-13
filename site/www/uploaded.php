@@ -35,7 +35,7 @@
 
     if($acceptable_upload && $scan && !$scan['decoded'])
     {
-        queue_task("poll.decodeScan", array("http://" . SERVER_NAME, API_PASSWORD), array(
+        queue_task("tasks.decodeScan", array("http://" . SERVER_NAME, API_PASSWORD), array(
             "action"  => "decode",
             "scan_id" => $scan["id"],
             "url"     => $url,
