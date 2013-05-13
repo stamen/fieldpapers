@@ -19,7 +19,7 @@ MySQL password a few times, it's fine to leave this blank.
                   libapache2-mod-php5 php-pear php5-gd php5-mysql \
                   python-beautifulsoup python-cairo python-dev \
                   python-gdal python-imaging python-numpy python-pip \
-                  python-setproctitle
+                  python-requests
 
 % pip install ModestMaps
 % pip install BlobDetector
