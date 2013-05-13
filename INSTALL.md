@@ -1,7 +1,8 @@
 Installing Field Papers
 =======================
 
-This guide has been tested on Ubuntu 10.04.
+This guide has been tested on Ubuntu 12.10 (and was previously used to install
+Field Papers on Ubuntu 10.04).
 
 System
 ------

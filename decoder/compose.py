@@ -1,17 +1,12 @@
-﻿from sys import argv
-from math import log, pi
+﻿from math import pi
 from copy import copy
-from itertools import product
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname, realpath
 from urlparse import urljoin, urlparse, parse_qs
 from os import close, write, unlink
-from json import dumps as json_encode
 from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
-from shutil import move
-from setproctitle import setproctitle
 
 from ModestMaps import mapByExtent, mapByExtentZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
@@ -19,7 +14,6 @@ from ModestMaps.Geo import Location
 from ModestMaps.Core import Point
 
 from cairo import ImageSurface
-from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle, draw_cross, flow_text
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
@@ -480,7 +474,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
         #
     
         for (index, page) in enumerate(pages):
-            setproctitle("[page %d]" % (index + 1,))
             _update_print(0.1 + 0.9 * float(index) / len(pages))
 
             page_href = print_href and (print_href + '/%(number)s' % page) or None
