@@ -4,8 +4,6 @@ from xml.etree import ElementTree
 from mimetypes import guess_type
 from StringIO import StringIO
 
-# yield this value from decode and compose main() in lieu of a timeout
-ALL_FINISHED = -1
 import requests
 
 

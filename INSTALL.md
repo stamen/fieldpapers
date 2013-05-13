@@ -26,7 +26,7 @@ MySQL password a few times, it's fine to leave this blank.
 % pip install BlobDetector
 % pip install celery
 
-% pip install redis
+% pecl install redis
 ```
     
 Field Papers uses server packages from PHP's PEAR collection. The can be

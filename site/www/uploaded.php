@@ -35,14 +35,13 @@
 
     if($acceptable_upload && $scan && !$scan['decoded'])
     {
+        queue_task("poll.decodeScan", array("http://" . SERVER_NAME, API_PASSWORD), array(
+            "action"  => "decode",
+            "scan_id" => $scan["id"],
+            "url"     => $url,
+        ));
         $context->db->query('START TRANSACTION');
 
-        $message = array('action' => 'decode',
-                         'scan_id' => $scan['id'],
-                         'url' => $url);
-        
-        add_message($context->db, json_encode($message));
-        
         $scan = get_scan($context->db, $scan['id']);
         $parsed_url = parse_url($url);
         $scan['base_url'] = "http://{$parsed_url['host']}".dirname($parsed_url['path']);
