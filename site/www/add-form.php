@@ -31,7 +31,7 @@
                          'form_id' => $added_form['id']);
             
         // queue the task
-        queue_task("poll.parseForm", array("http://" . SERVER_NAME, API_PASSWORD), $message);
+        queue_task("tasks.parseForm", array("http://" . SERVER_NAME, API_PASSWORD), $message);
         
         $form_url = 'http://'.get_domain_name().get_base_dir().'/form.php?id='.urlencode($added_form['id']);
         header("Location: {$form_url}");

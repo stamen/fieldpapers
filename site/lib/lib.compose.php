@@ -347,7 +347,7 @@
         $message['print_id'] = $print['id'];
 
         // queue the task
-        queue_task("poll.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
+        queue_task("tasks.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
                 
         return $print;
     }
@@ -512,7 +512,7 @@
         $message['print_id'] = $print['id'];
 
         // queue the task
-        queue_task("poll.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
+        queue_task("tasks.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
         
         return $print;
     }
