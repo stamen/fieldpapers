@@ -257,29 +257,6 @@ CREATE TABLE scan_notes (
 
 
 
-DROP TABLE IF EXISTS messages;
-
-CREATE TABLE messages (
-
-    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    
-    content     TEXT,
-    deleted     TINYINT DEFAULT 0,
-
-    created     TIMESTAMP,
-    available   TIMESTAMP,
-
-    INDEX available (available),
-    INDEX deleted (deleted)
-
-) ENGINE=InnoDB, CHARACTER SET utf8;
-
-ALTER TABLE messages CHANGE COLUMN content content MEDIUMTEXT;
-
-ALTER TABLE messages CHANGE COLUMN created created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
-
-
 DROP TABLE IF EXISTS `logs`;
 
 CREATE TABLE `logs` (
