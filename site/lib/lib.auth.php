@@ -8,13 +8,11 @@
         {
             $user_id = generate_id();
             
-            $q = sprintf('INSERT INTO users
-                          SET id = %s',
-                         $dbh->quoteSmart($user_id));
+            $q = "INSERT INTO users (id) VALUES (?)";
 
-            error_log(preg_replace('/\s+/', ' ', $q));
+            log_debug($q, $user_id);
     
-            $res = $dbh->query($q);
+            $res = $dbh->query($q, $user_id);
             
             if(PEAR::isError($res)) 
             {
@@ -30,14 +28,13 @@
         
     function get_user(&$dbh, $user_id)
     {
-        $q = sprintf('SELECT id, name, email,
-                             UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
-                      FROM users
-                      WHERE id = %s',
-                     $dbh->quoteSmart($user_id));
+        $q = 'SELECT id, name, email,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
+              FROM users
+              WHERE id = ?';
     
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $user_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -47,14 +44,13 @@
     
     function get_user_by_name(&$dbh, $user_name)
     {
-        $q = sprintf('SELECT id, name,
-                             UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
-                      FROM users
-                      WHERE name = %s',
-                     $dbh->quoteSmart($user_name));
+        $q = 'SELECT id, name,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
+              FROM users
+              WHERE name = ?';
     
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $user_name);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -110,13 +106,12 @@
     
     function delete_user(&$dbh, $user_id)
     {
-        $q = sprintf('DELETE FROM users
-                      WHERE id = %s',
-                     $dbh->quoteSmart($user_id));
+        $q = 'DELETE FROM users
+              WHERE id = ?';
 
-        error_log(preg_replace('/\s+/', ' ', $q));
+        log_debug($q, $user_id);
 
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $user_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -131,12 +126,12 @@
     {
         $q = sprintf('SELECT password = SHA1(%s)
                       FROM users
-                      WHERE id = %s
+                      WHERE id = ?
                       LIMIT 1',
-                     $dbh->quoteSmart($password),
-                     $dbh->quoteSmart($user_id));
+                      $dbh->quoteSmart($password));
     
-        $res = $dbh->query($q);
+        log_debug($q, $user_id);
+        $res = $dbh->query($q, $user_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
