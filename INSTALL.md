@@ -132,22 +132,22 @@ more information.
 * Increase [`post_max_size`](http://php.net/manual/en/ini.core.php#ini.post-max-size)
   to allow room for larger uploaded files.
 
-Add Redis to the list of registered PHP extensions:
+Add Redis to the list of registered PHP extensions and use its bundled session
+handler:
 
 ```bash
-% echo "extension=redis.so" > /etc/php5/conf.d/20-redis.ini
+% cat <<EOF > /etc/php5/conf.d/20-redis.ini
+extension=redis.so
+session.save_handler = redis
+session.save_path = "tcp://localhost"
+EOF
 ```
 
 PHP sessions are brief by default, but a few tweaks can make them more durable.
 
-* Increase [`session.gc_maxlifetime`](http://php.net/manual/en/session.configuration.php#ini.session.gc-maxlifetime)
+* Increase
+  [`session.gc_maxlifetime`](http://php.net/manual/en/session.configuration.php#ini.session.gc-maxlifetime)
   to days or weeks so that visitors stay logged-in for longer periods of time.
-* To make it more efficient to keep sessions available for longer periods of time, set
-  [`session.save_path`](http://php.net/manual/en/session.configuration.php#ini.session.save-path)
-  to use a number of number of directory levels for session files. You'll need
-  to run `ext/session/mod_files.sh` from the PHP source for this to work, and probably set
-  [`session.hash_bits_per_character`](http://php.net/manual/en/session.configuration.php#ini.session.hash-bits-per-character)
-  to `4` just to be safe.
 
 When atlases or snapshots fail, the `/tmp` directory can fill up. Add a few
 find-and-delete commands to `/etc/crontab` to keep these files from piling up

@@ -33,11 +33,15 @@ If you're using Ubuntu 12.04 (or later):
 % apt-get install redis-server python-redis python-requests
 ```
 
-
-Add Redis to the list of registered PHP extensions:
+Add Redis to the list of registered PHP extensions and use its bundled session
+handler:
 
 ```bash
-% echo "extension=redis.so" > /etc/php5/conf.d/20-redis.ini
+% cat <<EOF > /etc/php5/conf.d/20-redis.ini
+extension=redis.so
+session.save_handler = redis
+session.save_path = "tcp://localhost"
+EOF
 ```
 
 Restart Apache:
@@ -92,3 +96,6 @@ Clean out the `users` table:
 create index users_email on users(email);
 delete users from users left join prints on prints.user_id=users.id left join scans on scans.user_id=users.id where prints.id is null and scans.id is null and users.name is null;
 ```
+
+Feel free to clear out any pending session data (in `/var/lib/php5` by
+default), as all new sessions will be stored in Redis.
