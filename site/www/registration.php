@@ -43,7 +43,7 @@
                 die('Someone has already registered with that email address.');
             }
             
-            $new_user = get_user($context->db, $_SESSION['user']['id']);
+            $new_user = add_user($context->db);
             
             $new_user['name'] = $_POST['username'];
             $new_user['email'] = $_POST['email'];

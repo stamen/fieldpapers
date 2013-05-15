@@ -146,20 +146,24 @@
     */
 
    /**
-    * Return false if $_SESSION['logged_in'] is false, true otherwise.
+    * Is the user logged in?
     */
     function is_logged_in()
     {
-        return $_SESSION['logged_in'] ? true : false;
+        return isset($_SESSION['user_id']);
     }
     
    /**
-    * Return user array from get_user() based on content
-    * of $_SESSION['user'], or false if it's empty.
+    * If the session contains a user id, return the associated user. Otherwise,
+    * return null.
     */
     function cookied_user(&$dbh)
     {
-        return get_user($dbh, $_SESSION['user']['id']) ? get_user($dbh, $_SESSION['user']['id']) : false;    
+        if ($_SESSION['user_id'] && ($user = get_user($dbh, $_SESSION['user_id']))) {
+            return $user;
+        }
+
+        return null;
     }
     
    /**
@@ -188,12 +192,11 @@
     }
     
    /**
-    * Set $_SESSION['logged_in'] to false and erase $_SESSION['user'].
+    * Log a user out.
     */
     function logout_user()
     {
-        $_SESSION['logged_in'] = false;
-        unset($_SESSION['user']);
+        session_destroy();
     }
     
 ?>
