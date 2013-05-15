@@ -93,8 +93,8 @@ alter table scans modify column user_id varchar(8);
 Clean out the `users` table:
 
 ```sql
-create index users_email on users(email);
 delete users from users left join prints on prints.user_id=users.id left join scans on scans.user_id=users.id where prints.id is null and scans.id is null and users.name is null;
+create index users_email on users(email);
 ```
 
 Feel free to clear out any pending session data (in `/var/lib/php5` by
