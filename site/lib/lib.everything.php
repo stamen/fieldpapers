@@ -38,12 +38,6 @@
             session_start();
             
             $user = cookied_user($db);
-            
-            if(!$user)
-            {
-                $user = add_user($db);
-                $_SESSION['user'] = $user;
-            }
         }
 
         // Smarty is created last because it needs $_SESSION populated

@@ -354,7 +354,7 @@
         $users = array();
         $user_id = $print['user_id'];
         
-        if(is_null($users[$user_id]))
+        if ($users[$user_id] == null && $user_id != null)
             $users[$user_id] = get_user($dbh, $user_id);
         
         $print['user_name'] = $users[$user_id]['name'];
@@ -368,7 +368,7 @@
                 $note_args['scans'][] = $scan['id'];
                 $user_id = $scan['user_id'];
                 
-                if(is_null($users[$user_id]))
+                if($users[$user_id] == null && $user_id != null)
                     $users[$user_id] = get_user($dbh, $user_id);
                 
                 $scans[$i]['user_name'] = $users[$user_id]['name'];

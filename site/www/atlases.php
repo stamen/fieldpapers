@@ -23,7 +23,7 @@
     {   
         $user_id = $print['user_id'];
         
-        if(is_null($users[$user_id]))
+        if($users[$user_id] == null && $user_id != null)
             $users[$user_id] = get_user($context->db, $user_id);
         
         $pages = get_print_pages($context->db, $print['id']);

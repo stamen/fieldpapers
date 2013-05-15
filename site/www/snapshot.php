@@ -49,11 +49,6 @@
     $form = get_form($context->db, $print['form_id']);
     $context->sm->assign('form', $form);
     
-    if($user = get_user($context->db, $context->user['id']))
-    {
-        $context->sm->assign('user', $user);
-    }
-    
     // Get the number of pages for the print
     $pages = get_print_pages($context->db, $print_id);
     $context->sm->assign('page_count', count($pages));
