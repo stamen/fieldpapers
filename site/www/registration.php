@@ -34,8 +34,8 @@
             }
             
             // Verify that the email address has not been used in a previous registration.
-            $mailsearch = sprintf("SELECT email from users WHERE email=%s;", $context->db->quoteSmart($_POST['email']));
-            $res_mailsearch = $context->db->query($mailsearch);
+            $mailsearch = "SELECT email from users WHERE email=?";
+            $res_mailsearch = $context->db->query($mailsearch, $_POST['email']);
             $email_match = $res_mailsearch->fetchRow(DB_FETCHMODE_ASSOC);   
             
             if ($email_match)
@@ -57,8 +57,8 @@
             }
             
             $hash = md5(rand(0,1000));
-            $q = sprintf('UPDATE users SET hash=%s WHERE name=%s', $context->db->quoteSmart($hash), $context->db->quoteSmart($_POST['username']));
-            $res = $context->db->query($q);   
+            $q = 'UPDATE users SET hash=? WHERE name=?';
+            $res = $context->db->query($q, $hash, $_POST['username']);
             
             login_user_by_id($context->db, $registered_user['id']);
             

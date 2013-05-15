@@ -835,5 +835,14 @@
                 return null;
         }
     }
-    
+
+    function log_debug() {
+        $str = "";
+        foreach (func_get_args() as $v) {
+            $str .= $v . " ";
+        }
+
+        error_log(rtrim($str));
+    }
+
 ?>

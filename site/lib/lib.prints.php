@@ -117,22 +117,21 @@
         if(preg_match('#^(\w+)/(\w+)$#', $print_id, $m))
             list($print_id, $page_number) = array($m[1], $m[2]);
     
-        $q = sprintf("SELECT layout, atlas_pages,
-                             paper_size, orientation, provider,
-                             pdf_url, preview_url, geotiff_url,
-                             id, title, form_id, north, south, east, west, zoom,
-                             (north + south) / 2 AS latitude,
-                             (east + west) / 2 AS longitude,
-                             UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(composed) AS composed,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
-                             country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id, progress
-                      FROM prints
-                      WHERE id = %s",
-                     $dbh->quoteSmart($print_id));
+        $q = "SELECT layout, atlas_pages,
+                     paper_size, orientation, provider,
+                     pdf_url, preview_url, geotiff_url,
+                     id, title, form_id, north, south, east, west, zoom,
+                     (north + south) / 2 AS latitude,
+                     (east + west) / 2 AS longitude,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(composed) AS composed,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                     country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                     user_id, progress
+              FROM prints
+              WHERE id = ?";
     
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $print_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");

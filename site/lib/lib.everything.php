@@ -30,7 +30,7 @@
         $user = null;
         $type = get_preferred_type($_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT']);
         
-        if($type == 'text/html' && $make_session)
+        if ($type == 'text/html' && $make_session)
         {
             // get the session user if there is one
 

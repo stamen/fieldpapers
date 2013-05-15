@@ -39,8 +39,7 @@
     
     if(is_logged_in())
     {
-        $logged_in = True;
-        $context->sm->assign('logged_in', $logged_in);
+        $context->sm->assign('logged_in', true);
         $context->sm->assign('username', $_SESSION['user']['name']);
     }
            
