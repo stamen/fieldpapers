@@ -44,10 +44,10 @@ session.save_path = "tcp://localhost"
 EOF
 ```
 
-Restart Apache:
+Reload Apache:
 
 ```bash
-% /etc/init.d/apache2 restart
+% /etc/init.d/apache2 reload
 ```
 
 Update your git clone:
@@ -86,15 +86,26 @@ Add Celery to `upstart`:
 Loosen the restrictions on where user ids are required:
 
 ```sql
-alter table prints modify column user_id varchar(8);
-alter table scans modify column user_id varchar(8);
+cat <<EOF | mysql -u root fieldpapers
+ALTER TABLE prints MODIFY COLUMN user_id VARCHAR(8);
+ALTER TABLE scans MODIFY COLUMN user_id VARCHAR(8);
+ALTER TABLE forms MODIFY COLUMN user_id VARCHAR(8);
+EOF
 ```
 
 Clean out the `users` table:
 
 ```sql
-delete users from users left join prints on prints.user_id=users.id left join scans on scans.user_id=users.id where prints.id is null and scans.id is null and users.name is null;
-create index users_email on users(email);
+cat <<EOF | mysql -u root fieldpapers
+DELETE users
+FROM users
+LEFT JOIN prints ON prints.user_id=users.id
+LEFT JOIN scans ON scans.user_id=users.id
+WHERE prints.id IS NULL
+    AND scans.id IS NULL
+    AND users.name IS NULL;
+CREATE INDEX users_email ON users(email);
+EOF
 ```
 
 Feel free to clear out any pending session data (in `/var/lib/php5` by
