@@ -204,7 +204,7 @@ CREATE TABLE forms (
     http_method     ENUM('GET', 'POST'),
     action_url      TEXT,
     
-    user_id         VARCHAR(8) NOT NULL,
+    user_id         VARCHAR(8),
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     parsed          TIMESTAMP DEFAULT 0,
     
