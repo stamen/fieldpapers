@@ -15,6 +15,7 @@
     require_once 'lib.forms.php';
     require_once 'lib.mbtiles.php';
     require_once 'lib.prints.php';
+    require_once 'lib.queue.php';
     require_once 'lib.scans.php';
     
     function &default_context($make_session)
@@ -29,24 +30,18 @@
         $user = null;
         $type = get_preferred_type($_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT']);
         
-        if($type == 'text/html' && $make_session)
+        if ($type == 'text/html' && $make_session)
         {
             // get the session user if there is one
 
-            session_set_cookie_params(86400 * 31, get_base_dir());
+            session_set_cookie_params(86400 * 31, get_base_dir(), null, false, true);
             session_start();
             
             $user = cookied_user($db);
-            
-            if(!$user)
-            {
-                $user = add_user($db);
-                $_SESSION['user'] = $user;
-            }
         }
 
         // Smarty is created last because it needs $_SESSION populated
-        $sm =& get_smarty_instance();
+        $sm =& get_smarty_instance($user);
         
         $ctx = new Context($db, $sm, $user, $type);
 

@@ -9,12 +9,13 @@
     /**** ... ****/
     
     $atlas_data = array(
-        'page_zoom' => sprintf('%d', $_POST['page_zoom']),
-        'paper_size' => $_POST['paper_size'],
+        'page_zoom'   => sprintf('%d', $_POST['page_zoom']),
+        'paper_size'  => $_POST['paper_size'],
         'orientation' => $_POST['orientation'],
-        'provider' => $_POST['provider'],
-        'pages' => (is_array($_POST['pages']) ? $_POST['pages'] : array())
-        );
+        'provider'    => $_POST['provider'],
+        'pages'       => (is_array($_POST['pages']) ? $_POST['pages'] : array()),
+        'private'     => filter_var($_REQUEST['private'], FILTER_VALIDATE_BOOLEAN),
+    );
     
     if($_POST['atlas_title'])
         $atlas_data['atlas_title'] = $_POST['atlas_title'];

@@ -301,9 +301,8 @@
                                     Someone anonymous
                                 {/if}
                                 made this atlas of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
-                                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">{$print.age|nice_relativetime|escape}</a>
-                                <br>
-                                <span class="details">
+                                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
+                                <div class="details">
                                     {if $print.page_count == 1}
                                         One page
                                     {elseif $print.page_count == 2}
@@ -319,7 +318,21 @@
                                     {/foreach}
                                     + {$print.orientation|escape}
                                     + {$print.layout|escape}
-                                </span>
+                                </div>
+                                {if $print.private}
+                                <script type="text/javascript">
+                                document.getElementById("border").setAttribute("stroke", "#f00");
+                                </script>
+                                <div class="private">
+                                    This atlas is private.
+                                </div>
+                                {/if}
+        
+                                {*
+                                <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
+                                <br>
+                                <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
+                                *}
                             </li>
 
                         {elseif $event.type == "scan"}
@@ -398,6 +411,9 @@
                     This may take a while, generally a few minutes. <br><br>
                     You don't need to keep this window open; you can <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark 
                     this page</a> and come back later.
+                </p>
+                <p class="private">
+                    Since this atlas is private, you probably should <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark it</a>.
                 </p>
             </div>
         {/if}        

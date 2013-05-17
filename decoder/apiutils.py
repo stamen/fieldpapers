@@ -1,283 +1,183 @@
-from array import array
-from urllib import urlencode
-from urlparse import urlparse, urlunparse, urljoin
+from urlparse import urljoin
 from os.path import dirname, basename
-from httplib import HTTPConnection
 from xml.etree import ElementTree
 from mimetypes import guess_type
+from StringIO import StringIO
 
-# yield this value from decode and compose main() in lieu of a timeout
-ALL_FINISHED = -1
+import requests
 
-def _prepare_http_connection(url):
-    """
-    """
-    s, host, path, p, q, f = urlparse(url)
-    host, port = (':' in host) and host.split(':') or (host, 80)
-    
-    return HTTPConnection(host, port), path
 
 def update_print(apibase, password, print_id, progress):
     """
     """
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    query = urlencode({'id': print_id})
-
-    params = urlencode(dict(progress=progress, password=password))
+    params = {'id': print_id}
+    data = dict(progress=progress, password=password)
     
-    req, path = _prepare_http_connection(apibase)
-    req.request('POST', path + '/update-atlas.php?' + query, params, headers)
-    res = req.getresponse()
+    res = requests.post(urljoin(apibase, '/update-atlas.php'), params=params, data=data)
     
-    assert res.status == 200, 'POST to update-atlas.php resulting in status %s instead of 200' % res.status
+    assert res.status_code == 200, 'POST to update-atlas.php resulting in status %s instead of 200' % res.status
 
-    return
 
 def finish_print(apibase, password, print_id, print_info):
     """
     """
-    #if urlparse(print_data_url)[1] == 'localhost':
-    #    # just use an absolute path for preview URL if it's on localhost
-    #    parts = urlparse(print_data_url)
-    #    print_data_url = urlunparse((None, None, parts[2], parts[3], parts[4], parts[5]))
-    
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    query = urlencode({'id': print_id})
-
+    params = {'id': print_id}
     print_info.update(dict(password=password))
-    params = urlencode(print_info)
     
-    req, path = _prepare_http_connection(apibase)
-    req.request('POST', path + '/finish-atlas.php?' + query, params, headers)
-    res = req.getresponse()
+    res = requests.post(urljoin(apibase, '/finish-atlas.php'), params=params, data=print_info)
     
-    assert res.status == 200, 'POST to finish-atlas.php resulting in status %s instead of 200' % res.status
+    assert res.status_code == 200, 'POST to finish-atlas.php resulting in status %s instead of 200' % res.status
 
-    return
 
 def update_scan(apibase, password, scan_id, progress):
-    
     """
     """
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    query = urlencode({'id': scan_id})
+    params = {'id': scan_id}
     
-    params = urlencode({'password': password,
-                        'progress': progress})
+    data = {'password': password,
+            'progress': progress}
     
-    req, path = _prepare_http_connection(apibase)
-    req.request('POST', path + '/update-scan.php?' + query, params, headers)
-    res = req.getresponse()
+    res = requests.post(urljoin(apibase, '/update-scan.php'), params=params, data=data)
     
-    assert res.status == 200, 'POST to update-scan.php resulting in status %s instead of 200' % res.status
+    assert res.status_code == 200, 'POST to update-scan.php resulting in status %s instead of 200' % res.status
 
-    return
 
 def finish_scan(apibase, password, scan_id, uploaded_file, print_id, print_page_number, print_href, min_coord, max_coord, geojpeg_bounds):
     """
     """
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    query = urlencode({'id': scan_id})
+    params = {'id': scan_id}
+    data = {
+            'print_id': print_id,
+            'print_page_number': print_page_number,
+            'print_href': print_href,
+            'password': password,
+            'uploaded_file': uploaded_file,
+            'has_geotiff': 'yes',
+            'has_geojpeg': 'yes',
+            'has_stickers': 'no',
+            'min_row': min_coord.row, 'max_row': max_coord.row,
+            'min_column': min_coord.column, 'max_column': max_coord.column,
+            'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom,
+            'geojpeg_bounds': '%.8f,%.8f,%.8f,%.8f' % geojpeg_bounds
+           }
     
-    params = urlencode({'print_id': print_id,
-                        'print_page_number': print_page_number,
-                        'print_href': print_href,
-                        'password': password,
-                        'uploaded_file': uploaded_file,
-                        'has_geotiff': 'yes',
-                        'has_geojpeg': 'yes',
-                        'has_stickers': 'no',
-                        'min_row': min_coord.row, 'max_row': max_coord.row,
-                        'min_column': min_coord.column, 'max_column': max_coord.column,
-                        'min_zoom': min_coord.zoom, 'max_zoom': max_coord.zoom,
-                        'geojpeg_bounds': '%.8f,%.8f,%.8f,%.8f' % geojpeg_bounds})
+    res = requests.post(urljoin(apibase, '/finish-scan.php'), params=params, data=data)
     
-    req, path = _prepare_http_connection(apibase)
-    req.request('POST', path + '/finish-scan.php?' + query, params, headers)
-    res = req.getresponse()
-    
-    assert res.status == 200, 'POST to finish-scan.php resulting in status %s instead of 200' % res.status
+    assert res.status_code == 200, 'POST to finish-scan.php resulting in status %s instead of 200' % res.status
 
-    return
 
 def fail_scan(apibase, password, scan_id):
     """
     """
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
+    params = {'id': scan_id}
+    data = {'password': password}
     
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    res = requests.post(urljoin(apibase, '/fail-scan.php'), params=params, data=data)
     
-    query = urlencode({'id': scan_id})
-    params = urlencode({'password': password})
-    
-    req = HTTPConnection(host, port)
-    req.request('POST', path + '/fail-scan.php?' + query, params, headers)
-    res = req.getresponse()
-    
-    assert res.status == 200, 'POST to fail-scan.php resulting in status %s instead of 200' % res.status
+    # TODO when does this fail? this failing shouldn't be fatal
+    assert res.status_code == 200, 'POST to fail-scan.php resulting in status %s instead of 200' % res.status
 
-    return
 
 def finish_form(apibase, password, form_id, action_url, http_method, title, fields):
     """
     """
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
-    
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
-    params = dict(password=password, action_url=action_url, http_method=http_method, title=title)
+    data = dict(password=password, action_url=action_url, http_method=http_method, title=title)
     
     for (index, field) in enumerate(fields):
-        params['fields[%d][name]' % index] = field['name']
-        params['fields[%d][label]' % index] = field['label']
-        params['fields[%d][type]' % index] = field['type']
+        data['fields[%d][name]' % index] = field['name']
+        data['fields[%d][label]' % index] = field['label']
+        data['fields[%d][type]' % index] = field['type']
     
-    query = urlencode({'id': form_id})
-    params = urlencode(params)
+    params = {'id': form_id}
     
-    req = HTTPConnection(host, port)
-    req.request('POST', path + '/finish-form.php?' + query, params, headers)
-    res = req.getresponse()
+    res = requests.post(urljoin(apibase, '/finish-form.php'), params=params, data=data)
     
-    assert res.status == 200, 'POST to finish-form.php resulting in status %s instead of 200' % res.status
+    assert res.status_code == 200, 'POST to finish-form.php resulting in status %s instead of 200' % res.status
 
-    return
 
 def fail_form(apibase, password, form_id):
     """
     """
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
+    params = {'id': form_id}
+    data = {'password': password}
     
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    res = requests.post(urljoin(apibase, '/fail-form.php'), params=params, data=data)
     
-    query = urlencode({'id': form_id})
-    params = urlencode({'password': password})
-    
-    req = HTTPConnection(host, port)
-    req.request('POST', path + '/fail-form.php?' + query, params, headers)
-    res = req.getresponse()
-    
-    assert res.status == 200, 'POST to fail-form.php resulting in status %s instead of 200' % res.status
+    assert res.status_code == 200, 'POST to fail-form.php resulting in status %s instead of 200' % res.status
 
-    return
 
-def append_print_file(print_id, file_path, file_contents, apibase, password):
+def upload(params, file_path, file_contents, apibase, password):
     """ Upload a file via the API append.php form input provision thingie.
+        This allows uploads to either target S3 or the app itself.
     """
 
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
+    params.update(dict(password=password,
+                       dirname=dirname(file_path),
+                       mimetype=(guess_type(file_path)[0] or '')))
+
+    res = requests.get(urljoin(apibase, '/append.php'), params=params, headers=dict(Accept='application/paperwalking+xml'))
     
-    query = urlencode({'print': print_id, 'password': password,
-                       'dirname': dirname(file_path),
-                       'mimetype': (guess_type(file_path)[0] or '')})
-    
-    req = HTTPConnection(host, port)
-    req.request('GET', path + '/append.php?' + query, headers=dict(Accept='application/paperwalking+xml'))
-    res = req.getresponse()
-    
-    form = ElementTree.parse(res).getroot()
+    form = ElementTree.parse(StringIO(res.text)).getroot()
     
     if form.tag == 'form':
         form_action = form.attrib['action']
         
         inputs = form.findall('.//input')
         
-        file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
-        
-        fields = [(input.attrib['name'], input.attrib['value'])
-                  for input in inputs
-                  if input.attrib['type'] != 'file' and 'name' in input.attrib]
-        
-        files = [(input.attrib['name'], basename(file_path), file_contents)
-                 for input in inputs
-                 if input.attrib['type'] == 'file']
+        fields = {}
+        files = {}
+
+        for input in inputs:
+            if input.attrib['type'] != 'file' and 'name' in input.attrib:
+                fields[input.attrib['name']] = input.attrib['value']
+            elif input.attrib['type'] == 'file':
+                files[input.attrib['name']] = (basename(file_path), file_contents)
 
         if len(files) == 1:
             base_url = [el.text for el in form.findall(".//*") if el.get('id', '') == 'base-url'][0]
             resource_url = urljoin(base_url, file_path)
         
-            post_type, post_body = encode_multipart_formdata(fields, files)
+            res = requests.post(urljoin(apibase, form_action), data=fields, files=files)
             
-            s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
-            host, port = (':' in host) and host.split(':') or (host, 80)
-            
-            req = HTTPConnection(host, port)
-            req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
-            res = req.getresponse()
-            
-            # res.read().startswith("Sorry, encountered error #1 ")
-            
-            assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
+            assert res.status_code in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (form_action, res.status_code)
 
             return resource_url
         
     raise Exception('Did not find a form with a file input, why is that?')
 
-def append_scan_file(scan_id, file_path, file_contents, apibase, password):
-    """ Upload a file via the API append.php form input provision thingie.
+
+def append_print_file(print_id, file_path, file_contents, apibase, password):
+    """ Upload a print.
     """
 
-    s, host, path, p, q, f = urlparse(apibase)
-    host, port = (':' in host) and host.split(':') or (host, 80)
-    
-    query = urlencode({'scan': scan_id, 'password': password,
-                       'dirname': dirname(file_path),
-                       'mimetype': (guess_type(file_path)[0] or '')})
-    
-    req = HTTPConnection(host, port)
-    req.request('GET', path + '/append.php?' + query, headers=dict(Accept='application/paperwalking+xml'))
-    res = req.getresponse()
-    
-    form = ElementTree.parse(res).getroot()
-    
-    if form.tag == 'form':
-        form_action = form.attrib['action']
-        
-        inputs = form.findall('.//input')
-        
-        file_inputs = [input for input in inputs if input.attrib['type'] == 'file']
-        
-        fields = [(input.attrib['name'], input.attrib['value'])
-                  for input in inputs
-                  if input.attrib['type'] != 'file' and 'name' in input.attrib]
-        
-        files = [(input.attrib['name'], basename(file_path), file_contents)
-                 for input in inputs
-                 if input.attrib['type'] == 'file']
+    params = {
+        "print": print_id,
+    }
 
-        if len(files) == 1:
-            post_type, post_body = encode_multipart_formdata(fields, files)
-            
-            s, host, path, p, query, f = urlparse(urljoin(apibase, form_action))
-            host, port = (':' in host) and host.split(':') or (host, 80)
-            
-            req = HTTPConnection(host, port)
-            req.request('POST', path+'?'+query, post_body, {'Content-Type': post_type, 'Content-Length': str(len(post_body))})
-            res = req.getresponse()
-            
-            # res.read().startswith("Sorry, encountered error #1 ")
-            
-            assert res.status in range(200, 308), 'POST of file to %s resulting in status %s instead of 2XX/3XX' % (host, res.status)
+    return upload(params, file_path, file_contents, apibase, password)
 
-            return True
-        
-    raise Exception('Did not find a form with a file input, why is that?')
+
+def append_scan_file(scan_id, file_path, file_contents, apibase, password):
+    """ Upload a scan.
+    """
+
+    params = {
+        "scan": scan_id,
+    }
+
+    return upload(params, file_path, file_contents, apibase, password)
+
 
 def get_print_info(print_url):
     """
     """
-    s, host, path, p, query, f = urlparse(print_url)
-    host, port = (':' in host) and host.split(':') or (host, 80)
-    
-    req = HTTPConnection(host, port)
-    req.request('GET', path + '?' + query, headers=dict(Accept='application/paperwalking+xml'))
-    res = req.getresponse()
-    
-    print_ = ElementTree.parse(res).getroot()
+    print print_url
+    res = requests.get(print_url, headers=dict(Accept='application/paperwalking+xml'))
+
+    if res.status_code == 404:
+        raise Exception("No such atlas: %s" % print_url)
+
+    print_ = ElementTree.parse(StringIO(res.text)).getroot()
     
     print_id = print_.attrib['id']
     paper = print_.find('paper').attrib['size']
@@ -288,35 +188,7 @@ def get_print_info(print_url):
     south = float(print_.find('bounds').find('south').text)
     east = float(print_.find('bounds').find('east').text)
     west = float(print_.find('bounds').find('west').text)
+
+    print print_id, north, west, south, east, paper, orientation, layout
     
     return print_id, north, west, south, east, paper, orientation, layout
-
-def encode_multipart_formdata(fields, files):
-    """ fields is a sequence of (name, value) elements for regular form fields.
-        files is a sequence of (name, filename, value) elements for data to be uploaded as files
-        Return (content_type, body) ready for httplib.HTTP instance
-        
-        Adapted from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/146306
-    """
-    BOUNDARY = '----------multipart-boundary-multipart-boundary-multipart-boundary$'
-    CRLF = '\r\n'
-
-    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
-    bytes = array('c')
-
-    for (key, value) in fields:
-        bytes.fromstring('--' + BOUNDARY + CRLF)
-        bytes.fromstring('Content-Disposition: form-data; name="%s"' % key + CRLF)
-        bytes.fromstring(CRLF)
-        bytes.fromstring(value + CRLF)
-
-    for (key, filename, value) in files:
-        bytes.fromstring('--' + BOUNDARY + CRLF)
-        bytes.fromstring('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename) + CRLF)
-        bytes.fromstring('Content-Type: %s' % (guess_type(filename)[0] or 'application/octet-stream') + CRLF)
-        bytes.fromstring(CRLF)
-        bytes.fromstring(value + CRLF)
-
-    bytes.fromstring('--' + BOUNDARY + '--' + CRLF)
-
-    return content_type, bytes.tostring()

@@ -209,6 +209,7 @@
         $layout = isset($post['layout']) ? $post['layout'] : 'full-page';
         $provider = $post['provider'];
         $title = $post['atlas_title'];
+        $private = filter_var($post['private'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         
         if(!is_array($extents))
             return null;
@@ -243,6 +244,7 @@
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
         $print['layout'] = $message['layout'];
+        $print['private'] = $private;
         
         // build up bounds for each page in the message
         
@@ -345,7 +347,9 @@
         
         set_print($dbh, $print);
         $message['print_id'] = $print['id'];
-        add_message($dbh, json_encode($message));
+
+        // queue the task
+        queue_task("tasks.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
                 
         return $print;
     }
@@ -508,7 +512,9 @@
         set_print($dbh, $print);
     
         $message['print_id'] = $print['id'];
-        add_message($dbh, json_encode($message));
+
+        // queue the task
+        queue_task("tasks.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
         
         return $print;
     }

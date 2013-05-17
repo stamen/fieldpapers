@@ -8,13 +8,11 @@
         {
             $user_id = generate_id();
             
-            $q = sprintf('INSERT INTO users
-                          SET id = %s',
-                         $dbh->quoteSmart($user_id));
+            $q = "INSERT INTO users (id) VALUES (?)";
 
-            error_log(preg_replace('/\s+/', ' ', $q));
+            log_debug($q, $user_id);
     
-            $res = $dbh->query($q);
+            $res = $dbh->query($q, $user_id);
             
             if(PEAR::isError($res)) 
             {
@@ -30,14 +28,13 @@
         
     function get_user(&$dbh, $user_id)
     {
-        $q = sprintf('SELECT id, name, email,
-                             UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
-                      FROM users
-                      WHERE id = %s',
-                     $dbh->quoteSmart($user_id));
+        $q = 'SELECT id, name, email,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
+              FROM users
+              WHERE id = ?';
     
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $user_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -47,14 +44,13 @@
     
     function get_user_by_name(&$dbh, $user_name)
     {
-        $q = sprintf('SELECT id, name,
-                             UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
-                      FROM users
-                      WHERE name = %s',
-                     $dbh->quoteSmart($user_name));
+        $q = 'SELECT id, name,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
+              FROM users
+              WHERE name = ?';
     
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $user_name);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -110,13 +106,12 @@
     
     function delete_user(&$dbh, $user_id)
     {
-        $q = sprintf('DELETE FROM users
-                      WHERE id = %s',
-                     $dbh->quoteSmart($user_id));
+        $q = 'DELETE FROM users
+              WHERE id = ?';
 
-        error_log(preg_replace('/\s+/', ' ', $q));
+        log_debug($q, $user_id);
 
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $user_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -131,12 +126,12 @@
     {
         $q = sprintf('SELECT password = SHA1(%s)
                       FROM users
-                      WHERE id = %s
+                      WHERE id = ?
                       LIMIT 1',
-                     $dbh->quoteSmart($password),
-                     $dbh->quoteSmart($user_id));
+                      $dbh->quoteSmart($password));
     
-        $res = $dbh->query($q);
+        log_debug($q, $user_id);
+        $res = $dbh->query($q, $user_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
@@ -151,54 +146,46 @@
     */
 
    /**
-    * Return false if $_SESSION['logged_in'] is false, true otherwise.
+    * Is the user logged in?
     */
     function is_logged_in()
     {
-        return $_SESSION['logged_in'] ? true : false;
+        return isset($_SESSION['user_id']);
     }
     
    /**
-    * Return user array from get_user() based on content
-    * of $_SESSION['user'], or false if it's empty.
+    * If the session contains a user id, return the associated user. Otherwise,
+    * return null.
     */
     function cookied_user(&$dbh)
     {
-        return get_user($dbh, $_SESSION['user']['id']) ? get_user($dbh, $_SESSION['user']['id']) : false;    
+        if ($_SESSION['user_id'] && ($user = get_user($dbh, $_SESSION['user_id']))) {
+            return $user;
+        }
+
+        return null;
     }
     
    /**
-    * Set $_SESSION['logged_in'] to true and populate $_SESSION['user'] from DB.
+    * Mark the user as being logged in by stashing their id in the session.
     */
     
-    function login_user_by_id(&$dbh, $user_id)
-    {
-        $_SESSION['logged_in'] = true; 
-        
-        
-        if ($user = get_user($dbh, $user_id))
-        {
-            $_SESSION['user'] = $user;
-        }
+    function login_user_by_id(&$dbh, $user_id) {
+        $_SESSION['user_id'] = $user_id;
     }
     
-    function login_user_by_name(&$dbh, $user)
-    {
-        $_SESSION['logged_in'] = true;
-        
-        if ($user = get_user_by_name($dbh, $user))
-        {
-            $_SESSION['user'] = $user;
+    function login_user_by_name(&$dbh, $user) {
+        if ($user = get_user_by_name($dbh, $user)) {
+            $_SESSION['user_id'] = $user['id'];
         }
     }
     
    /**
-    * Set $_SESSION['logged_in'] to false and erase $_SESSION['user'].
+    * Log a user out.
     */
     function logout_user()
     {
-        $_SESSION['logged_in'] = false;
-        unset($_SESSION['user']);
+        session_destroy();
     }
     
 ?>

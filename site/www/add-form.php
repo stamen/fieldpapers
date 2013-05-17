@@ -30,7 +30,8 @@
                          'url' => $_POST['form_url'],
                          'form_id' => $added_form['id']);
             
-        add_message($context->db, json_encode($message));
+        // queue the task
+        queue_task("tasks.parseForm", array("http://" . SERVER_NAME, API_PASSWORD), $message);
         
         $form_url = 'http://'.get_domain_name().get_base_dir().'/form.php?id='.urlencode($added_form['id']);
         header("Location: {$form_url}");

@@ -27,11 +27,19 @@
         }
     }
     
-    function get_prints(&$dbh, $args, $page)
+    function get_prints(&$dbh, $user, $args, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
-        $where_clauses = array('composed');
+        $where_clauses = array(
+            'composed',
+        );
+
+        if ($user['id']) {
+            $where_clauses[] = sprintf('(private = 0 OR (private = 1 AND user_id = %s))', $dbh->quoteSmart($user['id']));
+        } else {
+            $where_clauses[] = 'private = 0';
+        }
         
         if(isset($args['date']) && $time = strtotime($args['date']))
         {
@@ -65,7 +73,7 @@
             $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
-        $q = sprintf("SELECT paper_size, orientation, provider,
+        $q = sprintf("SELECT paper_size, orientation, provider, private,
                              pdf_url, preview_url, geotiff_url,
                              id, title, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
@@ -117,27 +125,30 @@
         if(preg_match('#^(\w+)/(\w+)$#', $print_id, $m))
             list($print_id, $page_number) = array($m[1], $m[2]);
     
-        $q = sprintf("SELECT layout, atlas_pages,
-                             paper_size, orientation, provider,
-                             pdf_url, preview_url, geotiff_url,
-                             id, title, form_id, north, south, east, west, zoom,
-                             (north + south) / 2 AS latitude,
-                             (east + west) / 2 AS longitude,
-                             UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(composed) AS composed,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
-                             country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                             user_id, progress
-                      FROM prints
-                      WHERE id = %s",
-                     $dbh->quoteSmart($print_id));
+        $q = "SELECT layout, atlas_pages,
+                     paper_size, orientation, provider, private,
+                     pdf_url, preview_url, geotiff_url,
+                     id, title, form_id, north, south, east, west, zoom,
+                     (north + south) / 2 AS latitude,
+                     (east + west) / 2 AS longitude,
+                     UNIX_TIMESTAMP(created) AS created,
+                     UNIX_TIMESTAMP(composed) AS composed,
+                     UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
+                     country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
+                     user_id, progress
+              FROM prints
+              WHERE id = ?";
     
-        $res = $dbh->query($q);
+        $res = $dbh->query($q, $print_id);
         
         if(PEAR::isError($res)) 
             die_with_code(500, "{$res->message}\n{$q}\n");
 
         $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+
+        if (empty($row)) {
+            return null;
+        }
         
         // TODO: ditch special-case for provider
         if(empty($row['provider']))
@@ -173,7 +184,7 @@
             'orientation', 'layout', 'provider', 'pdf_url', 'preview_url',
             'geotiff_url', 'atlas_pages', 'form_id', 'user_id',
             'country_name', 'country_woeid', 'region_name', 'region_woeid',
-            'place_name', 'place_woeid', 'progress'
+            'place_name', 'place_woeid', 'progress', 'private',
             );
 
         foreach($field_names as $field)
@@ -351,7 +362,7 @@
         $users = array();
         $user_id = $print['user_id'];
         
-        if(is_null($users[$user_id]))
+        if ($users[$user_id] == null && $user_id != null)
             $users[$user_id] = get_user($dbh, $user_id);
         
         $print['user_name'] = $users[$user_id]['name'];
@@ -365,7 +376,7 @@
                 $note_args['scans'][] = $scan['id'];
                 $user_id = $scan['user_id'];
                 
-                if(is_null($users[$user_id]))
+                if($users[$user_id] == null && $user_id != null)
                     $users[$user_id] = get_user($dbh, $user_id);
                 
                 $scans[$i]['user_name'] = $users[$user_id]['name'];

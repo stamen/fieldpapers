@@ -80,6 +80,7 @@
             <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
             <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
             <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider|escape}">
+            <input type="hidden" name="private" value="{$atlas_data.private|escape}">
             
             {if $atlas_data.form_url}
                 <input type="hidden" name="form_url" value="{$atlas_data.form_url|escape}">
