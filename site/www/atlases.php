@@ -16,7 +16,7 @@
         );
     
     $title = get_args_title($context->db, $print_args);
-    $prints = get_prints($context->db, $print_args, 50);
+    $prints = get_prints($context->db, $context->user, $print_args, 50);
     $users = array();
 
     foreach($prints as $i => $print)

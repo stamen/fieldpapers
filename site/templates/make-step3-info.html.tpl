@@ -46,7 +46,7 @@
                 </p>
                 
                 <p>
-                	<input type="checkbox"> Make this atlas private. (That means it's only accessible to you, if you're logged in, or by direct URL.)
+                    <label><input name="private" type="checkbox" {if $atlas_data.private}checked{/if}> Make this atlas private. (That means it's only accessible to you, if you're logged in, or by direct URL.)</label>
                 </p>
                 
                 <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">

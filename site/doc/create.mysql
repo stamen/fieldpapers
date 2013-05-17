@@ -55,6 +55,8 @@ CREATE TABLE prints (
     user_id         VARCHAR(8),
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     composed        TIMESTAMP DEFAULT 0,
+
+    private         TINYINT NOT NULL,
     
     PRIMARY KEY (id),
     INDEX `user` (user_id)
@@ -73,6 +75,7 @@ ALTER TABLE prints ADD COLUMN layout ENUM('half-page', 'full-page') DEFAULT 'ful
 
 ALTER TABLE prints ADD COLUMN title TEXT AFTER id;
 
+CREATE INDEX prints_private ON prints(private);
 
 
 DROP TABLE IF EXISTS pages;
