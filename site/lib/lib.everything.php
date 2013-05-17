@@ -41,7 +41,7 @@
         }
 
         // Smarty is created last because it needs $_SESSION populated
-        $sm =& get_smarty_instance();
+        $sm =& get_smarty_instance($user);
         
         $ctx = new Context($db, $sm, $user, $type);
 

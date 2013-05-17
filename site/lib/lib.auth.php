@@ -167,27 +167,16 @@
     }
     
    /**
-    * Set $_SESSION['logged_in'] to true and populate $_SESSION['user'] from DB.
+    * Mark the user as being logged in by stashing their id in the session.
     */
     
-    function login_user_by_id(&$dbh, $user_id)
-    {
-        $_SESSION['logged_in'] = true; 
-        
-        
-        if ($user = get_user($dbh, $user_id))
-        {
-            $_SESSION['user'] = $user;
-        }
+    function login_user_by_id(&$dbh, $user_id) {
+        $_SESSION['user_id'] = $user_id;
     }
     
-    function login_user_by_name(&$dbh, $user)
-    {
-        $_SESSION['logged_in'] = true;
-        
-        if ($user = get_user_by_name($dbh, $user))
-        {
-            $_SESSION['user'] = $user;
+    function login_user_by_name(&$dbh, $user) {
+        if ($user = get_user_by_name($dbh, $user)) {
+            $_SESSION['user_id'] = $user['id'];
         }
     }
     

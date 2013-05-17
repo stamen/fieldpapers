@@ -5,7 +5,7 @@
    /**
     * @return   Smarty  Locally-usable Smarty instance.
     */
-    function get_smarty_instance()
+    function get_smarty_instance($user)
     {
         $s = new Smarty();
 
@@ -25,8 +25,8 @@
                                     'post' => $_POST,
                                     'uri' => $_SERVER['REQUEST_URI'],
                                     'query' => $_SERVER['QUERY_STRING'],
-                                    'authenticated' => ($_SESSION['logged_in'] ? true : false),
-                                    'user' => $_SESSION['user']));
+                                    'authenticated' => isset($user),
+                                    'user' => $user));
         
         $s->register_modifier('nice_placename', 'nice_placename');
         $s->register_modifier('nice_domainname', 'nice_domainname');
