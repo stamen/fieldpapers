@@ -77,6 +77,11 @@ a:hover, a:active, a:focus {
 	font-size: 1px;
 	line-height: 0px;
 }
+
+.private {
+    color: #ff3333;
+}
+
 .navbar {
 	width: 960px;
 	margin-right:auto;
@@ -150,6 +155,11 @@ h2.pageCount {
 .atlasThumb img {
 	border: 1px solid black;
 }
+
+.atlasThumb img.private {
+	border: 1px solid #ff3333;
+}
+
 .hotSpot {
 	width: 48%;
 	margin-left: 10px;

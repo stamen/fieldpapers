@@ -110,3 +110,10 @@ EOF
 
 Feel free to clear out any pending session data (in `/var/lib/php5` by
 default), as all new sessions will be stored in Redis.
+
+Add an indexed `private` flag on `prints`:
+
+```sql
+ALTER TABLE prints ADD COLUMN private TINYINT NOT NULL;
+CREATE INDEX prints_private ON prints(private);
+```

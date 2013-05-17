@@ -27,11 +27,19 @@
         }
     }
     
-    function get_prints(&$dbh, $args, $page)
+    function get_prints(&$dbh, $user, $args, $page)
     {
         list($count, $offset, $perpage, $page) = get_pagination($page);
         
-        $where_clauses = array('composed');
+        $where_clauses = array(
+            'composed',
+        );
+
+        if ($user['id']) {
+            $where_clauses[] = sprintf('(private = 0 OR (private = 1 AND user_id = %s))', $dbh->quoteSmart($user['id']));
+        } else {
+            $where_clauses[] = 'private = 0';
+        }
         
         if(isset($args['date']) && $time = strtotime($args['date']))
         {
@@ -65,7 +73,7 @@
             $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
-        $q = sprintf("SELECT paper_size, orientation, provider,
+        $q = sprintf("SELECT paper_size, orientation, provider, private,
                              pdf_url, preview_url, geotiff_url,
                              id, title, north, south, east, west, zoom,
                              (north + south) / 2 AS latitude,
@@ -118,7 +126,7 @@
             list($print_id, $page_number) = array($m[1], $m[2]);
     
         $q = "SELECT layout, atlas_pages,
-                     paper_size, orientation, provider,
+                     paper_size, orientation, provider, private,
                      pdf_url, preview_url, geotiff_url,
                      id, title, form_id, north, south, east, west, zoom,
                      (north + south) / 2 AS latitude,
@@ -176,7 +184,7 @@
             'orientation', 'layout', 'provider', 'pdf_url', 'preview_url',
             'geotiff_url', 'atlas_pages', 'form_id', 'user_id',
             'country_name', 'country_woeid', 'region_name', 'region_woeid',
-            'place_name', 'place_woeid', 'progress'
+            'place_name', 'place_woeid', 'progress', 'private',
             );
 
         foreach($field_names as $field)

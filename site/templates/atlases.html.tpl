@@ -13,7 +13,7 @@
         
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
-                <a href="{$base_dir}/atlas.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" width="100%"></a>
+                <a href="{$base_dir}/atlas.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" width="100%"{if $print.private} class="private"{/if}></a>
 
                 <a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
 
@@ -37,7 +37,7 @@
                     {$print.number_of_pages} pages,
                 {/if}
 
-                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>.
+                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>. {if $print.private}<span class="private">This atlas is private.</span>{/if}
             </div>
         {/foreach}
         
