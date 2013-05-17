@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>Upload Scan - fieldpapers.org</title>
-<link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
-<meta http-equiv="refresh" content="30">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Upload Scan - fieldpapers.org</title>
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
 </head>
 <body>
 {include file="navigation.htmlf.tpl"}

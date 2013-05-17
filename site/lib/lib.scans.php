@@ -8,14 +8,19 @@
         {
             $scan_id = generate_id();
             
-            $q = sprintf('INSERT INTO scans
-                          SET id = %s, user_id = %s',
-                         $dbh->quoteSmart($scan_id),
-                         $dbh->quoteSmart($user_id));
+            if ($user_id != null) {
+                $q = 'INSERT INTO scans (id, user_id) VALUES (?, ?)';
 
-            error_log(preg_replace('/\s+/', ' ', $q));
-    
-            $res = $dbh->query($q);
+                log_debug($q, $scan_id, $user_id);
+
+                $res = $dbh->query($q, $scan_id, $user_id);
+            } else {
+                $q = 'INSERT INTO scans (id) VALUES (?)';
+
+                log_debug($q, $scan_id);
+
+                $res = $dbh->query($q, $scan_id);
+            }
             
             if(PEAR::isError($res)) 
             {

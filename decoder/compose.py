@@ -1,16 +1,12 @@
-﻿from sys import argv
-from math import log, pi
+﻿from math import pi
 from copy import copy
-from itertools import product
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname, realpath
 from urlparse import urljoin, urlparse, parse_qs
 from os import close, write, unlink
-from json import dumps as json_encode
 from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
-from shutil import move
 
 from ModestMaps import mapByExtent, mapByExtentZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
@@ -18,11 +14,10 @@ from ModestMaps.Geo import Location
 from ModestMaps.Core import Point
 
 from cairo import ImageSurface
-from PIL import Image
 
 from svgutils import create_cairo_font_face_for_file, place_image, draw_box, draw_circle, draw_cross, flow_text
 from dimensions import point_A, point_B, point_C, point_D, point_E, ptpin
-from apiutils import append_print_file, finish_print, update_print, ALL_FINISHED
+from apiutils import append_print_file, finish_print, update_print
 from cairoutils import get_drawing_context
 
 cached_fonts = dict()
@@ -439,8 +434,6 @@ parser.add_option('-p', '--provider', dest='provider',
 def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     """
     """
-    yield 5
-    
     print_path = 'atlas.php?' + urlencode({'id': print_id})
     print_href = print_id and urljoin(apibase.rstrip('/')+'/', print_path) or None
     print_info = {}
@@ -497,8 +490,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
             
             page_mmap = mapByExtentZoom(provider, northwest, southeast, zoom)
             
-            yield 60
-            
             if role == 'index':
                 indexees = [pages[other] for other in range(len(pages)) if other != index]
             else:
@@ -517,8 +508,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
                 preview_zoom = preview_mmap.coordinate.zoom - 1
                 preview_mmap = mapByExtentZoom(provider, northwest, southeast, preview_zoom)
     
-            yield 15
-            
             out = StringIO()
             preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
             preview_url = _append_file('preview-p%(number)s.jpg' % page, out.getvalue())
@@ -554,8 +543,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     
     preview_mmap = mapByExtent(provider, northwest, southeast, dimensions)
     
-    yield 15
-
     out = StringIO()
     preview_mmap.draw(fatbits_ok=True).save(out, format='JPEG', quality=85)
     preview_url = _append_file('preview.jpg' % page, out.getvalue())
@@ -567,7 +554,6 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     
     _finish_print(print_info)
     
-    yield ALL_FINISHED
 
 if __name__ == '__main__':
 

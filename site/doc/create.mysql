@@ -18,6 +18,7 @@ CREATE TABLE users (
 ) ENGINE=InnoDB, CHARACTER SET utf8;
 
 ALTER TABLE users CHANGE COLUMN created created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+CREATE INDEX users_email ON users(email);
 
 
 
@@ -51,9 +52,11 @@ CREATE TABLE prints (
     place_name      VARCHAR(128),
     place_woeid     INT UNSIGNED,
     
-    user_id         VARCHAR(8) NOT NULL,
+    user_id         VARCHAR(8),
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     composed        TIMESTAMP DEFAULT 0,
+
+    private         TINYINT NOT NULL,
     
     PRIMARY KEY (id),
     INDEX `user` (user_id)
@@ -72,6 +75,7 @@ ALTER TABLE prints ADD COLUMN layout ENUM('half-page', 'full-page') DEFAULT 'ful
 
 ALTER TABLE prints ADD COLUMN title TEXT AFTER id;
 
+CREATE INDEX prints_private ON prints(private);
 
 
 DROP TABLE IF EXISTS pages;
@@ -142,7 +146,7 @@ CREATE TABLE scans (
     uploaded_file   VARCHAR(255),
     decoding_json   TEXT,
 
-    user_id         VARCHAR(8) NOT NULL,
+    user_id         VARCHAR(8),
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     decoded         TIMESTAMP DEFAULT 0,
     failed          INT UNSIGNED DEFAULT 0,
@@ -203,7 +207,7 @@ CREATE TABLE forms (
     http_method     ENUM('GET', 'POST'),
     action_url      TEXT,
     
-    user_id         VARCHAR(8) NOT NULL,
+    user_id         VARCHAR(8),
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     parsed          TIMESTAMP DEFAULT 0,
     
@@ -254,29 +258,6 @@ CREATE TABLE scan_notes (
     PRIMARY KEY (scan_id, note_number)
 
 ) ENGINE=InnoDB, CHARACTER SET utf8;
-
-
-
-DROP TABLE IF EXISTS messages;
-
-CREATE TABLE messages (
-
-    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    
-    content     TEXT,
-    deleted     TINYINT DEFAULT 0,
-
-    created     TIMESTAMP,
-    available   TIMESTAMP,
-
-    INDEX available (available),
-    INDEX deleted (deleted)
-
-) ENGINE=InnoDB, CHARACTER SET utf8;
-
-ALTER TABLE messages CHANGE COLUMN content content MEDIUMTEXT;
-
-ALTER TABLE messages CHANGE COLUMN created created TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 
 

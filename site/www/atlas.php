@@ -11,9 +11,15 @@
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     
     $print = get_print($context->db, $print_id);
+
+    if (!$print) {
+        header("HTTP/1.1 404");
+        die("No such atlas.\n");
+    }
+
     $pages = get_print_pages($context->db, $print_id);
     $print['page_count'] = count($pages);
-    
+
     $context->sm->assign('print', $print);
     
     if($print['selected_page']) {

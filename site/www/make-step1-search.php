@@ -29,11 +29,13 @@
         $context->sm->assign('error', $_GET['error']);
     }
     
-    $user_mbtiles = get_mbtiles_by_user_id($context->db, $context->user['id']);
-    
-    if ($user_mbtiles)
-    {
-        $context->sm->assign('user_mbtiles', $user_mbtiles);
+    if (is_logged_in()) {
+        $user_mbtiles = get_mbtiles_by_user_id($context->db, $context->user['id']);
+
+        if ($user_mbtiles)
+        {
+            $context->sm->assign('user_mbtiles', $user_mbtiles);
+        }
     }
     
     header("Content-Type: text/html; charset=UTF-8");

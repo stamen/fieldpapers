@@ -16,14 +16,14 @@
         );
     
     $title = get_args_title($context->db, $print_args);
-    $prints = get_prints($context->db, $print_args, 50);
+    $prints = get_prints($context->db, $context->user, $print_args, 50);
     $users = array();
 
     foreach($prints as $i => $print)
     {   
         $user_id = $print['user_id'];
         
-        if(is_null($users[$user_id]))
+        if($users[$user_id] == null && $user_id != null)
             $users[$user_id] = get_user($context->db, $user_id);
         
         $pages = get_print_pages($context->db, $print['id']);
