@@ -248,7 +248,7 @@
             <div id="atlas-index-map-holder">
                 <div id="atlas-index-map"><div id="atlas-index-map-canvas"></div></div>
                 
-                <h3 class="title">{if $print.title}{$print.title|escape}{else}Untitled{/if}</h3>
+                <h3 class="title">{if $print.title}{$print.title|escape}{else}Untitled{/if}{if $print.private} <span class="private">private</span>{/if}</h3>
                 <p class="count">
                     {if $pages|@count == 1}
                         One page
@@ -319,15 +319,6 @@
                                     + {$print.orientation|escape}
                                     + {$print.layout|escape}
                                 </div>
-                                {if $print.private}
-                                <script type="text/javascript">
-                                document.getElementById("border").setAttribute("stroke", "#f00");
-                                </script>
-                                <div class="private">
-                                    This atlas is private.
-                                </div>
-                                {/if}
-        
                                 {*
                                 <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
                                 <br>
@@ -434,8 +425,8 @@
                     You don't need to keep this window open; you can <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark 
                     this page</a> and come back later.
                 </p>
-                <p class="private">
-                    Since this atlas is private, you probably should <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark it</a>.
+                <p>
+                    Since this atlas is <span class="private">private</span>, you probably should <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark it</a>.
                 </p>
             </div>
         {/if}        

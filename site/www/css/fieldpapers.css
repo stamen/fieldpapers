@@ -79,7 +79,9 @@ a:hover, a:active, a:focus {
 }
 
 .private {
-    color: #ff3333;
+    color: #fff;
+    background-color: #ff3333;
+    padding: 2px 5px;
 }
 
 .navbar {

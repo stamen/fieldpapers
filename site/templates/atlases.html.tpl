@@ -37,7 +37,7 @@
                     {$print.number_of_pages} pages,
                 {/if}
 
-                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>. {if $print.private}<span class="private">This atlas is private.</span>{/if}
+                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}">{$print.age|nice_relativetime|escape}</a>. {if $print.private}<span class="private"> private</span>{/if}
             </div>
         {/foreach}
         
