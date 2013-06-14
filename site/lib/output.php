@@ -33,7 +33,8 @@
         $s->register_modifier('nice_relativetime', 'nice_relativetime');
         $s->register_modifier('nice_datetime', 'nice_datetime');
         $s->register_modifier('nice_degree', 'nice_degree');
-        
+        $s->register_modifier('decode_utf8', 'decode_utf8');
+
         return $s;
     }
     
@@ -62,7 +63,7 @@
     {
         if(php_sapi_name() == 'cli')
             return '';
-        
+
         $query_pos = strpos($_SERVER['REQUEST_URI'], '?');
         
         return ($query_pos === false) ? $_SERVER['REQUEST_URI']
@@ -77,6 +78,11 @@
         return array(array('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 'OpenStreetMap'));
     }
     
+    function decode_utf8($str)
+    {
+        return utf8_decode($str);
+    }
+
     function nice_domainname($url)
     {
         return preg_replace('#^http://([^/]+)(/.+)?$#', '\1', $url);

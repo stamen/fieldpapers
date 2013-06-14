@@ -19,12 +19,7 @@
 
     $pages = get_print_pages($context->db, $print_id);
     $print['page_count'] = count($pages);
-    // Converting title to utf8
-    // leaving this here for now... not at all tested 
-    if($print['title']){
-      $print['title'] = utf8_decode($print['title']);
-    }
-
+    
     $context->sm->assign('print', $print);
     
     if($print['selected_page']) {
