@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="container" style="margin-top: 50px;">            
-            <form action="{$base_dir}/make-step4-layout.php" method="POST">
+            <form action="{$base_dir}/make-step4-layout.php" accept-charset="utf-8" method="POST">
                 <p style="margin-bottom: 60px;">
                     <label for="atlas_title" style="font-size: 22px;">Give Your Atlas a Name</label>
                     <br>

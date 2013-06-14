@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Make - fieldpapers.org</title>
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
     <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
@@ -181,7 +182,7 @@
     <body onload="initUI()">
         {include file="navigation.htmlf.tpl"}
         <div id="container" style="position: relative; padding-top: 20px;">
-            <form id="compose_print" method="post" action="{$base_dir}/make-step3-info.php">
+            <form id="compose_print" method="post" accept-charset = "utf-8" action="{$base_dir}/make-step3-info.php">
                 <div class="navbar">
                     <div id="subnav_container" style="margin-top: -20px;">
                         <span id="area" class="subnav area active">

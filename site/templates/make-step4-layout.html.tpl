@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="container" style="margin-top: 50px;">
-    <form id="compose_print" action="{$base_dir}/compose-atlas.php" method="POST">    
+    <form id="compose_print" action="{$base_dir}/compose-atlas.php" accept-charset="utf-8" method="POST">    
         <span style="font-size: 22px;">Choose a Layout</span>
         
         <div style="margin-top: 20px">
