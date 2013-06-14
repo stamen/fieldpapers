@@ -15,7 +15,7 @@
             <div class="atlasThumb">
                 <a href="{$base_dir}/atlas.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" width="100%"{if $print.private} class="private"{/if}></a>
 
-                <a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a>
+                <a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|decode_utf8|escape}{else}Untitled{/if}</a>
 
                 {if $print.user.name}
                     by <a href="{$base_dir}/atlases.php?user={$print.user_id}">{$print.user.name}</a>,

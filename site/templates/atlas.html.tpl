@@ -248,7 +248,7 @@
             <div id="atlas-index-map-holder">
                 <div id="atlas-index-map"><div id="atlas-index-map-canvas"></div></div>
                 
-                <h3 class="title">{if $print.title}{$print.title|escape:'html'}{else}Untitled{/if}{if $print.private} <span class="private">private</span>{/if}</h3>
+                <h3 class="title">{if $print.title}{$print.title|decode_utf8|escape:'html'}{else}Untitled{/if}{if $print.private} <span class="private">private</span>{/if}</h3>
                 <p class="count">
                     {if $pages|@count == 1}
                         One page
