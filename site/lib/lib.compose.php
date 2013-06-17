@@ -345,6 +345,8 @@
         $layout = isset($post['layout']) ? $post['layout'] : 'full-page';
         $provider = $post['provider'];
         $title = $post['atlas_title'];
+        $grid = filter_var($post['grid'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0; // XXX ADD checkbox value for grid toggling
+        // XXX then uncomment the portion below that enables the utm grid provider 
         $private = filter_var($post['private'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         
         if(!is_array($extents))
@@ -447,11 +449,12 @@
             set_print_page($dbh, $page);
             
             // add grid overlay to the printed output of each non-index page:
+            // XXX UNCOMMENT this after getting the checkbox value
             
-            /* Disabled after fixing the URL until UI is available
-            if($value['role'] != 'index')
+            // Disabled after fixing the URL until UI is available
+            if($value['role'] != 'index' && $grid) // XXX ADD to if: "& grid requested" (get from checkbox value)
                 $message['pages'][$i]['provider'] = "{$value['provider']},http://tile.stamen.com/utm/{Z}/{X}/{Y}.png";
-             */
+             
         }
         
         // Deal with WOEIDs

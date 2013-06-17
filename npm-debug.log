@@ -1,0 +1,118 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', 'serve' ]
+2 info using npm@1.2.24
+3 info using node@v0.10.9
+4 verbose node symlink /usr/bin/node
+5 verbose read json /home/mike/package.json
+6 verbose read json /home/mike/node_modules/connect/package.json
+7 verbose read json /home/mike/node_modules/pg/package.json
+8 verbose read json /home/mike/node_modules/serve/package.json
+9 warn package.json serve@1.2.0 No repository field.
+10 verbose read json /home/mike/package.json
+11 verbose cache add [ 'serve', null ]
+12 verbose cache add name=undefined spec="serve" args=["serve",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'serve',
+13 verbose parsed url   path: 'serve',
+13 verbose parsed url   href: 'serve' }
+14 silly lockFile b88fb872-serve serve
+15 verbose lock serve /home/mike/.npm/b88fb872-serve.lock
+16 silly lockFile b88fb872-serve serve
+17 silly lockFile b88fb872-serve serve
+18 verbose addNamed [ 'serve', '' ]
+19 verbose addNamed [ null, '' ]
+20 silly lockFile f5f9b276-serve serve@
+21 verbose lock serve@ /home/mike/.npm/f5f9b276-serve.lock
+22 silly addNameRange { name: 'serve', range: '', hasData: false }
+23 verbose url raw serve
+24 verbose url resolving [ 'https://registry.npmjs.org/', './serve' ]
+25 verbose url resolved https://registry.npmjs.org/serve
+26 info trying registry request attempt 1 at 17:37:33
+27 verbose etag "2D72FMF1641C4AVBWMXCHEWUN"
+28 http GET https://registry.npmjs.org/serve
+29 http 304 https://registry.npmjs.org/serve
+30 silly registry.get cb [ 304,
+30 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+30 silly registry.get     etag: '"2D72FMF1641C4AVBWMXCHEWUN"',
+30 silly registry.get     date: 'Wed, 12 Jun 2013 00:37:34 GMT',
+30 silly registry.get     'content-length': '0' } ]
+31 verbose etag serve from cache
+32 silly addNameRange number 2 { name: 'serve', range: '', hasData: true }
+33 silly addNameRange versions [ 'serve',
+33 silly addNameRange   [ '0.0.1',
+33 silly addNameRange     '0.0.2',
+33 silly addNameRange     '0.0.3',
+33 silly addNameRange     '0.0.4',
+33 silly addNameRange     '0.0.5',
+33 silly addNameRange     '1.0.0',
+33 silly addNameRange     '1.0.1',
+33 silly addNameRange     '1.0.2',
+33 silly addNameRange     '1.0.3',
+33 silly addNameRange     '1.1.0',
+33 silly addNameRange     '1.2.0' ] ]
+34 verbose addNamed [ 'serve', '1.2.0' ]
+35 verbose addNamed [ '1.2.0', '1.2.0' ]
+36 silly lockFile f4c41b33-serve-1-2-0 serve@1.2.0
+37 verbose lock serve@1.2.0 /home/mike/.npm/f4c41b33-serve-1-2-0.lock
+38 verbose read json /home/mike/.npm/serve/1.2.0/package/package.json
+39 silly lockFile f4c41b33-serve-1-2-0 serve@1.2.0
+40 silly lockFile f4c41b33-serve-1-2-0 serve@1.2.0
+41 silly lockFile f5f9b276-serve serve@
+42 silly lockFile f5f9b276-serve serve@
+43 silly resolved [ { name: 'serve',
+43 silly resolved     version: '1.2.0',
+43 silly resolved     description: 'Simple command-line file / directory server built with connect',
+43 silly resolved     keywords: [ 'static', 'server', 'connect' ],
+43 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+43 silly resolved     dependencies:
+43 silly resolved      { connect: '2.3.x',
+43 silly resolved        stylus: '*',
+43 silly resolved        jade: '*',
+43 silly resolved        'less-middleware': '*',
+43 silly resolved        commander: '0.6.1' },
+43 silly resolved     bin: { serve: './bin/serve' },
+43 silly resolved     readme: '\n# serve\n\n  Simple 5 minute command-line file / directory server built with connect, inspired by nodejitsu\'s [http-server](https://github.com/nodejitsu/http-server) to show off the simplicity and flexibility of connect as a modular server.\n\n## Installation\n\n    $ npm install -g serve\n\n## Usage\n\n```\n\nUsage: serve [options] [dir]\n\nOptions:\n\n  -v, --version       output the version number\n  -F, --format <fmt>  specify the log format string\n  -p, --port <port>   specify the port [3000]\n  -H, --hidden        enable hidden file serving\n  -S, --no-stylus     disable stylus rendering\n  -J, --no-jade       disable jade rendering\n      --no-less       disable less css rendering\n  -I, --no-icons      disable icons\n  -L, --no-logs       disable request logging\n  -D, --no-dirs       disable directory serving\n  -h, --help          output usage information\n\n```\n\n## Examples\n\n HTTP Accept support built into `connect.directory()`:\n \n     $ curl http://local:3000/ -H "Accept: text/plain"\n     bin\n     History.md\n     node_modules\n     package.json\n     Readme.md\n\n  Requesting a file:\n\n    $ curl http://local:3000/Readme.md\n\n     # serve\n     ...\n\n  Requesting JSON for the directory listing:\n\n    $ curl http://local:3000/ -H "Accept: application/json"\n    ["bin","History.md","node_modules","package.json","Readme.md"]\n\n Directory listing served by connect\'s `connect.directory()` middleware.\n\n  ![directory listings](http://f.cl.ly/items/100M2C3o0p2u3A0q1o3H/Screenshot.png)\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2011 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
+43 silly resolved     readmeFilename: 'Readme.md',
+43 silly resolved     _id: 'serve@1.2.0',
+43 silly resolved     _from: 'serve@' } ]
+44 info install serve@1.2.0 into /home/mike
+45 info installOne serve@1.2.0
+46 verbose from cache /home/mike/.npm/serve/1.2.0/package/package.json
+47 info /home/mike/node_modules/serve unbuild
+48 verbose from cache /home/mike/node_modules/serve/package.json
+49 info preuninstall serve@1.2.0
+50 info uninstall serve@1.2.0
+51 verbose true,/home/mike/node_modules,/home/mike/node_modules unbuild serve@1.2.0
+52 verbose /home/mike/node_modules/.bin,[object Object] binRoot
+53 info postuninstall serve@1.2.0
+54 info /home/mike/node_modules/serve unbuild
+55 verbose read json /home/mike/node_modules/serve/package.json
+56 error error rolling back Error: EACCES, unlink '/home/mike/node_modules/serve/node_modules/.bin/jade'
+56 error error rolling back  serve@1.2.0 { [Error: EACCES, unlink '/home/mike/node_modules/serve/node_modules/.bin/jade']
+56 error error rolling back   errno: 3,
+56 error error rolling back   code: 'EACCES',
+56 error error rolling back   path: '/home/mike/node_modules/serve/node_modules/.bin/jade' }
+57 error Error: EACCES, unlink '/home/mike/node_modules/serve/node_modules/.bin/jade'
+57 error  { [Error: EACCES, unlink '/home/mike/node_modules/serve/node_modules/.bin/jade']
+57 error   errno: 3,
+57 error   code: 'EACCES',
+57 error   path: '/home/mike/node_modules/serve/node_modules/.bin/jade' }
+58 error Please try running this command again as root/Administrator.
+59 error System Linux 3.2.0-39-generic
+60 error command "/usr/bin/node" "/usr/bin/npm" "install" "serve"
+61 error cwd /home/mike/Code/Stamen/fieldpapers
+62 error node -v v0.10.9
+63 error npm -v 1.2.24
+64 error path /home/mike/node_modules/serve/node_modules/.bin/jade
+65 error code EACCES
+66 error errno 3
+67 error stack Error: EACCES, unlink '/home/mike/node_modules/serve/node_modules/.bin/jade'
+68 verbose exit [ 3, true ]
