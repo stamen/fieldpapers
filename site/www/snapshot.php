@@ -11,6 +11,12 @@
     $scan_id = $_GET['id'] ? $_GET['id'] : null;
     
     $scan = get_scan($context->db, $scan_id);
+
+    $extent = $scan['geojpeg_bounds'];
+    $center_y = $extent[0] + $extent[2] / 2;
+    $center_x = $extent[1] + $extent[3] / 2;
+    
+
     $context->sm->assign('scan', $scan);
             
     if ($scan['print_id'] && $scan['print_page_number'])
@@ -35,7 +41,7 @@
     {
         $context->sm->assign('print', $print);
     }
-    
+
     //Get the title of the print associated with the scan
     if ($print['title'])
     {
@@ -51,6 +57,8 @@
     
     // Get the number of pages for the print
     $pages = get_print_pages($context->db, $print_id);
+
+    $context->sm->assign('zoom', $pages[0]['zoom']);
     $context->sm->assign('page_count', count($pages));
     
     $notes = get_scan_notes($context->db, array('scan' => $scan['id']));
