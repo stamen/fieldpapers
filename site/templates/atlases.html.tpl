@@ -10,6 +10,8 @@
     <div class="container">
         <h1>Atlases {$title|escape}</h1>
         <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
+
+        {* add a map here (https://github.com/stamen/fieldpapers/issues/212) *}
         
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
