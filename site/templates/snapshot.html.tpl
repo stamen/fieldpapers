@@ -239,7 +239,7 @@
                             </span>
                             <br/>
                             <span id="atlas_link">
-                                <a href="{$base_dir}/atlas.php?id={$print_id}">{$title|escape}</a>
+                                <a href="{$base_dir}/atlas.php?id={$print_id}">{$title|decode_utf8|escape}</a>
                             </span>
                         </div>
                         <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
