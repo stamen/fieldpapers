@@ -31,7 +31,7 @@
     </div>
     
     
-	<form id="compose_print" action="{$base_dir}/compose-atlas.php" method="POST">    
+	<form id="compose_print" action="{$base_dir}/compose-atlas.php" accept-charset="utf-8" method="POST">    
 
     <div class="smallLayoutContainer">
     	<h2>Choose a Layout</h2>
@@ -74,8 +74,8 @@
      <div class="smallLayoutContainer">
          <p><input type="checkbox" id="grid" /> <label for="grid">Add a grid overlay to each map?</label></p>
          
-            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}">
-            <input type="hidden" name="atlas_text" value="{$atlas_data.atlas_text|escape:hexentity}">
+            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape}">
+            <input type="hidden" name="atlas_text" value="{$atlas_data.atlas_text|escape}">
             <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
             <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
             <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
