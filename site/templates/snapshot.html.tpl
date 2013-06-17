@@ -224,8 +224,17 @@
 </head>
 <body> 
     {include file="navigation.htmlf.tpl"}
+
             <div id="container" style="position: relative; padding-top: 30px;">
                         {if $scan && $scan.decoded}
+
+    <div class="edit-elsewhere">
+      <a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers2.local/files/scans/{$scan.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a><br>
+     <a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$scan.id}/$z/$x/$y.jpg">Edit in Potlatch</a>
+    </div>
+
+
+
                 <div class="navbar">
                     <div class="atlas_inputs">
                         <div style="display: inline-block; float: left; background-color: black; padding: 14px;">
