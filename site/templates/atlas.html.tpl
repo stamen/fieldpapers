@@ -204,10 +204,6 @@
 {else}
 <body>
 {/if}
-    <div class="edit-elsewhere">
-      <a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$print.zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a><br>
-     <a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$print.zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id}/$z/$x/$y.jpg">Edit in Potlatch</a>
-    </div>
 
     {include file="navigation.htmlf.tpl"}
     <div class="container">
