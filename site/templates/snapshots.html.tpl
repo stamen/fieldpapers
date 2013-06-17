@@ -17,9 +17,9 @@
                 
                 {capture assign="scan_title"}
                     {if $scan.print && $scan.print.title && $scan.print_page_number}
-                        Page {$scan.print_page_number} of {$scan.print.title|escape}
+                        Page {$scan.print_page_number} of {$scan.print.title|decode_utf8|escape}
                     {elseif $scan.print && $scan.print.title}
-                        {$scan.print.title|escape}
+                        {$scan.print.title|decode_utf8|escape}
                     {elseif $scan.print_page_number}
                         Page {$scan.print_page_number} of untitled atlas
                     {else}

@@ -26,7 +26,10 @@
         */
         
         $db =& get_db_connection();
-        
+         /* change character set to utf8 */
+        $db->query("SET NAMES utf8mb4");
+        //$db->query("SET CHARACTER SET 'utf8'");
+
         $user = null;
         $type = get_preferred_type($_GET['type'] ? $_GET['type'] : $_SERVER['HTTP_ACCEPT']);
         

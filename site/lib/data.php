@@ -61,7 +61,7 @@
         
         if(PEAR::isError($dbh)) 
             die_with_code(500, "{$dbh->message}\n{$q}\n");
-
+        
         return $dbh;
     }
     
