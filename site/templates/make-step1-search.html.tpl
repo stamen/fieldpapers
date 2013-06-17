@@ -28,22 +28,22 @@
                 <p>                                            
                     <form id="search-form" accept-charset = "utf-8" action="{$base_dir}/make-step2-geography.php" method="post">
                         <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
-                               placeholder="Type in a location" value="{$atlas_data.atlas_location|escape:hexentity}">
+                               placeholder="Type in a location" value="{$atlas_data.atlas_location|escape}">
                         {if $error}
                             <p style="color: #C33;">We could not find that place. Please try again.</p>
                         {/if}
                         <input type="submit" name="action" value="Start There">
                         
                         {if $atlas_data.atlas_provider}
-                            <input name="atlas_provider" value="{$atlas_data.atlas_provider|escape:hexentity}" type="hidden">
+                            <input name="atlas_provider" value="{$atlas_data.atlas_provider|escape}" type="hidden">
                         {/if}
                         
                         {if $atlas_data.atlas_title}
-                            <input name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}" type="hidden">
+                            <input name="atlas_title" value="{$atlas_data.atlas_title|escape}" type="hidden">
                         {/if}
                         
                         {if $atlas_data.atlas_text}
-                            <input name="atlas_text" value="{$atlas_data.atlas_text|escape:hexentity}" type="hidden">
+                            <input name="atlas_text" value="{$atlas_data.atlas_text|escape}" type="hidden">
                         {/if}
                     </form>
                 </p>

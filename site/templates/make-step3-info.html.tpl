@@ -35,14 +35,14 @@
                     <label for="atlas_title" style="font-size: 22px;">Give Your Atlas a Name</label>
                     <br>
                     <input style="margin-top: 10px; color: grey;" type="text" id='title_input' name="atlas_title" size="60"
-                           placeholder="Untitled" value="{$atlas_data.atlas_title|escape:hexentity}">
+                           placeholder="Untitled" value="{$atlas_data.atlas_title|escape}">
                 </p>
                 <p>
                     <label for="atlas_text" style="font-size: 16px"><b>Page Text</b> (<i>This is optional.</i>)</label>
                 </p>
                 <p>Add text to each page in your atlas, like a questionnaire or a site survey form.</p>
                 <p>
-                    <textarea name="atlas_text" rows="10" style="font-size: 16px; width: 40em;" placeholder="Text to print with each page of your atlas">{$atlas_data.atlas_text|escape:hexentity}</textarea>
+                    <textarea name="atlas_text" rows="10" style="font-size: 16px; width: 40em;" placeholder="Text to print with each page of your atlas">{$atlas_data.atlas_text|escape}</textarea>
                 </p>
                 
                 <p>
