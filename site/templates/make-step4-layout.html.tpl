@@ -29,12 +29,14 @@
             </span>
         </div>
     </div>
-    <div class="container" style="margin-top: 50px;">
-    <form id="compose_print" action="{$base_dir}/compose-atlas.php" accept-charset="utf-8" method="POST">    
-        <span style="font-size: 22px;">Choose a Layout</span>
-        
-        <div style="margin-top: 20px">
-        
+    
+    
+	<form id="compose_print" action="{$base_dir}/compose-atlas.php" method="POST">    
+
+    <div class="smallLayoutContainer">
+    	<h2>Choose a Layout</h2>
+	</div>
+    <div class="container">        
         {if !$atlas_data.atlas_text}
             <div class="homeThird">
                 <label for="maps_only">
@@ -47,7 +49,6 @@
                 </div>
             </div>
         {/if}
-        {*
         <div class="homeThird">
             <label for="maps_notes_own">
                 <img src="{$base_dir}/img/image-make-map-notes.png" alt="Maps and Notes on Their Own Page">
@@ -58,7 +59,6 @@
             <br><span style="font-size: .8em; color: #666; margin-left: 30px;">on their own pages</span>
             </div>
         </div>
-        *}
         <div class="homeThird">
             <label for="maps_notes_same">
                 <img src="{$base_dir}/img/image-make-maps-notes-2up.png" alt="Maps and Notes on the Same Page">
@@ -69,10 +69,13 @@
                 <br><span style="font-size: .8em; color: #666; margin-left: 30px;">on same page</span>
             </div>
         </div>
-        <div class="clearfloat"></div>
-        <div style="float: right; margin-top: 60px;">
-            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape}">
-            <input type="hidden" name="atlas_text" value="{$atlas_data.atlas_text|escape}">
+        <div class="clearfloat"></div> 
+     </div>   
+     <div class="smallLayoutContainer">
+         <p><input type="checkbox" id="grid" /> <label for="grid">Add a grid overlay to each map?</label></p>
+         
+            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape:hexentity}">
+            <input type="hidden" name="atlas_text" value="{$atlas_data.atlas_text|escape:hexentity}">
             <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
             <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
             <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
@@ -88,13 +91,18 @@
             {foreach from=$atlas_data.pages item="page" key="index"}
                 <input type="hidden" name="pages[{$index|escape}]" value="{$page|escape}">
             {/foreach}
-
+            
+        <div style="float: right; margin-top: 20px; margin-bottom: 40px;">
             <input type="submit" value="Finished!">
             <input type="hidden" name="action" value="compose">
-        </div>
+        </div> 
+    </div>
     </form>
+    <div class="container">
+        {include file="footer.htmlf.tpl"} 
     </div>
-            {include file="footer.htmlf.tpl"}
-    </div>
+
 </body>
 </html>
+
+
