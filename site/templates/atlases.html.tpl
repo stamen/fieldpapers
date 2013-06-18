@@ -35,7 +35,8 @@
         background: #000;
         padding: 20px;
     }
-    h2.header {
+    h2.header
+    {
         background: #000;
         font-size: 24px;
         line-height: 36px;
@@ -44,6 +45,9 @@
         box-sizing: border-box;
         margin: -40px 0 20px 0;
         position: relative;
+    }
+    span.count {
+        font-size: 18px;
     }
     {/literal}
 </style>
@@ -55,7 +59,7 @@
     </div>
         
     <div class="container">
-        <h2 class="header">Atlases {$title|escape}</h2>
+        <h2 class="header">Atlases {$title|escape} <span class="count">{$atlas_count} atlases</span></h2>
         <!--
         <h1>Atlases {$title|escape}</h1>
         <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>

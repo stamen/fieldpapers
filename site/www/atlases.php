@@ -31,7 +31,15 @@
         $prints[$i]['number_of_pages'] = count($pages);
         $prints[$i]['user'] = $users[$user_id];
     }
+
+    /*
+    print "<pre>";
+    print_r($prints);
+    print "</pre>";
+    exit();
+    */
     
+    $context->sm->assign('atlas_count', count($prints));
     $context->sm->assign('title', $title);
     $context->sm->assign('prints', $prints);
     $context->sm->assign('prints_json', json_encode($prints));
