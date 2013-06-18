@@ -97,11 +97,22 @@
                 bottom_right = map.locationPoint(marker.print.southeast);
             marker.style.left = top_left.x + "px";
             marker.style.top = top_left.y + "px";
-            marker.style.width = (bottom_right.x - top_left.x) + "px";
-            marker.style.height = (bottom_right.y - top_left.y) + "px";
+            var width = Math.ceil(bottom_right.x - top_left.x),
+                height = Math.ceil(bottom_right.y - top_left.y);
+            marker.print.area = width * height;
+            marker.style.width = width + "px";
+            marker.style.height = height + "px";
             marker.className = "marker"; 
-            marker_container.appendChild(marker);
         });
+
+        markers.sort(function(a,b) {
+            return b.print.area - a.print.area;
+        });
+
+        markers.forEach(function(marker) {
+            marker_container.appendChild(marker); 
+        });
+
         {/literal}
     </script>
 
