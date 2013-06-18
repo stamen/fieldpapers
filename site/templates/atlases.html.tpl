@@ -3,7 +3,15 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Atlases - fieldpapers.org</title>
+<script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
 <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
+<style>
+    {literal}
+    #map {
+        height: 600px;
+    }
+    {/literal}
+</style>
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
@@ -12,6 +20,8 @@
         <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
 
         {* add a map here (https://github.com/stamen/fieldpapers/issues/212) *}
+	<div id="map"></div>
+
         
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
@@ -47,7 +57,22 @@
     </div>
 	<div class="clearfloat"></div>
 
+    <script>
+        var prints = {$prints_json};
+        {literal}
+        var corners = [];
+        prints.forEach(function(print) {
+            corners.push({lat: +print.north, lon: +print.west}, {lat: +print.south, lon: +print.east});
+        });
+        var template = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
+        var provider = new MM.TemplatedMapProvider(template);
+        var map = new MM.Map('map', provider);
+        map.setExtent(corners);
+        {/literal}
+    </script>
+
     {include file="footer.htmlf.tpl"} 
-</div>
+    </div>
+
 </body>
 </html>

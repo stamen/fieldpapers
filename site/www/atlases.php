@@ -34,12 +34,8 @@
     
     $context->sm->assign('title', $title);
     $context->sm->assign('prints', $prints);
+    $context->sm->assign('prints_json', json_encode($prints));
 
-/*    print "<pre>";
-    print_r($prints);
-    print "</pre>";
-    exit();
-*/
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
         print $context->sm->fetch("atlases.html.tpl");
