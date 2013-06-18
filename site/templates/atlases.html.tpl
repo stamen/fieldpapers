@@ -8,7 +8,19 @@
 <style>
     {literal}
     #map {
+        position: relative;
         height: 600px;
+    }
+    #markers {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+    }
+    #markers .marker {
+        position: absolute;
+        background: green;
+        border: 2px solid #000;
     }
     {/literal}
 </style>
@@ -20,7 +32,9 @@
         <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
 
         {* add a map here (https://github.com/stamen/fieldpapers/issues/212) *}
-	<div id="map"></div>
+	<div id="map">
+            <div id="markers"></div>
+        </div>
 
         
         {foreach from=$prints item="print" name="index"}
@@ -58,16 +72,36 @@
 	<div class="clearfloat"></div>
 
     <script>
-        var prints = {$prints_json};
+        var prints = {$prints_json},
+            print_href = "{$base_dir}/atlas.php?id=";
         {literal}
-        var corners = [];
+        var corners = [],
+            markers = [];
         prints.forEach(function(print) {
-            corners.push({lat: +print.north, lon: +print.west}, {lat: +print.south, lon: +print.east});
+            print.northwest = {lat: +print.north, lon: +print.west}; 
+            print.southeast = {lat: +print.south, lon: +print.east};
+            corners.push(print.northwest, print.southeast);
+            var marker = document.createElement("a");
+            marker.print = print;
+            marker.setAttribute("href", print_href + print.id);
+            markers.push(marker);
         });
         var template = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
         var provider = new MM.TemplatedMapProvider(template);
-        var map = new MM.Map('map', provider);
+        var map = new MM.Map('map', provider, null, []);
         map.setExtent(corners);
+
+        var marker_container = document.getElementById("markers");
+        markers.forEach(function(marker, i) { 
+            var top_left = map.locationPoint(marker.print.northwest),
+                bottom_right = map.locationPoint(marker.print.southeast);
+            marker.style.left = top_left.x + "px";
+            marker.style.top = top_left.y + "px";
+            marker.style.width = (bottom_right.x - top_left.x) + "px";
+            marker.style.height = (bottom_right.y - top_left.y) + "px";
+            marker.className = "marker"; 
+            marker_container.appendChild(marker);
+        });
         {/literal}
     </script>
 
