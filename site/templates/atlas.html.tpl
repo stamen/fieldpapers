@@ -195,6 +195,12 @@
         #zoom-in, #zoom-out {
             cursor: pointer;
         }
+		
+		
+#atlases-nearby { }
+#atlases-nearby ul { margin-left: -30px;  }
+#atlases-nearby li { margin:0; padding-right: 18px;  display: block; float: left; list-style: none; }
+#atlases-nearby div {width:140px; height: 140px; background-image: url(http://fieldpapers.org/files/prints/lnpnk6cx/preview.jpg)}		
         
         {/literal}
     </style>
@@ -301,7 +307,7 @@
                                     Someone anonymous
                                 {/if}
                                 made this atlas of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
-                                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
+                                <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">{$print.age|nice_relativetime|escape}</a>
                                 <div class="details">
                                     {if $print.page_count == 1}
                                         One page
@@ -319,11 +325,6 @@
                                     + {$print.orientation|escape}
                                     + {$print.layout|escape}
                                 </div>
-                                {*
-                                <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
-                                <br>
-                                <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
-                                *}
                             </li>
 
                         {elseif $event.type == "scan"}
@@ -339,7 +340,7 @@
                                 {if $scan.has_geotiff == 'yes'}
                                     (<a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">GeoTIFF</a>)
                                 {/if}
-                                <a href="{$base_dir}/snapshots.php?month={"Y-m"|@date:$scan.created}" class="date">- {$scan.age|nice_relativetime|escape}</a>
+                                <a href="{$base_dir}/snapshots.php?month={"Y-m"|@date:$scan.created}" class="date">{$scan.age|nice_relativetime|escape}</a>
                                 <br>
                                 
                                 <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
@@ -363,7 +364,7 @@
                                 {else}
                                     added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">{$count} notes about page {$scan.print_page_number|escape}</a>
                                 {/if}
-                                <a class="date">- {$last_note.age|nice_relativetime|escape}</a>
+                                <a class="date">{$last_note.age|nice_relativetime|escape}</a>
                                 
                                 <ol>
                                     {foreach from=$notes item="note"}
@@ -392,6 +393,41 @@
                     {/foreach}
                 </ul>
             </div>
+
+			<!-- If Atlases Nearby, show up to 6, most recent -->   
+            {*        
+            <div id="atlases-nearby">
+                <h3>Nearby</h3>
+            	<ul>
+                	<li>
+	                	<div><a href="atlas.php"></a></div>
+						<a href="">[Atlas Name]</a>
+                    </li>
+                	<li>
+	                	<div><a href="atlas.php"></a></div>
+						<a href="">[Atlas Name]</a>
+                    </li>
+                	<li>
+	                	<div><a href="atlas.php"></a></div>
+						<a href="">[Atlas Name]</a>
+                    </li>
+                	<li>
+	                	<div><a href="atlas.php"></a></div>
+						<a href="">[Atlas Name]</a>
+                    </li>
+                	<li>
+	                	<div><a href="atlas.php"></a></div>
+						<a href="">[Atlas Name]</a>
+                    </li>
+                	<li>
+	                	<div><a href="atlas.php"></a></div>
+						<a href="">[Atlas Name]</a>
+                    </li>
+				</ul>
+            </div>  
+            <br clear="all" />          
+            <br clear="all" /> 
+            *}         
         {else}
             <div class="smallContainer">
                 <p>Preparing your atlas... ({$print.progress*100|string_format:"%d"}% complete)</p>
