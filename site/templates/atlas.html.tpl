@@ -15,6 +15,27 @@
     {/if}
     <style type="text/css">
         {literal}
+        .atlasThumb-container {
+            position: relative;
+        }
+
+        .atlasThumb-small {
+            //width: 180px;
+            height: 180px;
+            background-position: center center;
+            overflow: hidden;
+        }
+
+        h6.header {
+            //postion: relative;
+            //bottom: 0;
+        }
+
+        .atlasThumb-title {
+            position: relative;
+            bottom: 0;
+        }
+
         #canvas {
             width: 100%;
             height: 100%;
@@ -211,7 +232,7 @@
             <script>
                 var base_url = {$base_dir|json_encode};
                 var selected_page = {$print.selected_page|json_encode} || null;
-                
+
                 {if $print.selected_page}
                     var overview_provider = {$print.selected_page.provider|json_encode};
                     var main_provider = {$print.selected_page.provider|json_encode};
@@ -416,8 +437,37 @@
                 </p>
             </div>
         {/if}        
+
+{* MT follows *}
+
+{foreach from=$nearby_prints item="print" name="index"}
+<div class="atlasThumb-container atlasThumb">
+    <div class="atlasThumb-small" style="background-image: url({$print.preview_url});"></div>
+    <div class="atlasThumb-title">
+        <h6 class="header"><a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|decode_utf8|escape}{else}Untitled{/if}</a></h6>
+    </div>
+</div>
+{/foreach}
+
+
+
+
 {include file="footer.htmlf.tpl"}
 
 </div>
+
+<script>
+{literal}
+    // nearby prints
+    var nearby_prints = {$nearby_prints_json};
+    if (nearby_prints.length) {
+        nearby_prints.forEach(function(print) { 
+            var div = null; 
+        });
+
+    }
+{/literal}
+</script>
+
 </body>
 </html>
