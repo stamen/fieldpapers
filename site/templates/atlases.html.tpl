@@ -9,7 +9,8 @@
     {literal}
     #map {
         position: relative;
-        height: 600px;
+        height: 580px;
+        width: 100%;
     }
     #markers {
         position: absolute;
@@ -19,24 +20,46 @@
     }
     #markers .marker {
         position: absolute;
-        background: green;
+        background: yellow;
+        opacity: 0.4;
         border: 2px solid #000;
+        display: block;
+    }
+    #hdr {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        font-family: aria;
+        font-size: 3em;
+        color: #fff;
+        background: #000;
+        padding: 20px;
+    }
+    h2.header {
+        background: #000;
+        font-size: 24px;
+        line-height: 36px;
+        color: #fff;
+        padding: 2px 10px;
+        box-sizing: border-box;
+        margin: -40px 0 20px 0;
+        position: relative;
     }
     {/literal}
 </style>
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
+    <div id="map">
+        <div id="markers"></div>
+    </div>
+        
     <div class="container">
+        <h2 class="header">Atlases {$title|escape}</h2>
+        <!--
         <h1>Atlases {$title|escape}</h1>
         <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
-
-        {* add a map here (https://github.com/stamen/fieldpapers/issues/212) *}
-	<div id="map">
-            <div id="markers"></div>
-        </div>
-
-        
+        -->
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
                 <a href="{$base_dir}/atlas.php?id={$print.id}"><img src="{$print.preview_url}" alt="printed page" width="100%"{if $print.private} class="private"{/if}></a>
