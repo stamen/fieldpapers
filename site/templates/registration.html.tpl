@@ -33,7 +33,9 @@
                     <input type='hidden' name='action' value='register'>
                     <input type='hidden' name='redirect' value='index.php'>
                 </form>
-            {include file="footer.htmlf.tpl"} 
-        </div>       
+        </div>
+        <div class="container">
+        	{include file="footer.htmlf.tpl"}
+        </div> 
     </body>
 </html>

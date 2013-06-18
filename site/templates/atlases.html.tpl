@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>Atlases - fieldpapers.org</title>    
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Atlases - fieldpapers.org</title>
+<link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
     <div class="container">
         <h1>Atlases {$title|escape}</h1>
         <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
+
+        {* add a map here (https://github.com/stamen/fieldpapers/issues/212) *}
         
         {foreach from=$prints item="print" name="index"}
             <div class="atlasThumb">
@@ -43,5 +45,9 @@
         
         {include file="footer.htmlf.tpl"}
     </div>
+	<div class="clearfloat"></div>
+
+    {include file="footer.htmlf.tpl"} 
+</div>
 </body>
 </html>

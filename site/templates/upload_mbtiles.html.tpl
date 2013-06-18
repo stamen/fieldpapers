@@ -11,7 +11,9 @@
             Upload your file: <input name="uploaded_mbtiles" type="file"><br>
             <input type="submit" value="Upload">
         </form>
-        {include file="footer.htmlf.tpl"}
-        </div>
-    </body>
+
+
+{include file="footer.htmlf.tpl"}
+</div>
+</body>
 </html>
