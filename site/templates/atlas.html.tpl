@@ -121,7 +121,22 @@
                 height: 18px;
             }
             .map-buttons-br form{display:inline;}
-            #atlas-index-map-holder .borrow
+            
+            .borrow input{
+                background: black;
+                border: none;
+                color: #fff;
+                font-size: 18px;
+                text-decoration: underline;
+                font-weight: bold;
+                line-height: 18px;
+                padding: 0;
+                cursor:pointer;
+            }
+            .borrow input:hover{
+                text-decoration:none;
+            }
+             #atlas-index-map-holder .borrow
             {
                 bottom: 0;
                 right: 0;
@@ -284,17 +299,17 @@
                 </div>
                 <div class="map-buttons-br">
                     <form action="{$base_dir}/make-step4-layout.php" accept-charset="utf-8" method="POST">    
-                        <p class="borrow"><a href="#">Copy this atlas</a></p>
+                        <p class="borrow">{*<a href="#">Copy this atlas</a>*}<input type="submit" value="Copy this atlas"></p>
                         <input type="hidden" name="atlas_title" value="{$print.title|escape}">
                         <input type="hidden" name="atlas_text" value="{$print.text|escape}">                    
                         <input type="hidden" id="page_zoom" name="page_zoom" value="{$print.page_zoom|escape}">
                         <input type="hidden" id="paper_size" name="paper_size" value="{$print.paper_size|escape}">
                         <input type="hidden" id="orientation" name="orientation" value="{$print.orientation|escape}">
                         <input type="hidden" id="provider" name="provider" value="{$print.provider|escape}">
-    
+                        <input type="hidden" id="clone_id" name="clone_id" value="{$print.id}"> 
                         {foreach from=$pages item="page" key="index"}
                             {if $page.page_number != "i"}    
-                                <input type="hidden" name="pages[{$page.page_number|escape}]" value="{$page|escape}">
+                                <input type="hidden" name="pages[{$page.page_number|escape}]" value="{$page.nwse|escape}">
                             {/if}
                         {/foreach} 
                     </form>
