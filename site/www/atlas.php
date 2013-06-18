@@ -16,12 +16,20 @@
         header("HTTP/1.1 404");
         die("No such atlas.\n");
     }
-    //print var_dump($print);
+    
     $pages = get_print_pages($context->db, $print_id);
     $print['page_count'] = count($pages);
-    //print "<br/><br/>";
-    //print var_dump($pages);
-    //if($pages 
+    if($pages){
+        $i=0;
+        while($i < count($pages)){
+            $page = $pages[$i];
+            if($page['page_number'] == 'A1'){
+                $print['page_zoom'] = $page['zoom'];
+            }
+            $pages[$i]['nwse'] = $page['north'] .",". $page['west'] .",". $page['south'] .",". $page['east'];
+            $i++;
+        }
+    }
     $context->sm->assign('print', $print);
     
     if($print['selected_page']) {

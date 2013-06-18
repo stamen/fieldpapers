@@ -18,6 +18,10 @@
         'pages'       => (is_array($_POST['pages']) ? $_POST['pages'] : array()),
         'private'     => filter_var($_REQUEST['private'], FILTER_VALIDATE_BOOLEAN),
         );
+    
+    if(isset($_POST['clone_id'])){
+        $atlas_data['clone_id'] = trim($_POST['clone_id']);
+    }
 
     $context->sm->assign('atlas_data', $atlas_data);
     

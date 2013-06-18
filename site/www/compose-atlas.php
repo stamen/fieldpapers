@@ -32,14 +32,22 @@
         $json_content = $_POST['geojson_data'];
     }
     
+    $clone_job = false;
+    $clone_id = 0;
+    if(isset($_POST['clone_id'])){
+        $clone_job = true;
+        $clone_id = $_POST['clone_id'];
+    }
+    
     if($_SERVER['REQUEST_METHOD'] == 'POST')
-    {       
+    {      
         $context->db->query('START TRANSACTION');
         
         if($is_json) {
             $print = compose_from_geojson($context->db, $json_content);
 
-        } else {
+        }else{
+    
             $atlas_postvars = $_POST;
 
             if(!empty($_POST['form_url']))
@@ -61,8 +69,11 @@
                 
                 $atlas_postvars['form_id'] = $added_form['id'];
             }
-            
-            $print = compose_from_postvars($context->db, $atlas_postvars, $context->user['id']);
+            if($clone_job && $clone_id){
+                $print = compose_clone($context->db, $atlas_postvars, $context->user['id'], $clone_id);
+            }else{
+                $print = compose_from_postvars($context->db, $atlas_postvars, $context->user['id']);
+            }
         }
         
         $context->db->query('COMMIT');

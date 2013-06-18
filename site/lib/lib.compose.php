@@ -197,6 +197,127 @@
         
         return $bounds;
     }
+
+    /**
+        clones an exisiting atlas
+    **/
+    function compose_clone(&$dbh, $post, $user_id, $clone_id){
+        $org_print = get_print($dbh, $clone_id);
+        $org_pages = get_print_pages($dbh, $clone_id);
+        
+       // if(!is_array($pages))
+       //     return null;
+
+
+        $message = array('action' =>            'compose',
+                         'paper_size' =>        strtolower($org_print['paper_size']),
+                         'orientation' =>       $org_print['orientation'],
+                         'provider' =>          $org_print['provider'],
+                         'layout' =>            $org_print['layout'],
+                         'pages' =>             array()
+                        );
+
+        // set print
+        $print = add_print($dbh, $user_id);
+        $print['title'] = $post['atlas_title'];
+        $print['text'] = $org_print['text'];
+        $print['paper_size'] = $message['paper_size'];
+        $print['orientation'] = $message['orientation'];
+        $print['layout'] = $message['layout'];
+        $print['private'] = $org_print['private'];
+        $print['north'] = $org_print['north'];
+        $print['south'] = $org_print['south'];
+        $print['west'] = $org_print['west'];
+        $print['east'] = $org_print['east'];
+        $print['country_name'] = $org_print['country_name'];
+        $print['country_woeid'] = $org_print['country_woeid'];
+        $print['region_name'] = $org_print['region_name'];
+        $print['region_woeid'] = $org_print['region_woeid'];
+        $print['place_name'] = $org_print['place_name'];
+        $print['place_woeid'] = $org_print['place_woeid'];
+        $print['cloned'] = $clone_id;
+        // create messages
+        foreach($org_pages as $org_page){
+            $bounds = array(floatval($org_page['north']), floatval($org_page['west']), floatval($org_page['south']), floatval($org_page['east']));
+            $text = trim(sprintf("%s\n\n%s", $print['title'], $print['text']));
+
+            if($org_page['page_number'] == 'i'){
+                $message['pages'][] = array('number' => 'i',
+                                            'zoom' => intval($org_page['zoom']),
+                                            'bounds' => $bounds,
+                                            'provider' => $org_page['provider'],
+                                            'role' => 'index',
+                                            'text' => ''
+                                            );
+            }else{
+                $message['pages'][] = array('zoom' => intval($org_page['zoom']),
+                                            'number' => $org_page['page_number'],
+                                            'provider' => $org_page['provider'],
+                                            'bounds' => $bounds,
+                                            'text' => $text
+                                            );
+            }
+        }
+
+        // create pages in DB
+        foreach($message['pages'] as $i => $value)
+        {
+            $page = add_print_page($dbh, $print['id'], $value['number']);
+
+            $page['zoom'] = $value['zoom'];
+
+            $_page = $value['bounds'];
+
+            $page['north'] = $_page[0];
+            $page['south'] = $_page[2];
+            $page['west'] = $_page[1];
+            $page['east'] = $_page[3];
+
+            $page['provider'] = $value['provider'];
+
+            set_print_page($dbh, $page);
+
+            // add grid overlay to the printed output of each non-index page:
+
+            /* Disabled after fixing the URL until UI is available
+            if($value['role'] != 'index')
+                $message['pages'][$i]['provider'] = "{$value['provider']},http://tile.stamen.com/utm/{Z}/{X}/{Y}.png";
+             */
+        }
+
+        // Not sure what forms table is or does but leaving it in for now (SeanC)
+        if($post['form_id'] && $form = get_form($dbh, $post['form_id']))
+        {
+            $print['form_id'] = $form['id'];
+
+            if($form['parsed']) {
+                $message['form_fields'] = get_form_fields($dbh, $form['id']);
+
+            } else {
+                // The form hasn't been parsed yet, probably because
+                // compose-atlas.php was called with just a form_url.
+
+                $message['form_id'] = $form['id'];
+                $message['form_url'] = $form['form_url'];
+            }
+        }
+
+
+        
+        $print['progress'] = 0.1; // the first 10% is getting it queued
+
+        set_print($dbh, $print);
+        $message['print_id'] = $print['id'];
+
+        // queue the task
+        queue_task("tasks.composePrint", array("http://" . SERVER_NAME, API_PASSWORD), $message);
+
+        return $print;
+    }
+
+
+
+
     
    /**
     * Convert an array of form fields to an atlas composition and queue it up.
