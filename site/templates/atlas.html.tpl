@@ -343,8 +343,14 @@
                                 {else}
                                     Someone anonymous
                                 {/if}
-                                made this atlas of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
+                                made this atlas 
+                                {if $print.place_name}
+                                of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
+                                {/if}
                                 <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
+                                {if $print.cloned}
+                                    <br/> It was cloned from <a href="{$base_dir}/atlas.php?id={$print.cloned|escape}">this atlas.</a>
+                                {/if}
                                 <div class="details">
                                     {if $print.page_count == 1}
                                         One page

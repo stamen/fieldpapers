@@ -135,7 +135,7 @@
                      UNIX_TIMESTAMP(composed) AS composed,
                      UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
                      country_name, country_woeid, region_name, region_woeid, place_name, place_woeid,
-                     user_id, progress
+                     user_id, progress, cloned
               FROM prints
               WHERE id = ?";
     
@@ -184,7 +184,7 @@
             'orientation', 'layout', 'provider', 'pdf_url', 'preview_url',
             'geotiff_url', 'atlas_pages', 'form_id', 'user_id',
             'country_name', 'country_woeid', 'region_name', 'region_woeid',
-            'place_name', 'place_woeid', 'progress', 'private',
+            'place_name', 'place_woeid', 'progress', 'private', 'cloned',
             );
 
         foreach($field_names as $field)
