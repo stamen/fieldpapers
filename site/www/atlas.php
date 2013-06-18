@@ -16,10 +16,12 @@
         header("HTTP/1.1 404");
         die("No such atlas.\n");
     }
-
+    //print var_dump($print);
     $pages = get_print_pages($context->db, $print_id);
     $print['page_count'] = count($pages);
-    
+    //print "<br/><br/>";
+    //print var_dump($pages);
+    //if($pages 
     $context->sm->assign('print', $print);
     
     if($print['selected_page']) {

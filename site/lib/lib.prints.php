@@ -128,7 +128,7 @@
         $q = "SELECT layout, atlas_pages,
                      paper_size, orientation, provider, private,
                      pdf_url, preview_url, geotiff_url,
-                     id, title, form_id, north, south, east, west, zoom,
+                     id, title, text, form_id, north, south, east, west, zoom,
                      (north + south) / 2 AS latitude,
                      (east + west) / 2 AS longitude,
                      UNIX_TIMESTAMP(created) AS created,
@@ -180,7 +180,7 @@
         $update_clauses = array();
 
         $field_names = array(
-            'title', 'north', 'south', 'east', 'west', 'zoom', 'paper_size',
+            'title', 'text', 'north', 'south', 'east', 'west', 'zoom', 'paper_size',
             'orientation', 'layout', 'provider', 'pdf_url', 'preview_url',
             'geotiff_url', 'atlas_pages', 'form_id', 'user_id',
             'country_name', 'country_woeid', 'region_name', 'region_woeid',

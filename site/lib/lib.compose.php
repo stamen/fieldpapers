@@ -241,6 +241,7 @@
         $print = add_print($dbh, $user_id);
         
         $print['title'] = $title;
+        $print['text'] = trim($post['atlas_text']);
         $print['paper_size'] = $message['paper_size'];
         $print['orientation'] = $message['orientation'];
         $print['layout'] = $message['layout'];
