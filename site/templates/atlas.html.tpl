@@ -92,7 +92,12 @@
                 line-height: 18px;
                 font-weight: bold;
             }
-            
+            #atlas-index-map-holder .borrow,
+            #atlas-index-map-holder .download
+            {
+                position: relative;
+                display: inline;
+            }
             #atlas-index-map-holder a
             {
                 color: white;
@@ -109,10 +114,16 @@
                 top: 32px;
                 left: 0;
             }
-            
+            .map-buttons-br{
+                position: absolute;
+                bottom: 9px;
+                right:0;
+                height: 18px;
+            }
+            .map-buttons-br form{display:inline;}
             #atlas-index-map-holder .borrow
             {
-                bottom: 32px;
+                bottom: 0;
                 right: 0;
             }
             
@@ -239,10 +250,12 @@
             
             <div id="atlas-overview-map-holder">
                 <div id="atlas-overview-map"></div>
+                {if $print.place_woeid || $print.country_woeid}
                 <h2>
                     {if $print.place_woeid}{$print.place_name|nice_placename},{/if}
                     {if $print.country_woeid}{$print.country_name|nice_placename}{/if}
                 </h2>
+                {/if}
             </div>
             
             <div id="atlas-index-map-holder">
@@ -269,9 +282,24 @@
                                   width="46" height="46">
                     </span>
                 </div>
-
-                {* TODO: <p class="borrow">Borrow this Atlas</p> *}
-                <p class="download"><a href="{$print.pdf_url}">Download PDF {* TODO: <span class="size">17MB</span> *}</a></p>
+                <div class="map-buttons-br">
+                    <form action="{$base_dir}/make-step4-layout.php" accept-charset="utf-8" method="POST">    
+                        <p class="borrow"><a href="#">Copy this atlas</a></p>
+                        <input type="hidden" name="atlas_title" value="{$print.title|escape}">
+                        <input type="hidden" name="atlas_text" value="{$print.text|escape}">                    
+                        <input type="hidden" id="page_zoom" name="page_zoom" value="{$print.page_zoom|escape}">
+                        <input type="hidden" id="paper_size" name="paper_size" value="{$print.paper_size|escape}">
+                        <input type="hidden" id="orientation" name="orientation" value="{$print.orientation|escape}">
+                        <input type="hidden" id="provider" name="provider" value="{$print.provider|escape}">
+    
+                        {foreach from=$pages item="page" key="index"}
+                            {if $page.page_number != "i"}    
+                                <input type="hidden" name="pages[{$page.page_number|escape}]" value="{$page|escape}">
+                            {/if}
+                        {/foreach} 
+                    </form>
+                    <p class="download"><a href="{$print.pdf_url}">Download PDF {* TODO: <span class="size">17MB</span> *}</a></p>
+                </div>
             </div>
             
             <div id="atlas-export-column">
