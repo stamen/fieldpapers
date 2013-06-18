@@ -301,7 +301,14 @@
                                 {else}
                                     Someone anonymous
                                 {/if}
-                                made this atlas of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
+                                made this atlas 
+                                {if $print.place_name}
+                                    of   
+                                    <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>,
+                                    <a href="{$base_dir}/atlases.php?place={$print.region_woeid}">{$print.region_name|nice_placename}</a>,
+                                    <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
+                                {/if}
+
                                 <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
                                 <div class="details">
                                     {if $print.page_count == 1}
