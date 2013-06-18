@@ -168,6 +168,13 @@ h2.pageCount {
 	-webkit-column-gap: 10px;
 	-webkit-column-fill: auto;
 }
+.atlasThumb {
+        margin-left: 10px;
+        float: left;
+        width: 300px;
+        margin-bottom: 2em;
+}
+
 .atlasPin {
 	column-break-inside: avoid;
 	-moz-column-break-inside: avoid;
