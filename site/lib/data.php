@@ -261,6 +261,9 @@
         {
             $place_info = woeid_placeinfo($args['place']);
             $place_name = nice_placename($place_info[4]);
+            if (!$place_name) {
+                $place_name = "(unknown)";
+            }
             $parts[] = "in $place_name";
         }
         
