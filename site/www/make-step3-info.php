@@ -25,6 +25,8 @@
     
     if(isset($_POST['clone_id']) && !empty($_POST['clone_id'])){
         $atlas_data['clone_id'] = trim($_POST['clone_id']);
+    }elseif(isset($_POST['refresh_id']) && !empty($_POST['refresh_id'])){
+        $atlas_data['refresh_id'] = trim($_POST['refresh_id']); 
     }
    
     $context->sm->assign('atlas_data', $atlas_data);

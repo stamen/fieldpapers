@@ -96,7 +96,12 @@
             #atlas-index-map-holder .download
             {
                 position: relative;
-                display: inline;
+                display: inline-block;
+                zoom: 1;
+                *display: inline;
+                min-height: 18px;
+                _height:18px;
+                vertical-align: top;
             }
             #atlas-index-map-holder a
             {
@@ -116,11 +121,22 @@
             }
             .map-buttons-br{
                 position: absolute;
-                bottom: 9px;
-                right:0;
-                height: 18px;
+                bottom: 0px;
+                right: 0px;
+                height: auto;
             }
-            .map-buttons-br form{display:inline;}
+            .map-buttons-tl{
+                position: absolute;
+                top: 0;
+                right: -1px;
+                height: auto;
+            }   
+            .map-buttons-br form,
+            .map-buttons-tl form{
+                display:inline-block;
+                zoom: 1;
+                *display: inline;
+            }
             
             .borrow input{
                 background: black;
@@ -221,6 +237,15 @@
         #zoom-in, #zoom-out {
             cursor: pointer;
         }
+        .extra-meta-note{
+            display: block;
+            font-size: .9em;
+            font-weight: lighter;
+        }
+        .extra-meta-note i{
+            font-style: normal;
+            font-weight: bold;
+        }
         
         {/literal}
     </style>
@@ -297,6 +322,25 @@
                                   width="46" height="46">
                     </span>
                 </div>
+                {if $isosm}
+                <div class="map-buttons-tl">
+                    <form action="{$base_dir}/make-step3-info.php" accept-charset="utf-8" method="POST"> 
+                        <p class="borrow"><input type="submit" value="Refresh"></p>
+                        <input type="hidden" name="atlas_title" value="{$print.title|escape}">
+                        <input type="hidden" name="atlas_text" value="{$print.text|escape}">                        
+                        <input type="hidden" id="page_zoom" name="page_zoom" value="{$print.page_zoom|escape}">
+                        <input type="hidden" id="paper_size" name="paper_size" value="{$print.paper_size|escape}">
+                        <input type="hidden" id="orientation" name="orientation" value="{$print.orientation|escape}">
+                        <input type="hidden" id="provider" name="provider" value="{$print.provider|escape}">
+                        <input type="hidden" id="refresh_id" name="refresh_id" value="{$print.id}"> 
+                        {foreach from=$pages item="page" key="index"}
+                            {if $page.page_number != "i"}    
+                                <input type="hidden" name="pages[{$page.page_number|escape}]" value="{$page.nwse|escape}">
+                            {/if}
+                        {/foreach}  
+                    </form>
+                </div>
+                {/if}
                 <div class="map-buttons-br">
                     <form action="{$base_dir}/make-step3-info.php" accept-charset="utf-8" method="POST">    
                         <p class="borrow">{*<a href="#">Copy this atlas</a>*}<input type="submit" value="Copy this atlas"></p>
@@ -349,7 +393,9 @@
                                 {/if}
                                 <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
                                 {if $print.cloned}
-                                    <br/> It was cloned from <a href="{$base_dir}/atlas.php?id={$print.cloned|escape}">this atlas.</a>
+                                    <span class='extra-meta-note'>This atlas was <i>cloned</i> from <a href="{$base_dir}/atlas.php?id={$print.cloned|escape}">here.</a></span>
+                                {elseif $print.refreshed}
+                                    <span class='extra-meta-note'>This atlas was <i>refreshed</i> from <a href="{$base_dir}/atlas.php?id={$print.refreshed|escape}">here.</a></span>
                                 {/if}
                                 <div class="details">
                                     {if $print.page_count == 1}

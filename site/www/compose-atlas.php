@@ -38,6 +38,13 @@
         $clone_job = true;
         $clone_id = $_POST['clone_id'];
     }
+
+    $refresh_job = false;
+    $refresh_id = 0;
+    if(isset($_POST['refresh_id'])){
+        $refresh_job = true;
+        $refresh_id = $_POST['refresh_id'];
+    }
     
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {      
@@ -70,7 +77,9 @@
                 $atlas_postvars['form_id'] = $added_form['id'];
             }
             if($clone_job && $clone_id){
-                $print = compose_clone($context->db, $atlas_postvars, $context->user['id'], $clone_id);
+                $print = compose_clone($context->db, $atlas_postvars, $context->user['id'], $clone_id, false);
+            }elseif($refresh_job && $refresh_id){
+                $print = compose_clone($context->db, $atlas_postvars, $context->user['id'], $refresh_id, true);
             }else{
                 $print = compose_from_postvars($context->db, $atlas_postvars, $context->user['id']);
             }
