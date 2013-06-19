@@ -307,7 +307,12 @@
                     {/if}
                 </ul>
             </div>
-            
+           
+            <div id="atlas-editing">
+                <a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a><br>
+                <a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id}/$z/$x/$y.jpg">Edit in Potlatch</a>
+            </div>
+
             <div id="atlas-activity-stream">
                 <h3>Activity</h3>
                 
@@ -458,17 +463,6 @@
 
 </div>
 
-<script>
-{literal}
-    // nearby prints
-    var nearby_prints = {$nearby_prints_json};
-    if (nearby_prints.length) {
-        nearby_prints.forEach(function(print) { 
-            var div = null; 
-        });
-
-    }
-{/literal}
 </script>
 
 </body>
