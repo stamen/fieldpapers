@@ -310,13 +310,35 @@
                         <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=shp">Shapefile</a></li>
                     {/if}
                 </ul>
-                <h4>Edit Atlas</h4>
+                <!--<h4>Edit Atlas</h4>-->
+                <select id="editors">
+                    <option id="ignore">Edit In...</option>
+                    <option id="iD">iD</option>
+                    <option id="potlatch">Potlatch</option>
+                </select>
+                <!--
                 <ul>
                     <li><a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={    $zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a></li>
                     <li><a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id    }/$z/$x/$y.jpg">Edit in Potlatch</a></li>
                 </ul>
+                -->
             </div>
-           
+          
+            <script>
+                var sel = document.getElementById("editors");
+                {literal}
+                sel.onchange = function(e) {
+                    switch (e.target.value) { {/literal}
+                        case "iD": window.open("http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$zoom}/{$print.longitude}/{$print.latitude}"); break;
+                        case "Potlatch": window.open("http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id}/$z/$x/$y.jpg"); break; 
+                        default: break;
+                    {literal}
+                    };
+                };
+
+                {/literal}
+            </script>
+
             <div id="atlas-activity-stream">
                 <h3>Activity</h3>
                 
