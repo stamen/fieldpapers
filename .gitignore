@@ -3,6 +3,7 @@
 .DS_Store
 site/lib/init.php
 tags
+site/www/build/
 
 # these are symptoms
 decoder/highpass.jpg
