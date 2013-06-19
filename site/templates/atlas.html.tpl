@@ -15,6 +15,10 @@
     {/if}
     <style type="text/css">
         {literal}
+        #nearby-atlases {
+            margin-top: 75px;
+        }
+        
         .atlasThumb-container {
             position: relative;
         }
@@ -306,13 +310,13 @@
                         <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=shp">Shapefile</a></li>
                     {/if}
                 </ul>
+                <h4>Edit Atlas</h4>
+                <ul>
+                    <li><a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={    $zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a></li>
+                    <li><a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id    }/$z/$x/$y.jpg">Edit in Potlatch</a></li>
+                </ul>
             </div>
            
-            <div id="atlas-editing">
-                <a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a><br>
-                <a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id}/$z/$x/$y.jpg">Edit in Potlatch</a>
-            </div>
-
             <div id="atlas-activity-stream">
                 <h3>Activity</h3>
                 
@@ -444,7 +448,7 @@
         {/if}        
 
 {* XXX MT follows *}
-
+<div id="nearby-atlases">
 <h3>Nearby</h3>
 
 {foreach from=$nearby_prints item="print" name="index"}
@@ -455,6 +459,7 @@
     </div>
 </div>
 {/foreach}
+</div>
 
 
 
