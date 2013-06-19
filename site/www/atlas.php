@@ -19,19 +19,34 @@
     
     $pages = get_print_pages($context->db, $print_id);
     $print['page_count'] = count($pages);
+
+    $isOSM = false;
+    
     if($pages){
         $i=0;
         while($i < count($pages)){
             $page = $pages[$i];
+
+            // check to see if provider is OSM to control visibility of 'Refresh' button in template
+            if(strpos($page['provider'],"openstreetmap") !== false){
+                $isOSM = true;
+            }
+
+            // get page zoom from first page
             if($page['page_number'] == 'A1'){
                 $print['page_zoom'] = $page['zoom'];
             }
+
+            // construct extent string
             $pages[$i]['nwse'] = $page['north'] .",". $page['west'] .",". $page['south'] .",". $page['east'];
+            
             $i++;
         }
     }
-    $context->sm->assign('print', $print);
     
+    $context->sm->assign('print', $print);
+    $context->sm->assign('isosm', $isOSM);
+
     if($print['selected_page']) {
         $context->sm->assign('pages', array($print['selected_page']));
 

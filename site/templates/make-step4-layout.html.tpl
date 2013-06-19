@@ -104,7 +104,12 @@
             
             {if $atlas_data.clone_id}
                 <input type="hidden" name="clone_id" value="{$atlas_data.clone_id|escape}">
-            {/if} 
+            {/if}
+            
+            {if $atlas_data.refresh_id}
+                <input type="hidden" id="refresh_id" name="refresh_id" value="{$atlas_data.refresh_id|escape}">
+            {/if}
+
             {if $atlas_data.form_url}
                 <input type="hidden" name="form_url" value="{$atlas_data.form_url|escape}">
             {elseif $atlas_data.form_id}

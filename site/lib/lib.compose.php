@@ -197,11 +197,20 @@
         
         return $bounds;
     }
+    
+    /**
+     * simple wrapper for refreshing an atlas that calls compose_clone w/ refresh flag set
+    **/
+    function compose_refresh(&$dbh, $post, $user_id, $refresh_id){
+        return compose_clone($dbh, $post, $user_id, $refresh_id, true);
+    }
 
     /**
-        clones an exisiting atlas
+     * clones an exisiting atlas
+     * $clone_id = id of print to be cloned
+     * $is_refresh flag will set either the refreshed column or cloned column in the DB with the $clone_id
     **/
-    function compose_clone(&$dbh, $post, $user_id, $clone_id){
+    function compose_clone(&$dbh, $post, $user_id, $clone_id, $is_refresh=false){
         $org_print = get_print($dbh, $clone_id);
         $org_pages = get_print_pages($dbh, $clone_id);
         
@@ -235,7 +244,13 @@
         $print['region_woeid'] = $org_print['region_woeid'];
         $print['place_name'] = $org_print['place_name'];
         $print['place_woeid'] = $org_print['place_woeid'];
-        $print['cloned'] = $clone_id;
+        if($is_refresh){
+            $print['refreshed'] = $clone_id;
+            $print['cloned'] = NULL;
+        }else{
+            $print['refreshed'] = NULL;
+            $print['cloned'] = $clone_id;
+        }
         // create messages
         foreach($org_pages as $org_page){
             $bounds = array(floatval($org_page['north']), floatval($org_page['west']), floatval($org_page['south']), floatval($org_page['east']));
