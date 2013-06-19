@@ -298,7 +298,7 @@
                     </span>
                 </div>
                 <div class="map-buttons-br">
-                    <form action="{$base_dir}/make-step4-layout.php" accept-charset="utf-8" method="POST">    
+                    <form action="{$base_dir}/make-step3-info.php" accept-charset="utf-8" method="POST">    
                         <p class="borrow">{*<a href="#">Copy this atlas</a>*}<input type="submit" value="Copy this atlas"></p>
                         <input type="hidden" name="atlas_title" value="{$print.title|escape}">
                         <input type="hidden" name="atlas_text" value="{$print.text|escape}">                    
@@ -474,9 +474,11 @@
                     You don't need to keep this window open; you can <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark 
                     this page</a> and come back later.
                 </p>
+                {if $print.private}
                 <p>
                     Since this atlas is <span class="private">private</span>, you probably should <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark it</a>.
                 </p>
+                {/if}
             </div>
         {/if}        
         {include file="footer.htmlf.tpl"}

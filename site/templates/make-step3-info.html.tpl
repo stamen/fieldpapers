@@ -53,7 +53,9 @@
                 <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
                 <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
                 <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider|escape}">
-
+                {if $atlas_data.clone_id}
+                    <input type="hidden" id="clone_id" name="clone_id" value="{$atlas_data.clone_id|escape}">
+                {/if}
                 {foreach from=$atlas_data.pages item="page" key="index"}
                     <input type="hidden" name="pages[{$index|escape}]" value="{$page|escape}">
                 {/foreach}

@@ -22,7 +22,11 @@
 
     if($_POST['atlas_text'])
         $atlas_data['atlas_text'] = $_POST['atlas_text'];
-
+    
+    if(isset($_POST['clone_id']) && !empty($_POST['clone_id'])){
+        $atlas_data['clone_id'] = trim($_POST['clone_id']);
+    }
+   
     $context->sm->assign('atlas_data', $atlas_data);
     
     if($context->type == 'text/html') {

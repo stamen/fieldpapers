@@ -52,12 +52,7 @@
     
    <div class="container" style="margin-top:50px;"> 
 	<form id="compose_print" action="{$base_dir}/compose-atlas.php" accept-charset="utf-8" method="POST">    
-    {if $atlas_data.clone_id}
-        <div id="clone-msg">
-            <h3>Please rename your clone</h3>
-            <input type='text' name='clone_name' size='50' id='clone_name' placeholder='' value='{$atlas_data.atlas_title|escape}_clone_v2'>
-        </div>
-    {/if} 
+   
     <div class="smallLayoutContainer">
     	<h2>Choose a Layout</h2>
 	</div>
@@ -99,17 +94,14 @@
      </div>   
      <div class="smallLayoutContainer">
          <p><input type="checkbox" id="grid" /> <label for="grid">Add a grid overlay to each map?</label></p>
-            {if $atlas_data.clone_id} 
-                <input id='atlas_title_input' type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape}_clone_v2">
-            {else}
-                <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape}">
-            {/if}
+            <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape}">          
             <input type="hidden" name="atlas_text" value="{$atlas_data.atlas_text|escape}">
             <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
             <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
             <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
             <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider|escape}">
             <input type="hidden" name="private" value="{$atlas_data.private|escape}">
+            
             {if $atlas_data.clone_id}
                 <input type="hidden" name="clone_id" value="{$atlas_data.clone_id|escape}">
             {/if} 
@@ -129,36 +121,8 @@
         </div> 
     </div>
     </form>
-    
         {include file="footer.htmlf.tpl"} 
-    </div>
-    <script>
-    {literal}
-    var cloneInput = document.getElementById('clone_name');
-    var atlas_title = document.getElementById('atlas_title_input');
-    cloneInput.onkeydown = function(e){
-        if(e.keyCode == 13){
-            e.preventDefault && e.preventDefault();
-            e.returnValue = false;
-            return false;
-        }
-    }    
-    function inputChange(val){
-        console.log(val);
-        if(!val || val.length < 1)return;
-        atlas_title.value = val;
-    }
-    
-    cloneInput.onkeypress = function(){
-        inputChange(this.value);
-    };
-
-    cloneInput.onchange = function(){
-        inputChange(this.value);
-    };    
-
-    {/literal}
-    </script>
+    </div> 
 </body>
 </html>
 
