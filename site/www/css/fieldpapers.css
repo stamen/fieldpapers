@@ -34,6 +34,7 @@ code {
 input {
 	font-size: 1.25em;
 	padding: 3px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', 'Arial Unicode MS', sans-serif;
 }
 a img {
 	border: none;

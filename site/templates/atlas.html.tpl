@@ -145,9 +145,10 @@
                 font-size: 18px;
                 text-decoration: underline;
                 font-weight: bold;
-                line-height: 18px;
+                line-height: 19px;
                 padding: 0;
-                cursor:pointer;
+                margin: 0;
+                cursor: pointer;
             }
             .borrow input:hover{
                 text-decoration:none;
