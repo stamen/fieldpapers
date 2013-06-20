@@ -263,6 +263,12 @@
         #zoom-in, #zoom-out {
             cursor: pointer;
         }
+		
+		
+#atlases-nearby { }
+#atlases-nearby ul { margin-left: -30px;  }
+#atlases-nearby li { margin:0; padding-right: 18px;  display: block; float: left; list-style: none; }
+#atlases-nearby div {width:140px; height: 140px; background-image: url(http://fieldpapers.org/files/prints/lnpnk6cx/preview.jpg)}		
         
         {/literal}
     </style>
@@ -459,11 +465,6 @@
                                     + {$print.orientation|escape}
                                     + {$print.layout|escape}
                                 </div>
-                                {*
-                                <a>George</a> made this atlas of <a>Dubai</a> <a class="date">- 3 weeks ago</a>
-                                <br>
-                                <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
-                                *}
                             </li>
                             {if $clone_child}
                                 <li>
@@ -508,7 +509,7 @@
                                 {if $scan.has_geotiff == 'yes'}
                                     (<a href="{$scan.base_url|escape}/walking-paper-{$scan.id|escape}.tif">GeoTIFF</a>)
                                 {/if}
-                                <a href="{$base_dir}/snapshots.php?month={"Y-m"|@date:$scan.created}" class="date">- {$scan.age|nice_relativetime|escape}</a>
+                                <a href="{$base_dir}/snapshots.php?month={"Y-m"|@date:$scan.created}" class="date">{$scan.age|nice_relativetime|escape}</a>
                                 <br>
                                 
                                 <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
@@ -532,7 +533,7 @@
                                 {else}
                                     added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">{$count} notes about page {$scan.print_page_number|escape}</a>
                                 {/if}
-                                <a class="date">- {$last_note.age|nice_relativetime|escape}</a>
+                                <a class="date">{$last_note.age|nice_relativetime|escape}</a>
                                 
                                 <ol>
                                     {foreach from=$notes item="note"}
@@ -600,8 +601,5 @@
 {include file="footer.htmlf.tpl"}
 
 </div>
-
-</script>
-
 </body>
 </html>
