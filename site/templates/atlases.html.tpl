@@ -59,11 +59,7 @@
     </div>
         
     <div class="container">
-        <h2 class="header">Atlases {$title|escape} <span class="count">{$atlas_count} atlases</span></h2>
-        <!--
-        <h1>Atlases {$title|escape}</h1>
-        <h2>Atlases | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
-        -->
+        <h2 class="header">Atlases {$title|escape} <span class="count">{$atlas_count} atlases</span> | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
         <div id="columns"> 
             {foreach from=$prints item="print" name="index"}
                 <div class="atlasPin"> 
