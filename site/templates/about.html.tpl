@@ -4,6 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>About - fieldpapers.org</title>    
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
+<!--     <link rel="stylesheet" href="{$base_dir}/css/bootstrap.css" type="text/css"> -->
 </head>
 <body>         
     {include file="navigation.htmlf.tpl"}
@@ -85,7 +86,10 @@
         {/literal}
         
         <div class="clearfloat"></div>
-        {include file="footer.htmlf.tpl"}
-    </div>
+
+</div>
+<div class="container">
+	{include file="footer.htmlf.tpl"}
+</div>
 </body>
 </html>

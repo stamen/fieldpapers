@@ -15,6 +15,31 @@
     {/if}
     <style type="text/css">
         {literal}
+        #nearby-atlases {
+            margin-top: 75px;
+        }
+        
+        .atlasThumb-container {
+            position: relative;
+        }
+
+        .atlasThumb-small {
+            //width: 180px;
+            height: 180px;
+            background-position: center center;
+            overflow: hidden;
+        }
+
+        h6.header {
+            //postion: relative;
+            //bottom: 0;
+        }
+
+        .atlasThumb-title {
+            position: relative;
+            bottom: 0;
+        }
+
         #canvas {
             width: 100%;
             height: 100%;
@@ -238,8 +263,6 @@
         #zoom-in, #zoom-out {
             cursor: pointer;
         }
-        .extra-meta-note{}
-        .extra-meta-note i{}
         
         {/literal}
     </style>
@@ -256,7 +279,7 @@
             <script>
                 var base_url = {$base_dir|json_encode};
                 var selected_page = {$print.selected_page|json_encode} || null;
-                
+
                 {if $print.selected_page}
                     var overview_provider = {$print.selected_page.provider|json_encode};
                     var main_provider = {$print.selected_page.provider|json_encode};
@@ -366,8 +389,35 @@
                         <li><a href="{$base_dir}/activity.php?print={$print.id|escape}&amp;type=shp">Shapefile</a></li>
                     {/if}
                 </ul>
+                <!--<h4>Edit Atlas</h4>-->
+                <select id="editors">
+                    <option id="ignore">Edit In...</option>
+                    <option id="iD">iD</option>
+                    <option id="potlatch">Potlatch</option>
+                </select>
+                <!--
+                <ul>
+                    <li><a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={    $zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a></li>
+                    <li><a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id    }/$z/$x/$y.jpg">Edit in Potlatch</a></li>
+                </ul>
+                -->
             </div>
-            
+          
+            <script>
+                var sel = document.getElementById("editors");
+                {literal}
+                sel.onchange = function(e) {
+                    switch (e.target.value) { {/literal}
+                        case "iD": window.open("http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$print.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$zoom}/{$print.longitude}/{$print.latitude}"); break;
+                        case "Potlatch": window.open("http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$print.id}/$z/$x/$y.jpg"); break; 
+                        default: break;
+                    {literal}
+                    };
+                };
+
+                {/literal}
+            </script>
+
             <div id="atlas-activity-stream">
                 <h3>Activity</h3>
                 
@@ -384,8 +434,12 @@
                                 {/if}
                                 made this atlas 
                                 {if $print.place_name}
-                                of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
+                                    of   
+                                    <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename}</a>,
+                                    <a href="{$base_dir}/atlases.php?place={$print.region_woeid}">{$print.region_name|nice_placename}</a>,
+                                    <a href="{$base_dir}/atlases.php?place={$print.country_woeid}">{$print.country_name|nice_placename}</a>
                                 {/if}
+
                                 <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
                                
                                 <div class="details">
@@ -458,12 +512,6 @@
                                 <br>
                                 
                                 <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}"><img src="{$scan.base_url|escape}/preview.jpg"></a>
-
-                                {*
-                                <a>George</a> uploaded a <a>snapshot</a> of <a>page B2</a> <a class="date">- 3 weeks ago</a>
-                                <br>
-                                <img>
-                                *}
                             </li>
 
                         {elseif $event.type == "notes"}
@@ -504,26 +552,10 @@
                                     Someone anonymous
                                 {/if}
                                 added <a href="{$base_dir}/snapshot.php?id={$scan.id|escape}">a note about page {$scan.print_page_number|escape}</a>
-                                <a class="date">- {$note.age|nice_relativetime|escape}</a>
+                                <a class="date">{$note.age|nice_relativetime|escape}</a>
                                 <ol>
                                     <li>{$note.note|escape}</li>
                                 </ol>
-
-                                {*
-                                <a>George</a> added 3 notes about <a>page B2</a> <a class="date">- 2 weeks ago</a>
-                                <ol>
-                                    <li>This is where I found a</li>
-                                    <li>Fire hydrant looks busted</li>
-                                    <li>Best eggs in the city</li>
-                                </ol>
-
-                                Someone anonymous added a note to <a>page B2</a> <a class="date">- 4 days ago</a>
-                                <ol>
-                                    <li>This is where I found a</li>
-                                    <li>Fire hydrant looks busted</li>
-                                    <li>Best eggs in the city</li>
-                                </ol>
-                                *}
                             </li>
                         {/if}
                     {/foreach}
@@ -547,7 +579,29 @@
                 {/if}
             </div>
         {/if}        
-        {include file="footer.htmlf.tpl"}
+
+{* XXX MT follows *}
+<div id="nearby-atlases">
+<h3>Nearby</h3>
+
+{foreach from=$nearby_prints item="print" name="index"}
+<div class="atlasThumb-container atlasThumb">
+    <div class="atlasThumb-small" style="background-image: url({$print.preview_url});"></div>
+    <div class="atlasThumb-title">
+        <h4 class="header"><a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|decode_utf8|escape}{else}Untitled{/if}</a></h4>
     </div>
+</div>
+{/foreach}
+</div>
+
+
+
+
+{include file="footer.htmlf.tpl"}
+
+</div>
+
+</script>
+
 </body>
 </html>

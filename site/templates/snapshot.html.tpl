@@ -328,7 +328,6 @@
                 {include file="en/scan-process-info.htmlf.tpl"}
                 {include file="footer.htmlf.tpl"}
             {/if}
-        </div>
-    
+
 </body>
 </html>
