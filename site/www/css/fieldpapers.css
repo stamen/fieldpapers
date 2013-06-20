@@ -12,18 +12,16 @@ ul, ol, dl {
 	margin: 0 50px;
 }
 */
-h1, h2, h3, h4, h5, h6, p {
-	margin-top: 0;
-	padding-right: 10px;
-	padding-left: 10px;
-}
+
 .subHead {
-	font-size: 0.5em;
 	color: #666;
 	font-weight: normal;
 }
 small {
-	font-size: 0.75em;
+	font-size: 13px;
+}
+.grey {
+	color: #666;
 }
 code {
 	background-color: #eee;
@@ -32,7 +30,6 @@ code {
 	font-family: "Lucida Console", Monaco, monospace;
 }
 input {
-	font-size: 1.25em;
 	padding: 3px;
     font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', 'Arial Unicode MS', sans-serif;
 }
@@ -65,6 +62,17 @@ a:hover, a:active, a:focus {
 	clear: both;
 	padding-top: 60px;
 	padding-bottom: 50px;
+}
+.smallContainer input, .smallContainer textarea {
+	font-size: 18px;
+}
+.smallLayoutContainer {
+	width: 620px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: left;
+	clear: both;
+	padding-top: 60px;
 }
 .fltrt {
 	float: right;
@@ -115,6 +123,7 @@ a:hover, a:active, a:focus {
 	display: block;
 	float: left;
 	padding-bottom: 20px;
+	line-height: 20px;
 }
 .navbar li.in {
 	border-bottom: 2px solid black;
@@ -122,11 +131,11 @@ a:hover, a:active, a:focus {
 .navbar .section {
 	font-weight: bold;
 	font-style:italic;
-	font-size: 0.875em;
+	font-size: 14px;
 }
 .navbar .desc {
-	font-size: 0.675em;
-	line-height:1.5em;
+	margin-top: 0;
+	font-size: 11px;
 	color: #666;
 }
 .navbar a:link, .navbar a:visited, .navbar a:visited {
@@ -149,14 +158,39 @@ h2.pageCount {
 	clear: both;
 	margin-top: 20px;
 }
-.atlasThumb {
-	margin-left: 10px;
-	float: left;
-	width: 300px;
-	margin-bottom: 2em;
+#columns {
+	column-count: 3;
+	column-gap: 15px;
+	column-fill: auto;
+	-moz-column-count: 3;
+	-moz-column-gap: 10px;
+	-moz-column-fill: auto;
+	-webkit-column-count: 3;
+	-webkit-column-gap: 10px;
+	-webkit-column-fill: auto;
 }
-.atlasThumb img {
-	border: 1px solid black;
+.atlasThumb {
+        margin-left: 10px;
+        float: left;
+        width: 300px;
+        margin-bottom: 2em;
+}
+
+.atlasPin {
+	column-break-inside: avoid;
+	-moz-column-break-inside: avoid;
+	-webkit-column-break-inside: avoid;
+	display: inline-block;
+	margin: 0 2px 15px;
+	padding: 15px;
+	border: 2px solid #FAFAFA;
+	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+	background: #FEFEFE;
+	background-image: linear-gradient(45deg, #FFF, #F9F9F9);
+	color: #666;
+}
+.atlasPin img {
+	margin-bottom: 20px;
 }
 
 .atlasThumb img.private {
@@ -196,7 +230,7 @@ h2.pageCount {
 }
 .buttonBar button {
 	margin-left: 20px;
-	font-size: 1.25em;
+	font-size: 18px;
 }
 .fieldSet {
 	float: right;
@@ -272,11 +306,15 @@ button, #remove, #remove_new {
 	width: 960px;
 	margin-right: auto;
 	margin-left: auto;
-	text-align: left;
+	text-align: center;
 	clear: both;
-	padding-top: 100px;
-	font-size: 0.825em;
-	line-height: 1.25em;
+	margin-top: 60px;
+	margin-bottom: 20px;
+	font-size: 14px;
+	line-height: 20px;
+}
+#footer small {
+	color: #666;
 }
 #subnav_container {
 	position: absolute;
@@ -285,12 +323,13 @@ button, #remove, #remove_new {
 	left: 360px;
 	z-index: 2;
 	background-color: #FFF;
+	line-height: 14px;
 }
 .subnav {
 	display: inline-block;
 	padding-left: 10px;
 	padding-top: 10px;
-	padding-bottom: 4px;
+	padding-bottom: 5px;
 	margin-left: 0px;
 	width: 75px;
 	text-align: left;
@@ -314,11 +353,128 @@ button, #remove, #remove_new {
 	text-align: center;
 }
 #error {
+	margin-bottom: 20px;
 	background-color: #f2f2f2;
-	border-left; 10px #ff3333 solid;
-	padding: 10px;
+	border-left: 10px solid #ff3333;
+	padding: 15px;
 	color: #ff3333
 }
 .explanation {
-	color: #666;	
+	color: #666;
 }
+/* Cribbed/Tweaked From BOOTSTRAP.CSS */
+/*!
+ * Bootstrap v2.0.1
+ *
+ * Copyright 2012 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ */
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+	color: #333333;
+	text-rendering: optimizelegibility;
+}
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+	font-weight: normal;
+	color: #999999;
+}
+h1 {
+	font-size: 30px;
+	line-height: 36px;
+}
+h1 small {
+	font-size: 18px;
+}
+h2 {
+	font-size: 24px;
+	line-height: 36px;
+}
+h2 small {
+	font-size: 18px;
+}
+h3 {
+	line-height: 27px;
+	font-size: 18px;
+}
+h3 small {
+	font-size: 14px;
+}
+h4, h5, h6 {
+	line-height: 18px;
+}
+h4 {
+	font-size: 14px;
+}
+h4 small {
+	font-size: 12px;
+}
+h5 {
+	font-size: 12px;
+}
+h6 {
+	font-size: 11px;
+	color: #999999;
+	text-transform: uppercase;
+}
+.pagination {
+	height: 36px;
+	margin-left: 280px;
+	margin-bottom: 60px;
+}
+.pagination ul {
+	display: inline-block;
+ *display: inline;
+  /* IE7 inline-block hack */
+
+  *zoom: 1;
+	margin-left: 0;
+	margin-bottom: 0;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.pagination li {
+	display: inline;
+}
+.pagination a {
+	float: left;
+	padding: 0 14px;
+	line-height: 34px;
+	text-decoration: none;
+	border: 1px solid #ddd;
+	border-left-width: 0;
+}
+.pagination a:hover, .pagination .active a {
+	background-color: #f5f5f5;
+}
+.pagination .active a {
+	color: #999999;
+	cursor: default;
+}
+.pagination .disabled a, .pagination .disabled a:hover {
+	color: #999999;
+	background-color: transparent;
+	cursor: default;
+}
+.pagination li:first-child a {
+	border-left-width: 1px;
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+}
+.pagination li:last-child a {
+	-webkit-border-radius: 0 3px 3px 0;
+	-moz-border-radius: 0 3px 3px 0;
+	border-radius: 0 3px 3px 0;
+}
+.pagination-centered {
+	text-align: center;
+}
+.pagination-right {
+	text-align: right;
+}
+

@@ -99,8 +99,8 @@
         }
                 
         #page_plural {
-            font-size: 0.675em;
-            line-height 1.5em;
+            font-size: 11px;
+            line-height 14;
             color: #666;
         }
         

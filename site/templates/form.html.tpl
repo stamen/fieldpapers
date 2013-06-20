@@ -22,9 +22,9 @@
             
             {if $fields|@count >= 1}
                 {if field|@count == 1}
-                    <p>There is <b>{$fields|@count}</b> input on this form:  
+                    <p>There is <b>{$fields|@count}</b> input on this form: </p> 
                 {else}
-                    <p>There are <b>{$fields|@count}</b> inputs on this form: 
+                    <p>There are <b>{$fields|@count}</b> inputs on this form: </p>
                 {/if}
                     <ul>
                         {foreach from=$fields item="field"}
@@ -37,7 +37,6 @@
                             {/if}
                         {/foreach}
                     </ul>
-                </p>
             {/if}
         {else}
             <p>Preparing your form.</p>
@@ -48,7 +47,8 @@
             </p>
         {/if}
         
-        {include file="footer.htmlf.tpl"}
-    </div>
+{include file="footer.htmlf.tpl"}
+
+</div>
 </body>
 </html>
