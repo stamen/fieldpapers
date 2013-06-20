@@ -11,10 +11,27 @@
     $print_id = $_GET['id'] ? $_GET['id'] : null;
     
     $print = get_print($context->db, $print_id);
-
+    
     if (!$print) {
         header("HTTP/1.1 404");
         die("No such atlas.\n");
+    }
+    
+    // get cloned or refreshed details
+    $clone_child = NULL;
+    $clone_parent = NULL;
+    if(!$print['cloned']){
+        $clone_child = get_latest_print_clone($context->db, $print_id);
+    }else{
+        $clone_parent = get_print($context->db, $print['cloned']);
+    }
+
+    $refresh_child = NULL;
+    $refresh_parent = NULL;
+    if(!$print['refreshed']){
+        $refresh_child = get_latest_print_refresh($context->db, $print_id);
+    }else{
+        $refresh_parent = get_print($context->db, $print['refreshed']);
     }
     
     $pages = get_print_pages($context->db, $print_id);
@@ -46,6 +63,10 @@
     
     $context->sm->assign('print', $print);
     $context->sm->assign('isosm', $isOSM);
+    $context->sm->assign('clone_child', $clone_child);
+    $context->sm->assign('refresh_child', $refresh_child);
+    $context->sm->assign('clone_parent', $clone_parent);
+    $context->sm->assign('refresh_parent', $refresh_parent);
 
     if($print['selected_page']) {
         $context->sm->assign('pages', array($print['selected_page']));

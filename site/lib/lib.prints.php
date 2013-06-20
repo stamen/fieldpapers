@@ -286,7 +286,7 @@
         
         return $rows;
     }
-    
+
     function get_print_page(&$dbh, $print_id, $page_number)
     {
         $q = sprintf("SELECT print_id, page_number, text,
@@ -566,4 +566,62 @@
         return join(',', array_values($row));
     }
 
+    /**
+     * Gets latest clone for a parent print
+     */
+    function get_latest_print_clone(&$dbh,$print_id){
+        $q = sprintf("SELECT id, title, user_id,
+                UNIX_TIMESTAMP(created) AS created,
+                UNIX_TIMESTAMP(composed) AS composed,
+                UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
+                FROM prints
+                WHERE cloned = %s
+                ORDER BY created DESC LIMIT 1",
+                $dbh->quoteSmart($print_id));
+    
+        $res = $dbh->query($q);
+
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+        
+        if($row['user_id'] != null){
+            $user = get_user($dbh, $row['user_id']);
+            if($user['name']){
+                $row['user_name'] = $user['name'];
+            }
+        }
+        return $row;
+    }
+
+    /**
+     * Gets latest refresh for a parent print
+     */
+    function get_latest_print_refresh(&$dbh,$print_id){
+        $q = sprintf("SELECT id, title, user_id,
+                UNIX_TIMESTAMP(created) AS created,
+                UNIX_TIMESTAMP(composed) AS composed,
+                UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age
+                FROM prints
+                WHERE refreshed = %s
+                ORDER BY created DESC LIMIT 1",
+                $dbh->quoteSmart($print_id));
+    
+        $res = $dbh->query($q);
+
+        if(PEAR::isError($res)) 
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+        
+        if($row['user_id'] != null){
+            $user = get_user($dbh, $row['user_id']);
+            if($user['name']){
+                $row['user_name'] = $user['name'];
+            }
+        }
+
+        return $row;
+    }
 ?>

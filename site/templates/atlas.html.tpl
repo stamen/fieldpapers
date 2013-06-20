@@ -238,15 +238,8 @@
         #zoom-in, #zoom-out {
             cursor: pointer;
         }
-        .extra-meta-note{
-            display: block;
-            font-size: .9em;
-            font-weight: lighter;
-        }
-        .extra-meta-note i{
-            font-style: normal;
-            font-weight: bold;
-        }
+        .extra-meta-note{}
+        .extra-meta-note i{}
         
         {/literal}
     </style>
@@ -393,11 +386,7 @@
                                 of <a href="{$base_dir}/atlases.php?place={$print.place_woeid}">{$print.place_name|nice_placename|escape}</a>
                                 {/if}
                                 <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$print.created}" class="date">- {$print.age|nice_relativetime|escape}</a>
-                                {if $print.cloned}
-                                    <span class='extra-meta-note'>This atlas was <i>cloned</i> from <a href="{$base_dir}/atlas.php?id={$print.cloned|escape}">here.</a></span>
-                                {elseif $print.refreshed}
-                                    <span class='extra-meta-note'>This atlas was <i>refreshed</i> from <a href="{$base_dir}/atlas.php?id={$print.refreshed|escape}">here.</a></span>
-                                {/if}
+                               
                                 <div class="details">
                                     {if $print.page_count == 1}
                                         One page
@@ -421,7 +410,36 @@
                                 <span class="details">18 pages + satellite and labels + portrait + map/notes layout, 2-up + <a>imported MBTiles</a></span>
                                 *}
                             </li>
-
+                            {if $clone_child}
+                                <li>
+                                    <span class='extra-meta-note'>
+                                    {if $clone_child.user_name}<a href="{$base_dir}/atlas.php?id={$cloned_child.user_id|escape}">{$clone_child.user_name|escape}</a>{else}Someone{/if}</a>
+                                     made a 
+                                    <a href="{$base_dir}/atlas.php?id={$clone_child.id|escape}"><i>copy</i></a>
+                                     of this atlas - <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$clone_child.created}" class="date">{$clone_child.age|nice_relativetime|escape}</a>.
+                                    </span>
+                                </li>
+                            {/if}
+                            {if $clone_parent}
+                                <li>
+                                    <span class='extra-meta-note'>This atlas is a <i>copy</i> of <a href="{$base_dir}/atlas.php?id={$print.cloned|escape}">
+                                    {if $clone_parent.title}{$clone_parent.title|escape:'html'}{else}Untitled{/if}</a></span>
+                                </li>
+                            {/if}
+                           {if $refresh_child}
+                                <li>
+                                    <span class='extra-meta-note'>A <a href="{$base_dir}/atlas.php?id={$refresh_child.id|escape}">new, refreshed version</a> of this atlas was made by
+                                    {if $refresh_child.user_name}{$refresh_child.user_name|escape}{else}someone{/if} 
+                                    <a href="{$base_dir}/atlases.php?month={"Y-m"|@date:$refresh_child.created}" class="date">{$refresh_child.age|nice_relativetime|escape}</a>.
+                                    </span>
+                                </li>
+                            {/if}
+                            {if $refresh_parent}
+                                <li>
+                                    <span class='extra-meta-note'>This atlas is a <i>refresh</i> of <a href="{$base_dir}/atlas.php?id={$print.refreshed|escape}">
+                                    {if $refresh_parent.title}{$refresh_parent.title|escape:'html'}{else}Untitled{/if}</a></span>
+                                </li>
+                            {/if} 
                         {elseif $event.type == "scan"}
                             <li>
                                 {assign var="scan" value=$event.scan}
