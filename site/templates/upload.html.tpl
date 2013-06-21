@@ -21,7 +21,7 @@
         <input name="file" type="file">
         <br>
         <br>
-        <input type="submit" value="Upload">
+        <input class='btn' type="submit" value="Upload">
     </form>
     {elseif $localpost}
     <form action="{$base_dir}/post-file.php" method="post" enctype="multipart/form-data">
@@ -30,7 +30,7 @@
         <input name="expiration" type="hidden" value="{$localpost.expiration|escape}">
         <input name="signature" type="hidden" value="{$localpost.signature|escape}">
         <input name="file" type="file">
-        <input type="submit" value="Upload">
+        <input class='btn' type="submit" value="Upload">
     </form>
     {/if}
     <div style='margin-top: 50px;'>

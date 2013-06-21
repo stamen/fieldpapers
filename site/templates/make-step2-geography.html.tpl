@@ -212,7 +212,7 @@
                                     <span id="page_plural">PAGE</span>
                                 </span>
                                 
-                                <input id="next_button" type="submit" value="Next">
+                                <input id="next_button" class='btn' type="submit" value="Next">
                             </span>                           
                         </span>
                         <span class="subnav info">

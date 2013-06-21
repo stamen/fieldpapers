@@ -15,24 +15,20 @@
         <div class="container">
             <div class="smallContainer" style="text-align: center;">
 
-                <!--
+                {if $error_nosearch}{* TODO: send error msg *}
                 <p>Sorry, but our <strong>search isn't working at the moment.</strong></p>
         
                 <p>While we work on a fix, you can still browse existing atlases around the world,<br>
                 and stay in touch for updates by following the <a href="https://twitter.com/stamen">@stamen</a> Twitter account.</p>
         
                 <p>Thanks.</p>
-                -->
+                {/if}
 
                 <h2>Where in the world is your atlas?</h2>
-                <p>                                            
                     <form id="search-form" accept-charset = "utf-8" action="{$base_dir}/make-step2-geography.php" method="post">
-                        <input type="text" name="query" size="50" style="padding: 5px; color: grey;" id="location_input"
+                        <input type="text" name="query" size="45" style="padding: 5px; color: grey;" id="location_input"
                                placeholder="Type in a location" value="{$atlas_data.atlas_location|escape}">
-                        {if $error}
-                            <p style="color: #C33;">We could not find that place. Please try again.</p>
-                        {/if}
-                        <input type="submit" name="action" value="Start There">
+                        <input class='btn' style='margin-bottom: 5px;' type="submit" name="action" value="Start There">
                         
                         {if $atlas_data.atlas_provider}
                             <input name="atlas_provider" value="{$atlas_data.atlas_provider|escape}" type="hidden">
@@ -46,7 +42,9 @@
                             <input name="atlas_text" value="{$atlas_data.atlas_text|escape}" type="hidden">
                         {/if}
                     </form>
-                </p>
+                {if $error}
+                    <p style="color: #C33;">We could not find that place. Please try again.</p>
+                {/if}
                 {if $user_mbtiles}
                     <h2>Or Choose your MBTiles</h2>
                     <p>
@@ -60,12 +58,12 @@
                                     </option>
                                 {/foreach}
                             </select><br>
-                            <input type="submit" name="action" value="Use MBTiles">
+                            <input class='btn' type="submit" name="action" value="Use MBTiles">
                         </form>
                     </p>
                 {/if}
                 
-                </div>
+            </div>
             {include file="footer.htmlf.tpl"}
         </div>
     </body>
