@@ -22,6 +22,9 @@
         margin-top: 20px;
         font-size: 1em;
     }
+    input[type='radio'], input[type='checkbox']{
+        vertical-align: text-bottom;
+    }
     {/literal}
     </style>
 </head>
@@ -54,7 +57,7 @@
    
     <div class="smallLayoutContainer">
     	<h2>Choose a Layout</h2>
-        <p><input type="checkbox" id="grid" /> <label for="grid">Add a grid overlay to each map?</label></p>
+        <p><label for="grid"><input type="checkbox" id="grid" /> Add a grid overlay to each map?</label></p>
 	</div>
     <div class="container"> 
             
