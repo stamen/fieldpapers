@@ -287,7 +287,6 @@
         #atlases-nearby li:nth-child(6n){
             margin-right:0;
         }
-        #atlases-nearby li:hover{}
 
         #atlases-nearby div {
             width:140px;
@@ -302,6 +301,9 @@
             background-size: cover;
             background-position: center;
         }
+
+        #atlases-nearby li:hover{}
+        #atlases-nearby li:hover div a{}
         #atlases-nearby li:hover a{
             text-decoration: none;
         }
