@@ -25,6 +25,11 @@
         border: 2px solid #000;
         display: block;
     }
+    #markers .marker:hover {
+        background: steelblue;
+        border: 2px solid #fff;
+    }
+    
     #hdr {
         position: absolute;
         bottom: 0;
