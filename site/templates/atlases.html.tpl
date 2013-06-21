@@ -59,7 +59,7 @@
             var marker = document.createElement("a");
             marker.print = print;
             marker.setAttribute("href", print_href + print.id);
-            var title = print.title || "No title";
+            var title = print.title || "Untitled";
             marker.setAttribute("title", title);
             markers.push(marker);
         });
