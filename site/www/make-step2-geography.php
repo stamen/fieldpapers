@@ -20,8 +20,8 @@
         $atlas_data['atlas_text'] = $_POST['atlas_text'];
 
     $context->sm->assign('atlas_data', $atlas_data);
-
-    if($_POST['query'])
+    
+    if(isset($_POST['query']))
     {
         if(preg_match('/^(-?\d+(?:\.\d+)?)[,\s]+(-?\d+(?:\.\d+)?)(?:[,\s]+(\d+))?$/', trim($_POST['query']), $m))
         {
@@ -31,7 +31,6 @@
         } else {
             $latlonzoom = placefinder_placename_latlonzoom($_POST['query']);
             //header('Content-type: text/javascript');
-            //print_r($latlonzoom);
             
             if(!is_array($latlonzoom))
             {
@@ -54,29 +53,31 @@
         header('HTTP/1.1 303');
         header("Location: $redirect_href");
     }
-
-    if($_GET['mbtiles_id'])
-    {        
-        $mbtiles = get_mbtiles_by_id($context->db, $_GET['mbtiles_id']);
-                
-        $mbtiles_data = array("provider" =>      $mbtiles['url'],
-                              "uploaded_file" => $mbtiles['uploaded_file'],
-                              "center_x" =>      $mbtiles['center_x_coord'],
-                              "center_y" =>      $mbtiles['center_y_coord'],
-                              "zoom" =>          $mbtiles['center_zoom'],
-                              'min_zoom' =>      $mbtiles['min_zoom'],
-                              'max_zoom' =>      $mbtiles['max_zoom']
-                              );
-        $context->sm-> assign('mbtiles_data', $mbtiles_data); 
-    }
-    
-    if($_GET['lat'] && $_GET['lon'] && $_GET['zoom'])
-    {
-        $center = array($_GET['lat'], $_GET['lon']);
-        $zoom = $_GET['zoom'];
-        
-        $context->sm->assign('center', join(',', $center));
-        $context->sm->assign('zoom', $zoom);
+    if(isset($_GET) && !empty($_GET)){ 
+        if($_GET['mbtiles_id']){        
+            $mbtiles = get_mbtiles_by_id($context->db, $_GET['mbtiles_id']);
+                    
+            $mbtiles_data = array("provider" =>      $mbtiles['url'],
+                                  "uploaded_file" => $mbtiles['uploaded_file'],
+                                  "center_x" =>      $mbtiles['center_x_coord'],
+                                  "center_y" =>      $mbtiles['center_y_coord'],
+                                  "zoom" =>          $mbtiles['center_zoom'],
+                                  'min_zoom' =>      $mbtiles['min_zoom'],
+                                  'max_zoom' =>      $mbtiles['max_zoom']
+                                  );
+            $context->sm-> assign('mbtiles_data', $mbtiles_data); 
+        }elseif($_GET['lat'] && $_GET['lon'] && $_GET['zoom']){
+            $center = array($_GET['lat'], $_GET['lon']);
+            $zoom = $_GET['zoom'];
+            
+            $context->sm->assign('center', join(',', $center));
+            $context->sm->assign('zoom', $zoom);
+        }else{
+            $redirect_href = sprintf('http://%s%s/make-step1-search.php?error=no_response', get_domain_name(), get_base_dir());
+            header('HTTP/1.1 303');
+            header("Location: $redirect_href"); 
+            exit();
+        }
     }
     
     $context->sm->assign('providers', get_map_providers());

@@ -29,6 +29,9 @@
         $context->sm->assign('error', $_GET['error']);
     }
     
+    // TODO: check whether search is currently working
+    // pass $error_nosearch to template
+
     if (is_logged_in()) {
         $user_mbtiles = get_mbtiles_by_user_id($context->db, $context->user['id']);
 

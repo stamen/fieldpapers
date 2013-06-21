@@ -71,7 +71,7 @@
                 {/foreach}
                 
                 <div style="float: right; margin-top: 20px;">
-                    <input type="submit" value="Next">
+                    <input class='btn' type="submit" value="Next">
                 </div>
             </form>
     </div>
