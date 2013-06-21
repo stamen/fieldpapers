@@ -5,52 +5,6 @@
 <title>Atlases - fieldpapers.org</title>
 <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
 <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
-<style>
-    {literal}
-    #map {
-        position: relative;
-        height: 580px;
-        width: 100%;
-    }
-    #markers {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 100;
-    }
-    #markers .marker {
-        position: absolute;
-        background: yellow;
-        opacity: 0.4;
-        border: 2px solid #000;
-        display: block;
-    }
-    #hdr {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        font-family: aria;
-        font-size: 3em;
-        color: #fff;
-        background: #000;
-        padding: 20px;
-    }
-    h2.header
-    {
-        background: #000;
-        font-size: 24px;
-        line-height: 36px;
-        color: #fff;
-        padding: 2px 10px;
-        box-sizing: border-box;
-        margin: -40px 0 20px 0;
-        position: relative;
-    }
-    span.count {
-        font-size: 18px;
-    }
-    {/literal}
-</style>
 </head>
 <body>
     {include file="navigation.htmlf.tpl"}
@@ -59,7 +13,7 @@
     </div>
         
     <div class="container">
-        <h2 class="header">Atlases {$title|escape} <span class="count">{$atlas_count} atlases</span> | <a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
+        <h2 class="header">Atlases {$title|escape} <span class="count">{$atlas_count} atlases</span><span class="pipe-divider">|</span><a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
         <div id="columns"> 
             {foreach from=$prints item="print" name="index"}
                 <div class="atlasPin"> 
