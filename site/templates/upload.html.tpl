@@ -4,6 +4,16 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Upload Scan - fieldpapers.org</title>
     <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
+    <style type='text/css'>
+        {literal}
+        input[type='submit']{
+            margin-top: -1px;
+        }
+        input[type="file"]{
+            line-height: 1;
+        }
+        {/literal}
+    </style>
 </head>
 <body>
 {include file="navigation.htmlf.tpl"}
