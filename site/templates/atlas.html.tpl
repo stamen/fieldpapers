@@ -581,19 +581,19 @@
             </div>
         {/if}        
 
-{* XXX MT follows *}
-<div id="nearby-atlases">
-<h3>Nearby</h3>
+        {* XXX MT follows *}
+        <div id="nearby-atlases">
+            <h3>Nearby</h3>
 
-{foreach from=$nearby_prints item="print" name="index"}
-<div class="atlasThumb-container atlasThumb">
-    <div class="atlasThumb-small" style="background-image: url({$print.preview_url});"></div>
-    <div class="atlasThumb-title">
-        <h4 class="header"><a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|decode_utf8|escape}{else}Untitled{/if}</a></h4>
-    </div>
-</div>
-{/foreach}
-</div>
+            {foreach from=$nearby_prints item="print" name="index"}
+            <div class="atlasThumb-container atlasThumb">
+                <div class="atlasThumb-small" style="background-image: url({$print.preview_url});"></div>
+                <div class="atlasThumb-title">
+                    <h4 class="header"><a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a></h4>
+                </div>
+            </div>
+            {/foreach}
+        </div>
 
 
 

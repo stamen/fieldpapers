@@ -50,11 +50,11 @@
         </div>
     </div>
     
-   <div class="container" style="margin-top:50px;"> 
 	<form id="compose_print" action="{$base_dir}/compose-atlas.php" accept-charset="utf-8" method="POST">    
    
     <div class="smallLayoutContainer">
     	<h2>Choose a Layout</h2>
+        <p><input type="checkbox" id="grid" /> <label for="grid">Add a grid overlay to each map?</label></p>
 	</div>
     <div class="container"> 
             
@@ -92,8 +92,7 @@
         </div>
         <div class="clearfloat"></div> 
      </div>   
-     <div class="smallLayoutContainer">
-         <p><input type="checkbox" id="grid" /> <label for="grid">Add a grid overlay to each map?</label></p>
+     <div class="smallLayoutContainer" style="text-align:right;">
             <input type="hidden" name="atlas_title" value="{$atlas_data.atlas_title|escape}">          
             <input type="hidden" name="atlas_text" value="{$atlas_data.atlas_text|escape}">
             <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
@@ -120,8 +119,8 @@
                 <input type="hidden" name="pages[{$index|escape}]" value="{$page|escape}">
             {/foreach}
             
-        <div style="float: right; margin-top: 20px; margin-bottom: 40px;">
-            <input type="submit" value="Finished!">
+        <div style=" margin-bottom: 40px;">
+            <input id="finished-btn" class="btn" type="submit" value="Finished!">
             <input type="hidden" name="action" value="compose">
         </div> 
     </div>

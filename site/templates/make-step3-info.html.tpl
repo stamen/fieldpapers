@@ -29,24 +29,28 @@
             </span>
         </div>
     </div>
-    <div class="container" style="margin-top: 50px;">            
+    <div class="smallContainer">
+        <h2>Name/Description</h2>
             <form action="{$base_dir}/make-step4-layout.php" accept-charset="utf-8" method="POST">
-                <p style="margin-bottom: 60px;">
-                    <label for="atlas_title" style="font-size: 22px;">Give Your Atlas a Name</label>
-                    <br>
-                    <input style="margin-top: 10px; color: grey;" type="text" id='title_input' name="atlas_title" size="60"
+                <p>
+                    <label for="atlas_title">Give Your Atlas a Name</label>
+                    <br/>
+                    <input type="text" id='title_input' name="atlas_title" size="60"
                            placeholder="Untitled" value="{$atlas_data.atlas_title|escape}">
                 </p>
                 <p>
-                    <label for="atlas_text" style="font-size: 16px"><b>Page Text</b> (<i>This is optional.</i>)</label>
+                    <label for="atlas_text">Add <i>optional</i> text to each page?</label>
+                    <br/>
+                    <small>Text you enter will show up next to each map in the atlas</small>
                 </p>
-                <p>Add text to each page in your atlas, like a questionnaire or a site survey form.</p>
                 <p>
-                    <textarea name="atlas_text" rows="10" style="font-size: 16px; width: 40em;" placeholder="Text to print with each page of your atlas">{$atlas_data.atlas_text|escape}</textarea>
+                    <textarea name="atlas_text" rows="10" style="width:100%;">{$atlas_data.atlas_text|escape}</textarea>
                 </p>
                 
                 <p>
-                    <label><input name="private" type="checkbox" {if $atlas_data.private}checked{/if}> Make this atlas private. (That means it's only accessible to you, if you're logged in, or by direct URL.)</label>
+                    <label><input name="private" type="checkbox" {if $atlas_data.private}checked{/if}> Make this atlas private.</label>
+                    <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>(That means it's only accessible to you, if you're logged in, or by direct URL.)</small>
                 </p>
                 
                 <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
@@ -66,12 +70,13 @@
                     <input type="hidden" name="pages[{$index|escape}]" value="{$page|escape}">
                 {/foreach}
                 
-                <div style="float: right; margin-top: 60px;">
+                <div style="float: right; margin-top: 20px;">
                     <input type="submit" value="Next">
                 </div>
             </form>
-            
-            {include file="footer.htmlf.tpl"}
+    </div>
+    <div class='container'>
+        {include file="footer.htmlf.tpl"}
     </div>
 </body>
 </html>
