@@ -265,10 +265,46 @@
         }
 		
 		
-#atlases-nearby { }
-#atlases-nearby ul { margin-left: -30px;  }
-#atlases-nearby li { margin:0; padding-right: 18px;  display: block; float: left; list-style: none; }
-#atlases-nearby div {width:140px; height: 140px; background-image: url(http://fieldpapers.org/files/prints/lnpnk6cx/preview.jpg)}		
+        #atlases-nearby { }
+        #atlases-nearby ul {
+            overflow: hidden;
+            margin-left: -30px;
+        }
+        #atlases-nearby li { 
+            margin: 0 15px 0 0; 
+            padding-right: 0;  
+            display: block;
+            float: left;
+            list-style: none;
+            width: 140px;
+            height: auto;
+            ovverflow: hidden;
+            box-sizing: border-box;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }       
+        #atlases-nearby li:nth-child(6n){
+            margin-right:0;
+        }
+        #atlases-nearby li:hover{}
+
+        #atlases-nearby div {
+            width:140px;
+            height: 140px;
+            position: relative;
+        }
+        
+        #atlases-nearby div a{
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        #atlases-nearby li:hover a{
+            text-decoration: none;
+        }
         
         {/literal}
     </style>
@@ -582,17 +618,21 @@
         {/if}        
 
         {* XXX MT follows *}
-        <div id="nearby-atlases">
+        <div id="atlases-nearby">
             <h3>Nearby</h3>
-
+            <ul>
             {foreach from=$nearby_prints item="print" name="index"}
-            <div class="atlasThumb-container atlasThumb">
-                <div class="atlasThumb-small" style="background-image: url({$print.preview_url});"></div>
-                <div class="atlasThumb-title">
-                    <h4 class="header"><a href="{$base_dir}/atlas.php?id={$print.id}">{if $print.title}{$print.title|escape}{else}Untitled{/if}</a></h4>
+            {if $smarty.foreach.index.index < 6}
+            {assign var='title' value=$print.title|default:'Unknown'}{* TODO: make normalize attribute smarty function *}
+            <li>
+                <div>
+                    <a href="{$base_dir}/atlas.php?id={$print.id}" style="background-image: url({$print.preview_url});"></a>
                 </div>
-            </div>
+                <a href="{$base_dir}/atlas.php?id={$print.id}">{$title|escape}</a>
+            </li>
+            {/if}
             {/foreach}
+            </ul>
         </div>
 
 
