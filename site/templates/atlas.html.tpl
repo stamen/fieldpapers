@@ -24,8 +24,10 @@
         }
 
         .atlasThumb-small {
-            //width: 180px;
-            height: 180px;
+            max-width: 140px;
+            max-height: 140px;
+            min-width: 140px;
+            min-height: 140px;
             background-position: center center;
             overflow: hidden;
         }
