@@ -59,6 +59,8 @@
             var marker = document.createElement("a");
             marker.print = print;
             marker.setAttribute("href", print_href + print.id);
+            var title = print.title || "No title";
+            marker.setAttribute("title", title);
             markers.push(marker);
         });
         var template = 'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png';
@@ -70,10 +72,18 @@
         markers.forEach(function(marker, i) { 
             var top_left = map.locationPoint(marker.print.northwest),
                 bottom_right = map.locationPoint(marker.print.southeast);
-            marker.style.left = top_left.x + "px";
-            marker.style.top = top_left.y + "px";
             var width = Math.ceil(bottom_right.x - top_left.x),
                 height = Math.ceil(bottom_right.y - top_left.y);
+            if (width < 20) {
+                top_left.x -= Math.floor((20 - width) / 2);
+                width = 20;
+            }
+            if (height < 20) {
+                top_left.y -= Math.floor((20 - height) / 2);
+                height = 20;
+            }
+            marker.style.left = top_left.x + "px";
+            marker.style.top = top_left.y + "px";
             marker.print.area = width * height;
             marker.style.width = width + "px";
             marker.style.height = height + "px";
