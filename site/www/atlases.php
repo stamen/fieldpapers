@@ -29,7 +29,7 @@
     $title = get_args_title($context->db, $print_args);
     list($prints, $pagination_results) = get_prints($context->db, $context->user, $print_args, $pagination_args);
     
-    $prints_total = get_prints_count($context->db);
+    $prints_total = get_prints_count($context->db, $print_args);
     $pagination_results['total'] = intval($prints_total['count']);  
     $pagination_results['more'] = (($pagination_results['offset'] + $pagination_results['perpage']) < $pagination_results['total']) ? true : false;
     $pagination_results['total_fmt'] = number_format($prints_total['count']);
@@ -37,10 +37,23 @@
     
     if($pagination_results['more']){
         $pagination_results['next_link'] = get_base_href() . '?page=' . ($pagination_results['page'] + 1); 
+        foreach($print_args as $arg => $val){
+            if($val){
+                $pagination_results['next_link'] .= '&' . $arg . "=" . $val;
+            }
+
+        }
     }
     if($pagination_results['page'] > 1){
         $pagination_results['prev_link'] = get_base_href() . '?page=' . ($pagination_results['page'] - 1);
+        foreach($print_args as $arg => $val){
+            if($val){
+                $pagination_results['prev_link'] .= '&' . $arg . "=" . $val;
+            }
+
+        }
     }
+
     
     //print var_dump($pagination_results); 
     foreach($prints as $i => $print)
