@@ -570,3 +570,16 @@ h2.header a{
     position: relative;
     padding: 0 10px;
 }
+
+/* pagination */
+#pagination{
+    overflow: hidden;
+}
+#pagination .pagination-link{
+}
+#pagination .next{
+    float: right;
+}
+#pagination .prev{
+    float: left;
+}

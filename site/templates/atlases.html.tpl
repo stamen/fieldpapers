@@ -13,7 +13,7 @@
     </div>
         
     <div class="container">
-        <h2 class="header">Atlases {$title|escape} <span class="count">{$atlas_count} atlases</span><span class="pipe-divider">|</span><a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
+        <h2 class="header">Atlases {$title|escape} <span class="count">{$pagination.total_fmt} atlases</span><span class="pipe-divider">|</span><a href="{$base_dir}/snapshots.php?{$request.query|escape}">Snapshots</a></h2>
         <div id="columns"> 
             {foreach from=$prints item="print" name="index"}
                 <div class="atlasPin"> 
@@ -43,7 +43,8 @@
                         </small>
                  </div>
             {/foreach} 
-        </div>    
+        </div>
+        {include file="pagination.htmlf.tpl"}
         <div class="clearfloat"></div>
 
     <script>
