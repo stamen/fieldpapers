@@ -13,12 +13,36 @@
         'month' => preg_match('#^\d{4}-\d\d$#', $_GET['month']) ? $_GET['month'] : null,
         'place' => is_numeric($_GET['place']) ? $_GET['place'] : null,
         'user' => preg_match('/^\w+$/', $_GET['user']) ? $_GET['user'] : null
-        );
+    );
+    
+    $prints_per_page = 50;
+    $page_num = 1;
+    if(isset($_GET['page'])){
+        $page_num = intval($_GET['page']);
+    }    
+    
+    $pagination_args = array(
+        'perpage' => $prints_per_page,
+        'page'  => $page_num
+    );
     
     $title = get_args_title($context->db, $print_args);
-    $prints = get_prints($context->db, $context->user, $print_args, 50);
+    list($prints, $pagination_results) = get_prints($context->db, $context->user, $print_args, $pagination_args);
+    
+    $prints_total = get_prints_count($context->db);
+    $pagination_results['total'] = intval($prints_total['count']);  
+    $pagination_results['more'] = (($pagination_results['offset'] + $pagination_results['perpage']) < $pagination_results['total']) ? true : false;
+    $pagination_results['total_fmt'] = number_format($prints_total['count']);
     $users = array();
-
+    
+    if($pagination_results['more']){
+        $pagination_results['next_link'] = get_base_href() . '?page=' . ($pagination_results['page'] + 1); 
+    }
+    if($pagination_results['page'] > 1){
+        $pagination_results['prev_link'] = get_base_href() . '?page=' . ($pagination_results['page'] - 1);
+    }
+    
+    //print var_dump($pagination_results); 
     foreach($prints as $i => $print)
     {   
         $user_id = $print['user_id'];
@@ -38,7 +62,7 @@
     print "</pre>";
     exit();
     */
-    
+    $context->sm->assign('pagination',$pagination_results); 
     $context->sm->assign('atlas_count', count($prints));
     $context->sm->assign('title', $title);
     $context->sm->assign('prints', $prints);

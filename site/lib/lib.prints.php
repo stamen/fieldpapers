@@ -114,8 +114,13 @@
 
             $rows[] = $row;
         }
-        
-        return $rows;
+        $pagination_props = array(
+            'count'     => $count,
+            'offset'    =>  $offset,
+            'perpage'   => $perpage,
+            'page'      => $page
+        );         
+        return array($rows, $pagination_props);
     }
     
     function get_print(&$dbh, $print_id)
@@ -621,6 +626,21 @@
                 $row['user_name'] = $user['name'];
             }
         }
+
+        return $row;
+    }
+
+    /**
+     * Return count for prints
+     */
+    function get_prints_count(&$dbh){
+        $q = "SELECT count(*) as count from prints;";
+        $res = $dbh->query($q); 
+
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $row = $res->fetchRow(DB_FETCHMODE_ASSOC); 
 
         return $row;
     }
