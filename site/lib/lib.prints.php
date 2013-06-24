@@ -114,13 +114,15 @@
 
             $rows[] = $row;
         }
+
         $pagination_props = array(
             'count'     => $count,
-            'offset'    =>  $offset,
+            'offset'    => $offset,
             'perpage'   => $perpage,
             'page'      => $page
         );         
-        return array($rows, $pagination_props);
+
+        return array($rows, $pagination_props, $where_clauses);
     }
     
     function get_print(&$dbh, $print_id)
@@ -633,50 +635,7 @@
     /**
      * Return count for prints
      */
-    function get_prints_count(&$dbh,$args=[]){
-       
-        $where_clauses = array(
-            'composed',
-        );
-
-        if ($user['id']) {
-            $where_clauses[] = sprintf('(private = 0 OR (private = 1 AND user_id = %s))', $dbh->quoteSmart($user['id']));
-        } else {
-            $where_clauses[] = 'private = 0';
-        }
-
-        if(isset($args['date']) && $time = strtotime($args['date']))
-        {
-            $start = date('Y-m-d 00:00:00', $time);
-            $end = date('Y-m-d 23:59:59', $time);
-
-            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
-        }
-
-        if(isset($args['month']) && $time = strtotime("{$args['month']}-01"))
-        {
-            $start = date('Y-m-d 00:00:00', $time);
-            $end = date('Y-m-d 23:59:59', $time + 86400 * intval(date('t', $time)));
-
-            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
-        }
-
-        if(isset($args['place']))
-        {
-            $woeid_clauses = array(
-                sprintf('place_woeid = %d', $args['place']),
-                sprintf('region_woeid = %d', $args['place']),
-                sprintf('country_woeid = %d', $args['place'])
-                );
-
-            $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
-        }
-
-        if(isset($args['user']))
-        {
-            $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
-        } 
-
+    function get_prints_count(&$dbh,$where_clauses=[]){
         $q = sprintf("SELECT count(*) as count from prints WHERE %s", join(' AND ', $where_clauses));
         $res = $dbh->query($q); 
 
@@ -686,5 +645,12 @@
         $row = $res->fetchRow(DB_FETCHMODE_ASSOC); 
 
         return $row;
+    }
+
+    /*
+     * Wrapper for data.php function
+    */
+    function get_prints_pagination_display_obj($pagination_results, $prints_total, $print_args){
+        return create_pagination_display_obj($pagination_results, $prints_total, $print_args);
     }
 ?>

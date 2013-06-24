@@ -240,6 +240,36 @@
         
         return array(max(0, $count), max(0, $offset), max(0, $perpage), max(1, $page));
     }
+
+    /**
+     * Returns a pagination object to be used for setting display options
+     * on the front end
+     */
+    function create_pagination_display_obj($pagination_results, $count, $filter_args=[]){
+        $pagination_results['total'] = intval($count['count']);  
+        $pagination_results['more'] = (($pagination_results['offset'] + $pagination_results['perpage']) < $pagination_results['total']) ? true : false;
+        $pagination_results['total_fmt'] = number_format($count['count']);
+        
+        // create query string from any filter args passed in, ie. time, place...       
+        $filter_query = '';
+        foreach($filter_args as $arg => $val){
+            if(isset($val) && !empty($val)){
+                $filter_query .= '&' . $arg . "=" . $val;
+            }
+        }
+ 
+        // set pagination links 
+        if($pagination_results['more']){
+            $pagination_results['next_link'] = get_base_href() . '?page=' . ($pagination_results['page'] + 1); 
+            $pagination_results['next_link'] .= $filter_query;
+        }
+        if($pagination_results['page'] > 1){
+            $pagination_results['prev_link'] = get_base_href() . '?page=' . ($pagination_results['page'] - 1);
+            $pagination_results['prev_link'] .= $filter_query;
+        }
+
+        return $pagination_results;
+    }
     
     function get_args_title(&$dbh, $args)
     {
