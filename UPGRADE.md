@@ -117,3 +117,11 @@ Add an indexed `private` flag on `prints`:
 ALTER TABLE prints ADD COLUMN private TINYINT NOT NULL;
 CREATE INDEX prints_private ON prints(private);
 ```
+
+Add additional columns on `prints`:
+
+```sql
+ALTER TABLE prints ADD COLUMN text MEDIUMTEXT;
+ALTER TABLE prints ADD COLUMN cloned VARCHAR(20) DEFAULT NULL;
+ALTER TABLE prints ADD COLUMN refreshed VARCHAR(20) DEFAULT NULL;
+```
