@@ -580,6 +580,25 @@
                     {/foreach}
                 </ul>
             </div>
+            
+        {* XXX MT follows *}
+        <div id="atlases-nearby">
+            <h3>Nearby</h3>
+            <ul>
+            {foreach from=$nearby_prints item="print" name="index"}
+            {if $smarty.foreach.index.index < 6}
+            {assign var='title' value=$print.title|default:'Unknown'}{* TODO: make normalize attribute smarty function *}
+            <li>
+                <div>
+                    <a href="{$base_dir}/atlas.php?id={$print.id}" style="background-image: url({$print.preview_url});"></a>
+                </div>
+                <a href="{$base_dir}/atlas.php?id={$print.id}">{$title|escape}</a>
+            </li>
+            {/if}
+            {/foreach}
+            </ul>
+        </div>            
+            
         {else}
             <div class="smallContainer">
                 <p>Preparing your atlas... ({$print.progress*100|string_format:"%d"}% complete)</p>
@@ -598,27 +617,6 @@
                 {/if}
             </div>
         {/if}        
-
-        {* XXX MT follows *}
-        <div id="atlases-nearby">
-            <h3>Nearby</h3>
-            <ul>
-            {foreach from=$nearby_prints item="print" name="index"}
-            {if $smarty.foreach.index.index < 6}
-            {assign var='title' value=$print.title|default:'Unknown'}{* TODO: make normalize attribute smarty function *}
-            <li>
-                <div>
-                    <a href="{$base_dir}/atlas.php?id={$print.id}" style="background-image: url({$print.preview_url});"></a>
-                </div>
-                <a href="{$base_dir}/atlas.php?id={$print.id}">{$title|escape}</a>
-            </li>
-            {/if}
-            {/foreach}
-            </ul>
-        </div>
-
-
-
 
 {include file="footer.htmlf.tpl"}
 
