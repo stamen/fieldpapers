@@ -9,11 +9,13 @@
             $scan_id = generate_id();
             
             if ($user_id != null) {
-                $q = 'INSERT INTO scans (id, user_id) VALUES (?, ?)';
+                // TODO why doesn't this work wth params? Broken PEAR::DB version?
+                $q = sprintf("INSERT INTO scans (id, user_id) VALUES (%s, %s)",
+                    $dbh->quoteSmart($scan_id), $dbh->quoteSmart($user_id));
 
-                log_debug($q, $scan_id, $user_id);
+                log_debug($q);
 
-                $res = $dbh->query($q, $scan_id, $user_id);
+                $res = $dbh->query($q);
             } else {
                 $q = 'INSERT INTO scans (id) VALUES (?)';
 
