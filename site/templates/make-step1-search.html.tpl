@@ -42,9 +42,6 @@
                             <input name="atlas_text" value="{$atlas_data.atlas_text|escape}" type="hidden">
                         {/if}
                     </form>
-                {if $error}
-                    <p style="color: #C33;">We could not find that place. Please try again.</p>
-                {/if}
                 {if $user_mbtiles}
                     <h2>Or Choose your MBTiles</h2>
                     <p>
