@@ -23,10 +23,9 @@
         $atlas_data['atlas_text'] = $_POST['atlas_text'];
 
     $context->sm->assign('atlas_data', $atlas_data);
-
     if($_GET['error'] == 'no_response')
     {
-        $context->sm->assign('error', $_GET['error']);
+        $context->sm->assign('error', 'We could not find that place. Please try again.');
     }
     
     // TODO: check whether search is currently working
