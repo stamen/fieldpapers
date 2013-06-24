@@ -251,7 +251,7 @@
         $pagination_results['total_fmt'] = number_format($count['count']);
         
         // create query string from any filter args passed in, ie. time, place...       
-        $filter_query = http_build_query($filter_args);
+        $filter_query =  http_build_query($filter_args);
         /*
         foreach($filter_args as $arg => $val){
             if(isset($val) && !empty($val)){
@@ -262,11 +262,11 @@
         // set pagination links 
         if($pagination_results['more']){
             $pagination_results['next_link'] = get_base_href() . '?page=' . ($pagination_results['page'] + 1); 
-            $pagination_results['next_link'] .= $filter_query;
+            $pagination_results['next_link'] .= '&' . $filter_query;
         }
         if($pagination_results['page'] > 1){
             $pagination_results['prev_link'] = get_base_href() . '?page=' . ($pagination_results['page'] - 1);
-            $pagination_results['prev_link'] .= $filter_query;
+            $pagination_results['prev_link'] .= '&' . $filter_query;
         }
 
         return $pagination_results;
