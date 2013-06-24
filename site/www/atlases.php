@@ -14,7 +14,9 @@
         'place' => is_numeric($_GET['place']) ? $_GET['place'] : null,
         'user' => preg_match('/^\w+$/', $_GET['user']) ? $_GET['user'] : null
     );
-    
+
+    // set intial pagination request params
+    // TODO: globalize prints_per_page    
     $prints_per_page = 50;
     $page_num = 1;
     if(isset($_GET['page'])){
@@ -25,37 +27,22 @@
         'perpage' => $prints_per_page,
         'page'  => $page_num
     );
-    
+
+
     $title = get_args_title($context->db, $print_args);
-    list($prints, $pagination_results) = get_prints($context->db, $context->user, $print_args, $pagination_args);
-    
-    $prints_total = get_prints_count($context->db, $print_args);
-    $pagination_results['total'] = intval($prints_total['count']);  
-    $pagination_results['more'] = (($pagination_results['offset'] + $pagination_results['perpage']) < $pagination_results['total']) ? true : false;
-    $pagination_results['total_fmt'] = number_format($prints_total['count']);
-    $users = array();
-    
-    if($pagination_results['more']){
-        $pagination_results['next_link'] = get_base_href() . '?page=' . ($pagination_results['page'] + 1); 
-        foreach($print_args as $arg => $val){
-            if($val){
-                $pagination_results['next_link'] .= '&' . $arg . "=" . $val;
-            }
 
-        }
-    }
-    if($pagination_results['page'] > 1){
-        $pagination_results['prev_link'] = get_base_href() . '?page=' . ($pagination_results['page'] - 1);
-        foreach($print_args as $arg => $val){
-            if($val){
-                $pagination_results['prev_link'] .= '&' . $arg . "=" . $val;
-            }
-
-        }
-    }
-
+    // get prints array and pagination object used by get_prints query
+    list($prints, $pagination_results, $where_clauses) = get_prints($context->db, $context->user, $print_args, $pagination_args);
     
-    //print var_dump($pagination_results); 
+    // get total count of prints
+    // passing in $print_args array to keep count in sync 
+    $prints_total = get_prints_count($context->db, $where_clauses);
+
+    // update pagination results
+    $pagination_results = get_prints_pagination_display_obj($pagination_results, $prints_total, $print_args);
+    
+    print var_dump($pagination_results); 
+    $users = array(); 
     foreach($prints as $i => $print)
     {   
         $user_id = $print['user_id'];
@@ -69,17 +56,12 @@
         $prints[$i]['user'] = $users[$user_id];
     }
 
-    /*
-    print "<pre>";
-    print_r($prints);
-    print "</pre>";
-    exit();
-    */
     $context->sm->assign('pagination',$pagination_results); 
     $context->sm->assign('atlas_count', count($prints));
     $context->sm->assign('title', $title);
     $context->sm->assign('prints', $prints);
     $context->sm->assign('prints_json', json_encode($prints));
+    $context->sm->assign('query_without_page', http_build_query($print_args));
 
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
@@ -89,5 +71,4 @@
         header('HTTP/1.1 400');
         die("Unknown type.\n");
     }
-
 ?>

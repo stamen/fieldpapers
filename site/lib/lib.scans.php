@@ -139,8 +139,16 @@
         
         while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
             $rows[] = $row;
-        
-        return $rows;
+
+      
+        $pagination_props = array(
+            'count'     => $count,
+            'offset'    => $offset,
+            'perpage'   => $perpage,
+            'page'      => $page
+        );         
+ 
+        return array($rows, $pagination_props, $where_clauses);
     }
     
     function set_scan(&$dbh, $scan)
@@ -527,5 +535,28 @@
         
         return join(',', array_values($row));
     }
+
+    /*
+     * Return count for scans
+     * pass in where clauses to keep count in sync w/ applied filters
+     */ 
+    function get_scans_count(&$dbh,$where_clauses=[]){
+        $q = sprintf("SELECT count(*) as count from scans WHERE %s", join(' AND ', $where_clauses));
+        $res = $dbh->query($q); 
+
+        if(PEAR::isError($res))
+            die_with_code(500, "{$res->message}\n{$q}\n");
+
+        $row = $res->fetchRow(DB_FETCHMODE_ASSOC); 
+
+        return $row;
+    }
     
+    /*
+     * Wrapper for data.php function
+     */
+    function get_scans_pagination_display_obj($pagination_results, $scans_total, $scan_args){
+        return create_pagination_display_obj($pagination_results, $scans_total, $scan_args);
+    }
+
 ?>

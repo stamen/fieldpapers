@@ -8,7 +8,7 @@
 <body>
     {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <h2 class='header'><a href="{$base_dir}/atlases.php?{$request.query|escape}">Atlases</a><span class="pipe-divider">|</span>Snapshots</h2>
+        <h2 class='header'><a href="{$base_dir}/atlases.php?{$query_without_page|escape}">Atlases</a><span class="pipe-divider">|</span>Snapshots {$title|escape} <span class="count">{$pagination.total_fmt} scans</span></h2>
         <div id="columns">
             {foreach from=$scans item="scan" name="index"}
                 <div class="atlasPin">
@@ -44,7 +44,7 @@
                 </div>
             {/foreach}
         </div>
-        
+        {include file="pagination.htmlf.tpl"}        
 {include file="footer.htmlf.tpl"}
 
 </div> <!-- end .container -->

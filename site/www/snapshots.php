@@ -15,10 +15,32 @@
         'user' => preg_match('/^\w+$/', $_GET['user']) ? $_GET['user'] : null
         );
     
-    $title = get_args_title($context->db, $scan_args);
-    $scans = get_scans($context->db, $scan_args, 50);
-    $users = array();
+     
+    // set intial pagination request params
+    // TODO: globalize prints_per_page    
+    $prints_per_page = 50;
+    $page_num = 1;
+    if(isset($_GET['page'])){
+        $page_num = intval($_GET['page']);
+    }    
     
+    $pagination_args = array(
+        'perpage' => $prints_per_page,
+        'page'  => $page_num
+    );
+
+ 
+    $title = get_args_title($context->db, $scan_args);
+    list($scans, $pagination_results, $where_clauses) = get_scans($context->db, $scan_args, $pagination_args);
+
+    // get total count of prints
+    // passing in $print_args array to keep count in sync 
+    $scans_total = get_scans_count($context->db, $where_clauses);
+
+    // update pagination results
+    $pagination_results = get_scans_pagination_display_obj($pagination_results, $scans_total, $scan_args);
+ 
+    $users = array(); 
     foreach($scans as $i => $scan)
     {   
         $user_id = $print['user_id'];
@@ -32,9 +54,11 @@
             $scans[$i]['print'] = get_print($context->db, $scan['print_id']);
     }
     
+    $context->sm->assign('pagination',$pagination_results);  
     $context->sm->assign('title', $title);
     $context->sm->assign('scans', $scans);
-    
+    $context->sm->assign('query_without_page', http_build_query($scan_args));
+
     if($context->type == 'text/html') {
         header("Content-Type: text/html; charset=UTF-8");
         print $context->sm->fetch("snapshots.html.tpl");

@@ -569,10 +569,33 @@ h2.header a{
     overflow: hidden;
 }
 #pagination .pagination-link{
+    padding: 0 14px;
+    line-height: 34px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+    text-decoration: underline;
 }
-#pagination .next{
+
+#pagination .pagination-link:hover{
+    text-decoration: none;
+}
+
+#pagination .pagination-link:hover,
+#pagination .pagination-link:visited{
+    color: #09f;
+}
+#pagination .newer{
     float: right;
 }
-#pagination .prev{
+#pagination .older{
     float: left;
 }
+#pagination .disabled,
+#pagination .pagination-link.disabled:hover{
+    color: #999;
+    cursor: default;
+    text-decoration: none;
+    background-color: transparent;
+}
+
