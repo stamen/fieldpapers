@@ -48,6 +48,8 @@ a:hover, a:active, a:focus {
 	margin-left: auto;
 	text-align: left;
 	clear: both;
+    position: relative;
+    z-index:2;
 }
 .smallContainer {
 	width: 620px;
@@ -508,6 +510,7 @@ h6 {
     position: relative;                                                                                                        
     height: 580px;                                                                                                             
     width: 100%;                                                                                                               
+    z-index:1;
 }                                                                                                                              
 #markers {                                                                                                                     
     position: absolute;                                                                                                        
