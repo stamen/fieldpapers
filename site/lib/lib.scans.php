@@ -542,7 +542,7 @@
      * Return count for scans
      * pass in where clauses to keep count in sync w/ applied filters
      */ 
-    function get_scans_count(&$dbh,$where_clauses=[]){
+    function get_scans_count(&$dbh,$where_clauses=array()){
         $q = sprintf("SELECT count(*) as count from scans WHERE %s", join(' AND ', $where_clauses));
         $res = $dbh->query($q); 
 

@@ -245,7 +245,7 @@
      * Returns a pagination object to be used for setting display options
      * on the front end
      */
-    function create_pagination_display_obj($pagination_results, $count, $filter_args=[]){
+    function create_pagination_display_obj($pagination_results, $count, $filter_args=array()){
         $pagination_results['total'] = intval($count['count']);  
         $pagination_results['more'] = (($pagination_results['offset'] + $pagination_results['perpage']) < $pagination_results['total']) ? true : false;
         $pagination_results['total_fmt'] = number_format($count['count']);

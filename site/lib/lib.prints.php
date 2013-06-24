@@ -635,7 +635,7 @@
     /**
      * Return count for prints
      */
-    function get_prints_count(&$dbh,$where_clauses=[]){
+    function get_prints_count(&$dbh,$where_clauses=array()){
         $q = sprintf("SELECT count(*) as count from prints WHERE %s", join(' AND ', $where_clauses));
         $res = $dbh->query($q); 
 
