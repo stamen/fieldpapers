@@ -81,8 +81,8 @@
     $context->sm->assign('nearby_prints_json', json_encode($nearby_prints));
     $context->sm->assign('zoom', $pages[0]['zoom']); 
     
-
     $context->sm->assign('activity', get_print_activity($context->db, $print_id, true));
+    
     $context->sm->assign('providers', get_map_providers());
         
     if($context->type == 'text/html') {

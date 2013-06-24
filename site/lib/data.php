@@ -252,13 +252,7 @@
         
         // create query string from any filter args passed in, ie. time, place...       
         $filter_query =  http_build_query($filter_args);
-        /*
-        foreach($filter_args as $arg => $val){
-            if(isset($val) && !empty($val)){
-                $filter_query .= '&' . $arg . "=" . $val;
-            }
-        }*/
- 
+        
         // set pagination links 
         if($pagination_results['more']){
             $pagination_results['next_link'] = get_base_href() . '?page=' . ($pagination_results['page'] + 1); 
