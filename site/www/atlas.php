@@ -76,8 +76,11 @@
     }
 
     $query = array("place" => $print['place_woeid']);
-    $nearby_prints = get_prints($context->db, $context->user, $query, 6);
-    $context->sm->assign('nearby_prints', $nearby_prints);
+    if($nearby_prints = get_prints($context->db, $context->user, $query, 6)[0])
+    {
+        $context->sm->assign('nearby_prints', $nearby_prints);
+    }
+
     $context->sm->assign('nearby_prints_json', json_encode($nearby_prints));
     $context->sm->assign('zoom', $pages[0]['zoom']); 
     
