@@ -41,7 +41,6 @@
     // update pagination results
     $pagination_results = get_prints_pagination_display_obj($pagination_results, $prints_total, $print_args);
     
-    print var_dump($pagination_results); 
     $users = array(); 
     foreach($prints as $i => $print)
     {   
