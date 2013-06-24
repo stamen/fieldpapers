@@ -11,21 +11,15 @@
     <div class="smallContainer">
         {literal}
         <h2>About Field Papers</h2>
-        <p>
-            Field Papers allows you to print a multipage paper atlas of anywhere in the world and take it outside, offline, in the field. You can scribble on it, draw things, make notes. 
-        </p>
-        <p>
-            When you upload a snapshot of your print to Field Papers, we'll do some magic on the server to put it back in the right spot on the map. You can transcribe your notes into digital form and share the result with your friends or download the notes for later analysis.
-        </p>
-        <p>
-            You don't need a <a href="http://en.wikipedia.org/wiki/Global_Positioning_System">GPS</a> to make a map or learn complicated desktop <a href="http://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> software to use Field Papers. It's as easy as print, mark, scan.
-        </p>
-        <p>
-            This project is a continuation of <a href="http://walkingpapers.org">Walking Papers</a>, which was built for the OpenStreetMap (OSM) editing community. Field Papers allows you to print multiple-page atlases using several map styles (including satellite imagery and black and white cartography to save ink) and has built in note annotation tools with GIS format downloads. Field Papers also supports user accounts so you can save “your stuff” for later, or use the service anonymously. Maps from the two systems work together if you want OSM editing (see below).
-        </p>
-        <p>
-            Curious about <a href="http://openstreetmap.org">OpenStreetMap</a>? It's a wiki-style map of the world that anyone can edit and it needs your help to add content. Field Papers and Walking Papers both provide tools to “round trip” map data through paper, to make it easier to perform the kinds of eyes-on-the-street edits, as well as distributing the load by making it possible for legible, easy notes to be shared and turned into real geographical data. Don't see your street on OpenStreetMap? Please add it! 
-        </p>
+        <p>Field Papers is a tool to help you create a multi-page atlas of anywhere in the world. Once you print it, you can take it outside, into the field, to record notes and observations about the area you're looking at, or use it as your own personal tour guide in a new city.</p>
+<p><a href="http://www.flickr.com/photos/kachkaev/9008302727/" title="Вторая пензенская картовечеринка // Second mapping party in Penza, Russia by Alexander Kachkaev, on Flickr"><img src="http://farm6.staticflickr.com/5443/9008302727_857cc4475b_b.jpg" style="width: 100%" alt="Вторая пензенская картовечеринка // Second mapping party in Penza, Russia"></a><br />
+<small>Вторая пензенская картовечеринка // Second mapping party in Penza, Russia by Alexander Kachkaev, <a href="http://creativecommons.org/licenses/by/2.0/deed.en_GB">CC BY 2.0</a></small></p>
+<p>Later, you can photograph each page in the atlas, and upload back into Field Papers. These photographs are called "snapshots" in Field Papers, and each snapshot is connected automatically to the atlas from whence it came. You can transcribe any notes you made in the field into Field Papers (as points or areas) and share the result with your friends, or download your notes for later analysis.</p>
+<p>You don't need a <a href="http://en.wikipedia.org/wiki/Global_Positioning_System">GPS</a> to make a map or learn complicated desktop <a href="http://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> software to use Field Papers.</p>
+
+<p> This project is a continuation of <a href="http://walkingpapers.org">Walking Papers</a>, which was built for the <a href="http://openstreetmap.org">OpenStreetMap</a> (OSM) editing community. Field Papers allows you to print multiple-page atlases using several map styles (including satellite imagery and black and white cartography to save ink) and has built in note annotation tools with GIS format downloads. Even though you can use Field Papers without creating an account, you also have the options of collecting any atlases you make under your own username.</p>
+
+<p>Curious about <a href="http://openstreetmap.org">OSM</a>? It's a "wikipedia-style map of the world" that anyone can edit. Field Papers and Walking Papers both provide tools to “roundtrip” map data through paper, making it easier to collect on-the-ground information and edits to OSM data. If you'd like to learn how to make edits in OSM, please visit <a href="http://www.learnosm.org">Learn OSM</a>.</p>
 
         <h2>Advanced Tools</h2>
         <p>
