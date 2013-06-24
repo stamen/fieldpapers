@@ -373,8 +373,8 @@
             $users[$user_id] = get_user($dbh, $user_id);
         
         $print['user_name'] = $users[$user_id]['name'];
-        
-        if($scans = get_scans($dbh, array('print' => $print['id']), 9999))
+        list($scans, $pagination_results, $where_clauses) = get_scans($dbh, array('print' => $print['id']), 9999);        
+        if($scans)
         {
             $note_args = array('scans' => array());
             

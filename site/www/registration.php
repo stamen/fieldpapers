@@ -7,30 +7,35 @@
     $context = default_context(True);
     
     /**** ... ****/
-        
+    $error = '';    
     switch($_POST['action'])
     {
         case 'register':
             if (!$_POST['username']) 
             {
-                die('Please provide a user name.');
+                //die('Please provide a user name.');
+                $error = 'Please provide a user name.';
+                break;
             }
-            
+
             if (!$_POST['password1'])
             {
-                die('Please provide a password.');
+                $error = 'Please provide a password.';
+                break;
             }
             
             if ($_POST['password1'] != $_POST['password2'])
             {
-                die('Passwords do not match. Please try again.');
+                $error = 'Passwords do not match. Please try again.';
+                break;
             }
         
             $prev_registered_user = get_user_by_name($context->db, $_POST['username']);
             
             if($prev_registered_user)
             {
-                die('Username exists.');
+                $error = 'Username exists.';
+                break;
             }
             
             // Verify that the email address has not been used in a previous registration.
@@ -40,7 +45,8 @@
             
             if ($email_match)
             {
-                die('Someone has already registered with that email address.');
+                $error = 'Someone has already registered with that email address.';
+                break;
             }
             
             $new_user = add_user($context->db);
@@ -53,7 +59,8 @@
             
             if ($registered_user === false)
             {
-                die('User name exists.');
+                $error = 'User name exists.';
+                break;
             }
             
             $hash = md5(rand(0,1000));
@@ -83,7 +90,10 @@
             
             break;
     }
-    
+    if(!empty($error))
+    {
+        $context->sm->assign('error', $error);
+    } 
     header("Content-Type: text/html; charset=UTF-8");
     print $context->sm->fetch("registration.html.tpl");
 

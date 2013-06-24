@@ -7,38 +7,26 @@
     $context = default_context(True);
 
     /**** ... ****/
-    
+    $error = '';
     switch($_POST['action'])
     {
         case 'log in':
-            $registered_user = get_user_by_name($context->db, $_POST['username']);
-            $error = ''; 
+            $registered_user = get_user_by_name($context->db, $_POST['username']); 
             if (!$registered_user)
             {
                 $error = 'You are not registered.';
             }
-            if(!empty($error)){
-                $redirect_href = sprintf('http://%s%s/login.php?error=%s', get_domain_name(), get_base_dir(), $error);
-                header('HTTP/1.1 303');
-                header("Location: $redirect_href");
-                exit();
-            }
-
-            if (!check_user_password($context->db, $registered_user['id'], $_POST['password']))
-            {
-                $error ='That\'s not the correct password!';
-            }
-
-            if(!empty($error)){
-                $redirect_href = sprintf('http://%s%s/login.php?error=%s', get_domain_name(), get_base_dir(), $error);
-                header('HTTP/1.1 303');
-                header("Location: $redirect_href");
-                exit();
-            }
-            login_user_by_name($context->db, $registered_user['name']);
-            
-            header('Location: ' . $_POST['redirect']);
-        
+            if(empty($error)){
+                if (!check_user_password($context->db, $registered_user['id'], $_POST['password']))
+                {
+                    $error ='That\'s not the correct password!';
+                }
+                if(empty($error))
+                {
+                    login_user_by_name($context->db, $registered_user['name']); 
+                    header('Location: ' . $_POST['redirect']);
+                }
+            } 
             break;
             
         case 'log out':
@@ -55,8 +43,9 @@
         $context->sm->assign('username', $_SESSION['user']['name']);
     }
     
-    if(isset($_GET['error']) && !empty($_GET['error'])){
-        $context->sm->assign('error', $_GET['error']);
+    if(!empty($error))
+    {
+        $context->sm->assign('error', $error);
     }
 
     header("Content-Type: text/html; charset=UTF-8");
