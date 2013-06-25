@@ -103,7 +103,9 @@
             // TODO: ditch special-case for provider
             if(empty($row['provider']))
                 $row['provider'] = reset(reset(get_map_providers()));
-
+            
+            // decode/compose.py writes the filename for pdf's
+            // I suppose this special case handles a time before the url's were being written to the DB
             // TODO: ditch special-case for pdf_url
             if(empty($row['pdf_url']) && S3_BUCKET_ID)
                 $row['pdf_url'] = sprintf('http://%s.s3.amazonaws.com/prints/%s/walking-paper-%s.pdf', S3_BUCKET_ID, $row['id'], $row['id']);
