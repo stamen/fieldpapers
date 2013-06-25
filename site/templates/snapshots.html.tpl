@@ -8,7 +8,7 @@
 <body>
     {include file="navigation.htmlf.tpl"}
     <div class="container">
-        <h2 class='header'><a href="{$base_dir}/atlases.php?{$query_without_page|escape}">Atlases</a><span class="pipe-divider">|</span>Snapshots {$title|escape} <span class="count">{$pagination.total_fmt} scans</span></h2>
+        <h2 class='header'><a href="{$base_dir}/atlases.php?{$query_without_page|escape}">Atlases</a> <span class="pipe-divider">/</span> {$pagination.total_fmt} Snapshots {$title|escape}</h2>
         <div class='pagination-top'>
             {include file="pagination.htmlf.tpl"}
         </div>
