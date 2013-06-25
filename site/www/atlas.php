@@ -77,10 +77,11 @@
 
     $query = array("place" => $print['place_woeid']);
 
-    $nearby_prints = get_prints($context->db, $context->user, $query, 6);
+    $nearby_prints = get_prints($context->db, $context->user, $query, 200);
     $nearby_prints = $nearby_prints[0];
     if($nearby_prints)
     {
+        $nearby_prints = array_rand($nearby_prints, $num_req=6);
         $context->sm->assign('nearby_prints', $nearby_prints);
     }
 
