@@ -1,3 +1,4 @@
+{if !$pagination.hide}
 <div id="pagination">
 {if $pagination.next_link}
     <a href="{$pagination.next_link}" class='pagination-link older'>Older</a>
@@ -11,3 +12,4 @@
     <span class='pagination-link newer disabled'>Newer</span>
 {/if}
 </div>
+{/if}
