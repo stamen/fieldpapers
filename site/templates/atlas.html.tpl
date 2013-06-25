@@ -7,8 +7,9 @@
     {if $print && !$print.composed}
         <meta http-equiv="refresh" content="5">
     {else}
-        <script type="text/javascript" src="{$base_dir}/modestmaps.js"></script>
-        <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/modestmaps.3.3.6.min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/modestmaps.hash.js"></script> 
+        <script type="text/javascript" src="{$base_dir}raphael-min.js"></script>
         <script type="text/javascript" src="{$base_dir}/js/print.js"></script>
         <script type="text/javascript" src="{$base_dir}/js/easey.js"></script>
         <script type="text/javascript" src="{$base_dir}/js/easey.handlers.js"></script>

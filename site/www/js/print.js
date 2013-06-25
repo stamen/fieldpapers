@@ -123,30 +123,32 @@ function loadMaps() {
         var overview_map_layers = [];
         var main_map_layers = [];
         
+        var hashStr = (location.hash.charAt(0) == '#') ? location.hash.substr(1) : location.hash;
+        var incomingCoords = MM.Hash.prototype.parseHash(hashStr) || null;
+        
         if (overview_provider.search(','))
         {
             var overview_providers = overview_provider.split(',');
             for (var i = 0; i < overview_providers.length; i++) {
                 // Create layers
-                overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_providers[i])));
+                overview_map_layers.push(new MM.Layer(new MM.Template(overview_providers[i])));
             }
         } else {
-            overview_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(overview_provider)));
+            overview_map_layers.push(new MM.Layer(new MM.Template(overview_provider)));
         }
         
         if (main_provider.search(','))
         {
             var main_providers = main_provider.split(',');
             for (var i = 0; i < main_providers.length; i++) {
-                main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_providers[i])));
+                main_map_layers.push(new MM.Layer(new MM.Template(main_providers[i])));
             }
         } else {
-            main_map_layers.push(new MM.Layer(new MM.TemplatedMapProvider(main_provider)));
+            main_map_layers.push(new MM.Layer(new MM.Template(main_provider)));
         }
         
         // Map 1
         var overview_map = new MM.Map("atlas-overview-map", overview_map_layers, null, []);
-        
         
         // Map 2
         var map = new MM.Map("atlas-index-map", main_map_layers, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
@@ -155,7 +157,12 @@ function loadMaps() {
         
         map.setExtent(extents);
         overview_map.setCenterZoom(map.getCenter(),5);
+        var hash = new MM.Hash(map); 
         
+        if(incomingCoords){
+            map.setCenterZoom(incomingCoords.center,incomingCoords.zoom);
+        }
+
         ////
         // Draw the Extent of the Atlas
         ////
@@ -177,8 +184,8 @@ function loadMaps() {
         });
         
         var map_extent = map.getExtent();
-        var map_top_left_point = map.locationPoint(map_extent[0]);
-        var map_bottom_right_point = map.locationPoint(map_extent[1]);
+        var map_top_left_point = map.locationPoint(map_extent.northWest());
+        var map_bottom_right_point = map.locationPoint(map_extent.southEast());
         
         var atlas_x_proportion = (ne_point.x - nw_point.x)/(map_bottom_right_point.x - map_top_left_point.x);
         var atlas_y_proportion = (ne_point.y - se_point.y)/(map_bottom_right_point.y - map_bottom_right_point.y);
@@ -272,7 +279,6 @@ function loadMaps() {
             page_label_background_objects.push(page_label_background);
             
             atlas_page_objects[i].click(function(nw, ne, se, sw) {
-                console.log(nw,ne,se,sw);
                 return function ()
                 {
                     if (map.getZoom() <= start_zoom) {
