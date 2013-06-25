@@ -568,6 +568,9 @@ h2.header a{
 }
 
 /* pagination */
+.pagination-top{
+    margin-bottom: 20px;
+}
 #pagination{
     overflow: hidden;
 }
