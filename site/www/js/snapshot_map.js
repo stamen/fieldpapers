@@ -8,7 +8,9 @@ var map,
     
 MM = com.modestmaps;
 var provider = base_provider + '/{Z}/{X}/{Y}.jpg';
-map = new MM.Map("map", new MM.TemplatedMapProvider(provider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+var template = new MM.Template(provider);
+var layer = new MM.Layer(template);
+map = new MM.Map("map", layer, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
     
 var bounds = geojpeg_bounds.split(','),
     north = parseFloat(bounds[0]),

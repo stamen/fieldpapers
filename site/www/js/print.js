@@ -272,6 +272,7 @@ function loadMaps() {
             page_label_background_objects.push(page_label_background);
             
             atlas_page_objects[i].click(function(nw, ne, se, sw) {
+                console.log(nw,ne,se,sw);
                 return function ()
                 {
                     if (map.getZoom() <= start_zoom) {
