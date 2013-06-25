@@ -10,6 +10,7 @@
         <meta http-equiv="refresh" content="5">
     {else}
         <script type="text/javascript" src="{$base_dir}/js/modestmaps.3.3.6.min.js"></script>
+        <script type="text/javascript" src="{$base_dir}/js/modestmaps.hash.js"></script>
         <script type="text/javascript" src="{$base_dir}/raphael-min.js"></script>
         <script type="text/javascript" src="{$base_dir}/js/reqwest.min.js"></script>
         <script type="text/javascript" src="{$base_dir}/js/marker_notes.js"></script>

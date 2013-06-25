@@ -7,6 +7,10 @@ var map,
     MM;    
     
 MM = com.modestmaps;
+
+var hashStr = (location.hash.charAt(0) == '#') ? location.hash.substr(1) : location.hash;
+var incomingCoords = MM.Hash.prototype.parseHash(hashStr) || null;
+
 var provider = base_provider + '/{Z}/{X}/{Y}.jpg';
 var template = new MM.Template(provider);
 var layer = new MM.Layer(template);
@@ -19,6 +23,11 @@ var bounds = geojpeg_bounds.split(','),
     east = parseFloat(bounds[3]),
     extents = [new MM.Location(north, west), new MM.Location(south, east)];
 
-map.setExtent(extents);
-map.zoomIn();
-map.panBy(0,40);
+var hash = new MM.Hash(map);
+if(!incomingCoords){
+    map.setExtent(extents);
+    map.zoomIn();
+    map.panBy(0,40);
+}else{
+    map.setCenterZoom(incomingCoords.center,incomingCoords.zoom);
+}
