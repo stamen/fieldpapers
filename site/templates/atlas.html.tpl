@@ -267,7 +267,9 @@
         }
 		
 		
-        #atlases-nearby { }
+        #atlases-nearby {
+            clear: both;
+        }
         #atlases-nearby ul {
             overflow: hidden;
             margin-left: -30px;
