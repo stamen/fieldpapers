@@ -129,7 +129,8 @@
         markers.forEach(function(marker) {
             marker_container.appendChild(marker); 
         });
-        
+
+        // ref: http://unscriptable.com/2009/03/20/debouncing-javascript-methods/ 
         var debounce = function (func, threshold, execAsap) {
  
             var timeout;
