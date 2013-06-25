@@ -100,7 +100,6 @@
         var provider = new MM.TemplatedMapProvider(template);
         var map = new MM.Map('map', provider, null, []);
         map.setExtent(corners);
-
         var marker_container = document.getElementById("markers");
         markers.forEach(function(marker, i) { 
             var top_left = map.locationPoint(marker.print.northwest),
@@ -130,7 +129,40 @@
         markers.forEach(function(marker) {
             marker_container.appendChild(marker); 
         });
-
+        
+        var debounce = function (func, threshold, execAsap) {
+ 
+            var timeout;
+     
+            return function debounced () {
+                var obj = this, args = arguments;
+                function delayed () {
+                    if (!execAsap)
+                        func.apply(obj, args);
+                    timeout = null; 
+                };
+     
+                if (timeout)
+                    clearTimeout(timeout);
+                else if (execAsap)
+                    func.apply(obj, args);
+     
+                timeout = setTimeout(delayed, threshold || 100); 
+            };
+     
+        }         
+        
+        function repositionMarkers(){
+            markers.forEach(function(marker){
+                var top_left = map.locationPoint(marker.print.northwest);
+                marker.style.left = top_left.x + "px";
+                marker.style.top = top_left.y + "px";
+            });
+        }
+        // reposition markers on resize
+        var repositionMarkersDebounce = debounce(repositionMarkers,50);
+        map.addCallback('resized', repositionMarkersDebounce); 
+ 
         {/literal}
     </script>
 
