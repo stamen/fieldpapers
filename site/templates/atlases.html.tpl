@@ -13,7 +13,8 @@
     </div>
         
     <div class="container">
-        <h2 class="header"> {$pagination.total_fmt} atlases {$title|escape} <span class="pipe-divider">/</span> <a href="{$base_dir}/snapshots.php?{$query_without_page|escape}">Snapshots</a></h2>
+        <h2 class="header"> {$pagination.total_fmt} atlases {$title|escape} <span class="pipe-divider">/</span> 
+        <a href="{$base_dir}/snapshots.php{if $query_without_page}?{$query_without_page|escape}{/if}">Snapshots</a></h2>
         <div class='pagination-top'>
         {include file="pagination.htmlf.tpl"}
         </div>
