@@ -55,6 +55,34 @@
         var prints = {$prints_json},
             print_href = "{$base_dir}/atlas.php?id=";
         {literal}
+      
+        function getDeepOffsetTop(elm){
+            var top = 0;
+            elm = elm || null;
+
+            while(elm){
+              top += elm.offsetTop || 0;
+              elm = elm.offsetParent || null;
+            }
+
+            return top;
+        }   
+        
+        function fitMapInWindow(elm){
+            var mapTargetHeight = 580;
+            var minMapHeight = 300;
+            var bottomPadding = 20;
+            var fromTop = getDeepOffsetTop(elm);
+            var winHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            var maxAvailable = winHeight - (fromTop + bottomPadding);
+            if(maxAvailable < mapTargetHeight){
+                if(maxAvailable < minMapHeight)maxAvailable = minMapHeight;
+                elm.style.height = maxAvailable + "px";
+            }
+        }
+        var mapDom = document.getElementById('map');
+        if(mapDom) fitMapInWindow(mapDom);
+
         var corners = [],
             markers = [];
         prints.forEach(function(print) {
