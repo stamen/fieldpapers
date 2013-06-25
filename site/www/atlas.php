@@ -76,7 +76,10 @@
     }
 
     $query = array("place" => $print['place_woeid']);
-    if($nearby_prints = get_prints($context->db, $context->user, $query, 6)[0])
+
+    $nearby_prints = get_prints($context->db, $context->user, $query, 6);
+    $nearby_prints = $nearby_prints[0];
+    if($nearby_prints)
     {
         $context->sm->assign('nearby_prints', $nearby_prints);
     }
