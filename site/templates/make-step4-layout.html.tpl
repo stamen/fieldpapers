@@ -57,7 +57,7 @@
    
     <div class="smallLayoutContainer">
     	<h2>Choose a Layout</h2>
-        <p><label for="grid"><input type="checkbox" id="grid" /> Add a grid overlay to each map?</label></p>
+        <p><label><input type="checkbox" name="grid" /> Add a grid overlay to each map?</label></p>
 	</div>
     <div class="container"> 
             
