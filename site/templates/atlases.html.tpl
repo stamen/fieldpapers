@@ -70,8 +70,8 @@
         
         function fitMapInWindow(elm){
             var mapTargetHeight = 580;
-            var minMapHeight = 300;
-            var bottomPadding = 20;
+            var minMapHeight = 250;;
+            var bottomPadding = 150;
             var fromTop = getDeepOffsetTop(elm);
             var winHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
             var maxAvailable = winHeight - (fromTop + bottomPadding);
