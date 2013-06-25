@@ -81,8 +81,14 @@
     $nearby_prints = $nearby_prints[0];
     if($nearby_prints)
     {
-        $nearby_prints = array_rand($nearby_prints, $num_req=6);
-        $context->sm->assign('nearby_prints', $nearby_prints);
+        //print var_dump($nearby_prints);
+        $rdm_keys = array_rand($nearby_prints, $num_req=6);
+        $rdm_nearby = array();
+        foreach($rdm_keys as $key => $val){
+            $rdm_nearby[] = $nearby_prints[$val];
+        }
+
+        $context->sm->assign('nearby_prints', $rdm_nearby);
     }
 
     $context->sm->assign('nearby_prints_json', json_encode($nearby_prints));
