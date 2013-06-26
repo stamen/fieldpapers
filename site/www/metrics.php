@@ -36,6 +36,10 @@ while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
     );
 }
 
-echo json_encode($rsp);
+//echo json_encode($rsp);
+$metric_data = json_encode($rsp);
+$context->sm->assign('metric_data', $metric_data);
 
+header("Content-Type: text/html; charset=UTF-8");
+print $context->sm->fetch("metrics.html.tpl");
 ?>
