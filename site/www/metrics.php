@@ -13,7 +13,16 @@ $query = <<<EOQ
 SELECT
     COUNT(pages.print_id) AS pages,
     prints.created,
-    prints.composed
+    prints.composed,
+    prints.orientation,
+    prints.layout,
+    prints.place_woeid,
+    prints.region_woeid,
+    prints.country_woeid,
+    prints.private,
+    prints.cloned,
+    prints.refreshed,
+    prints.provider
 FROM prints
 LEFT JOIN pages ON pages.print_id=prints.id
 GROUP BY prints.id
