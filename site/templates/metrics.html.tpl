@@ -3,7 +3,8 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Metrics - fieldpapers.org</title>
-    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css">
+    <link rel="stylesheet" href="{$base_dir}/css/fieldpapers.css" type="text/css"> 
+<!--    <link rel="stylesheet" href="../www/css/fieldpapers.css" type="text/css">-->
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <style>
         {literal}
@@ -29,10 +30,17 @@
     </style>
 </head>
 <body>
-<div id='chart-wrap'><div id="chart"></div></div>
+
+    {include file="navigation.htmlf.tpl"}
+
+	<div class="container">
+    	<h2>Metrics</h2>
+		<div id="chart-wrap">
+        	<div id="chart"></div>
+        </div>
 <script>
 
-
+/* make buckets */
 var metric_data = {$metric_data};
 {literal}
 metric_data.forEach(function(m){
@@ -42,9 +50,12 @@ metric_data.forEach(function(m){
     m.created_ts = +m.created; 
 });
 
+/* sort first to last */
 metric_data.sort(function(a,b){
     return b.created_ts - a.created_ts;
 });
+
+/* make day buckets */
 var startTime = metric_data[0].created_ts;
 var endTime = metric_data[metric_data.length-1].created_ts;
 var days = {};
@@ -96,7 +107,7 @@ function binByTime(unitOfTime){
             'date': new Date(parseInt(d)).toString(),
             'items' : days[d]
         });
-        console.log(days[d].length);  
+        //console.log(days[d].length);  
     }
     
     arr.sort(function(a,b){
@@ -113,11 +124,13 @@ atlases.forEach(function(atlas){
     //console.log(new Date(parseInt(atlas.ts)));
 });
 
+/* draw chart */
 var chartElm = d3.select('#chart');
 var min = d3.min(atlases, function(atlas){return atlas.items.length;});
 //var max = d3.max(atlases, function(atlas){return atlas.items.length;});
 
 var scale = d3.scale.linear().domain([min,max]).range([0,400]);
+//var axis = d3.svg.axis();
 var fmtTime = d3.time.format("%x");
 chartElm.selectAll('.bar')
 .data(atlases)
@@ -137,9 +150,13 @@ chartElm.selectAll('.bar')
 
 });
 
+//var layoutPie = d3.select('#layoutPie');
+
 
 {/literal}
 </script>
+	{include file="footer.htmlf.tpl"}
+	</div>
 </body>
 </html>
 
