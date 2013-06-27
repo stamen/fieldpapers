@@ -74,6 +74,11 @@
             </li>
         </ol>
 
+        <h2>History</h2>
+        <p>
+            The first version of Field Papers was <a href="http://content.stamen.com/announcing_field_papers">launched</a> in May 2012, in partnership with <a href="http://caerusassociates.com/ideas/maps-for-the-people-by-the-people/">Caerus Associates</a>. In June of 2013, we relaunched the site in collaboration with the <a href="http://www.usaid.gov/">U.S. Agency for International Development</a> (USAID) with major improvements to site performance, new metrics on atlas creation, as well as a general usability upgrade. 
+        </p>
+        
         <h2>Inspiration</h2>
         <p>
             The project is most particularly inspired by <a href="http://aaronland.info/">Aaron Cope then of Flickr</a> and <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom at Really Interesting Group</a>, whose <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> and <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> help all this post-digital, medieval technology make sense.
