@@ -1,6 +1,7 @@
     <div id="footer">
         <a href="{$base_dir}/about.php"><b>Field Papers</b></a> is built by <a href="http://www.stamen.com">Stamen Design</a>&nbsp;&nbsp;/&nbsp;&nbsp;
         <a href="{$base_dir}/about.php">About the Project</a>&nbsp;&nbsp;/&nbsp;&nbsp;
+        <a href="{$base_dir}/metrics.php">Metrics</a>&nbsp;&nbsp;/&nbsp;&nbsp;        
         <a href="http://wiki.openstreetmap.org/wiki/Field_Papers" title="Check out the OSM help wiki.">Help</a>
         <br>
         <small>
