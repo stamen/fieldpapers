@@ -22,7 +22,7 @@ SELECT
     prints.private,
     prints.cloned,
     prints.refreshed,
-    prints.provider
+    pages.provider
 FROM prints
 LEFT JOIN pages ON pages.print_id=prints.id
 GROUP BY prints.id
@@ -39,15 +39,25 @@ $rsp = array();
 
 while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
     $rsp[] = array(
-        "pages"    => (int) $row['pages'],
-        "created"  => date("c", strtotime($row['created'])),
-        "composed" => date("c", strtotime($row['composed'])),
+        "pages"			=> (int) $row['pages'],
+        "created"		=> date("c", strtotime($row['created'])),
+        "composed" 		=> date("c", strtotime($row['composed'])),
+        "orientation"	=> $row['orientation'],
+        "layout"		=> $row['layout'],
+        "provider"		=> $row['provider'],
     );
 }
 
 //echo json_encode($rsp);
 $metric_data = json_encode($rsp);
 $context->sm->assign('metric_data', $metric_data);
+
+$providers = get_map_providers();
+$providers_by_name = array();
+foreach ($providers as $i => $provider) {
+	$providers_by_name[$provider[0]] = $provider[1];
+}
+$context->sm->assign('providers', json_encode($providers_by_name));
 
 header("Content-Type: text/html; charset=UTF-8");
 print $context->sm->fetch("metrics.html.tpl");
