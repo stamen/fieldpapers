@@ -57,8 +57,8 @@
    
     <div class="smallLayoutContainer">
     	<h2>Choose a Layout</h2>
-        <p><label><input type="checkbox" name="grid" /> Add a grid overlay to each map?</label></p>
-	</div>
+        <p><label><input type="checkbox" name="grid" /> Add a UTM grid overlay to each map? (What's <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a>?)</label></p>
+    </div>
     <div class="container"> 
             
         {if !$atlas_data.atlas_text}
