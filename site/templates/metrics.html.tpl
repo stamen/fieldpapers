@@ -34,7 +34,8 @@
     {include file="navigation.htmlf.tpl"}
 
 	<div class="container">
-    	<h2>Metrics</h2>
+    	<h2>Metrics!</h2>
+        <p>This is a <em>bone simple</em> graph of atlases created each day. The giant peak you can see on the left there is our launch day, 30 May 2012. That's 440 atlases. </p>
 		<div id="chart-wrap">
         	<div id="chart"></div>
         </div>
@@ -149,8 +150,6 @@ chartElm.selectAll('.bar')
 .on('mouseout',function(){
 
 });
-
-//var layoutPie = d3.select('#layoutPie');
 
 
 {/literal}
