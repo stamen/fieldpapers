@@ -480,7 +480,7 @@
             }
         }
         
-        $print['progress'] = 0.1; // the first 10% is getting it queued
+        $print['progress'] = 0.0;
         
         set_print($dbh, $print);
         $message['print_id'] = $print['id'];
