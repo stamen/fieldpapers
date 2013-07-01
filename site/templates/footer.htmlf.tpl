@@ -5,8 +5,7 @@
         <a href="http://wiki.openstreetmap.org/wiki/Field_Papers" title="Check out the OSM help wiki.">Help</a>
         <br>
         <small>
-        Map data <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
-            <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://maps.stamen.com/toner">Toner</a> by Stamen, <a href="http://www.bing.com/maps/">Bing</a> by Microsoft, or a combination thereof.
+        Map data <a href="http://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a>, <a href="http://maps.stamen.com/toner">Toner</a> by Stamen, <a href="http://www.bing.com/maps/">Bing</a> by Microsoft, or a combination thereof.
             </small>
     </div>
 
