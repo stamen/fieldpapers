@@ -70,6 +70,12 @@
         list($count, $offset, $perpage, $page) = get_pagination($page);
     
         $where_clauses = array('decoded');
+
+        if ($user['id']) {
+            $where_clauses[] = sprintf('(prints.private = 0 OR (prints.private = 1 AND (prints.user_id = %s OR scans.user_id = %s))', $dbh->quoteSmart($user['id']), $dbh->quoteSmart($user['id']));
+        } else {
+            $where_clauses[] = 'prints.private = 0';
+        }
         
         if(isset($args['date']) && $time = strtotime($args['date']))
         {
@@ -108,28 +114,29 @@
             $where_clauses[] = sprintf('(print_id = %s)', $dbh->quoteSmart($args['print']));
         }
         
-        $q = sprintf("SELECT place_name, place_woeid,
-                             region_name, region_woeid,
-                             country_name, country_woeid,
-                             id, print_id, print_page_number, print_href,
-                             min_row, min_column, min_zoom,
-                             max_row, max_column, max_zoom,
-                             description, is_private, will_edit,
-                             UNIX_TIMESTAMP(created) AS created,
-                             UNIX_TIMESTAMP(decoded) AS decoded,
-                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created) AS age,
-                             failed, base_url, uploaded_file,
-                             has_geotiff, has_stickers,
-                             has_geojpeg, geojpeg_bounds,
-                             user_id, progress
+        $q = sprintf("SELECT scans.place_name, scans.place_woeid,
+                             scans.region_name, scans.region_woeid,
+                             scans.country_name, scans.country_woeid,
+                             scans.id, scans.print_id, scans.print_page_number, scans.print_href,
+                             scans.min_row, scans.min_column, scans.min_zoom,
+                             scans.max_row, scans.max_column, scans.max_zoom,
+                             scans.description, scans.is_private, scans.will_edit,
+                             UNIX_TIMESTAMP(scans.created) AS created,
+                             UNIX_TIMESTAMP(scans.decoded) AS decoded,
+                             UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(scans.created) AS age,
+                             scans.failed, scans.base_url, scans.uploaded_file,
+                             scans.has_geotiff, scans.has_stickers,
+                             scans.has_geojpeg, scans.geojpeg_bounds,
+                             scans.user_id, scans.progress
                       FROM scans
+                      LEFT JOIN prints ON scans.print_id = prints.id
                       WHERE %s
                         AND %s
                       ORDER BY created DESC
                       LIMIT %d OFFSET %d",
 
                      join(' AND ', $where_clauses),
-                     ($include_private ? '1' : "is_private='no'"),
+                     ($include_private ? '1' : "scans.is_private='no'"),
                      $count, $offset);
     
         $res = $dbh->query($q);
@@ -543,7 +550,7 @@
      * pass in where clauses to keep count in sync w/ applied filters
      */ 
     function get_scans_count(&$dbh,$where_clauses=array()){
-        $q = sprintf("SELECT count(*) as count from scans WHERE %s", join(' AND ', $where_clauses));
+        $q = sprintf("SELECT count(*) as count from scans LEFT JOIN prints on prints.id = scans.print_id WHERE %s", join(' AND ', $where_clauses));
         $res = $dbh->query($q); 
 
         if(PEAR::isError($res))
