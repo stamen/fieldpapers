@@ -228,15 +228,6 @@
 
             <div id="container" style="position: relative; padding-top: 30px;">
             {if $scan && $scan.decoded}
-             <!-- 
-                <div class="edit-elsewhere">
-                    <a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers2.local/files/scans/{$scan.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a><br>
-                    <a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$scan.id}/$z/$x/$y.jpg">Edit in Potlatch</a>
-                </div>
-            -->
-
-
-
                 <div class="navbar">
                     <div class="atlas_inputs">
                         <div style="display: inline-block; float: left; background-color: black; padding: 14px;">
@@ -250,7 +241,8 @@
                             </span>
                             <br/>
                             <span id="atlas_link">
-                                <a href="{$base_dir}/atlas.php?id={$print_id}">{$title|escape}</a>
+                                <a href="{$base_dir}/atlas.php?id={$print_id}">{$title|escape}</a><br/>
+                                <a href="http://www.openstreetmap.us/iD/release/#background=custom:http://fieldpapers.org/files/scans/{$scan.id}/{literal}{z}/{x}/{y}{/literal}.jpg&map={$zoom}/{$print.longitude}/{$print.latitude}">Edit in iD</a> | <a href="http://www.openstreetmap.org/edit?lat={$print.latitude}&lon={$print.longitude}&zoom={$zoom}&tileurl=http://fieldpapers.org/files/scans/{$scan.id}/$z/$x/$y.jpg">Edit in Potlatch</a>
                             </span>
                         </div>
                         <div class="radio_pin" id="marker_button" title="Add Marker" onclick="addMarkerNote('marker');"></div>
