@@ -82,7 +82,7 @@
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time);
             
-            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
+            $where_clauses[] = sprintf('(scans.created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
         if(isset($args['month']) && $time = strtotime("{$args['month']}-01"))
@@ -90,15 +90,15 @@
             $start = date('Y-m-d 00:00:00', $time);
             $end = date('Y-m-d 23:59:59', $time + 86400 * intval(date('t', $time)));
             
-            $where_clauses[] = sprintf('(created BETWEEN "%s" AND "%s")', $start, $end);
+            $where_clauses[] = sprintf('(scans.created BETWEEN "%s" AND "%s")', $start, $end);
         }
         
         if(isset($args['place']))
         {
             $woeid_clauses = array(
-                sprintf('place_woeid = %d', $args['place']),
-                sprintf('region_woeid = %d', $args['place']),
-                sprintf('country_woeid = %d', $args['place'])
+                sprintf('scans.place_woeid = %d', $args['place']),
+                sprintf('scans.region_woeid = %d', $args['place']),
+                sprintf('scans.country_woeid = %d', $args['place'])
                 );
         
             $where_clauses[] = '(' . join(' OR ', $woeid_clauses) . ')';
@@ -106,12 +106,12 @@
         
         if(isset($args['user']))
         {
-            $where_clauses[] = sprintf('(user_id = %s)', $dbh->quoteSmart($args['user']));
+            $where_clauses[] = sprintf('(scans.user_id = %s)', $dbh->quoteSmart($args['user']));
         }
         
         if(isset($args['print']))
         {
-            $where_clauses[] = sprintf('(print_id = %s)', $dbh->quoteSmart($args['print']));
+            $where_clauses[] = sprintf('(scans.print_id = %s)', $dbh->quoteSmart($args['print']));
         }
         
         $q = sprintf("SELECT scans.place_name, scans.place_woeid,
