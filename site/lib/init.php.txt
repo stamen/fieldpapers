@@ -40,6 +40,7 @@ http://tile.openstreetmap.org/{Z}/{X}/{Y}.png   Open Street Map
 http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png	Black & White
 http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg	Satellite + Labels
 http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg	Satellite Only
+http://a.tile.openstreetmap.fr/hot/{Z}/{X}/{Y}.png  Humanitarian
 
 PROVIDERS_LIST
 );
