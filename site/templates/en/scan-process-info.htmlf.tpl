@@ -9,7 +9,7 @@
             sheet of paper is normal) and right-side up. A legible 
             <a href="http://en.wikipedia.org/wiki/QR_Code">QR code</a> is critical.
             If this doesn’t help,
-            <a href="mailto:info@walking-papers.org?subject=Problem%20with%20scan%20#{$scan.id|escape}">let us know</a>.
+            <a href="https://github.com/stamen/fieldpapers/issues">let us know</a>.
         </p>
     </div>
 {else}
