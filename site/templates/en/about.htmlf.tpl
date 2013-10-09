@@ -38,7 +38,7 @@
     The project is most particularly inspired by <a href="http://aaronland.info/">Aaron Cope of Flickr</a> and <a href="http://www.reallyinterestinggroup.com/">Ben / Russell / Tom at Really Interesting Group</a>, whose <a href="http://bookcamp.pbworks.com/PaperCamp">Papercamp</a> / <a href="http://aaronland.info/talks/papernet/">Papernet</a> and <a href="http://www.reallyinterestinggroup.com/tofhwoti.html">Things Our Friends Have Written On The Internet 2008</a> help all this post-digital, medieval technology make sense.
 </p>
 <p>
-    <a href="mailto:info@walking-papers.org">info@walking-papers.org</a>
+    <a href="mailto:info@stamen.com">info@stamen.com</a>
     <br>
-    <a href="http://github.com/migurski/paperwalking">http://github.com/migurski/paperwalking</a>
+    <a href="http://github.com/stamen/fieldpapers">http://github.com/stamen/fieldpapers</a>
 </p>
