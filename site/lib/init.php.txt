@@ -36,7 +36,7 @@
     // Defaults to plain OpenStreetMap if omitted.
     define('TILE_PROVIDERS', <<<PROVIDERS_LIST
 
-http://tile.openstreetmap.org/{Z}/{X}/{Y}.png   Open Street Map
+http://tile.openstreetmap.org/{Z}/{X}/{Y}.png   OpenStreetMap
 http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png	Black & White
 http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg	Satellite + Labels
 http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg	Satellite Only
