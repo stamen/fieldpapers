@@ -58,6 +58,7 @@
     <div class="smallLayoutContainer">
     	<h2>Choose a Layout</h2>
         <p><label><input type="checkbox" name="grid" /> Add a UTM grid overlay to each map? (What's <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a>?)</label></p>
+        <p><label><input type="checkbox" name="redcross" /> Add the Red Cross overlay (for disaster relief efforts)</label></p>
     </div>
     <div class="container"> 
             
