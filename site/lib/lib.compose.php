@@ -454,7 +454,7 @@
                 $message['pages'][$i]['provider'] = "{$value['provider']},http://tile.stamen.com/utm/{Z}/{X}/{Y}.png";
              
             if($redcross)
-                $message['pages'][$i]['provider'] = "{$value['provider']},http://a.tiles.mapbox.com/v3/americanredcross.HAIYAN_Atlas_Bounds/{z}/{x}/{y}.png";
+                $message['pages'][$i]['provider'] = "{$value['provider']},http://a.tiles.mapbox.com/v3/americanredcross.HAIYAN_Atlas_Bounds/{Z}/{X}/{Y}.png";
         }
         
         // Deal with WOEIDs
