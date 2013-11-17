@@ -346,6 +346,7 @@
         $provider = $post['provider'];
         $title = $post['atlas_title'];
         $grid = filter_var($post['grid'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $redcross = filter_var($post['redcross'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         $private = filter_var($post['private'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         
         if(!is_array($extents))
@@ -452,6 +453,8 @@
             if($value['role'] != 'index' && $grid)
                 $message['pages'][$i]['provider'] = "{$value['provider']},http://tile.stamen.com/utm/{Z}/{X}/{Y}.png";
              
+            if($redcross)
+                $message['pages'][$i]['provider'] = "{$value['provider']},http://a.tiles.mapbox.com/v3/americanredcross.HAIYAN_Atlas_Bounds/{z}/{x}/{y}.png";
         }
         
         // Deal with WOEIDs
