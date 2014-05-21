@@ -57,6 +57,10 @@ CREATE TABLE prints (
     composed        TIMESTAMP DEFAULT 0,
 
     private         TINYINT NOT NULL,
+
+    text            MEDIUMTEXT,
+    cloned          VARCHAR(20) DEFAULT NULL,
+    refreshed       VARCHAR(20) DEFAULT NULL,
     
     PRIMARY KEY (id),
     INDEX `user` (user_id)
