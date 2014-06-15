@@ -29,22 +29,22 @@
         <ol>
             <li>
             <p>
-                <strong><a href="http://fieldpapers.org/make-canned-atlas-template.html">Atlas Template Tool</a></strong> - Field Papers includes a HTML form based template API that you can host anywhere and populate with preset values for each use case. The form posts those parameters to Field Papers and populates each phase of the make atlas process with those values, while allowing the user to modify the area of interest, etc.
+                <strong><a href="/make-canned-atlas-template.html">Atlas Template Tool</a></strong> - Field Papers includes a HTML form based template API that you can host anywhere and populate with preset values for each use case. The form posts those parameters to Field Papers and populates each phase of the make atlas process with those values, while allowing the user to modify the area of interest, etc.
             </p>
             </li>
             <li>
             <p>
-                <strong><a href="http://fieldpapers.org/make-geojson-atlas-form.html">Incident Maps</a></strong> - Field checking a list of feature locations? Upload a list of locations in GeoJSON format and we'll center an atlas page on each incident to give you a head start and liberate you from the atlas page grid.
+                <strong><a href="/make-geojson-atlas-form.html">Incident Maps</a></strong> - Field checking a list of feature locations? Upload a list of locations in GeoJSON format and we'll center an atlas page on each incident to give you a head start and liberate you from the atlas page grid.
             </p>
             </li>
             <li>
             <p>
-                <strong>Custom Map Styles</strong> - <a href="http://fieldpapers.org/upload_mbtiles.php">MBTiles Uploader Tool</a> - Use <a href="http://mapbox.com/tilemill/">TileMill</a> to design your own basemap or leverage existing ArcGIS geodata via <a href="http://www.arc2earth.com/">Arc2Earth</a> to export maps out of ArcMap in the MapBoxTiles SQLite data <a href="http://mapbox.com/mbtiles-spec/">format</a> and upload them for use on Field Papers. You'll need to be logged into Field Papers to save these to your account and have them available in the make atlas process.
+                <strong>Custom Map Styles</strong> - <a href="/upload_mbtiles.php">MBTiles Uploader Tool</a> - Use <a href="http://mapbox.com/tilemill/">TileMill</a> to design your own basemap or leverage existing ArcGIS geodata via <a href="http://www.arc2earth.com/">Arc2Earth</a> to export maps out of ArcMap in the MapBoxTiles SQLite data <a href="http://mapbox.com/mbtiles-spec/">format</a> and upload them for use on Field Papers. You'll need to be logged into Field Papers to save these to your account and have them available in the make atlas process.
             </p>
             </li>
             <li>
             <p>
-                <strong>Custom Map Styles</strong> - <a href="http://fieldpapers.org/make-canned-atlas-template.html">TMS endpoints</a> - Already published your basemap online as a tiled map service? Use our template tool detailed above to point to the TMS endpoint. Example: <a href="http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg">http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg</a>.
+                <strong>Custom Map Styles</strong> - <a href="/make-canned-atlas-template.html">TMS endpoints</a> - Already published your basemap online as a tiled map service? Use our template tool detailed above to point to the TMS endpoint. Example: <a href="http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg">http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg</a>.
             </p>
             </li>
             <li>
