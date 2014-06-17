@@ -22,6 +22,12 @@
                 <div class="desc">recent activity</div>
             </a>
         </li>
+        <li>
+            <a href="{$base_dir}/advanced.php">
+                <div class="section">EXTEND</div>
+                <div class="desc">with advanced tools</div>
+            </a>
+        </li>
         {if $request.authenticated}
         	<li>
                 <div class="section"><a href="{$base_dir}/atlases.php?user={$request.user.id}">{$request.user.name}</a></div>
