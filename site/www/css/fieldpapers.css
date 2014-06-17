@@ -115,8 +115,7 @@ a:hover, a:active, a:focus {
 	float: left;
 }
 .navbar li {
-	width: 140px;
-	margin-left: 10px;
+	margin-right: 30px;
 	display: block;
 	float: left;
 	padding-bottom: 20px;
