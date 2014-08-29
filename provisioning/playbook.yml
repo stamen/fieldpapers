@@ -1,0 +1,72 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+
+    #
+    # Install dependancies
+    #
+    - name: check if apt is updated
+      apt: cache_valid_time=3600 update-cache=yes
+    - name: Install My SQL Core 5.5
+      apt: "pkg=mysql-client-core-5.5 state=installed"
+    - name: Install My SQL Server
+      apt: "pkg=mysql-server state=installed"
+    - name: Install My SQL Client
+      apt: "pkg=mysql-client state=installed"
+    - name: Install Apache 2
+      apt: "pkg=apache2 state=installed"
+    - name: Install PHP 5
+      apt: "pkg=php5 state=installed"
+    - name: Enable PHP-MySql
+      apt: "pkg=php5-mysql state=installed"
+    - name: Install python-mysqldb which is needed by Ansible
+      apt: "pkg=python-mysqldb state=installed"
+    - name: Install PHP my admin
+      apt: "pkg=phpmyadmin state=installed"
+
+    #
+    # Change the root of Apache to the /vagrant root
+    #
+    - name: Move default Apache root
+      action: command mv /var/www /var/www-old
+    - name: Symlink /var/www to /vagrant
+      action: command ln -s /vagrant /var/www
+
+    #
+    # Setup MySQL
+    #
+    - name: Create a user named vagrant and password vagrantssh
+      mysql_user: name=vagrant password=vagrant priv=*.*:ALL state=present
+
+    ###################################################################
+    #
+    # App specific stuff goes here. Don't change anything above without
+    # a pull request
+    #
+    - apt: "pkg=build-essential state=installed"
+    - apt: "pkg=gdal-bin state=installed"
+    - apt: "pkg=git-core state=installed"
+    - apt: "pkg=screen state=installed"
+    - apt: "pkg=default-jre-headless state=installed"
+    - apt: "pkg=redis-server state=installed"
+    - apt: "pkg=libapache2-mod-php5 state=installed"
+    - apt: "pkg=php-pear state=installed"
+    - apt: "pkg=php5-gd state=installed"
+    - apt: "pkg=python-beautifulsoup state=installed"
+    - apt: "pkg=python-cairo state=installed"
+    - apt: "pkg=python-dev state=installed"
+    - apt: "pkg=python-gdal state=installed"
+    - apt: "pkg=python-imaging state=installed"
+    - apt: "pkg=python-numpy state=installed"
+    - apt: "pkg=python-pip state=installed"
+    - apt: "pkg=python-requests state=installed"
+
+    - name: "Bandage for SSL bug affecting PIP"
+      command: cp /vagrant/provisioning/httplib.py_modified /usr/lib/python2.7/httplib.py
+
+    - pip: name=ModestMaps
+    - pip: name=BlobDetector
+    - pip: name=celery
+
+    - command: pecl install redis

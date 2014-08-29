@@ -10,3 +10,7 @@ decoder/highpass.jpg
 decoder/postblob.jpg
 decoder/preblobs.jpg
 decoder/qrcode.png
+
+.vagrant
+*.box
+vagrant_ansible_inventory_default
