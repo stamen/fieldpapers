@@ -41,6 +41,7 @@ http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png	Black & White
 http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg	Satellite + Labels
 http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg	Satellite Only
 http://a.tile.openstreetmap.fr/hot/{Z}/{X}/{Y}.png  Humanitarian
+http://tile.opencyclemap.org/cycle/{Z}/{X}/{Y}.png  OpenCycleMap
 
 PROVIDERS_LIST
 );
