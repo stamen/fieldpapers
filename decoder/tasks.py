@@ -20,6 +20,7 @@ def decodeScan(apibase, password, **msg):
         decode.main(apibase, password, msg['scan_id'], url)
     except:
         client.captureException()
+        raise
 
 
 @celery.task
@@ -44,6 +45,7 @@ def composePrint(apibase, password, **msg):
             forms.main(apibase, password, msg['form_id'], msg['form_url'], on_fields)
         except:
             client.captureException()
+            raise
     
     else:
         if 'form_fields' in msg:
@@ -56,6 +58,7 @@ def composePrint(apibase, password, **msg):
             compose.main(apibase, password, **kwargs)
         except:
             client.captureException()
+            raise
 
 
 @celery.task
@@ -68,3 +71,4 @@ def parseForm(apibase, password, **msg):
         return forms.main(apibase, password, msg['form_id'], msg['url'])
     except:
         client.captureException()
+        raise
