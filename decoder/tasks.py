@@ -1,9 +1,11 @@
 from celery import Celery
+from raven import Client
 
 import compose, decode, forms
 
 
 celery = Celery('tasks', broker='redis://')
+client = Client()
 
 
 @celery.task
@@ -13,7 +15,11 @@ def decodeScan(apibase, password, **msg):
     url = msg['url']
 
     print 'Decoding scan', msg['scan_id']
-    decode.main(apibase, password, msg['scan_id'], url)
+
+    try:
+        decode.main(apibase, password, msg['scan_id'], url)
+    except:
+        client.captureException()
 
 
 @celery.task
@@ -32,8 +38,12 @@ def composePrint(apibase, password, **msg):
                 page['text'] = (page.get('text', '').strip() + '\n\n' + forms.fields_as_text(fields['fields'])).strip()
         
         print 'Composing print', msg['print_id'], 'and form', msg['form_id']
-        compose.main(apibase, password, **kwargs)
-        forms.main(apibase, password, msg['form_id'], msg['form_url'], on_fields)
+
+        try:
+            compose.main(apibase, password, **kwargs)
+            forms.main(apibase, password, msg['form_id'], msg['form_url'], on_fields)
+        except:
+            client.captureException()
     
     else:
         if 'form_fields' in msg:
@@ -41,7 +51,11 @@ def composePrint(apibase, password, **msg):
                 page['text'] = (page.get('text', '').strip() + '\n\n' + forms.fields_as_text(msg['form_fields'])).strip()
     
         print 'Composing print', msg['print_id']
-        compose.main(apibase, password, **kwargs)
+
+        try:
+            compose.main(apibase, password, **kwargs)
+        except:
+            client.captureException()
 
 
 @celery.task
@@ -49,4 +63,8 @@ def parseForm(apibase, password, **msg):
     """
     """
     print 'Parsing a form.'
-    return forms.main(apibase, password, msg['form_id'], msg['url'])
+
+    try:
+        return forms.main(apibase, password, msg['form_id'], msg['url'])
+    except:
+        client.captureException()

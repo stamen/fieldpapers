@@ -25,6 +25,7 @@ MySQL password a few times, it's fine to leave this blank.
 % pip install ModestMaps
 % pip install BlobDetector
 % pip install celery
+% pip install raven
 
 % pecl install redis
 ```
