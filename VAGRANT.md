@@ -19,15 +19,10 @@ This will create, provision, and launch the virtual machine.
 
 Log into the virtual machine with `vagrant ssh`
 
-**rough notes begin here**
+_This part will take a while..._
 
-You'll find the field papers respository in /var/www
-
-Web interface is installed in /var/www/site
-
-You can see it from your host machine at `localhost:8999` but nothing is running? The database doesn't exist?
-
-You need to start following the [INSTALL.md](https://github.com/stamen/fieldpapers/blob/master/INSTALL.md) steps somewhere in the "Field Papers" section. Cloning the repo is not necessary (is it?). Maybe.
+When it is done go to:
+`http://localhost:8999` where you will see a directory listing. If so, you are ready to head over to [the Field Notes section of INSTALL.md](https://github.com/stamen/fieldpapers/blob/master/INSTALL.md#field-papers). Do everthing those instructions tell you to do after the "Field Notes" section
 
 
 Logging
