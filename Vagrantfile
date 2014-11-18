@@ -34,6 +34,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Default value: false
   # config.ssh.forward_agent = true
 
+  # Vagrant v1.1+
+  config.vm.synced_folder "./", "/usr/local/fieldpapers/", id: "vagrant-root",
+    owner: "vagrant",
+    group: "www-data",
+    mount_options: ["dmode=775,fmode=664"]
+
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provisioning/playbook.yml"
     #ansible.verbose = 'vvvv'

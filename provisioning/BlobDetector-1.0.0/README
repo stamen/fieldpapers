@@ -1,0 +1,3 @@
+BlobDetector is a minimal implementation of two-pass connected component
+labeling for simple images:
+    http://en.wikipedia.org/wiki/Blob_extraction#Two-pass

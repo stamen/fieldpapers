@@ -62,11 +62,16 @@
     - apt: "pkg=python-pip state=installed"
     - apt: "pkg=python-requests state=installed"
 
-    - name: "Bandage for SSL bug affecting PIP"
-      command: cp /vagrant/provisioning/httplib.py_modified /usr/lib/python2.7/httplib.py
-
     - pip: name=ModestMaps
-    - pip: name=BlobDetector
+
+    #- pip: name=BlobDetector
+    # Commenting pip install of BlobDetector until the issue below is fixed
+    #https://github.com/migurski/Blobdetector/issues/1
+    - name: "Install BlobDetector from a local package instead of pip for now"
+      command: "python setup.py install"
+      args:
+        chdir: "/vagrant/provisioning/BlobDetector-1.0.0/"
+
     - pip: name=celery
 
     - command: pecl install redis
