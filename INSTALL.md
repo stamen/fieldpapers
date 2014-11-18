@@ -65,6 +65,14 @@ and reload the configuration.
 % /etc/init.d/apache2 reload
 ```
 
+You'll also want to disable PHP for anything under `files/`:
+
+```
+<Location /files>
+  php_flag engine off
+</Location>
+```
+
 Set up a new MySQL database for the site.
     
 ```bash
