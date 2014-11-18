@@ -2,6 +2,8 @@ Field Papers is the codebase behind http://fieldpapers.org.
 
 See [INSTALL.md](https://github.com/stamen/fieldpapers/blob/master/INSTALL.md) for a guide to installing Field Papers.
 
+If you are handy with [Vagrant](), can start with the [Vagrant Install Instructions](https://github.com/stamen/fieldpapers/blob/master/VAGRANT.md)
+
 ## About Field Papers
 
 Field Papers allows you to print a multipage paper atlas of anywhere in 
