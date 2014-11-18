@@ -106,7 +106,9 @@ the window open for now. You will need to start Celery for print tasks to run:
 
 ```bash
 % cd /usr/local/fieldpapers/decoder
-% celery -A poll worker
+% pip install raven
+% pip install redis
+% celery -A tasks worker
 ```
 
 You'll see a few messages scroll by, and eventually the print page will be
