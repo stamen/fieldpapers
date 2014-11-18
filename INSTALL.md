@@ -85,8 +85,12 @@ EOF
 ```
     
 Finally, set up site configuration by duplicating a new `init.php` and modifying
-the settings to match your own database, chosen API password, Yahoo and Flickr
-API keys, and other details.
+the settings. You will need to edit the following:
+   * DB_DSN - Whitch should look like `mysql://user@localhost/fieldpapers`
+   * chosen API password
+   * Add a [GEOPLANET_APPID](https://developer.yahoo.com/geo/geoplanet/)
+   * Add a [FLICKR_KEY](https://www.flickr.com/services/apps/by/me)
+as well as any other details you wish to customize.
     
 ```bash
 % cp /usr/local/fieldpapers/site/lib/init.php.txt /usr/local/fieldpapers/site/lib/init.php
