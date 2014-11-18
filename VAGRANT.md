@@ -1,4 +1,4 @@
-Testing and installing with Vagrant
+Using Vagrant for development
 ===
 
 To make Field Papers easier to install and test, you can use [Vagrant](vagrantup.com).
