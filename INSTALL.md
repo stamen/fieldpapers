@@ -133,7 +133,7 @@ Field Papers. As a last step, add Celery to `upstart` so it will start on boot:
 
 That's it - you're done!
 
-Tweaks, Gotchas
+Tweaks, Gotchas (really, you should actually do these steps too)
 ---------------
 
 Many of PHP's internal settings are restrictive by default, for safety. You'll
@@ -163,6 +163,12 @@ PHP sessions are brief by default, but a few tweaks can make them more durable.
 * Increase
   [`session.gc_maxlifetime`](http://php.net/manual/en/session.configuration.php#ini.session.gc-maxlifetime)
   to days or weeks so that visitors stay logged-in for longer periods of time.
+
+After making these any of these changes to `php.ini`, should should restart apache:
+
+```
+/etc/init.d/apache2 reload
+```
 
 When atlases or snapshots fail, the `/tmp` directory can fill up. Add a few
 find-and-delete commands to `/etc/crontab` to keep these files from piling up
