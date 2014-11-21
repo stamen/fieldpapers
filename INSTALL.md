@@ -86,7 +86,7 @@ EOF
     
 Finally, set up site configuration by duplicating a new `init.php` and modifying
 the settings. You will need to edit the following:
-   * DB_DSN - Whitch should look like `mysql://user@localhost/fieldpapers`
+   * DB_DSN - Whitch should look like `mysql://root@localhost/fieldpapers`
    * chosen API password
    * Add a [GEOPLANET_APPID](https://developer.yahoo.com/geo/geoplanet/)
    * Add a [FLICKR_KEY](https://www.flickr.com/services/apps/by/me)
