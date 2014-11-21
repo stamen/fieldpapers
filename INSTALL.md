@@ -61,11 +61,11 @@ the default virtual host's DocumentRoot to `/usr/local/fieldpapers/site/www`
 and reload the configuration.
 
 ```bash
-% sed -i 's/DocumentRoot.*/DocumentRoot \/usr\/local\/fieldpapers\/site\/www/' /etc/apache2/sites-available/default
+% sudo sed -i 's/DocumentRoot.*/DocumentRoot \/usr\/local\/fieldpapers\/site\/www/' /etc/apache2/sites-available/default
 % /etc/init.d/apache2 reload
 ```
 
-You'll also want to disable PHP for anything under `files/`:
+You'll also want to disable PHP for anything under `files/` (run `sudo sensible-editor /etc/apache2/sites-available/default` and add these lines _before_ the last `</VirtualHost>` line):
 
 ```
 <Location /files>
