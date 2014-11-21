@@ -75,3 +75,7 @@
     - pip: name=celery
 
     - command: pecl install redis
+
+    - command: pear install Crypt_HMAC HTTP_Request DB
+    - command: pear install Crypt_HMAC2 MDB2 MDB2#mysql
+    - command: ln -s /usr/lib/libproj.so.0 /usr/lib/libproj.so
