@@ -22,7 +22,7 @@ _This part will take a while..._
 Log into the virtual machine with `vagrant ssh`
 
 When it is done go to:
-`http://localhost:8999` where you will see a directory listing. If so, you are ready to head over to [the Field Papers section of INSTALL.md](https://github.com/stamen/fieldpapers/blob/master/INSTALL.md#field-papers). Do everthing those instructions tell you to do after the "Field Notes" section
+`http://localhost:8999` where you will see a directory listing. If so, you are ready to head over to [the Field Papers section of INSTALL.md](https://github.com/stamen/fieldpapers/blob/master/INSTALL.md#field-papers). Do everything those instructions tell you to do after the "Field Papers" section (after the first `git clone` instructions, which will already be done.)
 
 
 Logging
