@@ -97,6 +97,9 @@ as well as any other details you wish to customize.
 % sensible-editor /usr/local/fieldpapers/site/lib/init.php
 ```
 
+Place licensed copies of `Helvetica.ttf` and `Helvetica-Bold.ttf` in
+`decoder/fonts`.
+
 Tasks
 -----
 
