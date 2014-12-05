@@ -1,0 +1,54 @@
+<?php
+
+    putenv("TZ=America/Los_Angeles");
+    define('DB_DSN', 'mysql://fieldpapers@localhost/fieldpapers');
+    define('REDIS_HOST', 'localhost');
+    define('TMP_DIR', dirname(realpath(__FILE__)).'/../tmp');
+    define('SERVER_NAME', $_SERVER['SERVER_NAME']); // used in get_domain_name(), probably leave this alone
+    
+    define('API_PASSWORD', '*** you choose this ***');
+    define('COOKIE_SIGNATURE', '*** you choose this ***');
+
+    // Yahoo GeoPlanet application ID
+    define('GEOPLANET_APPID', '*** http://developer.yahoo.com/geo/geoplanet/ ***');
+
+    // Flickr application key
+    define('FLICKR_KEY', '*** http://www.flickr.com/services/api/keys/ ***');
+
+    session_name('paperwalking-sessionid');
+
+    // Amazon S3
+    // leave one or more of these constants empty to use local uploads
+    define('AWS_ACCESS_KEY', '*** http://aws.amazon.com/ ***');
+    define('AWS_SECRET_KEY', '');
+    define('S3_BUCKET_ID',   '');
+    
+    // Master on/off switch for the whole site.
+    // Displays a "go away" message for any page when turned off.
+    define('MASTER_ON_OFF_SWITCH', 1);
+    
+    // Path where ogr2ogr and zip binaries can be found, for shapefile downloads.
+    define('OGR2OGR_PATH', '');
+    define('ZIP_PATH', '');
+    
+    // List of tile providers as a multi-line string.
+    // Each line is a URL followed by a space followed by a text description.
+    // Defaults to plain OpenStreetMap if omitted.
+    define('TILE_PROVIDERS', <<<PROVIDERS_LIST
+
+http://tile.openstreetmap.org/{Z}/{X}/{Y}.png   OpenStreetMap
+http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png	Black & White
+http://tile.stamen.com/boner/{Z}/{X}/{Y}.jpg	Satellite + Labels
+http://tile.stamen.com/bing-lite/{Z}/{X}/{Y}.jpg	Satellite Only
+http://a.tile.openstreetmap.fr/hot/{Z}/{X}/{Y}.png  Humanitarian
+http://tile.opencyclemap.org/cycle/{Z}/{X}/{Y}.png  OpenCycleMap
+
+PROVIDERS_LIST
+);
+
+    // default latitude, longitude, and zoom - see http://www.dbsgeo.com/latlon/ if in doubt.
+    define('DEFAULT_LATITUDE', 37.791);
+    define('DEFAULT_LONGITUDE', -122.343);
+    define('DEFAULT_ZOOM', 11);
+
+?>

@@ -3,66 +3,78 @@
   sudo: yes
   tasks:
 
+    ###################################################################
     #
     # Install dependancies
     #
     - name: check if apt is updated
       apt: cache_valid_time=3600 update-cache=yes
-    - name: Install My SQL Core 5.5
-      apt: "pkg=mysql-client-core-5.5 state=installed"
-    - name: Install My SQL Server
-      apt: "pkg=mysql-server state=installed"
-    - name: Install My SQL Client
-      apt: "pkg=mysql-client state=installed"
-    - name: Install Apache 2
-      apt: "pkg=apache2 state=installed"
-    - name: Install PHP 5
-      apt: "pkg=php5 state=installed"
-    - name: Enable PHP-MySql
-      apt: "pkg=php5-mysql state=installed"
-    - name: Install python-mysqldb which is needed by Ansible
-      apt: "pkg=python-mysqldb state=installed"
-    - name: Install PHP my admin
-      apt: "pkg=phpmyadmin state=installed"
-
-    #
-    # Change the root of Apache to the /vagrant root
-    #
-    - name: Move default Apache root
-      action: command mv /var/www /var/www-old
-    - name: Symlink /var/www to /vagrant
-      action: command ln -s /vagrant /var/www
-
-    #
-    # Setup MySQL
-    #
-    - name: Create a user named vagrant and password vagrantssh
-      mysql_user: name=vagrant password=vagrant priv=*.*:ALL state=present
+    
+    - name: Install dependancies
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - mysql-client-core-5.5
+        - mysql-server
+        - mysql-client
+        - apache2
+        - php5
+        - php5-mysql
+        - phpmyadmin
+        - build-essential
+        - curl
+        - vim
+        - gdal-bin
+        - git-core
+        - screen
+        - default-jre-headless
+        - redis-server
+        - libapache2-mod-php5
+        - php-pear
+        - php5-gd
+        - python-mysqldb
+        - python-beautifulsoup
+        - python-cairo
+        - python-dev
+        - python-gdal
+        - python-imaging
+        - python-numpy
+        - python-pip
+        - python-requests
 
     ###################################################################
     #
-    # App specific stuff goes here. Don't change anything above without
-    # a pull request
+    # Setup Apache
     #
-    - apt: "pkg=build-essential state=installed"
-    - apt: "pkg=gdal-bin state=installed"
-    - apt: "pkg=git-core state=installed"
-    - apt: "pkg=screen state=installed"
-    - apt: "pkg=default-jre-headless state=installed"
-    - apt: "pkg=redis-server state=installed"
-    - apt: "pkg=libapache2-mod-php5 state=installed"
-    - apt: "pkg=php-pear state=installed"
-    - apt: "pkg=php5-gd state=installed"
-    - apt: "pkg=python-beautifulsoup state=installed"
-    - apt: "pkg=python-cairo state=installed"
-    - apt: "pkg=python-dev state=installed"
-    - apt: "pkg=python-gdal state=installed"
-    - apt: "pkg=python-imaging state=installed"
-    - apt: "pkg=python-numpy state=installed"
-    - apt: "pkg=python-pip state=installed"
-    - apt: "pkg=python-requests state=installed"
+    - name: Move default Apache root
+      action: command mv /var/www /var/www-old
 
-    - pip: name=ModestMaps
+    - name: Symlink /var/www to /vagrant
+      action: command ln -s /vagrant /var/www
+
+    ###################################################################
+    #
+    # Setup MySQL
+    #
+    - name: Create fieldpapers database
+      mysql_db: name=fieldpapers state=present encoding='utf8'
+
+    - name: Create a user named vagrant and password vagrantssh
+      mysql_user: name=vagrant password=vagrant priv=*.*:ALL state=present
+      
+    - name: Create fieldpapers database user
+      mysql_user: name=fieldpapers password=w4lks priv='fieldpapers.*:ALL' state=present
+
+    - name: Load database schema
+      mysql_db: name=fieldpapers state=import target=/vagrant/site/doc/create.mysql
+
+
+    - name: Install python requirements
+      action: pip name={{item}} state=latest
+      with_items:
+        - ModestMaps
+        - celery
+        - raven
+        - redis
 
     #- pip: name=BlobDetector
     # Commenting pip install of BlobDetector until the issue below is fixed
@@ -72,10 +84,43 @@
       args:
         chdir: "/vagrant/provisioning/BlobDetector-1.0.0/"
 
-    - pip: name=celery
+    - name: Install packages via pecl.
+      command: "pecl install {{ item }}"
+      register: pecl_result
+      changed_when: "pecl_result.rc == 0"
+      failed_when: "not (('already installed' in pecl_result.stdout) or ('install ok:' in pecl_result.stdout))"
+      with_items: 
+        - redis
 
-    - command: pecl install redis
+    - name: Install packages via pear
+      command: pear install {{ item }}
+      register: pear_result
+      changed_when: "'already installed' not in pear_result.stdout"
+      failed_when: "'already installed' not in pear_result.stdout and pear_result.stderr"
+      with_items:
+        - Crypt_HMAC HTTP_Request DB
+        - Crypt_HMAC2 MDB2 MDB2#mysql
 
-    - command: pear install Crypt_HMAC HTTP_Request DB
-    - command: pear install Crypt_HMAC2 MDB2 MDB2#mysql
-    - command: ln -s /usr/lib/libproj.so.0 /usr/lib/libproj.so
+    - name: Create libproj symlink
+      file: src=/usr/lib/libproj.so.0 dest=/usr/lib/libproj.so state=link
+
+    - name: Make fieldpapers site
+      command: "{{ item }} chdir=/vagrant/site"
+      with_items:
+        - make
+
+    - name: Copy over apache default site configuration
+      copy: src=configs/apache_default dest=/etc/apache2/sites-available/default owner=root
+
+    - name: Copy redis ini to php5/conf.d
+      copy: src=configs/20-redis.ini dest=/etc/php5/conf.d/20-redis.ini owner=root
+
+    - name: Copy php ini to php5/apache2
+      copy: src=configs/php.ini dest=/etc/php5/apache2/php.ini owner=root
+
+    - name: Copy celery configuration into /etc/init
+      copy: src=configs/celery.conf dest=/etc/init/celery.conf owner=root
+
+    - name: Copy crontab /etc/init
+      copy: src=configs/crontab.txt dest=/etc/cron.d/fieldpapers owner=root
+
