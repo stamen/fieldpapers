@@ -118,9 +118,18 @@
     - name: Copy php ini to php5/apache2
       copy: src=configs/php.ini dest=/etc/php5/apache2/php.ini owner=root
 
+    - name: Copy php.init into place
+      copy: src=configs/init.php.txt dest=/vagrant/site/lib/init.php owner=root
+
     - name: Copy celery configuration into /etc/init
       copy: src=configs/celery.conf dest=/etc/init/celery.conf owner=root
 
     - name: Copy crontab /etc/init
       copy: src=configs/crontab.txt dest=/etc/cron.d/fieldpapers owner=root
+
+    # - name: Start celery tasks worker
+    #   shell: "cd /vagrant/decoder && celery -A tasks worker && celery start"
+
+    - name: Restart Apache
+      action: service name=apache2 state=restarted
 
