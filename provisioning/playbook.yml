@@ -120,14 +120,15 @@
     - name: Copy php.init into place
       copy: src=configs/init.php.txt dest=/usr/local/fieldpapers/site/lib/init.php owner=root
 
-    - name: Copy celery configuration into /etc/init
-      copy: src=configs/celery.conf dest=/etc/init/celery.conf owner=root
-
     - name: Copy crontab /etc/init
       copy: src=configs/crontab.txt dest=/etc/cron.d/fieldpapers owner=root
 
-    # - name: Start celery tasks worker
-    #   shell: "cd /vagrant/decoder && celery -A tasks worker && celery start"
+    - name: Copy celery configuration into upstart directory
+      copy: src=configs/celery.conf dest=/etc/init/celery.conf owner=root
+
+    - name: Start celery
+      command: start celery
+      sudo: yes
 
     - name: Restart Apache
       action: service name=apache2 state=restarted
