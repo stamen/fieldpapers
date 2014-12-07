@@ -26,6 +26,7 @@
         - gdal-bin
         - git-core
         - screen
+        - sendmail
         - default-jre-headless
         - redis-server
         - libapache2-mod-php5
