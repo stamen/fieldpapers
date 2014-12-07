@@ -65,8 +65,7 @@
       mysql_user: name=fieldpapers password=w4lks priv='fieldpapers.*:ALL' state=present
 
     - name: Load database schema
-      mysql_db: name=fieldpapers state=import target=/vagrant/site/doc/create.mysql
-
+      mysql_db: name=fieldpapers state=import target=/usr/local/fieldpapers/site/doc/create.mysql
 
     - name: Install python requirements
       action: pip name={{item}} state=latest
@@ -105,7 +104,7 @@
       file: src=/usr/lib/libproj.so.0 dest=/usr/lib/libproj.so state=link
 
     - name: Make fieldpapers site
-      command: "{{ item }} chdir=/vagrant/site"
+      command: "{{ item }} chdir=/usr/local/fieldpapers/site"
       with_items:
         - make
 
@@ -119,7 +118,7 @@
       copy: src=configs/php.ini dest=/etc/php5/apache2/php.ini owner=root
 
     - name: Copy php.init into place
-      copy: src=configs/init.php.txt dest=/vagrant/site/lib/init.php owner=root
+      copy: src=configs/init.php.txt dest=/usr/local/fieldpapers/site/lib/init.php owner=root
 
     - name: Copy celery configuration into /etc/init
       copy: src=configs/celery.conf dest=/etc/init/celery.conf owner=root
