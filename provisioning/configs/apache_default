@@ -1,24 +1,19 @@
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 
-	DocumentRoot /vagrant/site/www
+	DocumentRoot /usr/local/fieldpapers/site/www/
 
 	<Directory />
-		Options FollowSymLinks
-		AllowOverride None
-	</Directory>
-
-	<Location /files>
-	  php_flag engine off
-	</Location>
-	
-	<Directory /vagrant/site/www/>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
 		Order allow,deny
 		allow from all
 	</Directory>
 
+	<Location /files>
+	  php_flag engine off
+	</Location>
+	
 	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
 	<Directory "/usr/lib/cgi-bin">
 		AllowOverride None
