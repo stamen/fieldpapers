@@ -1,12 +1,12 @@
 <?php
 
     putenv("TZ=America/Los_Angeles");
-    define('DB_DSN', 'mysql://fieldpapers@localhost/fieldpapers');
+    define('DB_DSN', 'mysql://fieldpapers:w4lks@localhost/fieldpapers');
     define('REDIS_HOST', 'localhost');
     define('TMP_DIR', dirname(realpath(__FILE__)).'/../tmp');
     define('SERVER_NAME', $_SERVER['SERVER_NAME']); // used in get_domain_name(), probably leave this alone
     
-    define('API_PASSWORD', '*** you choose this ***');
+    define('API_PASSWORD', 'w4lks');
     define('COOKIE_SIGNATURE', '*** you choose this ***');
 
     // Yahoo GeoPlanet application ID
