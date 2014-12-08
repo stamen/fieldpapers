@@ -61,11 +61,11 @@ the default virtual host's DocumentRoot to `/usr/local/fieldpapers/site/www`
 and reload the configuration.
 
 ```bash
-% sed -i 's/DocumentRoot.*/DocumentRoot \/usr\/local\/fieldpapers\/site\/www/' /etc/apache2/sites-available/default
+% sudo sed -i 's/DocumentRoot.*/DocumentRoot \/usr\/local\/fieldpapers\/site\/www/' /etc/apache2/sites-available/default
 % /etc/init.d/apache2 reload
 ```
 
-You'll also want to disable PHP for anything under `files/`:
+You'll also want to disable PHP for anything under `files/` (run `sudo sensible-editor /etc/apache2/sites-available/default` and add these lines _before_ the last `</VirtualHost>` line):
 
 ```
 <Location /files>
@@ -86,7 +86,7 @@ EOF
     
 Finally, set up site configuration by duplicating a new `init.php` and modifying
 the settings. You will need to edit the following:
-   * DB_DSN - Whitch should look like `mysql://user@localhost/fieldpapers`
+   * DB_DSN - Whitch should look like `mysql://root@localhost/fieldpapers`
    * chosen API password
    * Add a [GEOPLANET_APPID](https://developer.yahoo.com/geo/geoplanet/)
    * Add a [FLICKR_KEY](https://www.flickr.com/services/apps/by/me)
@@ -136,7 +136,7 @@ Field Papers. As a last step, add Celery to `upstart` so it will start on boot:
 
 That's it - you're done!
 
-Tweaks, Gotchas
+Tweaks, Gotchas (really, you should actually do these steps too)
 ---------------
 
 Many of PHP's internal settings are restrictive by default, for safety. You'll
@@ -166,6 +166,12 @@ PHP sessions are brief by default, but a few tweaks can make them more durable.
 * Increase
   [`session.gc_maxlifetime`](http://php.net/manual/en/session.configuration.php#ini.session.gc-maxlifetime)
   to days or weeks so that visitors stay logged-in for longer periods of time.
+
+After making these any of these changes to `php.ini`, should should restart apache:
+
+```
+/etc/init.d/apache2 reload
+```
 
 When atlases or snapshots fail, the `/tmp` directory can fill up. Add a few
 find-and-delete commands to `/etc/crontab` to keep these files from piling up
