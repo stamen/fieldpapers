@@ -3,6 +3,8 @@
   sudo: yes
   tasks:
 
+    - shell: sudo apt-get update
+
     - action: user name=ubuntu password=ubuntu groups="sudo,admin,www-data"
 
     ###################################################################
@@ -23,6 +25,7 @@
         - php5-mysql
         - phpmyadmin
         - build-essential
+        - libcairo2-dev
         - curl
         - vim
         - gdal-bin
@@ -42,7 +45,6 @@
         - python-imaging
         - python-numpy
         - python-pip
-        - python-requests
 
     ###################################################################
     #
@@ -53,6 +55,11 @@
 
     - name: Symlink /var/www to /vagrant
       action: command ln -s /vagrant /var/www
+
+    - name: Make fieldpapers site
+      command: "{{ item }} chdir=/usr/local/fieldpapers/site"
+      with_items:
+        - make
 
     ###################################################################
     #
@@ -77,6 +84,7 @@
         - celery
         - raven
         - redis
+        - requests
 
     #- pip: name=BlobDetector
     # Commenting pip install of BlobDetector until the issue below is fixed
@@ -106,10 +114,6 @@
     - name: Create libproj symlink
       file: src=/usr/lib/libproj.so.0 dest=/usr/lib/libproj.so state=link
 
-    - name: Make fieldpapers site
-      command: "{{ item }} chdir=/usr/local/fieldpapers/site"
-      with_items:
-        - make
 
     - name: Copy over apache default site configuration
       copy: src=configs/apache_default dest=/etc/apache2/sites-available/default owner=root
