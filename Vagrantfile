@@ -5,18 +5,18 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "hashicorp/precise64"
-  config.vm.network :private_network, ip: "192.168.33.10"
-
-
-  # Vagrant v1.1+
+  
   config.vm.synced_folder "./", "/usr/local/fieldpapers/", id: "vagrant-root",
     owner: "vagrant",
     group: "www-data",
     mount_options: ["dmode=775,fmode=664"]
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/playbook.yml"
-    #ansible.verbose = 'vvvv'
+  config.vm.provider :virtualbox do |vb, override|
+    vb.memory = 1024
+    vb.cpus = 1
+    override.vm.box = "precise64"
+    override.vm.box_url = "http://files.vagrantup.com/precise64.box"
+    override.vm.network :private_network, ip: "192.168.33.10"
+    override.vm.provision :ansible, :playbook => "provisioning/playbook.yml"
   end
 end
