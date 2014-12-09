@@ -14,8 +14,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :virtualbox do |vb, override|
     vb.memory = 1024
     vb.cpus = 1
-    override.vm.box = "precise64"
-    override.vm.box_url = "http://files.vagrantup.com/precise64.box"
+    override.vm.box = "precise32"
+    override.vm.box_url = "http://files.vagrantup.com/precise32.box"
     override.vm.network :private_network, ip: "192.168.33.10"
     override.vm.provision :ansible, :playbook => "provisioning/playbook.yml"
   end
