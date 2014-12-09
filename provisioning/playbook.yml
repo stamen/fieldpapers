@@ -3,6 +3,8 @@
   sudo: yes
   tasks:
 
+    - action: user name=ubuntu password=ubuntu groups="sudo,admin,www-data"
+
     ###################################################################
     #
     # Install dependancies
