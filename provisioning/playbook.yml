@@ -5,7 +5,6 @@
 
     - shell: sudo apt-get update
 
-    - action: user name=ubuntu password=ubuntu groups="sudo,admin,www-data"
 
     ###################################################################
     #
@@ -108,12 +107,15 @@
       changed_when: "'already installed' not in pear_result.stdout"
       failed_when: "'already installed' not in pear_result.stdout and pear_result.stderr"
       with_items:
-        - Crypt_HMAC HTTP_Request DB
-        - Crypt_HMAC2 MDB2 MDB2#mysql
+        - Crypt_HMAC 
+        - HTTP_Request 
+        - DB
+        - Crypt_HMAC2 
+        - MDB2 
+        - MDB2#mysql
 
     - name: Create libproj symlink
       file: src=/usr/lib/libproj.so.0 dest=/usr/lib/libproj.so state=link
-
 
     - name: Copy over apache default site configuration
       copy: src=configs/apache_default dest=/etc/apache2/sites-available/default owner=root
