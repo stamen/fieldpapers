@@ -5,43 +5,18 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
-
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "hashicorp/precise64"
-
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network :forwarded_port, guest: 80, host: 8999
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network :private_network, ip: "192.168.33.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network :public_network
-
-  # If true, then any SSH connections made will enable agent forwarding.
-  # Default value: false
-  # config.ssh.forward_agent = true
-
-  # Vagrant v1.1+
+  
   config.vm.synced_folder "./", "/usr/local/fieldpapers/", id: "vagrant-root",
     owner: "vagrant",
     group: "www-data",
     mount_options: ["dmode=775,fmode=664"]
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/playbook.yml"
-    #ansible.verbose = 'vvvv'
+  config.vm.provider :virtualbox do |vb, override|
+    vb.memory = 1024
+    vb.cpus = 1
+    override.vm.box = "precise32"
+    override.vm.box_url = "http://files.vagrantup.com/precise32.box"
+    override.vm.network :private_network, ip: "192.168.33.10"
+    override.vm.provision :ansible, :playbook => "provisioning/playbook.yml"
   end
 end

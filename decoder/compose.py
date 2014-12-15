@@ -93,7 +93,7 @@ def add_page_text(ctx, text, x, y, width, height):
     ctx.move_to(0, 12)
 
     try:
-        font_file = realpath('fonts/Helvetica.ttf')
+        font_file = realpath('fonts/LiberationSans-Regular.ttf')
 
         if font_file not in cached_fonts:
             cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)
@@ -365,7 +365,7 @@ def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layo
     place_image(ctx, img, 0, -36, 129.1, 36)
 
     try:
-        font_file = realpath('fonts/Helvetica.ttf')
+        font_file = realpath('fonts/LiberationSans-Regular.ttf')
 
         if font_file not in cached_fonts:
             cached_fonts[font_file] = create_cairo_font_face_for_file(font_file)

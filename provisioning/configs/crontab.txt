@@ -1,0 +1,4 @@
+10 *    * * *   ubuntu  find /tmp -cmin +360 -name 'preblobs-*.jpg' -delete
+20 *    * * *   ubuntu  find /tmp -cmin +360 -name 'highpass-*.jpg' -delete
+30 *    * * *   ubuntu  find /tmp -cmin +360 -name 'postblob-*.png' -delete
+40 *    * * *   ubuntu  find /tmp -cmin +360 -name 'cairoutils-*.???' -delete
