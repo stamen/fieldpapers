@@ -613,6 +613,7 @@
                     This may take a while, generally a few minutes. <br><br>
                     You don't need to keep this window open; you can <a href="{$base_dir}/atlas.php?id={$print.id|escape}">bookmark 
                     this page</a> and come back later.
+                    <br><br>If it takes more than an hour, check <a href="http://twitter.com/fieldpapers">@fieldpapers on twitter</a> for system status updates, and email us at help@fieldpapers.org if your atlas is stuck.
                 </p>
                 {if $print.private}
                 <p>
