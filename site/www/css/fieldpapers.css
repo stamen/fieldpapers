@@ -113,6 +113,7 @@ a:hover, a:active, a:focus {
 .navbar ul {
 	list-style:none;
 	float: left;
+	padding-left: 0px;
 }
 .navbar li {
 	margin-right: 30px;
