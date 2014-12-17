@@ -37,7 +37,7 @@
             header("HTTP/1.0 404 Not Found");
             
             header('Content-Type: image/png');
-            echo file_get_contents('img/no-tile-here.png');
+            //echo file_get_contents('img/no-tile-here.png');
         }
         
         $db_mbtiles->close();
