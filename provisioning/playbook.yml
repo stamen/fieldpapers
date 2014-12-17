@@ -22,6 +22,7 @@
         - apache2
         - php5
         - php5-mysql
+        - php5-sqlite
         - phpmyadmin
         - build-essential
         - libcairo2-dev

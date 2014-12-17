@@ -17,6 +17,9 @@
         'private'     => filter_var($_REQUEST['private'], FILTER_VALIDATE_BOOLEAN),
     );
     
+    if($_POST['overlay'])
+        $atlas_data['provider'] = $atlas_data['provider'].','.$_POST['overlay'];
+
     if($_POST['atlas_title'])
         $atlas_data['atlas_title'] = $_POST['atlas_title'];
 

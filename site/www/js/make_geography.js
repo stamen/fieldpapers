@@ -1,5 +1,6 @@
 var map = null,
-    map_layer;
+    map_layer,
+    overlay_layer;
 
 var paper_orientations = {"landscape": 1.50, "portrait": .75},
     page_aspect_ratio = paper_orientations["landscape"],
@@ -38,6 +39,12 @@ var page_button_width = 33,
 function setProvider(tileURL)
 {        
     map_layer.setProvider(new MM.TemplatedMapProvider(tileURL));
+}
+
+function setOverlayProvider(tileURL) 
+{
+    overlay_layer.setProvider(new MM.TemplatedMapProvider(tileURL));
+    map.draw();
 }
 
 function setMapHeight()
@@ -585,6 +592,7 @@ function initUI () {
     // Map
     ////
     var MM = com.modestmaps;
+    var layers = [];
 
     if (mbtiles_data)
     {
@@ -596,10 +604,21 @@ function initUI () {
     }
 
     map_layer = new MM.Layer(provider);
+    layers.push(map_layer);
+
+    if(user_mbtiles)
+    {
+        var overlayURL = user_mbtiles[0]["url"],
+            overlayProvider = new MM.TemplatedMapProvider(overlayURL);
+
+        overlay_layer = new MM.Layer(overlayProvider);
+        layers.push(overlay_layer);
+    }
+    
 
     setMapHeight();
 
-    map = new MM.Map("map", map_layer,null,[new MM.DragHandler(), new MM.DoubleClickHandler()]);
+    map = new MM.Map("map", layers, null,[new MM.DragHandler(), new MM.DoubleClickHandler()]);
 
     if (mbtiles_data)
     {

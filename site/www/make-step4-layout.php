@@ -18,6 +18,9 @@
         'pages'       => (is_array($_POST['pages']) ? $_POST['pages'] : array()),
         'private'     => filter_var($_REQUEST['private'], FILTER_VALIDATE_BOOLEAN),
         );
+
+    if($_POST['overlay'])
+        $atlas_data['overlay'] = $_POST['overlay'];
     
     if(isset($_POST['clone_id']) && !empty($_POST['clone_id'])){
         $atlas_data['clone_id'] = trim($_POST['clone_id']);
