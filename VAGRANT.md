@@ -37,3 +37,5 @@ From the fieldpapers checkout on your host machine
 *Celery logging*
 `vagrant ssh -c "screen -r celery"`
 
+"mysql --user=fieldpapers --password=w4lks fieldpapers"
+
