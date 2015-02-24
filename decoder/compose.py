@@ -2,7 +2,7 @@
 
 from math import pi
 from copy import copy
-from urllib import urlopen, urlencode
+from urllib import urlopen, urlencode, quote_plus
 from os.path import join as pathjoin, dirname, realpath
 from urlparse import urljoin, urlparse, parse_qs
 from os import close, write, unlink
@@ -27,18 +27,12 @@ cached_fonts = dict()
 def get_qrcode_image(print_href):
     """ Render a QR code to an ImageSurface.
     """
-    scheme, host, path, p, query, f = urlparse(print_href)
-
-    print_path = scheme + '://' + host + path
-    print_id = parse_qs(query).get('id', [''])[0]
-
-    q = {'print': print_id}
-    u = urljoin(print_path, 'code.php') + '?' + urlencode(q)
-
-    handle, filename = mkstemp(suffix='.png')
+    (handle, filename) = mkstemp(suffix='.png')
 
     try:
-        write(handle, urlopen(u).read())
+        # Field Papers' code.php won't generate arbitrary QR codes (good,
+        # except for now ;-)
+        write(handle, urlopen("https://api.qrserver.com/v1/create-qr-code/?size=528x528&data=%s" % (quote_plus(print_href))).read())
         close(handle)
 
         img = ImageSurface.create_from_png(filename)
