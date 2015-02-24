@@ -18,7 +18,7 @@ RUN \
 # System dependencies
 
 RUN \
-  apt-get install -y gdal-bin default-jre-headless python-cairo python-dev python-imaging python-numpy python-pip python-requests && \
+  apt-get install -y gdal-bin default-jre-headless python-cairo python-gdal python-dev python-imaging python-numpy python-pip python-requests && \
   apt-get clean
 
 # Application dependencies
