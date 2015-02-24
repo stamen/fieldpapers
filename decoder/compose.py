@@ -1,4 +1,6 @@
-﻿from math import pi
+#!/usr/bin/env python
+
+from math import pi
 from copy import copy
 from urllib import urlopen, urlencode
 from os.path import join as pathjoin, dirname, realpath
