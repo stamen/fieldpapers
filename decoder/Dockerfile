@@ -35,3 +35,5 @@ ENV HOME /app
 WORKDIR /app
 
 ADD . /app/
+
+VOLUME ["/app"]
