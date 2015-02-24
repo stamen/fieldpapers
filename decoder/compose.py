@@ -9,6 +9,7 @@ from os import close, write, unlink
 from optparse import OptionParser
 from StringIO import StringIO
 from tempfile import mkstemp
+import sys
 
 from ModestMaps import mapByExtent, mapByExtentZoom
 from ModestMaps.Providers import TemplatedMercatorProvider
@@ -211,7 +212,7 @@ def add_scale_bar(ctx, mmap, map_height_pt):
 def add_print_page(ctx, mmap, href, well_bounds_pt, points_FG, hm2pt_ratio, layout, text, mark, fuzzy, indexees):
     """
     """
-    print 'Adding print page:', href
+    print >> sys.stderr, 'Adding print page:', href
 
     well_xmin_pt, well_ymin_pt, well_xmax_pt, well_ymax_pt = well_bounds_pt
     well_width_pt, well_height_pt = well_xmax_pt - well_xmin_pt, well_ymax_pt - well_ymin_pt
@@ -442,8 +443,8 @@ def main(apibase, password, print_id, pages, paper_size, orientation, layout):
     _finish_print = lambda print_info: print_id and finish_print(apibase, password, print_id, print_info) or None
     _update_print = lambda progress: print_id and update_print(apibase, password, print_id, progress) or None
 
-    print 'Print:', print_id
-    print 'Paper:', orientation, paper_size, layout
+    print >> sys.stderr, 'Print:', print_id
+    print >> sys.stderr, 'Paper:', orientation, paper_size, layout
 
     #
     # Prepare output context.
