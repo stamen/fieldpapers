@@ -9,6 +9,7 @@ from tempfile import mkstemp
 from ModestMaps import mapByExtentZoom
 from ModestMaps.Geo import Location
 from ModestMaps.Providers import TemplatedMercatorProvider
+from raven import Client
 
 from cairoutils import get_drawing_context
 from compose import add_print_page, paper_info
@@ -95,4 +96,10 @@ if __name__ == '__main__':
         parser.print_help()
         exit(1)
 
-    render_page(opts.paper_size, opts.orientation, opts.layout, args[0], opts.page_number, opts.bounds, opts.zoom, opts.provider)
+    client = Client()
+
+    try:
+        render_page(opts.paper_size, opts.orientation, opts.layout, args[0], opts.page_number, opts.bounds, opts.zoom, opts.provider)
+    except Exception, e:
+        client.captureException()
+        raise
