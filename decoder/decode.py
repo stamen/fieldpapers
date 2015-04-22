@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import traceback
 
 from sys import argv
@@ -260,14 +261,14 @@ def read_code(image):
     
     if layout == 'half-page' and orientation == 'landscape':
         east += (east - west)
-        print 'Adjusted', orientation, layout, 'bounds to %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
+        print >> sys.stderr, 'Adjusted', orientation, layout, 'bounds to %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
 
     elif layout == 'half-page' and orientation == 'portrait':
         south += (south - north)
-        print 'Adjusted', orientation, layout, 'bounds to %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
+        print >> sys.stderr, 'Adjusted', orientation, layout, 'bounds to %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
     
     else:
-        print 'Kept', orientation, layout, 'bounds at %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
+        print >> sys.stderr, 'Kept', orientation, layout, 'bounds at %.6f, %.6f, %.6f, %.6f' % (north, west, south, east)
 
     return print_id, print_url, north, west, south, east, paper, orientation, layout
 
