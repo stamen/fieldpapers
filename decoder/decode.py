@@ -244,25 +244,14 @@ def read_code(image):
     """
     """
     jit = lambda: .2 * (random() - .5)
-    original = image
-    
-    for attempt in range(10):
-        decode = 'java', '-classpath', ':'.join(glob(pathjoin(dirname(__file__), 'lib/*.jar'))), 'qrdecode'
-        decode = Popen(decode, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        
-        image.save(decode.stdin, 'PNG')
-        decode.stdin.close()
-        decode.wait()
-        
-        print_url = decode.stdout.read().strip()
-        
-        if print_url.startswith('http://'):
-            break
-        
-        matrix = (1 + jit(), jit(), jit(), jit(), 1 + jit(), jit())
-        image = original.transform(image.size, Image.AFFINE, matrix, Image.BICUBIC)
-        
-        print 'jittering QR code image by %.2f, %.2f, %.2f, %.2f, %.2f, %.2f' % matrix
+    decode = 'zbarimg', '--raw', '-q', '/dev/stdin'
+    decode = Popen(decode, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+
+    image.save(decode.stdin, 'PNG')
+    decode.stdin.close()
+    decode.wait()
+
+    print_url = decode.stdout.read().strip()
     
     if not print_url.startswith('http://'):
         raise CodeReadException('Attempt to read QR code failed')
