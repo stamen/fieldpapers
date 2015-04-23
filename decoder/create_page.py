@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 
 from optparse import OptionParser
@@ -14,6 +15,10 @@ from raven import Client
 from cairoutils import get_drawing_context
 from compose import add_print_page, paper_info
 from dimensions import ptpin
+
+
+API_BASE = os.getenv('API_BASE_URL', 'http://fieldpapers.org/')
+
 
 def render_page(paper_size, orientation, layout, atlas_id, page_number, bounds, zoom, provider):
     # hm2pt_ratio = homogeneous point coordinate conversation ratio
@@ -33,7 +38,7 @@ def render_page(paper_size, orientation, layout, atlas_id, page_number, bounds, 
 
     map_bounds_pt = (map_xmin_pt, map_ymin_pt, map_xmax_pt, map_ymax_pt)
 
-    page_href = "http://fieldpapers.org/atlases/%s/%s" % (atlas_id, page_number)
+    page_href = "%satlases/%s/%s" % (API_BASE, atlas_id, page_number)
 
     print >> sys.stderr, "page_href: %s" % (page_href)
 
