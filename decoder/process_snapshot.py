@@ -5,6 +5,7 @@ import sys
 
 from os import close, unlink
 from shutil import move
+from StringIO import StringIO
 from tempfile import mkstemp
 
 try:
@@ -31,7 +32,8 @@ def process_snapshot(input_file):
     """
     (highpass_filename, preblobs_filename, postblob_filename) = generate_filenames()
 
-    input = Image.open(input_file.read()).load()
+    input = Image.open(StringIO(input_file.read()))
+    input.load()
     blobs = imgblobs(input, highpass_filename, preblobs_filename, postblob_filename)
 
     unlink(highpass_filename)
