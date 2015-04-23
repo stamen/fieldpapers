@@ -44,7 +44,7 @@ def process_snapshot(input_file):
         print >> sys.stderr, paper, orientation, '--', s2p
 
         try:
-            (print_id, print_url, north, west, south, east, _paper, _orientation, _layout) = read_code(input)
+            (_, print_url, north, west, south, east, _paper, _orientation, _layout) = read_code(input)
         except CodeReadException:
             print >> sys.stderr, 'could not read the QR code.'
             continue
@@ -53,13 +53,6 @@ def process_snapshot(input_file):
             continue
 
         print_page_number = None
-
-        # TODO extract this from the URL better; may involve changing read_code
-        if print_url.startswith(API_BASE):
-            if '/' in print_id:
-                (print_id, print_page_number) = print_id.split('/', 1)
-        else:
-            print_id = None
 
         (paper_width_pt, paper_height_pt) = get_paper_size(paper, orientation)
         geo_args = (paper_width_pt, paper_height_pt, north, west, south, east)
