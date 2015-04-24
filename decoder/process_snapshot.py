@@ -22,9 +22,6 @@ from geoutils import create_geotiff
 from imagemath import imgblobs, open as imageopen
 
 
-API_BASE = os.getenv('API_BASE_URL', 'http://fieldpapers.org/')
-
-
 # extracted from decode.main
 def process_snapshot(input_file):
     """
