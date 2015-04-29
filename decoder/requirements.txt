@@ -1,0 +1,4 @@
+requests
+ModestMaps
+raven
+git+https://github.com/migurski/Blobdetector
