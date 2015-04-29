@@ -39,6 +39,15 @@
                            placeholder="Untitled" value="{$atlas_data.atlas_title|escape}">
                 </p>
                 <p>
+                    <label for="paper_size">Choose a Paper Size</label>
+                    <br>
+                    <select id="paper_size" name="paper_size">
+                      <option value="letter">Letter (8.5 x 11 in)</option>
+                      <option value="A4">A4 (8.3 x 11.7 in)</option>
+                      <option value="A3">A3 (11.7 x 16.5 in)</option>
+                    </select>
+                </p>
+                <p>
                     <label for="atlas_text">Add <i>optional</i> text to each page?</label>
                     <br/>
                     <small>Text you enter will show up next to each map in the atlas</small>
@@ -53,8 +62,8 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>(That means it's only accessible to you, if you're logged in, or by direct URL.)</small>
                 </p>
                 
+                
                 <input type="hidden" id="page_zoom" name="page_zoom" value="{$atlas_data.page_zoom|escape}">
-                <input type="hidden" id="paper_size" name="paper_size" value="{$atlas_data.paper_size|escape}">
                 <input type="hidden" id="orientation" name="orientation" value="{$atlas_data.orientation|escape}">
                 <input type="hidden" id="provider" name="provider" value="{$atlas_data.provider|escape}">
                 
