@@ -72,7 +72,7 @@
     
     function get_map_providers()
     {
-        if(preg_match_all('#^(http://\S+)\b\s+\b(.+)$#mi', TILE_PROVIDERS, $m))
+        if(preg_match_all('#^(https?://\S+)\b\s+\b(.+)$#mi', TILE_PROVIDERS, $m))
             return array_map(null, $m[1], $m[2]);
     
         return array(array('http://tile.openstreetmap.org/{Z}/{X}/{Y}.png', 'OpenStreetMap'));
