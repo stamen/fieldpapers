@@ -126,7 +126,7 @@ def create_geotiff(image, p2s, paper_width_pt, paper_height_pt, north, west, sou
         if translate.returncode:
             raise Exception(translate.returncode)
         
-        warp1 = 'gdalwarp -of GTiff -t_srs EPSG:3857 -tps -co COMPRESS=deflate -co TILED=yes'.split()
+        warp1 = 'gdalwarp -of GTiff -t_srs EPSG:3857 -tps -co COMPRESS=lzw -co TILED=yes'.split()
         warp1 += ['-dstnodata', '153 153 153']
         warp1 += [vrt_filename, tif1_filename]
         
