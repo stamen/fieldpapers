@@ -35,10 +35,12 @@ WORKDIR /app
 ENV VIRTUAL_ENV /app/env
 ENV PATH /app/env/bin:/app:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-ADD . /app/
+ADD requirements.txt /app/requirements.txt
 
 RUN \
   virtualenv env --system-site-packages && \
   pip install -r requirements.txt
+
+ADD . /app/
 
 VOLUME ["/app"]
