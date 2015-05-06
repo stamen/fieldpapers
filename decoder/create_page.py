@@ -51,7 +51,7 @@ def render_page(paper_size, orientation, layout, atlas_id, page_number, bounds, 
     try:
         (print_context, finish_drawing) = get_drawing_context(print_filename, page_width_pt, page_height_pt)
 
-        add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, None, None, None, [])
+        add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, "", None, None, [])
 
         finish_drawing()
 
