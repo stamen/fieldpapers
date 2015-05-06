@@ -69,7 +69,7 @@ def render_index(paper_size, orientation, layout, atlas_id, bounds, envelope, zo
     try:
         (print_context, finish_drawing) = get_drawing_context(print_filename, page_width_pt, page_height_pt)
 
-        add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, None, None, None, pages)
+        add_print_page(print_context, page_mmap, page_href, map_bounds_pt, points_FG, hm2pt_ratio, layout, "", None, None, pages)
 
         finish_drawing()
 
