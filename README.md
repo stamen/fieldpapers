@@ -1,3 +1,9 @@
+# Field Papers
+
+**NOTE**: this has moved to the [Field Papers organization](https://github.com/fieldpapers)
+
+---
+
 Field Papers is the codebase behind http://fieldpapers.org.
 
 See [INSTALL.md](https://github.com/stamen/fieldpapers/blob/master/INSTALL.md) for a guide to installing Field Papers.
