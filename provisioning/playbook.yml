@@ -22,6 +22,7 @@
         - apache2
         - php5
         - php5-mysql
+        - php5-sqlite
         - phpmyadmin
         - build-essential
         - libcairo2-dev
@@ -52,8 +53,8 @@
     - name: Move default Apache root
       action: command mv /var/www /var/www-old
 
-    - name: Symlink /var/www to /vagrant
-      action: command ln -s /vagrant /var/www
+    - name: Symlink /var/www to /usr/local/fieldpapers 
+      action: command ln -s /usr/local/fieldpapers /var/www
 
     - name: Make fieldpapers site
       command: "{{ item }} chdir=/usr/local/fieldpapers/site"
@@ -91,7 +92,7 @@
     - name: "Install BlobDetector from a local package instead of pip for now"
       command: "python setup.py install"
       args:
-        chdir: "/vagrant/provisioning/BlobDetector-1.0.0/"
+        chdir: "/usr/local/fieldpapers/provisioning/BlobDetector-1.0.0/"
 
     - name: Install packages via pecl.
       command: "pecl install {{ item }}"

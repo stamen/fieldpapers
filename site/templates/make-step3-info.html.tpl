@@ -70,6 +70,10 @@
                 {if $atlas_data.clone_id}
                     <input type="hidden" id="clone_id" name="clone_id" value="{$atlas_data.clone_id|escape}">
                 {/if}
+
+                {if $atlas_data.overlay}
+                    <input type="hidden" id="overlay" name="overlay" value="{$atlas_data.overlay|escape}">
+                {/if}
                 
                 {if $atlas_data.refresh_id}
                     <input type="hidden" id="refresh_id" name="refresh_id" value="{$atlas_data.refresh_id|escape}">

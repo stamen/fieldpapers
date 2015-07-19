@@ -27,7 +27,10 @@
         
         var mbtiles_data = {$mbtiles_data|@json_encode} || null,
             center = {$center|json_encode} || null,
-            zoom = {$zoom|json_encode} || null;
+            zoom = {$zoom|json_encode} || null,
+            zoom = {$zoom|json_encode} || null,
+            user_mbtiles = {$user_mbtiles|@json_encode} || null;
+
     </script>
     <script type="text/javascript" src="{$base_dir}/js/make_geography.js"></script>
     <style type="text/css">
@@ -206,6 +209,15 @@
                                         <option value="{$provider.0|escape}">{$provider.1|escape}</option>
                                     {/foreach}
                                 </select>
+
+                                {if $user_mbtiles}
+
+                                        <select style="width: 150px; top: -8px; margin-left: 10px; position: relative;" name="overlay" onChange="setOverlayProvider(this.value);">
+                                                {foreach from=$user_mbtiles key="index" item="user_mbtiles_file"}
+                                                   <option value="{$user_mbtiles_file.url|escape}">{$user_mbtiles_file.uploaded_file|escape}</option>
+                                                {/foreach}
+                                            </select>
+                                {/if}
                                 
                                 <span id="page_count_container">
                                     <span id="page_count"><b>1</b></span><br>

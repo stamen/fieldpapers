@@ -344,6 +344,7 @@
         $orientation = isset($post['orientation']) ? $post['orientation'] : 'portrait';
         $layout = isset($post['layout']) ? $post['layout'] : 'full-page';
         $provider = $post['provider'];
+        $overlay = $post['overlay'];
         $title = $post['atlas_title'];
         $grid = filter_var($post['grid'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         $redcross = filter_var($post['redcross'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
@@ -455,6 +456,12 @@
              
             if($redcross)
                 $message['pages'][$i]['provider'] = "{$value['provider']},http://a.tiles.mapbox.com/v3/americanredcross.HAIYAN_Atlas_Bounds/{Z}/{X}/{Y}.png";
+        
+            if($overlay)
+                $message['pages'][$i]['provider'] = "{$value['provider']},{$overlay}";
+
+
+
         }
         
         // Deal with WOEIDs
